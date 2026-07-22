@@ -1,0 +1,23 @@
+{
+  "name": "@life-os/worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@life-os/contracts": "workspace:*",
+    "drizzle-orm": "^0.45.0",
+    "pg-boss": "^9.0.0",
+    "postgres": "^3.4.0"
+  },
+  "devDependencies": {
+    "@life-os/tsconfig": "workspace:*",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0"
+  }
+}

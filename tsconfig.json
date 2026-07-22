@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/tsconfig" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/contracts" },
+    { "path": "./packages/mobile-data" },
+    { "path": "./packages/api-client" },
+    { "path": "./apps/web" },
+    { "path": "./apps/mobile" },
+    { "path": "./apps/api" },
+    { "path": "./apps/worker" }
+  ]
+}

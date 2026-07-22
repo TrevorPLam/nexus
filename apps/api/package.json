@@ -1,0 +1,31 @@
+{
+  "name": "@life-os/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.0",
+    "@hono/standard-validator": "^0.3.0",
+    "@hono/zod-openapi": "^0.18.0",
+    "@life-os/contracts": "workspace:*",
+    "@life-os/database": "workspace:*",
+    "@supabase/supabase-js": "^2.45.0",
+    "drizzle-orm": "^0.45.0",
+    "hono": "^4.12.0",
+    "jose": "^5.9.0",
+    "postgres": "^3.4.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@life-os/tsconfig": "workspace:*",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0"
+  }
+}
