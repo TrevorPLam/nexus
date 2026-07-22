@@ -1,7 +1,4 @@
-import {
-  CreateCalendarRequest,
-  UpdateCalendarRequest,
-} from '@life-os/contracts';
+import { CreateCalendarRequest, UpdateCalendarRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
