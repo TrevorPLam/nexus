@@ -15,6 +15,7 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest",
     "generate": "drizzle-kit generate",
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio"
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",
     "drizzle-kit": "^0.31.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^2.0.0"
   }
 }

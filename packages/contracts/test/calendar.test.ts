@@ -45,6 +45,64 @@ describe('Calendar Contracts', () => {
       ).toThrow();
     });
 
+    it('rejects empty name', () => {
+      expect(() =>
+        CreateCalendarRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: '',
+        }),
+      ).toThrow();
+    });
+
+    it('rejects name over max length', () => {
+      expect(() =>
+        CreateCalendarRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'a'.repeat(201),
+        }),
+      ).toThrow();
+    });
+
+    it('rejects invalid color format', () => {
+      expect(() =>
+        CreateCalendarRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'My Calendar',
+          color: 'red',
+        }),
+      ).toThrow();
+    });
+
+    it('accepts valid color format', () => {
+      const result = CreateCalendarRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'My Calendar',
+        color: '#FF0000',
+      });
+      expect(result.color).toBe('#FF0000');
+    });
+
+    it('accepts all provider enum values', () => {
+      const local = CreateCalendarRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'My Calendar',
+        provider: CalendarProvider.enum.local,
+      });
+      const google = CreateCalendarRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'My Calendar',
+        provider: CalendarProvider.enum.google,
+      });
+      const outlook = CreateCalendarRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'My Calendar',
+        provider: CalendarProvider.enum.outlook,
+      });
+      expect(local.provider).toBe(CalendarProvider.enum.local);
+      expect(google.provider).toBe(CalendarProvider.enum.google);
+      expect(outlook.provider).toBe(CalendarProvider.enum.outlook);
+    });
+
     it('calendar response uses enum for provider', () => {
       const result = CalendarResponse.parse({
         id: '123e4567-e89b-12d3-a456-426614174000',
@@ -97,6 +155,54 @@ describe('Calendar Contracts', () => {
           end: '2024-01-01T10:00:00Z',
         }),
       ).toThrow('start date must be before end date');
+    });
+
+    it('rejects start equal to end', () => {
+      expect(() =>
+        CreateEventRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          calendarId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'My Event',
+          start: '2024-01-01T10:00:00Z',
+          end: '2024-01-01T10:00:00Z',
+        }),
+      ).toThrow('start date must be before end date');
+    });
+
+    it('rejects empty title', () => {
+      expect(() =>
+        CreateEventRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          calendarId: '123e4567-e89b-12d3-a456-426614174000',
+          title: '',
+          start: '2024-01-01T10:00:00Z',
+          end: '2024-01-01T11:00:00Z',
+        }),
+      ).toThrow();
+    });
+
+    it('rejects title over max length', () => {
+      expect(() =>
+        CreateEventRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          calendarId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'a'.repeat(501),
+          start: '2024-01-01T10:00:00Z',
+          end: '2024-01-01T11:00:00Z',
+        }),
+      ).toThrow();
+    });
+
+    it('accepts isAllDay true', () => {
+      const result = CreateEventRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        calendarId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Event',
+        start: '2024-01-01T10:00:00Z',
+        end: '2024-01-01T11:00:00Z',
+        isAllDay: true,
+      });
+      expect(result.isAllDay).toBe(true);
     });
 
     it('rejects invalid datetime format', () => {
@@ -176,6 +282,42 @@ describe('Calendar Contracts', () => {
           status: 'invalid' as const,
         }),
       ).toThrow();
+    });
+
+    it('accepts all attendee status enum values', () => {
+      const needsAction = CreateEventAttendeeRequest.parse({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        status: AttendeeStatus.enum.needs_action,
+      });
+      const accepted = CreateEventAttendeeRequest.parse({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        status: AttendeeStatus.enum.accepted,
+      });
+      const declined = CreateEventAttendeeRequest.parse({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        status: AttendeeStatus.enum.declined,
+      });
+      const tentative = CreateEventAttendeeRequest.parse({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        status: AttendeeStatus.enum.tentative,
+      });
+      expect(needsAction.status).toBe(AttendeeStatus.enum.needs_action);
+      expect(accepted.status).toBe(AttendeeStatus.enum.accepted);
+      expect(declined.status).toBe(AttendeeStatus.enum.declined);
+      expect(tentative.status).toBe(AttendeeStatus.enum.tentative);
+    });
+
+    it('accepts isOrganizer true', () => {
+      const result = CreateEventAttendeeRequest.parse({
+        eventId: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        isOrganizer: true,
+      });
+      expect(result.isOrganizer).toBe(true);
     });
 
     it('attendee response uses enum for status', () => {

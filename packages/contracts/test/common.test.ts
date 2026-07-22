@@ -7,6 +7,7 @@ import {
   DateRangeSchema,
   ErrorResponseSchema,
 } from '../src/common';
+import * as contracts from '../src/index';
 
 describe('Common Contracts', () => {
   describe('IdSchema', () => {
@@ -144,6 +145,16 @@ describe('Common Contracts', () => {
           error: { code: 'ERROR' },
         }),
       ).toThrow();
+    });
+  });
+
+  describe('Barrel Exports', () => {
+    it('exports common schemas from index', () => {
+      expect(contracts.IdSchema).toBeDefined();
+      expect(contracts.WorkspaceIdSchema).toBeDefined();
+      expect(contracts.PaginationSchema).toBeDefined();
+      expect(contracts.DateRangeSchema).toBeDefined();
+      expect(contracts.ErrorResponseSchema).toBeDefined();
     });
   });
 });

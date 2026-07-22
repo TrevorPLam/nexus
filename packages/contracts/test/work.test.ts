@@ -64,6 +64,33 @@ describe('Work Contracts', () => {
       ).toThrow();
     });
 
+    it('accepts valid color format', () => {
+      const result = CreateProjectRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'My Project',
+        color: '#FF0000',
+      });
+      expect(result.color).toBe('#FF0000');
+    });
+
+    it('rejects empty name', () => {
+      expect(() =>
+        CreateProjectRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: '',
+        }),
+      ).toThrow();
+    });
+
+    it('rejects name over max length', () => {
+      expect(() =>
+        CreateProjectRequest.parse({
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'a'.repeat(201),
+        }),
+      ).toThrow();
+    });
+
     it('accepts valid update project request', () => {
       const result = UpdateProjectRequest.parse({
         name: 'Updated Project',
@@ -124,6 +151,81 @@ describe('Work Contracts', () => {
           status: 'invalid' as const,
         }),
       ).toThrow();
+    });
+
+    it('accepts all task status enum values', () => {
+      const todo = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        status: TaskStatus.enum.todo,
+      });
+      const inProgress = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        status: TaskStatus.enum.in_progress,
+      });
+      const done = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        status: TaskStatus.enum.done,
+      });
+      const cancelled = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        status: TaskStatus.enum.cancelled,
+      });
+      expect(todo.status).toBe(TaskStatus.enum.todo);
+      expect(inProgress.status).toBe(TaskStatus.enum.in_progress);
+      expect(done.status).toBe(TaskStatus.enum.done);
+      expect(cancelled.status).toBe(TaskStatus.enum.cancelled);
+    });
+
+    it('accepts all task priority enum values', () => {
+      const low = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        priority: TaskPriority.enum.low,
+      });
+      const medium = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        priority: TaskPriority.enum.medium,
+      });
+      const high = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        priority: TaskPriority.enum.high,
+      });
+      const urgent = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        priority: TaskPriority.enum.urgent,
+      });
+      expect(low.priority).toBe(TaskPriority.enum.low);
+      expect(medium.priority).toBe(TaskPriority.enum.medium);
+      expect(high.priority).toBe(TaskPriority.enum.high);
+      expect(urgent.priority).toBe(TaskPriority.enum.urgent);
+    });
+
+    it('accepts all energy level enum values', () => {
+      const low = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        energyLevel: EnergyLevel.enum.low,
+      });
+      const medium = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        energyLevel: EnergyLevel.enum.medium,
+      });
+      const high = CreateTaskRequest.parse({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'My Task',
+        energyLevel: EnergyLevel.enum.high,
+      });
+      expect(low.energyLevel).toBe(EnergyLevel.enum.low);
+      expect(medium.energyLevel).toBe(EnergyLevel.enum.medium);
+      expect(high.energyLevel).toBe(EnergyLevel.enum.high);
     });
 
     it('rejects invalid datetime format for dueDate', () => {
@@ -226,6 +328,33 @@ describe('Work Contracts', () => {
         dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
       });
       expect(result.type).toBe(DependencyType.enum.finish_to_start);
+    });
+
+    it('accepts all dependency type enum values', () => {
+      const finishToStart = CreateTaskDependencyRequest.parse({
+        taskId: '123e4567-e89b-12d3-a456-426614174000',
+        dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
+        type: DependencyType.enum.finish_to_start,
+      });
+      const startToStart = CreateTaskDependencyRequest.parse({
+        taskId: '123e4567-e89b-12d3-a456-426614174000',
+        dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
+        type: DependencyType.enum.start_to_start,
+      });
+      const finishToFinish = CreateTaskDependencyRequest.parse({
+        taskId: '123e4567-e89b-12d3-a456-426614174000',
+        dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
+        type: DependencyType.enum.finish_to_finish,
+      });
+      const startToFinish = CreateTaskDependencyRequest.parse({
+        taskId: '123e4567-e89b-12d3-a456-426614174000',
+        dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
+        type: DependencyType.enum.start_to_finish,
+      });
+      expect(finishToStart.type).toBe(DependencyType.enum.finish_to_start);
+      expect(startToStart.type).toBe(DependencyType.enum.start_to_start);
+      expect(finishToFinish.type).toBe(DependencyType.enum.finish_to_finish);
+      expect(startToFinish.type).toBe(DependencyType.enum.start_to_finish);
     });
 
     it('rejects invalid dependency type', () => {

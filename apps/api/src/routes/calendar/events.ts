@@ -1,7 +1,4 @@
-import {
-  CreateEventRequest,
-  UpdateEventRequest,
-} from '@life-os/contracts';
+import { CreateEventRequest, UpdateEventRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 

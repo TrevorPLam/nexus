@@ -1,7 +1,4 @@
-import {
-  CreateProjectRequest,
-  UpdateProjectRequest,
-} from '@life-os/contracts';
+import { CreateProjectRequest, UpdateProjectRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 

@@ -1,7 +1,4 @@
-import {
-  CreateTaskRequest,
-  UpdateTaskRequest,
-} from '@life-os/contracts';
+import { CreateTaskRequest, UpdateTaskRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
