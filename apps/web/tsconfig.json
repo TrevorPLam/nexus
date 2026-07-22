@@ -1,4 +1,7 @@
 {
   "extends": "@life-os/tsconfig/nextjs.json",
-  "include": ["src", "next-env.d.ts"]
+  "include": ["src", "next-env.d.ts"],
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+  }
 }

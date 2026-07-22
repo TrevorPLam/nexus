@@ -27,7 +27,9 @@
   },
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",
+    "@testing-library/react-native": "^12.5.0",
     "@types/react": "^18.3.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^2.0.0"
   }
 }

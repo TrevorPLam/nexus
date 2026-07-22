@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 
-import { appUsers, workspaces, workspaceMemberships, outboxEvents, auditLogs, idempotencyKeys } from './core';
+import {
+  appUsers,
+  workspaces,
+  workspaceMemberships,
+  outboxEvents,
+  auditLogs,
+  idempotencyKeys,
+} from './core';
 
 describe('Core Schema', () => {
   describe('appUsers table', () => {

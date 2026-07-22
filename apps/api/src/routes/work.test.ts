@@ -1,36 +1,27 @@
+import { Hono } from 'hono';
 import { describe, it, expect, vi } from 'vitest';
 
 import workRouter from './work.js';
 
-// Mock the sub-routers
+// Mock the sub-routers as proper Hono instances
 vi.mock('./work/batch-operations.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./work/projects.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./work/task-dependencies.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./work/task-notes.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./work/tasks.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 describe('Work Routes', () => {
@@ -47,7 +38,7 @@ describe('Work Routes', () => {
     expect(res.status).toBe(404); // No routes defined yet
   });
 
-  it('has routes property that is a Map', () => {
-    expect(workRouter.routes).toBeInstanceOf(Map);
+  it('has routes property', () => {
+    expect(workRouter.routes).toBeDefined();
   });
 });

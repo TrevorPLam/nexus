@@ -15,8 +15,12 @@ export default [
       '**/build/**',
       '**/coverage/**',
       '.turbo',
-      '*.config.js',
-      '*.config.mjs',
+      '**/*.config.js',
+      '**/*.config.mjs',
+      '**/*.config.ts',
+      '**/vitest.config.ts',
+      '**/node_modules/@react-native/**',
+      '**/node_modules/react-native/Libraries/**',
     ],
   },
   // Base JavaScript rules
@@ -67,7 +71,6 @@ export default [
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
-        allowDefaultProject: ['*.js', '*.jsx', '*.ts', '*.tsx'],
       },
       globals: {
         ...globals.node,

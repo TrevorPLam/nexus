@@ -7,5 +7,27 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    deps: {
+      optimizer: {
+        web: {
+          include: ['@tamagui/core', 'tamagui'],
+        },
+      },
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'dist/',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        'vitest.config.ts',
+        'src/test/setup.ts',
+      ],
+      include: ['src/**/*.{ts,tsx}'],
+    },
   },
 });

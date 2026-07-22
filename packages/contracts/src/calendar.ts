@@ -97,3 +97,57 @@ export const EventAttendeeResponse = z.object({
   isOrganizer: z.boolean(),
   createdAt: z.date(),
 });
+
+export const CreateSchedulingLinkRequest = z.object({
+  workspaceId: z.string().uuid(),
+  name: z.string().min(1).max(200),
+  slug: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(/^[a-z0-9-]+$/),
+  description: z.string().max(1000).optional(),
+  calendarId: z.string().uuid(),
+  eventDuration: z.number().int().positive().max(480), // Max 8 hours
+  bufferBefore: z.number().int().min(0).default(0),
+  bufferAfter: z.number().int().min(0).default(0),
+  minBookingNotice: z.number().int().min(0).default(0),
+  maxBookingNotice: z.number().int().min(0).default(0),
+  availabilityStart: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional(),
+  availabilityEnd: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional(),
+  availableDays: z.array(z.number().int().min(0).max(6)).default([0, 1, 2, 3, 4, 5, 6]),
+  requiresApproval: z.boolean().default(false),
+  maxDailyBookings: z.number().int().positive().optional(),
+});
+
+export const UpdateSchedulingLinkRequest = CreateSchedulingLinkRequest.partial();
+
+export const SchedulingLinkResponse = z.object({
+  id: z.string().uuid(),
+  workspaceId: z.string().uuid(),
+  userId: z.string().uuid(),
+  name: z.string(),
+  slug: z.string(),
+  description: z.string().nullable(),
+  calendarId: z.string().uuid(),
+  eventDuration: z.number().int(),
+  bufferBefore: z.number().int(),
+  bufferAfter: z.number().int(),
+  minBookingNotice: z.number().int(),
+  maxBookingNotice: z.number().int(),
+  availabilityStart: z.string().nullable(),
+  availabilityEnd: z.string().nullable(),
+  availableDays: z.array(z.number()).nullable(),
+  isActive: z.boolean(),
+  requiresApproval: z.boolean(),
+  maxDailyBookings: z.number().int().nullable(),
+  metadata: z.record(z.string(), z.unknown()).nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

@@ -1,5 +1,5 @@
 import * as schema from '@life-os/database';
-import { calendars, events, eventAttendees } from '@life-os/database';
+import { calendars, events, eventAttendees, schedulingLinks } from '@life-os/database';
 import { eq, and, desc, asc, gte, lte, or, isNull, gt } from 'drizzle-orm';
 
 import { db } from './db.js';
@@ -226,4 +226,91 @@ export async function getBaseRecurringEvent(recurrenceId: string) {
     .from(events)
     .where(and(eq(events.recurrenceId, recurrenceId), isNull(events.recurrenceId)));
   return event;
+}
+
+// Scheduling Link Operations
+export async function createSchedulingLink(data: typeof schema.schedulingLinks.$inferInsert) {
+  const [link] = await db.insert(schedulingLinks).values(data).returning();
+  return link;
+}
+
+export async function getSchedulingLinkById(id: string) {
+  const [link] = await db.select().from(schedulingLinks).where(eq(schedulingLinks.id, id));
+  return link;
+}
+
+export async function getSchedulingLinkBySlug(slug: string) {
+  const [link] = await db.select().from(schedulingLinks).where(eq(schedulingLinks.slug, slug));
+  return link;
+}
+
+export async function getSchedulingLinksByWorkspace(
+  workspaceId: string,
+  limit = 50,
+  cursor?: string,
+) {
+  const conditions = [eq(schedulingLinks.workspaceId, workspaceId)];
+
+  if (cursor) {
+    conditions.push(gt(schedulingLinks.createdAt, new Date(cursor)));
+  }
+
+  const results = await db
+    .select()
+    .from(schedulingLinks)
+    .where(and(...conditions))
+    .orderBy(desc(schedulingLinks.createdAt))
+    .limit(limit + 1);
+
+  const hasMore = results.length > limit;
+  const items = hasMore ? results.slice(0, -1) : results;
+  const nextCursor = hasMore ? items[items.length - 1].createdAt.toISOString() : null;
+
+  return {
+    items,
+    nextCursor,
+    hasMore,
+  };
+}
+
+export async function getSchedulingLinksByUser(userId: string, limit = 50, cursor?: string) {
+  const conditions = [eq(schedulingLinks.userId, userId)];
+
+  if (cursor) {
+    conditions.push(gt(schedulingLinks.createdAt, new Date(cursor)));
+  }
+
+  const results = await db
+    .select()
+    .from(schedulingLinks)
+    .where(and(...conditions))
+    .orderBy(desc(schedulingLinks.createdAt))
+    .limit(limit + 1);
+
+  const hasMore = results.length > limit;
+  const items = hasMore ? results.slice(0, -1) : results;
+  const nextCursor = hasMore ? items[items.length - 1].createdAt.toISOString() : null;
+
+  return {
+    items,
+    nextCursor,
+    hasMore,
+  };
+}
+
+export async function updateSchedulingLink(
+  id: string,
+  data: Partial<typeof schema.schedulingLinks.$inferInsert>,
+) {
+  const [link] = await db
+    .update(schedulingLinks)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(schedulingLinks.id, id))
+    .returning();
+  return link;
+}
+
+export async function deleteSchedulingLink(id: string) {
+  const [link] = await db.delete(schedulingLinks).where(eq(schedulingLinks.id, id)).returning();
+  return link;
 }

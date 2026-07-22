@@ -160,7 +160,9 @@ describe('handleApiError', () => {
     expect(result.statusCode).toBe(500);
     expect((result.body.error as { code: string }).code).toBe('INTERNAL_SERVER_ERROR');
     expect((result.body.error as { message: string }).message).toBe('An unexpected error occurred');
-    expect((result.body.error as { details?: unknown }).details).toEqual({ message: 'Something went wrong' });
+    expect((result.body.error as { details?: unknown }).details).toEqual({
+      message: 'Something went wrong',
+    });
     process.env.NODE_ENV = originalEnv;
   });
 

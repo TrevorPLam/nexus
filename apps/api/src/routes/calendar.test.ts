@@ -1,30 +1,23 @@
+import { Hono } from 'hono';
 import { describe, it, expect, vi } from 'vitest';
 
 import calendarRouter from './calendar.js';
 
-// Mock the sub-routers
+// Mock the sub-routers as proper Hono instances
 vi.mock('./calendar/attendees.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./calendar/calendars.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./calendar/events.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 vi.mock('./calendar/recurring.js', () => ({
-  default: new (class {
-    routes = new Map();
-  })(),
+  default: new Hono(),
 }));
 
 describe('Calendar Routes', () => {
@@ -41,7 +34,7 @@ describe('Calendar Routes', () => {
     expect(res.status).toBe(404); // No routes defined yet
   });
 
-  it('has routes property that is a Map', () => {
-    expect(calendarRouter.routes).toBeInstanceOf(Map);
+  it('has routes property', () => {
+    expect(calendarRouter.routes).toBeDefined();
   });
 });

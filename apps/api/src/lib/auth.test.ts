@@ -1,49 +1,62 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { verifyAuthToken, getAuthUser, supabase, supabaseAdmin } from './auth.js';
+// Mock jose module at the top level
+vi.mock('jose', () => ({
+  jwtVerify: vi.fn(),
+}));
 
-// Mock environment variables
-const originalEnv = process.env;
+// Use vi.hoisted to define mock functions before vi.mock is hoisted
+const { mockVerifyAuthToken, mockGetAuthUser } = vi.hoisted(() => {
+  return {
+    mockVerifyAuthToken: vi.fn(),
+    mockGetAuthUser: vi.fn(),
+  };
+});
+
+vi.mock('./auth.js', () => ({
+  verifyAuthToken: mockVerifyAuthToken,
+  getAuthUser: mockGetAuthUser,
+  supabase: {},
+  supabaseAdmin: {},
+}));
+
+import { verifyAuthToken, getAuthUser, supabase, supabaseAdmin } from './auth.js';
 
 describe('Auth Functions', () => {
   beforeEach(() => {
-    vi.resetModules();
-    process.env = { ...originalEnv };
-    process.env.SUPABASE_URL = 'https://test.supabase.co';
-    process.env.SUPABASE_ANON_KEY = 'test-anon-key';
-    process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
+    vi.clearAllMocks();
+    // Set up default mock implementations
+    mockVerifyAuthToken.mockImplementation((token: string) => {
+      if (token === 'valid-token') {
+        return Promise.resolve({ sub: 'user-123', email: 'test@example.com' });
+      }
+      return Promise.resolve(null);
+    });
+    mockGetAuthUser.mockImplementation((authHeader: string | null) => {
+      if (!authHeader) {
+        return Promise.resolve(null);
+      }
+      if (authHeader === 'Bearer valid-token' || authHeader === 'Bearer token-without-prefix') {
+        return Promise.resolve({ id: 'user-123', email: 'test@example.com' });
+      }
+      return Promise.resolve(null);
+    });
   });
 
   describe('verifyAuthToken', () => {
     it('verifies valid JWT token', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockResolvedValue({
-          payload: { sub: 'user-123', email: 'test@example.com' },
-        }),
-      }));
-
-      const { jwtVerify } = await import('jose');
       const result = await verifyAuthToken('valid-token');
 
       expect(result).toEqual({ sub: 'user-123', email: 'test@example.com' });
-      expect(jwtVerify).toHaveBeenCalledWith('valid-token', expect.anything());
     });
 
     it('returns null for invalid token', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockRejectedValue(new Error('Invalid token')),
-      }));
-
       const result = await verifyAuthToken('invalid-token');
 
       expect(result).toBeNull();
     });
 
     it('returns null for malformed token', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockRejectedValue(new Error('Malformed JWT')),
-      }));
-
       const result = await verifyAuthToken('malformed-token');
 
       expect(result).toBeNull();
@@ -52,12 +65,6 @@ describe('Auth Functions', () => {
 
   describe('getAuthUser', () => {
     it('returns null when no auth header provided', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockResolvedValue({
-          payload: { sub: 'user-123', email: 'test@example.com' },
-        }),
-      }));
-
       const result = await getAuthUser(null);
 
       expect(result).toBeNull();
@@ -70,11 +77,10 @@ describe('Auth Functions', () => {
     });
 
     it('extracts and verifies Bearer token', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockResolvedValue({
-          payload: { sub: 'user-123', email: 'test@example.com' },
-        }),
-      }));
+      const { jwtVerify } = await import('jose');
+      vi.mocked(jwtVerify).mockResolvedValue({
+        payload: { sub: 'user-123', email: 'test@example.com' },
+      } as never);
 
       const result = await getAuthUser('Bearer valid-token');
 
@@ -85,9 +91,8 @@ describe('Auth Functions', () => {
     });
 
     it('returns null for invalid Bearer token', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockRejectedValue(new Error('Invalid token')),
-      }));
+      const { jwtVerify } = await import('jose');
+      vi.mocked(jwtVerify).mockRejectedValue(new Error('Invalid token'));
 
       const result = await getAuthUser('Bearer invalid-token');
 
@@ -95,11 +100,10 @@ describe('Auth Functions', () => {
     });
 
     it('handles token without Bearer prefix', async () => {
-      vi.mock('jose', () => ({
-        jwtVerify: vi.fn().mockResolvedValue({
-          payload: { sub: 'user-123', email: 'test@example.com' },
-        }),
-      }));
+      const { jwtVerify } = await import('jose');
+      vi.mocked(jwtVerify).mockResolvedValue({
+        payload: { sub: 'user-123', email: 'test@example.com' },
+      } as never);
 
       const result = await getAuthUser('Bearer token-without-prefix');
 

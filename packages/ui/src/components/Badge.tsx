@@ -11,6 +11,10 @@ const StyledBadge = styled(Text, {
   fontWeight: '600',
   variants: {
     variant: {
+      default: {
+        backgroundColor: '#f3f4f6',
+        color: '#374151',
+      },
       success: {
         backgroundColor: '#10b981',
         color: 'white',
@@ -33,7 +37,7 @@ const StyledBadge = styled(Text, {
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'success' | 'warning' | 'danger' | 'info';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
 }
 
 export function Badge({ children, variant = 'info', ...props }: BadgeProps) {

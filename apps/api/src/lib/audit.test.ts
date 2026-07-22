@@ -13,9 +13,7 @@ vi.mock('./db.js', () => ({
     update: vi.fn(() => ({
       set: vi.fn(() => ({
         where: vi.fn(() => ({
-          returning: vi.fn(() =>
-            Promise.resolve([{ id: '123', processedAt: new Date() }]),
-          ),
+          returning: vi.fn(() => Promise.resolve([{ id: '123', processedAt: new Date() }])),
         })),
       })),
     })),

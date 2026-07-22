@@ -1,5 +1,14 @@
 import * as schema from '@life-os/database';
-import { projects, tasks, taskDependencies, taskNotes } from '@life-os/database';
+import {
+  projects,
+  tasks,
+  taskDependencies,
+  taskNotes,
+  taskAssignees,
+  taskComments,
+  taskAttachments,
+  timeEntries,
+} from '@life-os/database';
 import { eq, and, desc, asc, or, like, sql, gt, inArray } from 'drizzle-orm';
 
 import { db } from './db.js';
@@ -307,4 +316,136 @@ export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string
   }
 
   return db.update(tasks).set(updateData).where(inArray(tasks.id, taskIds)).returning();
+}
+
+// Task Assignee Operations
+export async function createTaskAssignee(data: typeof schema.taskAssignees.$inferInsert) {
+  const [assignee] = await db.insert(taskAssignees).values(data).returning();
+  return assignee;
+}
+
+export async function getTaskAssignees(taskId: string) {
+  return db.select().from(taskAssignees).where(eq(taskAssignees.taskId, taskId));
+}
+
+export async function deleteTaskAssignee(id: string) {
+  const [assignee] = await db.delete(taskAssignees).where(eq(taskAssignees.id, id)).returning();
+  return assignee;
+}
+
+// Task Comment Operations
+export async function createTaskComment(data: typeof schema.taskComments.$inferInsert) {
+  const [comment] = await db.insert(taskComments).values(data).returning();
+  return comment;
+}
+
+export async function getTaskCommentById(id: string) {
+  const [comment] = await db.select().from(taskComments).where(eq(taskComments.id, id));
+  return comment;
+}
+
+export async function getTaskCommentsByTask(taskId: string) {
+  return db
+    .select()
+    .from(taskComments)
+    .where(eq(taskComments.taskId, taskId))
+    .orderBy(desc(taskComments.createdAt));
+}
+
+export async function updateTaskComment(
+  id: string,
+  data: Partial<typeof schema.taskComments.$inferInsert>,
+) {
+  const [comment] = await db
+    .update(taskComments)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(taskComments.id, id))
+    .returning();
+  return comment;
+}
+
+export async function deleteTaskComment(id: string) {
+  const [comment] = await db.delete(taskComments).where(eq(taskComments.id, id)).returning();
+  return comment;
+}
+
+// Task Attachment Operations
+export async function createTaskAttachment(data: typeof schema.taskAttachments.$inferInsert) {
+  const [attachment] = await db.insert(taskAttachments).values(data).returning();
+  return attachment;
+}
+
+export async function getTaskAttachmentById(id: string) {
+  const [attachment] = await db.select().from(taskAttachments).where(eq(taskAttachments.id, id));
+  return attachment;
+}
+
+export async function getTaskAttachmentsByTask(taskId: string) {
+  return db
+    .select()
+    .from(taskAttachments)
+    .where(eq(taskAttachments.taskId, taskId))
+    .orderBy(desc(taskAttachments.createdAt));
+}
+
+export async function deleteTaskAttachment(id: string) {
+  const [attachment] = await db
+    .delete(taskAttachments)
+    .where(eq(taskAttachments.id, id))
+    .returning();
+  return attachment;
+}
+
+// Time Entry Operations
+export async function createTimeEntry(data: typeof schema.timeEntries.$inferInsert) {
+  const [entry] = await db.insert(timeEntries).values(data).returning();
+  return entry;
+}
+
+export async function getTimeEntryById(id: string) {
+  const [entry] = await db.select().from(timeEntries).where(eq(timeEntries.id, id));
+  return entry;
+}
+
+export async function getTimeEntriesByTask(taskId: string) {
+  return db
+    .select()
+    .from(timeEntries)
+    .where(eq(timeEntries.taskId, taskId))
+    .orderBy(desc(timeEntries.startedAt));
+}
+
+export async function getTimeEntriesByUser(userId: string, startDate?: Date, endDate?: Date) {
+  const conditions = [eq(timeEntries.userId, userId)];
+
+  if (startDate) {
+    conditions.push(sql`${timeEntries.startedAt} >= ${startDate}`);
+  }
+
+  if (endDate) {
+    conditions.push(sql`${timeEntries.startedAt} <= ${endDate}`);
+  }
+
+  return db
+    .select()
+    .from(timeEntries)
+    .where(and(...conditions))
+    .orderBy(desc(timeEntries.startedAt));
+}
+
+export async function updateTimeEntry(
+  id: string,
+  data: Partial<typeof schema.timeEntries.$inferInsert>,
+) {
+  const [entry] = await db
+    .update(timeEntries)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(timeEntries.id, id))
+    .returning();
+  return entry;
+}
+
+export async function deleteTimeEntry(id: string) {
+  const [entry] = await db.delete(timeEntries).where(eq(timeEntries.id, id)).returning();
+  return entry;
 }

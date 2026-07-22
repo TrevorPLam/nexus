@@ -115,3 +115,95 @@ export const TaskNoteResponse = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const CreateTaskAssigneeRequest = z.object({
+  taskId: z.string().uuid(),
+  userId: z.string().uuid(),
+  isPrimary: z.boolean().default(false),
+});
+
+export const TaskAssigneeResponse = z.object({
+  id: z.string().uuid(),
+  taskId: z.string().uuid(),
+  userId: z.string().uuid(),
+  assignedBy: z.string().uuid(),
+  assignedAt: z.date(),
+  isPrimary: z.boolean(),
+});
+
+export const CreateTaskCommentRequest = z.object({
+  taskId: z.string().uuid(),
+  content: z.string().min(1).max(10000),
+  parentId: z.string().uuid().optional(),
+  mentions: z.array(z.string().uuid()).optional(),
+});
+
+export const UpdateTaskCommentRequest = z.object({
+  content: z.string().min(1).max(10000),
+});
+
+export const TaskCommentResponse = z.object({
+  id: z.string().uuid(),
+  taskId: z.string().uuid(),
+  userId: z.string().uuid(),
+  content: z.string(),
+  parentId: z.string().uuid().nullable(),
+  mentions: z.array(z.string()).nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const CreateTaskAttachmentRequest = z.object({
+  taskId: z.string().uuid(),
+  fileName: z.string().min(1).max(500),
+  fileType: z.string().min(1).max(100),
+  fileSize: z.string().min(1), // Size in bytes as string
+  storagePath: z.string().min(1).max(1000),
+  storageBucket: z.string().default('attachments'),
+});
+
+export const TaskAttachmentResponse = z.object({
+  id: z.string().uuid(),
+  taskId: z.string().uuid(),
+  uploadedBy: z.string().uuid(),
+  fileName: z.string(),
+  fileType: z.string(),
+  fileSize: z.string(),
+  storagePath: z.string(),
+  storageBucket: z.string(),
+  metadata: z.record(z.string(), z.unknown()).nullable(),
+  createdAt: z.date(),
+});
+
+export const CreateTimeEntryRequest = z.object({
+  taskId: z.string().uuid(),
+  description: z.string().max(1000).optional(),
+  startedAt: z.string().datetime(),
+  stoppedAt: z.string().datetime().optional(),
+  duration: z.number().int().positive().optional(),
+  isBillable: z.boolean().default(false),
+  billableRate: z.string().optional(),
+});
+
+export const UpdateTimeEntryRequest = z.object({
+  description: z.string().max(1000).optional(),
+  stoppedAt: z.string().datetime().optional(),
+  duration: z.number().int().positive().optional(),
+  isBillable: z.boolean().optional(),
+  billableRate: z.string().optional(),
+});
+
+export const TimeEntryResponse = z.object({
+  id: z.string().uuid(),
+  taskId: z.string().uuid(),
+  userId: z.string().uuid(),
+  description: z.string().nullable(),
+  startedAt: z.date(),
+  stoppedAt: z.date().nullable(),
+  duration: z.string().nullable(),
+  isBillable: z.boolean(),
+  billableRate: z.string().nullable(),
+  metadata: z.record(z.string(), z.unknown()).nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
