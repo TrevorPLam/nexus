@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { z } from 'zod';
+
 import {
   CreateCalendarRequest,
-  UpdateCalendarRequest,
   CalendarResponse,
   CreateEventRequest,
-  UpdateEventRequest,
   EventResponse,
   CreateEventAttendeeRequest,
   EventAttendeeResponse,
@@ -42,7 +40,7 @@ describe('Calendar Contracts', () => {
         CreateCalendarRequest.parse({
           workspaceId: '123e4567-e89b-12d3-a456-426614174000',
           name: 'My Calendar',
-          provider: 'invalid' as any,
+          provider: 'invalid' as const,
         }),
       ).toThrow();
     });
@@ -175,7 +173,7 @@ describe('Calendar Contracts', () => {
         CreateEventAttendeeRequest.parse({
           eventId: '123e4567-e89b-12d3-a456-426614174000',
           email: 'test@example.com',
-          status: 'invalid' as any,
+          status: 'invalid' as const,
         }),
       ).toThrow();
     });

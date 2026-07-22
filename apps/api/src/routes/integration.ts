@@ -1,9 +1,10 @@
-import { Hono } from 'hono';
-import { validator } from 'hono/validator';
-import { db } from '../lib/db';
 import { tasks, events } from '@life-os/database';
 import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
+import { validator } from 'hono/validator';
 import { z } from 'zod';
+
+import { db } from '../lib/db';
 
 const integrationRouter = new Hono();
 

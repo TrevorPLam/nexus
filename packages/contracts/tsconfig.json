@@ -1,7 +1,7 @@
 {
   "extends": "@life-os/tsconfig/base.json",
   "compilerOptions": {
-    "rootDir": "src"
+    "rootDir": "."
   },
-  "include": ["src"]
+  "include": ["src", "test", "vitest.config.ts"]
 }

@@ -1,7 +1,8 @@
-import { eq, and, desc, asc, or, like, sql, gt, inArray } from 'drizzle-orm';
-import { db } from './db';
 import * as schema from '@life-os/database';
 import { projects, tasks, taskDependencies, taskNotes } from '@life-os/database';
+import { eq, and, desc, asc, or, like, sql, gt, inArray } from 'drizzle-orm';
+
+import { db } from './db';
 
 // Project Operations
 export async function createProject(data: typeof schema.projects.$inferInsert) {
@@ -294,7 +295,7 @@ export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date) 
 }
 
 export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string) {
-  const updateData: any = { status: newStatus, updatedAt: new Date() };
+  const updateData: Record<string, unknown> = { status: newStatus, updatedAt: new Date() };
   
   if (newStatus === 'done') {
     updateData.completedAt = new Date();

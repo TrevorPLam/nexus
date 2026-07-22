@@ -1,17 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { z } from 'zod';
+
 import {
   CreateProjectRequest,
   UpdateProjectRequest,
   ProjectResponse,
   CreateTaskRequest,
-  UpdateTaskRequest,
   TaskResponse,
   CreateTaskDependencyRequest,
-  TaskDependencyResponse,
   CreateTaskNoteRequest,
   UpdateTaskNoteRequest,
-  TaskNoteResponse,
   ProjectStatus,
   TaskStatus,
   TaskPriority,
@@ -124,7 +121,7 @@ describe('Work Contracts', () => {
         CreateTaskRequest.parse({
           workspaceId: '123e4567-e89b-12d3-a456-426614174000',
           title: 'My Task',
-          status: 'invalid' as any,
+          status: 'invalid' as const,
         }),
       ).toThrow();
     });
@@ -236,7 +233,7 @@ describe('Work Contracts', () => {
         CreateTaskDependencyRequest.parse({
           taskId: '123e4567-e89b-12d3-a456-426614174000',
           dependsOnTaskId: '123e4567-e89b-12d3-a456-426614174001',
-          type: 'invalid' as any,
+          type: 'invalid' as const,
         }),
       ).toThrow();
     });
@@ -274,7 +271,7 @@ describe('Work Contracts', () => {
         content: 'Updated note',
       });
       expect(result.content).toBe('Updated note');
-      expect((result as any).taskId).toBeUndefined();
+      expect('taskId' in result).toBe(false);
     });
   });
 });

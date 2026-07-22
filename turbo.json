@@ -1,23 +1,36 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "futureFlags": {
+    "globalConfiguration": true
+  },
+  "global": {
+    "inputs": [".env"],
+    "env": ["CI", "NODE_ENV", "TURBO_TOKEN", "TURBO_TEAM"]
+  },
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "inputs": ["$TURBO_DEFAULT$", ".env.*", "tsconfig.json"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**", ".turbo/**"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.*", "eslint.config.mjs", ".prettierrc"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.*", "tsconfig.json"]
+    },
+    "format": {
+      "inputs": ["$TURBO_DEFAULT$", ".prettierrc", ".prettierignore"]
     },
     "test": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.*", "tsconfig.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
     "clean": {

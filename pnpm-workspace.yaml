@@ -1,5 +1,37 @@
 packages:
   - 'packages/*'
   - 'apps/*'
+
+# Allow builds for specific packages
 allowBuilds:
+  esbuild: true
+  lefthook: true
+  sharp: true
   supabase: true
+  unrs-resolver: true
+
+# Catalog for shared dependency versions (pnpm 9.5+)
+# Strict mode enforces catalog usage across all packages
+catalogMode: strict
+
+catalogs:
+  default:
+    '@tanstack/react-query': ^5.0.0
+    drizzle-orm: ^0.33.0
+    hono: ^4.12.0
+    react: ^18.3.0
+    react-dom: ^18.3.0
+    typescript: ^5.9.0
+    zod: ^4.0.0
+
+# Workspace settings
+# linkWorkspacePackages: false enforces workspace: protocol usage
+linkWorkspacePackages: false
+
+# Hoisting settings for tooling compatibility
+# These settings moved from .npmrc per pnpm best practices (PR #11189)
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
+  - '*typescript*'
+  - '*lefthook*'

@@ -1,5 +1,6 @@
 import { styled } from '@tamagui/core';
-import { View } from '@tamagui/core';
+import { View, ViewStyle } from '@tamagui/core';
+import React from 'react';
 
 const StyledCard = styled(View, {
   name: 'Card',
@@ -17,7 +18,7 @@ const StyledCard = styled(View, {
 
 interface CardProps {
   children: React.ReactNode;
-  style?: any;
+  style?: ViewStyle;
 }
 
 export function Card({ children, style, ...props }: CardProps) {

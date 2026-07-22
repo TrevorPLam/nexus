@@ -1,8 +1,9 @@
-import { Context, Next } from 'hono';
-import { getAuthUser } from './auth';
-import { db } from './db';
 import { workspaceMemberships, appUsers } from '@life-os/database';
 import { eq, and } from 'drizzle-orm';
+import { Context, Next } from 'hono';
+
+import { getAuthUser } from './auth';
+import { db } from './db';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency';
 
 export async function authMiddleware(c: Context, next: Next) {
@@ -96,7 +97,7 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
 
     if (result.isDuplicate) {
       // Return the cached response
-      const status = parseInt(result.responseStatus) as any;
+      const status = parseInt(result.responseStatus) as number;
       return c.json(result.responseBody, status);
     }
 
@@ -104,7 +105,7 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
     const originalJson = c.json.bind(c);
     
     // Override json to capture the response
-    c.json = (data: any, init?: any) => {
+    c.json = (data: unknown, init?: number | ResponseInit) => {
       const status = typeof init === 'number' ? init : (init?.status || 200);
       
       // Store the response for idempotency

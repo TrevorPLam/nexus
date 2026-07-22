@@ -4,6 +4,10 @@
 # working directory name when running `supabase init`.
 project_id = "nexus"
 
+# SECURITY NOTE: When running Supabase locally, the services bind to 0.0.0.0 by default.
+# For production environments or when running on shared networks, consider binding to
+# 127.0.0.1 (localhost only) or use firewall rules to restrict access.
+
 [api]
 enabled = true
 # Port to use for the API URL.

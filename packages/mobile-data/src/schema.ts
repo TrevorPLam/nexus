@@ -1,5 +1,5 @@
-import { AppSchema } from '@powersync/react-native';
 import * as schema from '@life-os/database';
+import { AppSchema } from '@powersync/react-native';
 
 // PowerSync schema for mobile offline sync
 export const powersyncSchema = new AppSchema({

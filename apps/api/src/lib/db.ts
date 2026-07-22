@@ -1,6 +1,6 @@
+import * as schema from '@life-os/database';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as schema from '@life-os/database';
 
 const connectionString = process.env.DATABASE_URL;
 

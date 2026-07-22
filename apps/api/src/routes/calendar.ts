@@ -1,5 +1,3 @@
-import { Hono } from 'hono';
-import { validator } from 'hono/validator';
 import {
   CreateCalendarSchema,
   UpdateCalendarSchema,
@@ -7,6 +5,9 @@ import {
   UpdateEventSchema,
   CreateEventAttendeeSchema,
 } from '@life-os/contracts';
+import { Hono } from 'hono';
+import { validator } from 'hono/validator';
+
 import * as calendarOps from '../lib/calendar-operations';
 import { authMiddleware, requireWorkspaceMembership } from '../lib/middleware';
 
@@ -180,7 +181,7 @@ calendarRouter.put('/events/:id', validator('json', (value, c) => {
   const id = c.req.param('id');
   const data = c.req.valid('json');
   try {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.start) {
       updateData.start = new Date(data.start);
     }

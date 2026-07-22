@@ -1,5 +1,6 @@
 import { styled } from '@tamagui/core';
-import { TextInput } from '@tamagui/core';
+import { TextInput, TextStyle } from '@tamagui/core';
+import React from 'react';
 
 const StyledInput = styled(TextInput, {
   name: 'Input',
@@ -32,7 +33,7 @@ interface InputProps {
   variant?: 'default' | 'error';
   secureTextEntry?: boolean;
   keyboardType?: 'default' | 'email-address' | 'numeric';
-  style?: any;
+  style?: TextStyle;
 }
 
 export function Input({

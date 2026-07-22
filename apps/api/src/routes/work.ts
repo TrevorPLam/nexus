@@ -1,5 +1,3 @@
-import { Hono } from 'hono';
-import { validator } from 'hono/validator';
 import {
   CreateProjectSchema,
   UpdateProjectSchema,
@@ -9,8 +7,11 @@ import {
   CreateTaskNoteSchema,
   UpdateTaskNoteSchema,
 } from '@life-os/contracts';
-import * as workOps from '../lib/work-operations';
+import { Hono } from 'hono';
+import { validator } from 'hono/validator';
+
 import { authMiddleware, requireWorkspaceMembership, idempotencyMiddleware } from '../lib/middleware';
+import * as workOps from '../lib/work-operations';
 
 const workRouter = new Hono();
 
@@ -198,7 +199,7 @@ workRouter.put('/tasks/:id', idempotencyMiddleware, validator('json', (value, c)
   const id = c.req.param('id');
   const data = c.req.valid('json');
   try {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.dueDate) {
       updateData.dueDate = new Date(data.dueDate);
     }

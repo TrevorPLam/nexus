@@ -1,6 +1,7 @@
-import { eq, and, gt } from 'drizzle-orm';
-import { db } from './db';
 import { idempotencyKeys } from '@life-os/database';
+import { eq, and, gt } from 'drizzle-orm';
+
+import { db } from './db';
 
 const IDEMPOTENCY_KEY_EXPIRY_HOURS = 48;
 

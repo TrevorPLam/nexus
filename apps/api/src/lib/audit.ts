@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm';
-import { db } from './db';
 import { auditLogs, outboxEvents } from '@life-os/database';
+import { eq } from 'drizzle-orm';
+
+import { db } from './db';
 
 export async function createAuditLog(data: {
   userId?: string;

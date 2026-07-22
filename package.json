@@ -3,7 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "description": "Life OS - Personal productivity system",
-  "packageManager": "pnpm@11.0.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "24"
+    }
+  },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -14,18 +23,19 @@
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^19.0.0",
     "@eslint/js": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^10.0.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-import-x": "^4.0.0",
+    "globals": "^15.0.0",
     "lefthook": "^2.1.0",
     "prettier": "^3.9.0",
     "supabase": "^2.109.1",
     "turbo": "^2.9.0",
-    "typescript": "^5.9.0"
-  },
-  "engines": {
-    "node": ">=22.0.0",
-    "pnpm": ">=11.0.0"
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.0.0"
   }
 }

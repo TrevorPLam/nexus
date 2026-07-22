@@ -1,7 +1,8 @@
-import { eq, and, desc, asc, gte, lte, or, isNull, gt } from 'drizzle-orm';
-import { db } from './db';
 import * as schema from '@life-os/database';
 import { calendars, events, eventAttendees } from '@life-os/database';
+import { eq, and, desc, asc, gte, lte, or, isNull, gt } from 'drizzle-orm';
+
+import { db } from './db';
 
 // Calendar Operations
 export async function createCalendar(data: typeof schema.calendars.$inferInsert) {

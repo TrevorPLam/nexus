@@ -1,5 +1,5 @@
 {
-  "extends": "@life-os/tsconfig/base.json",
+  "extends": "@life-os/tsconfig/node.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"

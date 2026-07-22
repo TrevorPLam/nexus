@@ -1,4 +1,5 @@
 import { pgTable, uuid, timestamp, text, boolean, jsonb } from 'drizzle-orm/pg-core';
+
 import { workspaces } from './core';
 
 export const calendars = pgTable('calendars', {
