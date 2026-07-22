@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
 
 export default function WorkScreen() {
-  const router = useRouter();
 
   return (
     <View style={styles.container}>

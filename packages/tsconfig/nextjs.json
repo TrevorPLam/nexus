@@ -1,5 +1,5 @@
 {
-  "extends": "./base.json",
+  "extends": "./app-base.json",
   "compilerOptions": {
     "jsx": "preserve",
     "incremental": true,

@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
 
 export default function CalendarScreen() {
-  const router = useRouter();
 
   return (
     <View style={styles.container}>
