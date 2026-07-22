@@ -13,10 +13,17 @@ export const PaginationSchema = z.object({
   cursor: z.string().uuid().optional(),
 });
 
+export const DateRangeSchema = z.object({
+  start: z.string().datetime(),
+  end: z.string().datetime(),
+}).refine((data) => new Date(data.start) < new Date(data.end), {
+  message: 'start date must be before end date',
+});
+
 export const ErrorResponseSchema = z.object({
   error: z.object({
     code: z.string(),
     message: z.string(),
-    details: z.record(z.unknown()).optional(),
+    details: z.record(z.string(), z.unknown()).optional(),
   }),
 });

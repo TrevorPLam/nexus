@@ -9,13 +9,15 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
   },
   "dependencies": {
     "zod": "^4.0.0"
   },
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^2.0.0"
   }
 }

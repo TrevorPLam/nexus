@@ -3,8 +3,11 @@ import { z } from 'zod';
 export const ProjectStatus = z.enum(['active', 'archived', 'deleted']);
 export const TaskStatus = z.enum(['todo', 'in_progress', 'done', 'cancelled']);
 export const TaskPriority = z.enum(['low', 'medium', 'high', 'urgent']);
+export const EnergyLevel = z.enum(['low', 'medium', 'high']);
+export const DependencyType = z.enum(['finish_to_start', 'start_to_start', 'finish_to_finish', 'start_to_finish']);
 
-export const CreateProjectSchema = z.object({
+// Request schemas (input DTOs)
+export const CreateProjectRequest = z.object({
   workspaceId: z.string().uuid(),
   name: z.string().min(1).max(200),
   description: z.string().max(1000).optional(),
@@ -12,26 +15,9 @@ export const CreateProjectSchema = z.object({
   icon: z.string().max(50).optional(),
 });
 
-export const UpdateProjectSchema = CreateProjectSchema.partial().extend({
-  id: z.string().uuid(),
-});
+export const UpdateProjectRequest = CreateProjectRequest.partial();
 
-export const ProjectSchema = z.object({
-  id: z.string().uuid(),
-  workspaceId: z.string().uuid(),
-  name: z.string(),
-  description: z.string().nullable(),
-  color: z.string().nullable(),
-  icon: z.string().nullable(),
-  status: ProjectStatus,
-  metadata: z.record(z.unknown()).nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-});
-
-export const EnergyLevel = z.enum(['low', 'medium', 'high']);
-
-export const CreateTaskSchema = z.object({
+export const CreateTaskRequest = z.object({
   workspaceId: z.string().uuid(),
   projectId: z.string().uuid().optional(),
   parentId: z.string().uuid().optional(),
@@ -49,11 +35,38 @@ export const CreateTaskSchema = z.object({
   contextTags: z.string().optional(),
 });
 
-export const UpdateTaskSchema = CreateTaskSchema.partial().extend({
-  id: z.string().uuid(),
+export const UpdateTaskRequest = CreateTaskRequest.partial();
+
+export const CreateTaskDependencyRequest = z.object({
+  taskId: z.string().uuid(),
+  dependsOnTaskId: z.string().uuid(),
+  type: DependencyType.default('finish_to_start'),
 });
 
-export const TaskSchema = z.object({
+export const CreateTaskNoteRequest = z.object({
+  taskId: z.string().uuid(),
+  content: z.string().min(1).max(10000),
+});
+
+export const UpdateTaskNoteRequest = z.object({
+  content: z.string().min(1).max(10000),
+});
+
+// Response schemas (output DTOs)
+export const ProjectResponse = z.object({
+  id: z.string().uuid(),
+  workspaceId: z.string().uuid(),
+  name: z.string(),
+  description: z.string().nullable(),
+  color: z.string().nullable(),
+  icon: z.string().nullable(),
+  status: ProjectStatus,
+  metadata: z.record(z.string(), z.unknown()).nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const TaskResponse = z.object({
   id: z.string().uuid(),
   workspaceId: z.string().uuid(),
   projectId: z.string().uuid().nullable(),
@@ -64,45 +77,43 @@ export const TaskSchema = z.object({
   priority: TaskPriority,
   dueDate: z.date().nullable(),
   dueTime: z.string().nullable(),
-  estimatedDuration: z.string().nullable(),
+  estimatedDuration: z.number().int().positive().nullable(),
   completedAt: z.date().nullable(),
   calendarEventId: z.string().uuid().nullable(),
   recurrenceRule: z.string().nullable(),
   recurrenceId: z.string().uuid().nullable(),
-  energyLevel: z.string().nullable(),
+  energyLevel: EnergyLevel.nullable(),
   contextTags: z.string().nullable(),
-  metadata: z.record(z.unknown()).nullable(),
+  metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
-export const CreateTaskDependencySchema = z.object({
-  taskId: z.string().uuid(),
-  dependsOnTaskId: z.string().uuid(),
-  type: z.enum(['finish_to_start', 'start_to_start', 'finish_to_finish', 'start_to_finish']).default('finish_to_start'),
-});
-
-export const TaskDependencySchema = z.object({
+export const TaskDependencyResponse = z.object({
   id: z.string().uuid(),
   taskId: z.string().uuid(),
   dependsOnTaskId: z.string().uuid(),
-  type: z.string(),
+  type: DependencyType,
   createdAt: z.date(),
 });
 
-export const CreateTaskNoteSchema = z.object({
-  taskId: z.string().uuid(),
-  content: z.string().min(1).max(10000),
-});
-
-export const UpdateTaskNoteSchema = CreateTaskNoteSchema.partial().extend({
-  id: z.string().uuid(),
-});
-
-export const TaskNoteSchema = z.object({
+export const TaskNoteResponse = z.object({
   id: z.string().uuid(),
   taskId: z.string().uuid(),
   content: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+// Legacy exports for backward compatibility (deprecated)
+export const CreateProjectSchema = CreateProjectRequest;
+export const UpdateProjectSchema = UpdateProjectRequest;
+export const ProjectSchema = ProjectResponse;
+export const CreateTaskSchema = CreateTaskRequest;
+export const UpdateTaskSchema = UpdateTaskRequest;
+export const TaskSchema = TaskResponse;
+export const CreateTaskDependencySchema = CreateTaskDependencyRequest;
+export const TaskDependencySchema = TaskDependencyResponse;
+export const CreateTaskNoteSchema = CreateTaskNoteRequest;
+export const UpdateTaskNoteSchema = UpdateTaskNoteRequest;
+export const TaskNoteSchema = TaskNoteResponse;
