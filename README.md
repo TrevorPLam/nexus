@@ -101,6 +101,72 @@ pnpm --filter @life-os/mobile dev
 pnpm --filter @life-os/api dev
 ```
 
+## Quality Commands
+
+### Root-Level Commands
+
+Run these from the repository root to check all packages:
+
+```bash
+# Type check all packages
+pnpm typecheck
+
+# Lint all packages
+pnpm lint
+
+# Format all packages
+pnpm format
+
+# Build all packages
+pnpm build
+
+# Test all packages
+pnpm test
+
+# Clean all build artifacts
+pnpm clean
+```
+
+### Package-Level Commands
+
+For targeted validation of specific packages:
+
+```bash
+# Type check specific package
+pnpm --filter @life-os/contracts typecheck
+pnpm --filter @life-os/database typecheck
+pnpm --filter @life-os/api-client typecheck
+pnpm --filter @life-os/api typecheck
+pnpm --filter @life-os/web typecheck
+pnpm --filter @life-os/mobile typecheck
+pnpm --filter @life-os/worker typecheck
+pnpm --filter @life-os/ui typecheck
+pnpm --filter @life-os/mobile-data typecheck
+
+# Lint specific package
+pnpm --filter @life-os/contracts lint
+pnpm --filter @life-os/database lint
+# ... (same pattern for other packages)
+
+# Build specific package
+pnpm --filter @life-os/api build
+pnpm --filter @life-os/web build
+pnpm --filter @life-os/worker build
+```
+
+### Database Commands
+
+```bash
+# Generate migration from schema changes
+pnpm --filter @life-os/database generate
+
+# Apply migrations (via Supabase CLI)
+supabase db push
+
+# Open Drizzle Studio
+pnpm --filter @life-os/database studio
+```
+
 ## Current Status
 
 ### Completed

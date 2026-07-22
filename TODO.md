@@ -138,7 +138,7 @@ pnpm --filter @life-os/worker typecheck
 
 ## Program 01: Restore Repository Buildability
 
-### [ ] NEXUS-010 | STATUS: PLANNED | OWNER: AGENT | Make the monorepo quality graph executable
+### [x] NEXUS-010 | STATUS: DONE | OWNER: AGENT | Make the monorepo quality graph executable
 
 Initial analysis and research:
 
@@ -198,12 +198,12 @@ Blocks: NEXUS-011, NEXUS-012, NEXUS-013, NEXUS-014, NEXUS-015, NEXUS-016.
 
 Subtasks:
 
-- [ ] NEXUS-010.01 | STATUS: PLANNED | OWNER: AGENT | PATH: turbo.json | ACTION: Update the Turbo schema to the current task configuration format while preserving build dependencies, outputs, persistent dev tasks, and test outputs.
-- [ ] NEXUS-010.02 | STATUS: PLANNED | OWNER: AGENT | PATH: packages/tsconfig/*.json | ACTION: Split shared compiler settings from package/application output settings so inherited `rootDir` and declarations do not break Next.js, Expo, or Node applications.
-- [ ] NEXUS-010.03 | STATUS: PLANNED | OWNER: AGENT | PATH: apps/*/package.json, packages/*/package.json | ACTION: Normalize scripts for `build`, `typecheck`, `lint`, `test`, and `format`; remove or explicitly document scripts that cannot run yet.
-- [ ] NEXUS-010.04 | STATUS: PLANNED | OWNER: AGENT | PATH: apps/worker, packages/api-client | ACTION: Decide from source inspection whether each package should receive its minimal real entry point or be excluded from active build tasks; do not create fake implementations.
-- [ ] NEXUS-010.05 | STATUS: PLANNED | OWNER: AGENT | PATH: README.md | ACTION: Document the authoritative quality commands and the package-level commands used for targeted validation.
-- [ ] NEXUS-010.06 | STATUS: PLANNED | OWNER: AGENT | PATH: repository root | ACTION: Run targeted package checks, then run the root checks only after package checks pass.
+- [x] NEXUS-010.01 | STATUS: DONE | OWNER: AGENT | PATH: turbo.json | ACTION: Update the Turbo schema to the current task configuration format while preserving build dependencies, outputs, persistent dev tasks, and test outputs.
+- [x] NEXUS-010.02 | STATUS: DONE | OWNER: AGENT | PATH: packages/tsconfig/*.json | ACTION: Split shared compiler settings from package/application output settings so inherited `rootDir` and declarations do not break Next.js, Expo, or Node applications.
+- [x] NEXUS-010.03 | STATUS: DONE | OWNER: AGENT | PATH: apps/*/package.json, packages/*/package.json | ACTION: Normalize scripts for `build`, `typecheck`, `lint`, `test`, and `format`; remove or explicitly document scripts that cannot run yet.
+- [x] NEXUS-010.04 | STATUS: DONE | OWNER: AGENT | PATH: apps/worker, packages/api-client | ACTION: Decide from source inspection whether each package should receive its minimal real entry point or be excluded from active build tasks; do not create fake implementations.
+- [x] NEXUS-010.05 | STATUS: DONE | OWNER: AGENT | PATH: README.md | ACTION: Document the authoritative quality commands and the package-level commands used for targeted validation.
+- [x] NEXUS-010.06 | STATUS: DONE | OWNER: AGENT | PATH: repository root | ACTION: Run targeted package checks, then run the root checks only after package checks pass.
 
 Targeted validation:
 
