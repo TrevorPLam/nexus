@@ -2,9 +2,9 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
-import calendarRouter from './routes/calendar';
-import integrationRouter from './routes/integration';
-import workRouter from './routes/work';
+import calendarRouter from './routes/calendar.js';
+import integrationRouter from './routes/integration.js';
+import workRouter from './routes/work.js';
 
 const app = new Hono();
 

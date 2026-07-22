@@ -2,11 +2,11 @@ pre-commit:
   parallel: true
   commands:
     format:
-      glob: "*.{js,jsx,ts,tsx,json,md,yaml,yml}"
+      glob: '*.{js,jsx,ts,tsx,json,md,yaml,yml}'
       run: pnpm format
       stage_fixed: true
     lint:
-      glob: "*.{js,jsx,ts,tsx}"
+      glob: '*.{js,jsx,ts,tsx}'
       run: pnpm lint
 
 pre-push:

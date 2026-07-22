@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function WorkScreen() {
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Text style={styles.sectionTitle}>Projects</Text>
         <View style={styles.card}>
-          <Text style={styles.cardText}>No projects yet. Create your first project to get started.</Text>
+          <Text style={styles.cardText}>
+            No projects yet. Create your first project to get started.
+          </Text>
           <TouchableOpacity style={styles.cardButton}>
             <Text style={styles.cardButtonText}>Create Project</Text>
           </TouchableOpacity>
@@ -15,7 +16,9 @@ export default function WorkScreen() {
 
         <Text style={styles.sectionTitle}>Tasks</Text>
         <View style={styles.card}>
-          <Text style={styles.cardText}>No tasks yet. Create a task to start tracking your work.</Text>
+          <Text style={styles.cardText}>
+            No tasks yet. Create a task to start tracking your work.
+          </Text>
           <TouchableOpacity style={styles.cardButton}>
             <Text style={styles.cardButtonText}>Create Task</Text>
           </TouchableOpacity>

@@ -8,7 +8,10 @@ export const CreateCalendarRequest = z.object({
   workspaceId: z.string().uuid(),
   name: z.string().min(1).max(200),
   description: z.string().max(1000).optional(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .optional(),
   isDefault: z.boolean().default(false),
   provider: CalendarProvider.default('local'),
   providerCalendarId: z.string().optional(),
@@ -94,13 +97,3 @@ export const EventAttendeeResponse = z.object({
   isOrganizer: z.boolean(),
   createdAt: z.date(),
 });
-
-// Legacy exports for backward compatibility (deprecated)
-export const CreateCalendarSchema = CreateCalendarRequest;
-export const UpdateCalendarSchema = UpdateCalendarRequest;
-export const CalendarSchema = CalendarResponse;
-export const CreateEventSchema = CreateEventRequest;
-export const UpdateEventSchema = UpdateEventRequest;
-export const EventSchema = EventResponse;
-export const CreateEventAttendeeSchema = CreateEventAttendeeRequest;
-export const EventAttendeeSchema = EventAttendeeResponse;

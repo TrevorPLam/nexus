@@ -3,7 +3,7 @@ export class ApiError extends Error {
     public statusCode: number,
     public code: string,
     message: string,
-    public details?: Record<string, unknown>
+    public details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -53,7 +53,10 @@ export class InternalServerError extends ApiError {
   }
 }
 
-export function handleApiError(error: unknown): { statusCode: number; body: Record<string, unknown> } {
+export function handleApiError(error: unknown): {
+  statusCode: number;
+  body: Record<string, unknown>;
+} {
   if (error instanceof ApiError) {
     return {
       statusCode: error.statusCode,

@@ -1,3 +1,3 @@
-export * from './core';
-export * from './work';
-export * from './calendar';
+export * from './core.js';
+export * from './work.js';
+export * from './calendar.js';

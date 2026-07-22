@@ -2,9 +2,9 @@ import { workspaceMemberships, appUsers } from '@life-os/database';
 import { eq, and } from 'drizzle-orm';
 import { Context, Next } from 'hono';
 
-import { getAuthUser } from './auth';
-import { db } from './db';
-import { checkIdempotencyKey, createIdempotencyKey } from './idempotency';
+import { getAuthUser } from './auth.js';
+import { db } from './db.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
 export async function authMiddleware(c: Context, next: Next) {
   const authHeader = c.req.header('Authorization');
@@ -16,6 +16,7 @@ export async function authMiddleware(c: Context, next: Next) {
 
   // Set user in context for use in route handlers
   c.set('user', user);
+
   await next();
 }
 
@@ -42,10 +43,7 @@ export async function requireWorkspaceMembership(c: Context, next: Next) {
 
   try {
     // Get the app_user record for the authenticated user
-    const [appUser] = await db
-      .select()
-      .from(appUsers)
-      .where(eq(appUsers.supabaseUserId, user.id));
+    const [appUser] = await db.select().from(appUsers).where(eq(appUsers.supabaseUserId, user.id));
 
     if (!appUser) {
       return c.json({ error: 'User not found' }, 404);
@@ -58,8 +56,8 @@ export async function requireWorkspaceMembership(c: Context, next: Next) {
       .where(
         and(
           eq(workspaceMemberships.workspaceId, workspaceId),
-          eq(workspaceMemberships.userId, appUser.id)
-        )
+          eq(workspaceMemberships.userId, appUser.id),
+        ),
       );
 
     if (!membership) {
@@ -77,7 +75,7 @@ export async function requireWorkspaceMembership(c: Context, next: Next) {
 
 export async function idempotencyMiddleware(c: Context, next: Next) {
   const idempotencyKey = c.req.header('Idempotency-Key');
-  
+
   if (!idempotencyKey) {
     await next();
     return;
@@ -103,11 +101,11 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
 
     // Store the original json method to intercept the response
     const originalJson = c.json.bind(c);
-    
+
     // Override json to capture the response
     c.json = (data: unknown, init?: number | ResponseInit) => {
-      const status = typeof init === 'number' ? init : (init?.status || 200);
-      
+      const status = typeof init === 'number' ? init : init?.status || 200;
+
       // Store the response for idempotency
       createIdempotencyKey({
         key: idempotencyKey,
@@ -115,8 +113,8 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
         endpoint,
         responseStatus: String(status),
         responseBody: data,
-      }).catch(err => console.error('Failed to store idempotency key:', err));
-      
+      }).catch((err) => console.error('Failed to store idempotency key:', err));
+
       return originalJson(data, init);
     };
 

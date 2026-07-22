@@ -33,9 +33,7 @@ describe('Common Contracts', () => {
     });
 
     it('rejects invalid workspace UUID', () => {
-      expect(() =>
-        WorkspaceIdSchema.parse({ workspaceId: 'not-a-uuid' }),
-      ).toThrow();
+      expect(() => WorkspaceIdSchema.parse({ workspaceId: 'not-a-uuid' })).toThrow();
     });
   });
 

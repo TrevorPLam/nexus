@@ -1,7 +1,7 @@
 import { idempotencyKeys } from '@life-os/database';
 import { eq, and, gt } from 'drizzle-orm';
 
-import { db } from './db';
+import { db } from './db.js';
 
 const IDEMPOTENCY_KEY_EXPIRY_HOURS = 48;
 
@@ -14,8 +14,8 @@ export async function checkIdempotencyKey(key: string, userId: string, endpoint:
         eq(idempotencyKeys.key, key),
         eq(idempotencyKeys.userId, userId),
         eq(idempotencyKeys.endpoint, endpoint),
-        gt(idempotencyKeys.expiresAt, new Date())
-      )
+        gt(idempotencyKeys.expiresAt, new Date()),
+      ),
     )
     .limit(1);
 

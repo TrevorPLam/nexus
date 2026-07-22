@@ -1,6 +1,7 @@
 # .devin
 
-Devin AI assistant workflow definitions for automating development tasks in the Personal Command Center monorepo.
+Devin AI assistant workflow definitions for automating development tasks in the
+Personal Command Center monorepo.
 
 ## Table of Contents
 
@@ -12,14 +13,17 @@ Devin AI assistant workflow definitions for automating development tasks in the 
 
 ## Overview
 
-The `.devin` directory contains workflow definitions that the Devin AI assistant uses to automate repetitive development tasks. These workflows are triggered via slash commands and follow a systematic approach to task execution, including research, best practices application, quality assurance, and version control.
+The `.devin` directory contains workflow definitions that the Devin AI assistant
+uses to automate repetitive development tasks. These workflows are triggered via
+slash commands and follow a systematic approach to task execution, including
+research, best practices application, quality assurance, and version control.
 
 ## Available Workflows
 
-| Workflow | Slash Command | Description |
-|----------|---------------|-------------|
-| `tasks.md` | `/tasks` | Executes the first open task from TODO.md with research, best practices, QA, and commit |
-| `todo.md` | `/todo` | Executes the first open task from TODO.md with research, best practices, QA, and commit |
+| Workflow   | Slash Command | Description                                                                             |
+| ---------- | ------------- | --------------------------------------------------------------------------------------- |
+| `tasks.md` | `/tasks`      | Executes the first open task from TODO.md with research, best practices, QA, and commit |
+| `todo.md`  | `/todo`       | Executes the first open task from TODO.md with research, best practices, QA, and commit |
 
 ## Usage
 
@@ -31,6 +35,7 @@ Workflows are triggered via slash commands in the Devin AI assistant interface:
 ```
 
 The workflow will:
+
 1. Read the first incomplete task from TODO.md
 2. Assess the repository structure and related file paths
 3. Research best practices and industry standards
@@ -65,7 +70,8 @@ Detailed description of the workflow purpose.
 Additional context or caveats
 ```
 
-The `description` field in the frontmatter is used by the slash command system to display workflow information.
+The `description` field in the frontmatter is used by the slash command system
+to display workflow information.
 
 ## Adding Workflows
 

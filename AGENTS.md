@@ -4,7 +4,8 @@ Project conventions, rules, and patterns for the Life OS monorepo.
 
 ## Project Overview
 
-Life OS is a personal productivity system with work management and calendar integration. This is a monorepo built with pnpm workspaces and Turborepo.
+Life OS is a personal productivity system with work management and calendar
+integration. This is a monorepo built with pnpm workspaces and Turborepo.
 
 ### Structure
 
@@ -71,11 +72,13 @@ Life OS is a personal productivity system with work management and calendar inte
 - **Plugins**:
   - `@eslint/js` - Recommended JavaScript rules
   - `eslint-plugin-import-x` - Import ordering and cycle detection
-  - `eslint-config-prettier/flat` - Disables formatting rules (Prettier handles formatting)
+  - `eslint-config-prettier/flat` - Disables formatting rules (Prettier handles
+    formatting)
 - **Key Rules**:
   - `import-x/no-unresolved` - Error on unresolved imports
   - `import-x/no-cycle` - Error on circular dependencies
-  - `import-x/order` - Enforce import order: builtin, external, internal, parent, sibling, index
+  - `import-x/order` - Enforce import order: builtin, external, internal,
+    parent, sibling, index
 - **Command**: `pnpm lint` (runs via turbo across all packages)
 
 ### Formatting
@@ -131,14 +134,16 @@ Life OS is a personal productivity system with work management and calendar inte
 
 ### Layering
 
-- **packages/contracts** - Shared Zod schemas (no dependencies on other packages)
+- **packages/contracts** - Shared Zod schemas (no dependencies on other
+  packages)
 - **packages/database** - Drizzle schema (depends on contracts only)
 - **packages/api-client** - Typed API client (depends on contracts)
 - **packages/mobile-data** - PowerSync schema (depends on contracts)
 - **packages/ui** - Shared UI components (depends on React, Tamagui)
 - **apps/api** - Hono backend (depends on contracts, database)
 - **apps/web** - Next.js web app (depends on ui, contracts, api-client)
-- **apps/mobile** - Expo mobile app (depends on ui, contracts, mobile-data, api-client)
+- **apps/mobile** - Expo mobile app (depends on ui, contracts, mobile-data,
+  api-client)
 - **apps/worker** - Background worker (depends on contracts, database)
 
 ### Import Rules

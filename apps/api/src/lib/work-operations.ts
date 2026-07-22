@@ -2,7 +2,7 @@ import * as schema from '@life-os/database';
 import { projects, tasks, taskDependencies, taskNotes } from '@life-os/database';
 import { eq, and, desc, asc, or, like, sql, gt, inArray } from 'drizzle-orm';
 
-import { db } from './db';
+import { db } from './db.js';
 
 // Project Operations
 export async function createProject(data: typeof schema.projects.$inferInsert) {
@@ -17,12 +17,13 @@ export async function getProjectById(id: string) {
 
 export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cursor?: string) {
   const conditions = [eq(projects.workspaceId, workspaceId)];
-  
+
   if (cursor) {
     conditions.push(gt(projects.createdAt, new Date(cursor)));
   }
 
-  const results = await db.select()
+  const results = await db
+    .select()
     .from(projects)
     .where(and(...conditions))
     .orderBy(desc(projects.createdAt))
@@ -39,7 +40,10 @@ export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cu
   };
 }
 
-export async function updateProject(id: string, data: Partial<typeof schema.projects.$inferInsert>) {
+export async function updateProject(
+  id: string,
+  data: Partial<typeof schema.projects.$inferInsert>,
+) {
   const [project] = await db
     .update(projects)
     .set({ ...data, updatedAt: new Date() })
@@ -70,12 +74,13 @@ export async function getTaskById(id: string) {
 
 export async function getTasksByWorkspace(workspaceId: string, limit = 50, cursor?: string) {
   const conditions = [eq(tasks.workspaceId, workspaceId)];
-  
+
   if (cursor) {
     conditions.push(gt(tasks.createdAt, new Date(cursor)));
   }
 
-  const results = await db.select()
+  const results = await db
+    .select()
     .from(tasks)
     .where(and(...conditions))
     .orderBy(asc(tasks.dueDate), desc(tasks.priority), asc(tasks.createdAt))
@@ -93,7 +98,8 @@ export async function getTasksByWorkspace(workspaceId: string, limit = 50, curso
 }
 
 export async function getTasksByProject(projectId: string) {
-  return db.select()
+  return db
+    .select()
     .from(tasks)
     .where(eq(tasks.projectId, projectId))
     .orderBy(asc(tasks.dueDate), desc(tasks.priority));
@@ -109,37 +115,38 @@ export async function getFilteredTasks(filters: {
   dueAfter?: Date;
 }) {
   const conditions = [eq(tasks.workspaceId, filters.workspaceId)];
-  
+
   if (filters.projectId) {
     conditions.push(eq(tasks.projectId, filters.projectId));
   }
-  
+
   if (filters.status) {
     conditions.push(eq(tasks.status, filters.status));
   }
-  
+
   if (filters.priority) {
     conditions.push(eq(tasks.priority, filters.priority));
   }
-  
+
   if (filters.searchQuery) {
     conditions.push(
       or(
         like(tasks.title, `%${filters.searchQuery}%`),
-        like(tasks.description, `%${filters.searchQuery}%`)
-      )
+        like(tasks.description, `%${filters.searchQuery}%`),
+      ),
     );
   }
-  
+
   if (filters.dueBefore) {
     conditions.push(sql`${tasks.dueDate} <= ${filters.dueBefore}`);
   }
-  
+
   if (filters.dueAfter) {
     conditions.push(sql`${tasks.dueDate} >= ${filters.dueAfter}`);
   }
-  
-  return db.select()
+
+  return db
+    .select()
     .from(tasks)
     .where(and(...conditions))
     .orderBy(asc(tasks.dueDate), desc(tasks.priority));
@@ -147,22 +154,18 @@ export async function getFilteredTasks(filters: {
 
 export async function updateTask(id: string, data: Partial<typeof schema.tasks.$inferInsert>) {
   const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
-  
+
   // Auto-set completedAt when status is 'done'
   if (data.status === 'done' && !data.completedAt) {
     updateData.completedAt = new Date();
   }
-  
+
   // Clear completedAt when status is not 'done'
   if (data.status && data.status !== 'done') {
     updateData.completedAt = null;
   }
-  
-  const [task] = await db
-    .update(tasks)
-    .set(updateData)
-    .where(eq(tasks.id, id))
-    .returning();
+
+  const [task] = await db.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
   return task;
 }
 
@@ -182,9 +185,7 @@ export async function createTaskDependency(data: typeof schema.taskDependencies.
 }
 
 export async function getTaskDependencies(taskId: string) {
-  return db.select()
-    .from(taskDependencies)
-    .where(eq(taskDependencies.taskId, taskId));
+  return db.select().from(taskDependencies).where(eq(taskDependencies.taskId, taskId));
 }
 
 export async function deleteTaskDependency(id: string) {
@@ -198,7 +199,7 @@ export async function deleteTaskDependency(id: string) {
 // Batch operations
 export async function getProjectsWithTasks(workspaceId: string, limit = 50, cursor?: string) {
   const result = await getProjectsByWorkspace(workspaceId, limit, cursor);
-  
+
   const projectsWithTasks = await Promise.all(
     result.items.map(async (project) => {
       const taskList = await getTasksByProject(project.id);
@@ -206,9 +207,9 @@ export async function getProjectsWithTasks(workspaceId: string, limit = 50, curs
         ...project,
         tasks: taskList,
       };
-    })
+    }),
   );
-  
+
   return {
     items: projectsWithTasks,
     nextCursor: result.nextCursor,
@@ -218,7 +219,8 @@ export async function getProjectsWithTasks(workspaceId: string, limit = 50, curs
 
 // Subtask Operations
 export async function getSubtasks(parentTaskId: string) {
-  return db.select()
+  return db
+    .select()
     .from(tasks)
     .where(eq(tasks.parentId, parentTaskId))
     .orderBy(asc(tasks.createdAt));
@@ -236,13 +238,17 @@ export async function getTaskNoteById(id: string) {
 }
 
 export async function getTaskNotesByTask(taskId: string) {
-  return db.select()
+  return db
+    .select()
     .from(taskNotes)
     .where(eq(taskNotes.taskId, taskId))
     .orderBy(desc(taskNotes.createdAt));
 }
 
-export async function updateTaskNote(id: string, data: Partial<typeof schema.taskNotes.$inferInsert>) {
+export async function updateTaskNote(
+  id: string,
+  data: Partial<typeof schema.taskNotes.$inferInsert>,
+) {
   const [note] = await db
     .update(taskNotes)
     .set({ ...data, updatedAt: new Date() })
@@ -252,10 +258,7 @@ export async function updateTaskNote(id: string, data: Partial<typeof schema.tas
 }
 
 export async function deleteTaskNote(id: string) {
-  const [note] = await db
-    .delete(taskNotes)
-    .where(eq(taskNotes.id, id))
-    .returning();
+  const [note] = await db.delete(taskNotes).where(eq(taskNotes.id, id)).returning();
   return note;
 }
 
@@ -263,10 +266,10 @@ export async function deleteTaskNote(id: string) {
 export async function batchCompleteTasks(taskIds: string[]) {
   return db
     .update(tasks)
-    .set({ 
-      status: 'done', 
-      completedAt: new Date(), 
-      updatedAt: new Date() 
+    .set({
+      status: 'done',
+      completedAt: new Date(),
+      updatedAt: new Date(),
     })
     .where(inArray(tasks.id, taskIds))
     .returning();
@@ -275,9 +278,9 @@ export async function batchCompleteTasks(taskIds: string[]) {
 export async function batchDeferTasks(taskIds: string[], deferToDate: Date) {
   return db
     .update(tasks)
-    .set({ 
-      dueDate: deferToDate, 
-      updatedAt: new Date() 
+    .set({
+      dueDate: deferToDate,
+      updatedAt: new Date(),
     })
     .where(inArray(tasks.id, taskIds))
     .returning();
@@ -286,9 +289,9 @@ export async function batchDeferTasks(taskIds: string[], deferToDate: Date) {
 export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date) {
   return db
     .update(tasks)
-    .set({ 
-      dueDate: newDueDate, 
-      updatedAt: new Date() 
+    .set({
+      dueDate: newDueDate,
+      updatedAt: new Date(),
     })
     .where(inArray(tasks.id, taskIds))
     .returning();
@@ -296,16 +299,12 @@ export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date) 
 
 export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string) {
   const updateData: Record<string, unknown> = { status: newStatus, updatedAt: new Date() };
-  
+
   if (newStatus === 'done') {
     updateData.completedAt = new Date();
   } else {
     updateData.completedAt = null;
   }
-  
-  return db
-    .update(tasks)
-    .set(updateData)
-    .where(inArray(tasks.id, taskIds))
-    .returning();
+
+  return db.update(tasks).set(updateData).where(inArray(tasks.id, taskIds)).returning();
 }

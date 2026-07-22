@@ -36,7 +36,7 @@ export async function getAuthUser(authHeader: string | null) {
 
   const token = authHeader.replace('Bearer ', '');
   const payload = await verifyAuthToken(token);
-  
+
   if (!payload) {
     return null;
   }

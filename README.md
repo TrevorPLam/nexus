@@ -39,12 +39,14 @@ This is a monorepo built with pnpm workspaces and Turborepo.
 ## Modules
 
 ### Work Module
+
 - Projects: Organize work into projects
 - Tasks: Track tasks with status, priority, due dates
 - Task Dependencies: Define relationships between tasks
 - Integration: Tasks can be linked to calendar events
 
 ### Calendar Module
+
 - Calendars: Multiple calendars per workspace
 - Events: Create and manage events
 - Recurring Events: Support for recurring event patterns
@@ -170,6 +172,7 @@ pnpm --filter @life-os/database studio
 ## Current Status
 
 ### Completed
+
 - ✅ Monorepo structure with pnpm + Turborepo
 - ✅ TypeScript configuration
 - ✅ ESLint, Prettier, Lefthook setup
@@ -185,6 +188,7 @@ pnpm --filter @life-os/database studio
 - ✅ Database connection setup in API
 
 ### Pending
+
 - ⏳ Supabase cloud project setup
 - ⏳ Environment variables configuration
 - ⏳ Database migrations and seeding
@@ -196,7 +200,8 @@ pnpm --filter @life-os/database studio
 ## Next Steps
 
 1. **Create Supabase project** at [supabase.com](https://supabase.com)
-2. **Configure environment variables** in `apps/api/.env` with your Supabase credentials
+2. **Configure environment variables** in `apps/api/.env` with your Supabase
+   credentials
 3. **Run database migrations** to create tables
 4. **Test API endpoints** with authentication
 5. **Integrate UI components** in web and mobile apps

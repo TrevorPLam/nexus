@@ -8,19 +8,13 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Life OS</Text>
       <Text style={styles.subtitle}>Personal productivity system</Text>
-      
+
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push('/work')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/work')}>
           <Text style={styles.buttonText}>Work</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push('/calendar')}
-        >
+
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/calendar')}>
           <Text style={styles.buttonText}>Calendar</Text>
         </TouchableOpacity>
       </View>

@@ -55,13 +55,7 @@ interface ButtonProps {
 
 export function Button({ children, variant, size, onPress, disabled, ...props }: ButtonProps) {
   return (
-    <StyledButton
-      variant={variant}
-      size={size}
-      onPress={onPress}
-      disabled={disabled}
-      {...props}
-    >
+    <StyledButton variant={variant} size={size} onPress={onPress} disabled={disabled} {...props}>
       <Text>{children}</Text>
     </StyledButton>
   );

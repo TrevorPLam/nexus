@@ -12,15 +12,21 @@ export const appUsers = pgTable('app_users', {
 export const workspaces = pgTable('workspaces', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
-  ownerId: uuid('owner_id').notNull().references(() => appUsers.id),
+  ownerId: uuid('owner_id')
+    .notNull()
+    .references(() => appUsers.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
 export const workspaceMemberships = pgTable('workspace_memberships', {
   id: uuid('id').primaryKey().defaultRandom(),
-  workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id),
-  userId: uuid('user_id').notNull().references(() => appUsers.id),
+  workspaceId: uuid('workspace_id')
+    .notNull()
+    .references(() => workspaces.id),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => appUsers.id),
   role: text('role').notNull(), // 'owner', 'admin', 'member'
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });

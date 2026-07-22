@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function CalendarScreen() {
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Text style={styles.sectionTitle}>Calendars</Text>
         <View style={styles.card}>
-          <Text style={styles.cardText}>No calendars yet. Create your first calendar to get started.</Text>
+          <Text style={styles.cardText}>
+            No calendars yet. Create your first calendar to get started.
+          </Text>
           <TouchableOpacity style={styles.cardButton}>
             <Text style={styles.cardButtonText}>Create Calendar</Text>
           </TouchableOpacity>
@@ -15,7 +16,9 @@ export default function CalendarScreen() {
 
         <Text style={styles.sectionTitle}>Events</Text>
         <View style={styles.card}>
-          <Text style={styles.cardText}>No events scheduled. Create an event to add it to your calendar.</Text>
+          <Text style={styles.cardText}>
+            No events scheduled. Create an event to add it to your calendar.
+          </Text>
           <TouchableOpacity style={styles.cardButton}>
             <Text style={styles.cardButtonText}>Create Event</Text>
           </TouchableOpacity>

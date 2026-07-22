@@ -4,14 +4,22 @@ export const ProjectStatus = z.enum(['active', 'archived', 'deleted']);
 export const TaskStatus = z.enum(['todo', 'in_progress', 'done', 'cancelled']);
 export const TaskPriority = z.enum(['low', 'medium', 'high', 'urgent']);
 export const EnergyLevel = z.enum(['low', 'medium', 'high']);
-export const DependencyType = z.enum(['finish_to_start', 'start_to_start', 'finish_to_finish', 'start_to_finish']);
+export const DependencyType = z.enum([
+  'finish_to_start',
+  'start_to_start',
+  'finish_to_finish',
+  'start_to_finish',
+]);
 
 // Request schemas (input DTOs)
 export const CreateProjectRequest = z.object({
   workspaceId: z.string().uuid(),
   name: z.string().min(1).max(200),
   description: z.string().max(1000).optional(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .optional(),
   icon: z.string().max(50).optional(),
 });
 
@@ -26,7 +34,10 @@ export const CreateTaskRequest = z.object({
   status: TaskStatus.default('todo'),
   priority: TaskPriority.default('medium'),
   dueDate: z.string().datetime().optional(),
-  dueTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+  dueTime: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional(),
   estimatedDuration: z.number().int().positive().optional(),
   calendarEventId: z.string().uuid().optional(),
   recurrenceRule: z.string().optional(),
@@ -104,16 +115,3 @@ export const TaskNoteResponse = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
-
-// Legacy exports for backward compatibility (deprecated)
-export const CreateProjectSchema = CreateProjectRequest;
-export const UpdateProjectSchema = UpdateProjectRequest;
-export const ProjectSchema = ProjectResponse;
-export const CreateTaskSchema = CreateTaskRequest;
-export const UpdateTaskSchema = UpdateTaskRequest;
-export const TaskSchema = TaskResponse;
-export const CreateTaskDependencySchema = CreateTaskDependencyRequest;
-export const TaskDependencySchema = TaskDependencyResponse;
-export const CreateTaskNoteSchema = CreateTaskNoteRequest;
-export const UpdateTaskNoteSchema = UpdateTaskNoteRequest;
-export const TaskNoteSchema = TaskNoteResponse;

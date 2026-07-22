@@ -1,10 +1,12 @@
 import { pgTable, uuid, timestamp, text, boolean, jsonb } from 'drizzle-orm/pg-core';
 
-import { workspaces } from './core';
+import { workspaces } from './core.js';
 
 export const calendars = pgTable('calendars', {
   id: uuid('id').primaryKey().defaultRandom(),
-  workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id),
+  workspaceId: uuid('workspace_id')
+    .notNull()
+    .references(() => workspaces.id),
   name: text('name').notNull(),
   description: text('description'),
   color: text('color'),
@@ -18,8 +20,12 @@ export const calendars = pgTable('calendars', {
 
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
-  workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id),
-  calendarId: uuid('calendar_id').notNull().references(() => calendars.id),
+  workspaceId: uuid('workspace_id')
+    .notNull()
+    .references(() => workspaces.id),
+  calendarId: uuid('calendar_id')
+    .notNull()
+    .references(() => calendars.id),
   title: text('title').notNull(),
   description: text('description'),
   location: text('location'),
@@ -38,7 +44,9 @@ export const events = pgTable('events', {
 
 export const eventAttendees = pgTable('event_attendees', {
   id: uuid('id').primaryKey().defaultRandom(),
-  eventId: uuid('event_id').notNull().references(() => events.id),
+  eventId: uuid('event_id')
+    .notNull()
+    .references(() => events.id),
   email: text('email').notNull(),
   name: text('name'),
   status: text('status').notNull().default('needs_action'), // 'needs_action', 'accepted', 'declined', 'tentative'
