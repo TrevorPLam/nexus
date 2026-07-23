@@ -1,15 +1,16 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { eq } from 'drizzle-orm';
-
-import { db } from './db.js';
 import * as schema from '@life-os/database';
+import { eq } from 'drizzle-orm';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+
 import {
   seedTestFixtures,
   cleanupTestFixtures,
   type TestFixtures,
 } from '../test/fixtures/seed-data.js';
-import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
+
 import { createAuditLog, createOutboxEvent } from './audit.js';
+import { db } from './db.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
 /**
  * Security and Transaction Regression Tests

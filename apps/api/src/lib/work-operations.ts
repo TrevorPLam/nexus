@@ -74,10 +74,10 @@ import {
 } from '@life-os/database';
 import { eq, and, desc, asc, sql, inArray } from 'drizzle-orm';
 
-import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
-import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
+import { db } from './db.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
 /**
  * Executes a callback within a database transaction.

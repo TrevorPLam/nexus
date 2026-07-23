@@ -52,6 +52,7 @@
  * - July 22, 2026
  */
 
+import { CreateTaskAssigneeRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 
 import {
@@ -60,7 +61,6 @@ import {
   requireWorkspaceMembership,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
-import { CreateTaskAssigneeRequest } from '@life-os/contracts';
 
 const taskAssigneesRouter = new Hono();
 

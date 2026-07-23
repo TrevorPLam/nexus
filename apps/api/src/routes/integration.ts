@@ -57,6 +57,7 @@
  * - July 22, 2026
  */
 
+import { CreateTaskWithEventRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { z } from 'zod';
@@ -71,7 +72,6 @@ import {
   linkTaskEventCommand,
   unlinkTaskEventCommand,
 } from '../lib/work-operations.js';
-import { CreateTaskWithEventRequest } from '@life-os/contracts';
 
 const integrationRouter = new Hono();
 

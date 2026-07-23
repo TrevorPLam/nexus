@@ -1,13 +1,14 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { eq, and, sql } from 'drizzle-orm';
-
-import { db } from './db.js';
 import * as schema from '@life-os/database';
+import { eq, and, sql } from 'drizzle-orm';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+
 import {
   seedTestFixtures,
   cleanupTestFixtures,
   type TestFixtures,
 } from '../test/fixtures/seed-data.js';
+
+import { db } from './db.js';
 
 /**
  * RLS (Row-Level Security) Integration Tests

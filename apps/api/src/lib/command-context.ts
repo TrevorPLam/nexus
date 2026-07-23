@@ -41,12 +41,14 @@
  * - July 22, 2026
  */
 
-import { db } from './db.js';
-import { createAuditLog, createOutboxEvent } from './audit.js';
-import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
-import { Context } from 'hono';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
+import { Context } from 'hono';
+
+import { createAuditLog, createOutboxEvent } from './audit.js';
+import { db } from './db.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
+
 
 export interface CommandContext {
   userId?: string;

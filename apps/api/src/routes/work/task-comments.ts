@@ -51,6 +51,7 @@
  * - July 22, 2026
  */
 
+import { CreateTaskCommentRequest, UpdateTaskCommentRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 
 import {
@@ -59,7 +60,6 @@ import {
   requireWorkspaceMembership,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
-import { CreateTaskCommentRequest, UpdateTaskCommentRequest } from '@life-os/contracts';
 
 const taskCommentsRouter = new Hono();
 

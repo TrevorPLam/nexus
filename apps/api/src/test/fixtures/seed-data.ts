@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm';
-import { db } from '../../lib/db.js';
 import * as schema from '@life-os/database';
+import { eq } from 'drizzle-orm';
+
+import { db } from '../../lib/db.js';
 
 /**
  * Deterministic test fixtures for integration tests

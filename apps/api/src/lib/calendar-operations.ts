@@ -60,8 +60,8 @@ import * as schema from '@life-os/database';
 import { calendars, events, eventAttendees, schedulingLinks } from '@life-os/database';
 import { eq, and, desc, asc, gte, lte, or, isNull, gt, sql } from 'drizzle-orm';
 
-import { db } from './db.js';
 import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
+import { db } from './db.js';
 
 /**
  * CALENDAR OPERATIONS
@@ -1944,7 +1944,7 @@ export async function getAvailableSlots(
     dayEnd.setHours(availEnd.hour, availEnd.minute, 0, 0);
 
     // Generate slots for this day
-    let slotStart = new Date(dayStart);
+    const slotStart = new Date(dayStart);
     const slotEnd = new Date(slotStart);
     slotEnd.setMinutes(slotStart.getMinutes() + duration + (bufferAfter || 0));
 

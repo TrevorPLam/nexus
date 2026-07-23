@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import * as schema from '@life-os/database';
 import { eq } from 'drizzle-orm';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 
 import { db } from './db.js';
-import * as schema from '@life-os/database';
 import * as workOps from './work-operations.js';
 
 describe('Work Operations - Integration Tests', () => {

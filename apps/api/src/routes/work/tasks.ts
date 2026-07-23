@@ -58,9 +58,10 @@
 
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { CreateTaskRequest, UpdateTaskRequest, TaskResponse } from '@life-os/contracts';
-import { z } from 'zod';
 import { validator } from 'hono/validator';
+import { z } from 'zod';
 
+import { extractCommandContext } from '../../lib/command-context.js';
 import {
   authMiddleware,
   requireWorkspaceMembership,
@@ -69,7 +70,6 @@ import {
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
-import { extractCommandContext } from '../../lib/command-context.js';
 
 const tasksRouter = new OpenAPIHono();
 

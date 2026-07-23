@@ -60,19 +60,20 @@ import {
   AvailabilityQueryRequest,
   BookingRequest,
 } from '@life-os/contracts';
+import { appUsers } from '@life-os/database';
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
+import { db } from '../../lib/db.js';
 import {
   authMiddleware,
   requireWorkspaceMembership,
   requireEntityAccess,
   requireWorkspaceAccess,
 } from '../../lib/middleware.js';
-import { appUsers } from '@life-os/database';
-import { eq } from 'drizzle-orm';
-import { db } from '../../lib/db.js';
+
 
 const schedulingLinksRouter = new Hono();
 

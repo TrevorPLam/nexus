@@ -53,9 +53,13 @@
  */
 
 import { CreateProjectRequest, UpdateProjectRequest } from '@life-os/contracts';
+import { workspaceMemberships, appUsers, workspaces } from '@life-os/database';
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
+import { extractCommandContext } from '../../lib/command-context.js';
+import { db } from '../../lib/db.js';
 import {
   authMiddleware,
   requireWorkspaceMembership,
@@ -64,10 +68,7 @@ import {
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
-import { db } from '../../lib/db.js';
-import { workspaceMemberships, appUsers, workspaces } from '@life-os/database';
-import { eq } from 'drizzle-orm';
-import { extractCommandContext } from '../../lib/command-context.js';
+
 
 const projectsRouter = new Hono();
 

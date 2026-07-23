@@ -58,13 +58,13 @@
 
 import { Hono } from 'hono';
 
+import { extractCommandContext } from '../../lib/command-context.js';
 import {
   authMiddleware,
   idempotencyMiddleware,
   requireWorkspaceAccess,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
-import { extractCommandContext } from '../../lib/command-context.js';
 
 const batchOperationsRouter = new Hono();
 

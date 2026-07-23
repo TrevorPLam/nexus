@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { createAuditLog, createOutboxEvent } from './audit.js';
 import {
   executeCommand,
   executeCommandWithoutIdempotency,
   CommandContext,
 } from './command-context.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
-import { createAuditLog, createOutboxEvent } from './audit.js';
 
 // Mock the dependencies
 vi.mock('./idempotency.js');
