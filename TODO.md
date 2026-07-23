@@ -65,8 +65,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-002: Attach authenticated sessions to API client requests
 
-- [ ] **Task ID**: T-002
-- **Status**: `ready`
+- [x] **Task ID**: T-002
+- **Status**: `done`
 - **Related files**: `packages/api-client/src/index.ts`, `packages/api-client/src/index.test.ts`, `apps/web/src/lib/supabase/client.ts`, `apps/mobile`, `packages/contracts/src/common.ts`
 - **Definition of Done**:
   - Every authenticated API request can obtain and send the current Supabase access token as `Authorization: Bearer <token>`.
@@ -82,17 +82,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-002-1** | `AGENT` | `packages/api-client/src/index.ts` | Read the client, its package configuration, web Supabase client, mobile Supabase setup, and all current API-client tests.
-- [ ] **T-002-2** | `AGENT` | `packages/api-client/src/index.ts` | Research the repository’s Supabase session APIs and choose one platform-neutral token-provider contract.
-- [ ] **T-002-3** | `AGENT` | `packages/api-client/src/index.ts` | Verify whether any existing fetch wrapper or provider already supplies authorization before defining a new interface.
+- [x] **T-002-1** | `AGENT` | `packages/api-client/src/index.ts` | Read the client, its package configuration, web Supabase client, mobile Supabase setup, and all current API-client tests.
+- [x] **T-002-2** | `AGENT` | `packages/api-client/src/index.ts` | Research the repository's Supabase session APIs and choose one platform-neutral token-provider contract.
+- [x] **T-002-3** | `AGENT` | `packages/api-client/src/index.ts` | Verify whether any existing fetch wrapper or provider already supplies authorization before defining a new interface.
 
 ### Subtasks
 
-- [ ] **T-002-4** | `AGENT` | `packages/api-client/src/index.test.ts` | Write failing tests for a bearer token request, a missing-token request, and preservation of caller headers.
-- [ ] **T-002-5** | `AGENT` | `packages/api-client/src/index.ts` | Implement the token-provider adapter and authorization header assembly without changing endpoint paths.
-- [ ] **T-002-6** | `AGENT` | `apps/web/src/lib/supabase/client.ts` | Wire the web Supabase session provider into the API client initialization using the approved client-safe boundary.
-- [ ] **T-002-7** | `AGENT` | `apps/mobile` | Wire the mobile Supabase session provider without storing tokens in persistent application state.
-- [ ] **T-002-8** | `AGENT` | `packages/api-client/src/index.test.ts` | Run focused client tests and verify no token values appear in test output or errors.
+- [x] **T-002-4** | `AGENT` | `packages/api-client/src/index.test.ts` | Write failing tests for a bearer token request, a missing-token request, and preservation of caller headers.
+- [x] **T-002-5** | `AGENT` | `packages/api-client/src/index.ts` | Implement the token-provider adapter and authorization header assembly without changing endpoint paths.
+- [x] **T-002-6** | `AGENT` | `apps/web/src/lib/supabase/client.ts` | Wire the web Supabase session provider into the API client initialization using the approved client-safe boundary.
+- [x] **T-002-7** | `AGENT` | `apps/mobile` | Wire the mobile Supabase session provider without storing tokens in persistent application state.
+- [x] **T-002-8** | `AGENT` | `packages/api-client/src/index.test.ts` | Run focused client tests and verify no token values appear in test output or errors.
 
 ### Validation Commands
 
