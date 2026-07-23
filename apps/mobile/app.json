@@ -26,7 +26,17 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-router"],
-    "scheme": "lifeos"
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./app"
+        }
+      ]
+    ],
+    "scheme": "lifeos",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
