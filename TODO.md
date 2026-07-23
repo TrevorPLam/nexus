@@ -988,8 +988,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-022: Implement UI component tests - Checkbox
 
-- [ ] TASK-022
-- Status: ready
+- [x] TASK-022
+- Status: done
 - Related Files: `packages/ui/src/components/Checkbox.test.tsx`, `packages/ui/src/components/Checkbox.tsx`
 - Definition of Done: All 6 test placeholders implemented, tests pass
 - Out of Scope: Other UI components (separate tasks)
@@ -1005,32 +1005,32 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-022-001 | AGENT | `packages/ui/src/components/Checkbox.tsx`
+- [x] TASK-022-001 | AGENT | `packages/ui/src/components/Checkbox.tsx`
   Read Checkbox component to understand props and behavior.
 
-- [ ] TASK-022-002 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-002 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: renders checkbox input
 
-- [ ] TASK-022-003 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-003 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: handles checked state
 
-- [ ] TASK-022-004 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-004 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: handles unchecked state
 
-- [ ] TASK-022-005 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-005 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: calls onChange when clicked
 
-- [ ] TASK-022-006 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-006 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: is disabled when disabled prop is true
 
-- [ ] TASK-022-007 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+- [x] TASK-022-007 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
   Implement test: displays label when provided
 
-- [ ] TASK-022-008 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
-  Run Checkbox tests: `pnpm --filter @life-os/ui test -- Checkbox`
+- [x] TASK-022-008 | AGENT | `packages/ui/src/components/Checkbox.test.tsx`
+  Run Checkbox tests: `pnpm --filter @life-os/ui test -- Checkbox` - 7/7 tests passed
 
-- [ ] TASK-022-009 | AGENT | `packages/ui/src/components/`
-  Run type checking: `pnpm --filter @life-os/ui typecheck`
+- [x] TASK-022-009 | AGENT | `packages/ui/src/components/`
+  Run type checking: `pnpm --filter @life-os/ui typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
