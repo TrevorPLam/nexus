@@ -221,8 +221,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-005: Secure and transactionally replace task-event integration commands
 
-- [ ] **Task ID**: T-005
-- **Status**: `ready`
+- [x] **Task ID**: T-005
+- **Status**: `done`
 - **Related files**: `apps/api/src/routes/integration.ts`, `apps/api/src/routes/integration.test.ts`, `apps/api/src/lib/work-operations.ts`, `apps/api/src/lib/calendar-operations.ts`, `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts`
 - **Definition of Done**:
   - Task creation with an optional event is a single authenticated workspace-scoped transaction.
@@ -260,8 +260,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-006: Make API contracts typed and response-validated
 
-- [ ] **Task ID**: T-006
-- **Status**: `ready`
+- [x] **Task ID**: T-006
+- **Status**: `done`
 - **Related files**: `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts`, `packages/contracts/src/common.ts`, `packages/api-client/src/index.ts`, `packages/api-client/src/index.test.ts`
 - **Definition of Done**:
   - API-client request parameters use exported contract input types instead of `unknown`.
@@ -279,17 +279,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-006-1** | `AGENT` | `packages/contracts/src/*.ts` | Inventory request, update, response, and serialized-date schema mismatches for Work and Calendar.
-- [ ] **T-006-2** | `AGENT` | `packages/api-client/src/index.ts` | Research Zod parsing at the fetch boundary and choose a consistent error representation.
-- [ ] **T-006-3** | `AGENT` | `packages/contracts/test` | Identify stale fixtures, including the missing `isMilestone` field in Work response tests, and update task scope if needed.
+- [x] **T-006-1** | `AGENT` | `packages/contracts/src/*.ts` | Inventory request, update, response, and serialized-date schema mismatches for Work and Calendar.
+- [x] **T-006-2** | `AGENT` | `packages/api-client/src/index.ts` | Research Zod parsing at the fetch boundary and choose a consistent error representation.
+- [x] **T-006-3** | `AGENT` | `packages/contracts/test` | Identify stale fixtures, including the missing `isMilestone` field in Work response tests, and update task scope if needed.
 
 ### Subtasks
 
-- [ ] **T-006-4** | `AGENT` | `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts` | Write failing contract tests for ownership rejection, serialized dates, and complete required response fields.
-- [ ] **T-006-5** | `AGENT` | `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts` | Separate create/update/query/response DTOs and add explicit HTTP serialization schemas.
-- [ ] **T-006-6** | `AGENT` | `packages/api-client/src/index.ts` | Replace unknown payloads and casts with typed methods and response parsing.
-- [ ] **T-006-7** | `AGENT` | `packages/contracts/test`, `packages/api-client/src/index.test.ts` | Update fixtures and add invalid-response regression tests.
-- [ ] **T-006-8** | `AGENT` | `packages/contracts/test`, `packages/api-client/src/index.test.ts` | Run focused tests and typecheck both packages.
+- [x] **T-006-4** | `AGENT` | `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts` | Write failing contract tests for ownership rejection, serialized dates, and complete required response fields.
+- [x] **T-006-5** | `AGENT` | `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts` | Separate create/update/query/response DTOs and add explicit HTTP serialization schemas.
+- [x] **T-006-6** | `AGENT` | `packages/api-client/src/index.ts` | Replace unknown payloads and casts with typed methods and response parsing.
+- [x] **T-006-7** | `AGENT` | `packages/contracts/test`, `packages/api-client/src/index.test.ts` | Update fixtures and add invalid-response regression tests.
+- [x] **T-006-8** | `AGENT` | `packages/contracts/test`, `packages/api-client/src/index.test.ts` | Run focused tests and typecheck both packages.
 
 ### Validation Commands
 
