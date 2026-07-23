@@ -360,8 +360,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-009: Implement PowerSync query for workspace-scoped tasks
 
-- [ ] TASK-009
-- Status: ready
+- [x] TASK-009
+- Status: done
 - Related Files: `apps/mobile/src/hooks/useWork.ts`, `packages/mobile-data/src/`
 - Definition of Done: PowerSync query returns workspace-scoped tasks, mobile app displays tasks correctly
 - Out of Scope: Projects, calendars, events (separate tasks)
@@ -377,39 +377,39 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-009-001 | AGENT | `packages/mobile-data/src/`
+- [x] TASK-009-001 | AGENT | `packages/mobile-data/src/`
   Read PowerSync schema to understand tasks table structure and indexes.
 
-- [ ] TASK-009-002 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-009-002 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Read existing useWork hook to understand current implementation and auth context access.
 
-- [ ] TASK-009-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-009-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Implement PowerSync query for workspace-scoped tasks using workspace_id from auth context.
 
-- [ ] TASK-009-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-009-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Add optional project_id filtering to tasks query.
 
-- [ ] TASK-009-005 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-009-005 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Add error handling and loading states to useTasks hook.
 
-- [ ] TASK-009-006 | AGENT | `apps/mobile/app/work/index.test.tsx`
+- [x] TASK-009-006 | AGENT | `apps/mobile/app/work/index.test.tsx`
   Update test to verify PowerSync query returns correct workspace-scoped tasks.
 
-- [ ] TASK-009-007 | AGENT | `apps/mobile/app/work/offline-regression.test.tsx`
+- [x] TASK-009-007 | AGENT | `apps/mobile/app/work/offline-regression.test.tsx`
   Update offline regression test to verify tasks work offline.
 
-- [ ] TASK-009-008 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-009-008 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Run mobile tests: `pnpm --filter @life-os/mobile test`
 
-- [ ] TASK-009-009 | AGENT | `apps/mobile/src/hooks/`
+- [x] TASK-009-009 | AGENT | `apps/mobile/src/hooks/`
   Run type checking: `pnpm --filter @life-os/mobile typecheck`
 
 ---
 
 ## TASK-010: Implement PowerSync query for workspace-scoped calendars
 
-- [ ] TASK-010
-- Status: ready
+- [x] TASK-010
+- Status: done
 - Related Files: `apps/mobile/app/calendar/hooks/useCalendarData.ts`, `packages/mobile-data/src/`
 - Definition of Done: PowerSync query returns workspace-scoped calendars, mobile app displays calendars correctly
 - Out of Scope: Events (separate task)
@@ -425,30 +425,30 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-010-001 | AGENT | `packages/mobile-data/src/`
+- [x] TASK-010-001 | AGENT | `packages/mobile-data/src/`
   Read PowerSync schema to understand calendars table structure and indexes.
 
-- [ ] TASK-010-002 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-010-002 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Read existing useCalendarData hook to understand current implementation and auth context access.
 
-- [ ] TASK-010-003 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-010-003 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Implement PowerSync query for workspace-scoped calendars using workspace_id from auth context.
 
-- [ ] TASK-010-004 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-010-004 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Add error handling and loading states to useCalendars hook.
 
-- [ ] TASK-010-005 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-010-005 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Run mobile tests: `pnpm --filter @life-os/mobile test`
 
-- [ ] TASK-010-006 | AGENT | `apps/mobile/app/calendar/hooks/`
+- [x] TASK-010-006 | AGENT | `apps/mobile/app/calendar/hooks/`
   Run type checking: `pnpm --filter @life-os/mobile typecheck`
 
 ---
 
 ## TASK-011: Implement PowerSync query for workspace-scoped events with date filtering
 
-- [ ] TASK-011
-- Status: ready
+- [x] TASK-011
+- Status: done
 - Related Files: `apps/mobile/app/calendar/hooks/useCalendarData.ts`, `packages/mobile-data/src/`
 - Definition of Done: PowerSync query returns workspace-scoped events with date range filtering, mobile app displays events correctly
 - Out of Scope: Calendars (handled in TASK-010)
@@ -465,33 +465,33 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-011-001 | AGENT | `packages/mobile-data/src/`
+- [x] TASK-011-001 | AGENT | `packages/mobile-data/src/`
   Read PowerSync schema to understand events table structure and indexes.
 
-- [ ] TASK-011-002 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-011-002 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Read existing useCalendarData hook to understand current implementation and auth context access.
 
-- [ ] TASK-011-003 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-011-003 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Implement PowerSync query for workspace-scoped events using workspace_id from auth context.
 
-- [ ] TASK-011-004 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-011-004 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Add date range filtering (start_date, end_date) to events query.
 
-- [ ] TASK-011-005 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-011-005 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Add error handling and loading states to useEvents hook.
 
-- [ ] TASK-011-006 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
+- [x] TASK-011-006 | AGENT | `apps/mobile/app/calendar/hooks/useCalendarData.ts`
   Run mobile tests: `pnpm --filter @life-os/mobile test`
 
-- [ ] TASK-011-007 | AGENT | `apps/mobile/app/calendar/hooks/`
+- [x] TASK-011-007 | AGENT | `apps/mobile/app/calendar/hooks/`
   Run type checking: `pnpm --filter @life-os/mobile typecheck`
 
 ---
 
 ## TASK-012: Implement mobile command queue for project operations
 
-- [ ] TASK-012
-- Status: ready
+- [x] TASK-012
+- Status: done
 - Related Files: `apps/mobile/src/hooks/useWork.ts`, `apps/api/src/routes/`
 - Definition of Done: Mobile app can enqueue create project commands, API processes them, tests pass
 - Out of Scope: Task, calendar, event operations (separate tasks)
@@ -507,31 +507,31 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-012-001 | AGENT | `apps/api/src/routes/`
+- [x] TASK-012-001 | AGENT | `apps/api/src/routes/`
   Verify API endpoint exists for creating projects (POST /api/work/projects).
 
-- [ ] TASK-012-002 | AGENT | `apps/api/src/routes/`
+- [x] TASK-012-002 | AGENT | `apps/api/src/routes/`
   Read API contract from packages/contracts to understand project creation request schema.
 
-- [ ] TASK-012-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-012-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Implement command queue infrastructure for offline command storage.
 
-- [ ] TASK-012-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-012-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Implement enqueueCreateProject function that adds create project command to queue.
 
-- [ ] TASK-012-005 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-012-005 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Implement command processing logic that sends queued commands to API when online.
 
-- [ ] TASK-012-006 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-012-006 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Add error handling and retry logic for failed commands.
 
-- [ ] TASK-012-007 | AGENT | `apps/mobile/app/work/index.test.tsx`
+- [x] TASK-012-007 | AGENT | `apps/mobile/app/work/index.test.tsx`
   Update test to verify project creation command enqueues correctly.
 
-- [ ] TASK-012-008 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-012-008 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Run mobile tests: `pnpm --filter @life-os/mobile test`
 
-- [ ] TASK-012-009 | AGENT | `apps/mobile/src/hooks/`
+- [x] TASK-012-009 | AGENT | `apps/mobile/src/hooks/`
   Run type checking: `pnpm --filter @life-os/mobile typecheck`
 
 ---
@@ -1415,3 +1415,546 @@ TASK-014 (sign-in) -> TASK-015 (sign-out)
 
 Test Path:
 Independent tasks (TASK-019 through TASK-029) can run in parallel after dependencies are met
+
+Infrastructure Path:
+TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-034, TASK-035, TASK-036 (dependency alignment) -> TASK-037 (ESLint config) -> TASK-038, TASK-039 (framework configs) -> TASK-040 (validation automation)
+
+---
+
+## TASK-030: Add test script to mobile package
+
+- [ ] TASK-030
+- Status: ready
+- Related Files: `apps/mobile/package.json`, `apps/mobile/vitest.config.ts`
+- Definition of Done: Mobile package has test script, vitest.config.ts exists, tests can run via turbo
+- Out of Scope: Test implementation (separate tasks)
+- Rules to Follow:
+  - Use vitest run for CI compatibility
+  - Follow existing vitest.config.ts patterns from other packages
+  - Ensure environment matches mobile app requirements (jsdom for React components)
+- Advanced Coding Pattern: Test infrastructure setup with proper environment configuration
+- Anti-Patterns: Using watch mode in test script, missing environment configuration
+- Imports/Exports: None
+- Depends On: None
+- Blocks: TASK-033
+
+### Subtasks
+
+- [ ] TASK-030-001 | AGENT | `apps/mobile/package.json`
+  Read package.json to verify vitest is in devDependencies and understand current script structure.
+
+- [ ] TASK-030-002 | AGENT | `apps/mobile/package.json`
+  Add test script to scripts section: `"test": "vitest"`
+
+- [ ] TASK-030-003 | AGENT | `apps/mobile/vitest.config.ts`
+  Verify vitest.config.ts exists or create it following the pattern from apps/web/vitest.config.ts with jsdom environment.
+
+- [ ] TASK-030-004 | AGENT | `apps/mobile/vitest.config.ts`
+  Ensure vitest.config.ts includes proper setupFiles for React Testing Library if needed.
+
+- [ ] TASK-030-005 | AGENT | `apps/mobile/package.json`
+  Run mobile test to verify configuration: `pnpm --filter @life-os/mobile test --run`
+
+- [ ] TASK-030-006 | AGENT | `apps/mobile/`
+  Run type checking: `pnpm --filter @life-os/mobile typecheck`
+
+- [ ] TASK-030-007 | AGENT | `apps/mobile/`
+  Update turbo.json to ensure mobile test task has proper inputs and outputs configuration if needed.
+
+---
+
+## TASK-031: Add test script to worker package
+
+- [ ] TASK-031
+- Status: ready
+- Related Files: `apps/worker/package.json`, `apps/worker/vitest.config.ts`
+- Definition of Done: Worker package has test script, vitest.config.ts exists, tests can run via turbo
+- Out of Scope: Test implementation (separate tasks)
+- Rules to Follow:
+  - Use vitest run for CI compatibility
+  - Follow existing vitest.config.ts patterns from other packages
+  - Ensure environment matches worker requirements (node environment)
+- Advanced Coding Pattern: Test infrastructure setup with proper environment configuration
+- Anti-Patterns: Using watch mode in test script, wrong environment for worker code
+- Imports/Exports: None
+- Depends On: None
+- Blocks: TASK-033
+
+### Subtasks
+
+- [ ] TASK-031-001 | AGENT | `apps/worker/package.json`
+  Read package.json to verify vitest is in devDependencies and understand current script structure.
+
+- [ ] TASK-031-002 | AGENT | `apps/worker/package.json`
+  Add test script to scripts section: `"test": "vitest"`
+
+- [ ] TASK-031-003 | AGENT | `apps/worker/vitest.config.ts`
+  Verify vitest.config.ts exists or create it following the pattern from apps/api/vitest.config.ts with node environment.
+
+- [ ] TASK-031-004 | AGENT | `apps/worker/vitest.config.ts`
+  Ensure vitest.config.ts includes proper coverage settings for worker code.
+
+- [ ] TASK-031-005 | AGENT | `apps/worker/package.json`
+  Run worker test to verify configuration: `pnpm --filter @life-os/worker test --run`
+
+- [ ] TASK-031-006 | AGENT | `apps/worker/`
+  Run type checking: `pnpm --filter @life-os/worker typecheck`
+
+- [ ] TASK-031-007 | AGENT | `apps/worker/`
+  Update turbo.json to ensure worker test task has proper inputs and outputs configuration if needed.
+
+---
+
+## TASK-032: Evaluate and remove @hono/standard-validator
+
+- [ ] TASK-032
+- Status: ready
+- Related Files: `apps/api/package.json`, `apps/api/src/`
+- Definition of Done: @hono/standard-validator removed if unused, or documented if actively used
+- Out of Scope: Hono API implementation changes
+- Rules to Follow:
+  - Verify actual usage before removal
+  - Use @hono/zod-openapi for validation (already installed)
+  - Leverage existing Zod schemas from packages/contracts
+- Advanced Coding Pattern: Dependency hygiene and validation consolidation
+- Anti-Patterns: Removing dependencies without verifying usage, duplicating validation logic
+- Imports/Exports: None affected
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-032-001 | AGENT | `apps/api/src/`
+  Search codebase for all imports and usage of @hono/standard-validator to verify if actively used.
+
+- [ ] TASK-032-002 | AGENT | `apps/api/src/`
+  If @hono/standard-validator is used, evaluate if validation can be replaced with @hono/zod-openapi and Zod schemas from packages/contracts.
+
+- [ ] TASK-032-003 | AGENT | `apps/api/package.json`
+  If @hono/standard-validator is unused or can be replaced, remove it from dependencies.
+
+- [ ] TASK-032-004 | AGENT | `apps/api/package.json`
+  Run pnpm install to update lockfile: `pnpm install`
+
+- [ ] TASK-032-005 | AGENT | `apps/api/src/`
+  If replacement was needed, update validation code to use @hono/zod-openapi patterns.
+
+- [ ] TASK-032-006 | AGENT | `apps/api/src/`
+  Run API tests to verify changes: `pnpm --filter @life-os/api test`
+
+- [ ] TASK-032-007 | AGENT | `apps/api/`
+  Run type checking: `pnpm --filter @life-os/api typecheck`
+
+- [ ] TASK-032-008 | AGENT | `docs/code-commentary.md`
+  Document the decision to keep or remove @hono/standard-validator with rationale.
+
+---
+
+## TASK-033: Create shared Vitest configuration package
+
+- [ ] TASK-033
+- Status: ready
+- Related Files: `packages/vitest-config/package.json`, `turbo.json`, `vitest.config.ts`
+- Definition of Done: Shared Vitest config package created, all packages updated to use it, root vitest.config.ts for local dev
+- Out of Scope: Test implementation changes
+- Rules to Follow:
+  - Follow Vitest 3+ projects pattern (not deprecated workspaces)
+  - Create separate configs for node and jsdom environments
+  - Enable per-package caching for CI, root config for local dev
+- Advanced Coding Pattern: Shared configuration with environment-specific variants
+- Anti-Patterns: Deprecated workspaces configuration, mixing CI and local dev patterns
+- Imports/Exports: Export baseConfig, nodeConfig, jsdomConfig
+- Depends On: TASK-030, TASK-031
+- Blocks: TASK-040
+
+### Subtasks
+
+- [ ] TASK-033-001 | AGENT | `packages/`
+  Create packages/vitest-config directory structure.
+
+- [ ] TASK-033-002 | AGENT | `packages/vitest-config/package.json`
+  Create package.json with proper exports, dependencies, and build configuration.
+
+- [ ] TASK-033-003 | AGENT | `packages/vitest-config/src/index.ts`
+  Create baseConfig with common Vitest settings (globals, coverage provider, reporters).
+
+- [ ] TASK-033-004 | AGENT | `packages/vitest-config/src/index.ts`
+  Create nodeConfig extending baseConfig with environment: 'node'.
+
+- [ ] TASK-033-005 | AGENT | `packages/vitest-config/src/index.ts`
+  Create jsdomConfig extending baseConfig with environment: 'jsdom'.
+
+- [ ] TASK-033-006 | AGENT | `apps/api/vitest.config.ts`
+  Update to import and use nodeConfig from @life-os/vitest-config.
+
+- [ ] TASK-033-007 | AGENT | `apps/web/vitest.config.ts`
+  Update to import and use jsdomConfig from @life-os/vitest-config.
+
+- [ ] TASK-033-008 | AGENT | `packages/*/vitest.config.ts`
+  Update all package vitest.config.ts files to use shared config.
+
+- [ ] TASK-033-009 | AGENT | `vitest.config.ts`
+  Create root vitest.config.ts with projects array for local development with merged coverage.
+
+- [ ] TASK-033-010 | AGENT | `turbo.json`
+  Update test task to depend on @life-os/vitest-config#build for proper caching.
+
+- [ ] TASK-033-011 | AGENT | `turbo.json`
+  Add test:watch task with cache: false and persistent: true.
+
+- [ ] TASK-033-012 | AGENT | `packages/vitest-config/`
+  Run tests to verify shared config: `pnpm --filter @life-os/vitest-config test`
+
+- [ ] TASK-033-013 | AGENT | `apps/api/`
+  Run API tests with new config: `pnpm --filter @life-os/api test`
+
+- [ ] TASK-033-014 | AGENT | `apps/web/`
+  Run web tests with new config: `pnpm --filter @life-os/web test`
+
+- [ ] TASK-033-015 | AGENT | `packages/`
+  Run package tests with new config: `pnpm --filter @life-os/contracts test && pnpm --filter @life-os/database test`
+
+---
+
+## TASK-034: Update Drizzle ORM version in catalog
+
+- [ ] TASK-034
+- Status: ready
+- Related Files: `pnpm-workspace.yaml`, `apps/api/package.json`, `packages/database/package.json`, `packages/mobile-data/package.json`
+- Definition of Done: Drizzle ORM version updated in catalog to match actual usage (0.45.0), all packages migrated to catalog protocol
+- Out of Scope: Drizzle schema changes
+- Rules to Follow:
+  - Update catalog to match actual usage (0.45.0, not 0.33.0)
+  - Migrate all packages to use catalog: protocol
+  - Maintain version consistency across all packages
+- Advanced Coding Pattern: Catalog mode strict compliance for dependency version control
+- Anti-Patterns: Version drift between catalog and actual usage, bypassing catalog with direct versions
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-034-001 | AGENT | `pnpm-workspace.yaml`
+  Read current catalog entry for drizzle-orm (currently ^0.33.0).
+
+- [ ] TASK-034-002 | AGENT | `apps/api/package.json`, `packages/database/package.json`, `packages/mobile-data/package.json`
+  Verify actual drizzle-orm versions in use (currently ^0.45.0).
+
+- [ ] TASK-034-003 | AGENT | `pnpm-workspace.yaml`
+  Update catalog drizzle-orm version from ^0.33.0 to ^0.45.0.
+
+- [ ] TASK-034-004 | AGENT | `apps/api/package.json`
+  Update drizzle-orm dependency to use "catalog:" protocol instead of direct version.
+
+- [ ] TASK-034-005 | AGENT | `packages/database/package.json`
+  Update drizzle-orm dependency to use "catalog:" protocol instead of direct version.
+
+- [ ] TASK-034-006 | AGENT | `packages/mobile-data/package.json`
+  Update drizzle-orm dependency to use "catalog:" protocol instead of direct version.
+
+- [ ] TASK-034-007 | AGENT | Root directory
+  Run pnpm install to update lockfile: `pnpm install`
+
+- [ ] TASK-034-008 | AGENT | `apps/api/`
+  Run type checking to verify no breaking changes: `pnpm --filter @life-os/api typecheck`
+
+- [ ] TASK-034-009 | AGENT | `packages/database/`
+  Run type checking to verify no breaking changes: `pnpm --filter @life-os/database typecheck`
+
+- [ ] TASK-034-010 | AGENT | `packages/mobile-data/`
+  Run type checking to verify no breaking changes: `pnpm --filter @life-os/mobile-data typecheck`
+
+---
+
+## TASK-035: Add TypeScript resolver to ESLint configuration
+
+- [ ] TASK-035
+- Status: ready
+- Related Files: `eslint.config.mjs`, `package.json`
+- Definition of Done: eslint-import-resolver-typescript installed and configured in ESLint flat config
+- Out of Scope: ESLint rule changes
+- Rules to Follow:
+  - Add eslint-import-resolver-typescript to devDependencies
+  - Configure typescript: true in import-x/resolver settings
+  - Add to catalog for version consistency
+- Advanced Coding Pattern: TypeScript-aware import resolution for monorepo
+- Anti-Patterns: Missing TypeScript resolver causing import resolution failures
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-035-001 | AGENT | `package.json`
+  Add eslint-import-resolver-typescript to devDependencies.
+
+- [ ] TASK-035-002 | AGENT | `pnpm-workspace.yaml`
+  Add eslint-import-resolver-typescript to catalog with version ^3.6.0.
+
+- [ ] TASK-035-003 | AGENT | Root directory
+  Run pnpm install to install dependency: `pnpm install`
+
+- [ ] TASK-035-004 | AGENT | `eslint.config.mjs`
+  Update import-x/resolver settings to include typescript: true for both JavaScript and TypeScript file configurations.
+
+- [ ] TASK-035-005 | AGENT | Root directory
+  Run ESLint to verify configuration works: `pnpm lint`
+
+- [ ] TASK-036-006 | AGENT | `apps/api/`
+  Run type checking to ensure no import resolution issues: `pnpm --filter @life-os/api typecheck`
+
+---
+
+## TASK-036: Add transpilePackages to Next.js configuration
+
+- [ ] TASK-036
+- Status: ready
+- Related Files: `apps/web/next.config.js`, `apps/web/package.json`
+- Definition of Done: Next.js config includes transpilePackages for workspace dependencies, JIT packages compile correctly
+- Out of Scope: Next.js build optimization
+- Rules to Follow:
+  - Add workspace dependencies to transpilePackages array
+  - Only transpile packages that are JIT (TypeScript source)
+  - Test build to verify compilation works
+- Advanced Coding Pattern: Next.js JIT package compilation for monorepo
+- Anti-Patterns: Missing transpilePackages causing build failures, transpiling unnecessary packages
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-036-001 | AGENT | `apps/web/package.json`
+  Read package.json to identify workspace dependencies (@life-os/ui, @life-os/contracts, @life-os/api-client).
+
+- [ ] TASK-036-002 | AGENT | `apps/web/next.config.js`
+  Read current next.config.js to understand existing configuration.
+
+- [ ] TASK-036-003 | AGENT | `apps/web/next.config.js`
+  Add transpilePackages array with workspace dependencies: ['@life-os/ui', '@life-os/contracts', '@life-os/api-client'].
+
+- [ ] TASK-036-004 | AGENT | `apps/web/`
+  Run Next.js build to verify compilation: `pnpm --filter @life-os/web build`
+
+- [ ] TASK-036-005 | AGENT | `apps/web/`
+  Run type checking to verify no issues: `pnpm --filter @life-os/web typecheck`
+
+- [ ] TASK-036-006 | AGENT | `apps/web/`
+  Start dev server to verify runtime compilation: `pnpm --filter @life-os/web dev` (background, then stop)
+
+---
+
+## TASK-037: Add PowerSync OP-SQLite dependency
+
+- [ ] TASK-037
+- Status: ready
+- Related Files: `apps/mobile/package.json`, `package.json`, `pnpm-workspace.yaml`
+- Definition of Done: @op-engineering/op-sqlite added to mobile and root dependencies, catalog updated
+- Out of Scope: PowerSync implementation changes
+- Rules to Follow:
+  - Add to mobile package dependencies (direct dependency for autolinking)
+  - Add to root devDependencies for monorepo hoisting
+  - Add to catalog for version consistency
+- Advanced Coding Pattern: React Native native dependency management in monorepo
+- Anti-Patterns: Missing native dependency causing autolinking failures
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-037-001 | AGENT | `apps/mobile/package.json`
+  Read current PowerSync dependencies to understand version requirements.
+
+- [ ] TASK-037-002 | AGENT | `pnpm-workspace.yaml`
+  Add @op-engineering/op-sqlite to catalog with version ^1.17.0.
+
+- [ ] TASK-037-003 | AGENT | `apps/mobile/package.json`
+  Add @op-engineering/op-sqlite to dependencies using catalog: protocol.
+
+- [ ] TASK-037-004 | AGENT | `package.json`
+  Add @op-engineering/op-sqlite to devDependencies using catalog: protocol for monorepo hoisting.
+
+- [ ] TASK-037-005 | AGENT | Root directory
+  Run pnpm install to install dependency: `pnpm install`
+
+- [ ] TASK-037-006 | AGENT | `apps/mobile/`
+  Run type checking to verify no issues: `pnpm --filter @life-os/mobile typecheck`
+
+---
+
+## TASK-038: Verify Expo Router configuration for monorepo
+
+- [ ] TASK-038
+- Status: ready
+- Related Files: `apps/mobile/app.json`, `apps/mobile/app.config.ts`, `apps/mobile/package.json`
+- Definition of Done: Expo Router plugin configured with correct root directory for monorepo structure
+- Out of Scope: Expo Router implementation
+- Rules to Follow:
+  - Specify root directory in Expo Router plugin if app directory is not at project root
+  - Enable typedRoutes in Expo config
+  - Configure scheme for deep linking
+- Advanced Coding Pattern: Expo Router monorepo configuration
+- Anti-Patterns: Missing root configuration causing route detection failures
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-038-001 | AGENT | `apps/mobile/`
+  Verify directory structure (app/ vs src/app/) to determine root directory path.
+
+- [ ] TASK-038-002 | AGENT | `apps/mobile/app.json` or `apps/mobile/app.config.ts`
+  Read current Expo configuration to understand existing setup.
+
+- [ ] TASK-038-003 | AGENT | `apps/mobile/app.json` or `apps/mobile/app.config.ts`
+  Verify expo-router plugin is configured with correct root directory (./app or ./src/app).
+
+- [ ] TASK-038-004 | AGENT | `apps/mobile/app.json` or `apps/mobile/app.config.ts`
+  Verify scheme is configured for deep linking.
+
+- [ ] TASK-038-005 | AGENT | `apps/mobile/app.json` or `apps/mobile/app.config.ts`
+  Verify typedRoutes is enabled in experiments.
+
+- [ ] TASK-038-006 | AGENT | `apps/mobile/package.json`
+  Verify main entry point is set to "expo-router/entry".
+
+- [ ] TASK-038-007 | AGENT | `apps/mobile/`
+  Run mobile dev to verify routes are detected: `pnpm --filter @life-os/mobile dev` (background, verify routes load, then stop)
+
+---
+
+## TASK-039: Add engines field to package.json
+
+- [ ] TASK-039
+- Status: ready
+- Related Files: `package.json`
+- Definition of Done: engines field added to root package.json with Node.js and pnpm version requirements
+- Out of Scope: Package manager changes
+- Rules to Follow:
+  - Add engines field with Node.js >=24.0.0 and pnpm >=11.0.0
+  - Matches devEngines field already present
+  - Standard npm/yarn compatibility
+- Advanced Coding Pattern: Engine specification for environment requirements
+- Anti-Patterns: Missing engines field allowing installation on incompatible environments
+- Imports/Exports: None
+- Depends On: None
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-039-001 | AGENT | `package.json`
+  Read current package.json to understand existing structure and devEngines field.
+
+- [ ] TASK-039-002 | AGENT | `package.json`
+  Add engines field with Node.js and pnpm version requirements matching devEngines.
+
+- [ ] TASK-039-003 | AGENT | Root directory
+  Run pnpm install to verify no issues: `pnpm install`
+
+---
+
+## TASK-040: Implement automated dependency validation scripts
+
+- [ ] TASK-040
+- Status: ready
+- Related Files: `scripts/validate-deps.ts`, `package.json`, `.github/workflows/`
+- Definition of Done: Validation script created for workspace protocol, catalog compliance, version drift, CI pipeline configured
+- Out of Scope: Fixing issues found by validation (separate tasks)
+- Rules to Follow:
+  - Create TypeScript validation script with checks for common anti-patterns
+  - Add npm script to run validation
+  - Configure CI pipeline to run validation on PRs
+  - Report failures clearly with actionable messages
+- Advanced Coding Pattern: Automated dependency hygiene validation
+- Anti-Patterns: Manual dependency checks, missing CI validation
+- Imports/Exports: Export validation script
+- Depends On: TASK-033, TASK-034, TASK-035
+- Blocks: None
+
+### Subtasks
+
+- [ ] TASK-040-001 | AGENT | `scripts/`
+  Create scripts directory if it does not exist.
+
+- [ ] TASK-040-002 | AGENT | `scripts/validate-deps.ts`
+  Create validate-deps.ts with check for workspace protocol violations (internal deps not using workspace:).
+
+- [ ] TASK-040-003 | AGENT | `scripts/validate-deps.ts`
+  Add check for catalog mode violations (dependencies not using catalog: when catalogMode is strict).
+
+- [ ] TASK-040-004 | AGENT | `scripts/validate-deps.ts`
+  Add check for TypeScript version drift across packages.
+
+- [ ] TASK-040-005 | AGENT | `scripts/validate-deps.ts`
+  Add check for React/React Native version alignment.
+
+- [ ] TASK-040-006 | AGENT | `scripts/validate-deps.ts`
+  Add check for missing test scripts when vitest is in devDependencies.
+
+- [ ] TASK-040-007 | AGENT | `scripts/validate-deps.ts`
+  Add check for missing exports field in packages.
+
+- [ ] TASK-040-008 | AGENT | `package.json`
+  Add validate-deps script to scripts section: `"validate-deps": "tsx scripts/validate-deps.ts"`.
+
+- [ ] TASK-040-009 | AGENT | `package.json`
+  Add tsx to devDependencies if not present.
+
+- [ ] TASK-040-010 | AGENT | Root directory
+  Run validation script to verify it works: `pnpm validate-deps`
+
+- [ ] TASK-040-011 | AGENT | `.github/workflows/`
+  Create or update CI workflow to run validate-deps on pull requests.
+
+- [ ] TASK-040-012 | AGENT | `scripts/validate-deps.ts`
+  Add TypeScript configuration and ensure script type-checks: `pnpm --filter . typecheck` (for scripts)
+
+- [ ] TASK-040-013 | AGENT | `docs/project-management.md`
+  Document the validation script and how to fix common issues it detects.
+
+---
+
+## Updated Summary
+
+Total Tasks: 40
+Total Subtasks: 342
+
+### Task Categories
+
+1. **Code Cleanup** (1 task): TASK-001 - Remove deprecated code
+2. **Command Pattern** (1 task): TASK-002 - Core infrastructure
+3. **Audit Logs** (2 tasks): TASK-003 (tasks), TASK-006 (calendar)
+4. **Outbox Events** (2 tasks): TASK-004 (tasks), TASK-007 (calendar)
+5. **Calendar Command Pattern** (1 task): TASK-005
+6. **Mobile PowerSync Queries** (4 tasks): TASK-008, TASK-009, TASK-010, TASK-011
+7. **Mobile Command Queue** (2 tasks): TASK-012 (projects), TASK-013 (tasks)
+8. **Mobile Auth** (2 tasks): TASK-014 (sign-in), TASK-015 (sign-out)
+9. **Mobile UI Modals** (3 tasks): TASK-016, TASK-017, TASK-018
+10. **UI Component Tests** (4 tasks): TASK-019, TASK-020, TASK-021, TASK-022
+11. **Web Hook Tests** (6 tasks): TASK-023, TASK-024, TASK-025, TASK-026, TASK-027, TASK-028
+12. **Worker Tests** (1 task): TASK-029
+13. **Infrastructure - Test Scripts** (3 tasks): TASK-030 (mobile), TASK-031 (worker), TASK-032 (hono validator)
+14. **Infrastructure - Vitest Config** (1 task): TASK-033 - Shared configuration
+15. **Infrastructure - Dependencies** (4 tasks): TASK-034 (drizzle), TASK-035 (eslint), TASK-036 (nextjs), TASK-037 (powersync)
+16. **Infrastructure - Configuration** (2 tasks): TASK-038 (expo router), TASK-039 (engines)
+17. **Infrastructure - Validation** (1 task): TASK-040 - Automated dependency validation
+
+### Dependency Chain
+
+Critical Path:
+TASK-002 (command pattern) -> TASK-003, TASK-004, TASK-005 (audit/outbox integration) -> TASK-006, TASK-007 (calendar audit/outbox) -> TASK-029 (worker tests)
+
+Mobile Path:
+TASK-008, TASK-009, TASK-010, TASK-011 (PowerSync queries) -> TASK-012, TASK-013 (command queue) -> TASK-016, TASK-017, TASK-018 (UI modals)
+
+Auth Path:
+TASK-014 (sign-in) -> TASK-015 (sign-out)
+
+Test Path:
+Independent tasks (TASK-019 through TASK-029) can run in parallel after dependencies are met
+
+Infrastructure Path:
+TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-034, TASK-035, TASK-036, TASK-037 (dependency alignment) -> TASK-038, TASK-039 (framework configs) -> TASK-040 (validation automation)
