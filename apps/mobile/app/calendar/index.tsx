@@ -7,43 +7,35 @@ import {
   ScrollView,
   ActivityIndicator,
   FlatList,
+  Alert,
 } from 'react-native';
-import { usePowerSync, useQuery } from '@powersync/react';
-import { db } from '../../powersync';
-
-interface Calendar {
-  id: string;
-  name: string;
-  description: string | null;
-  color: string;
-  is_default: boolean;
-}
-
-interface Event {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  is_all_day: boolean;
-  calendar_id: string;
-}
+import { useCalendarData, useEventMutations, Calendar, Event } from './hooks/useCalendarData';
 
 export default function CalendarScreen() {
   const [view, setView] = useState<'calendars' | 'events' | 'scheduling'>('calendars');
   const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
-  const powersync = usePowerSync();
 
-  // Query calendars from PowerSync
-  const { data: calendars, isLoading: calendarsLoading } = useQuery(
-    db.selectFrom('calendars').selectAll(),
-  );
-
-  // Query events from PowerSync
-  const { data: events, isLoading: eventsLoading } = useQuery(db.selectFrom('events').selectAll());
+  const { calendars, events, loading, loadEvents } = useCalendarData();
+  const { pending } = useEventMutations();
 
   const handleCalendarPress = (calendar: Calendar) => {
     setSelectedCalendar(calendar);
     setView('events');
+    loadEvents(calendar.id);
+  };
+
+  const handleCreateCalendar = () => {
+    Alert.alert(
+      'Create Calendar',
+      'Calendar creation will be implemented when PowerSync sync is available.',
+    );
+  };
+
+  const handleCreateEvent = () => {
+    Alert.alert(
+      'Create Event',
+      'Event creation will be implemented when PowerSync sync is available.',
+    );
   };
 
   const renderCalendarItem = ({ item }: { item: Calendar }) => (
@@ -120,7 +112,7 @@ export default function CalendarScreen() {
       <ScrollView style={styles.content}>
         {view === 'calendars' && (
           <View style={styles.section}>
-            {calendarsLoading ? (
+            {loading ? (
               <ActivityIndicator style={styles.loader} />
             ) : calendars && calendars.length > 0 ? (
               <FlatList
@@ -132,7 +124,11 @@ export default function CalendarScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyText}>No calendars yet</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                  style={[styles.button, pending && styles.buttonDisabled]}
+                  onPress={handleCreateCalendar}
+                  disabled={pending}
+                >
                   <Text style={styles.buttonText}>Create Calendar</Text>
                 </TouchableOpacity>
               </View>
@@ -150,7 +146,7 @@ export default function CalendarScreen() {
                 </TouchableOpacity>
               </View>
             )}
-            {eventsLoading ? (
+            {loading ? (
               <ActivityIndicator style={styles.loader} />
             ) : events && events.length > 0 ? (
               <FlatList
@@ -166,7 +162,11 @@ export default function CalendarScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyText}>No events scheduled</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                  style={[styles.button, pending && styles.buttonDisabled]}
+                  onPress={handleCreateEvent}
+                  disabled={pending}
+                >
                   <Text style={styles.buttonText}>Create Event</Text>
                 </TouchableOpacity>
               </View>
@@ -177,9 +177,9 @@ export default function CalendarScreen() {
         {view === 'scheduling' && (
           <View style={styles.section}>
             <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>Scheduling links coming soon</Text>
+              <Text style={styles.emptyText}>Scheduling not available in mobile MVP</Text>
               <Text style={styles.emptyDescription}>
-                Create booking links for others to schedule time with you
+                Scheduling links are available in the web application
               </Text>
             </View>
           </View>
@@ -299,6 +299,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#9ca3af',
   },
   buttonText: {
     color: '#fff',

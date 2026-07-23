@@ -1,182 +1,234 @@
-import * as schema from '@life-os/database';
-import { AppSchema } from '@powersync/react-native';
+/**
+ * MODULE: Mobile PowerSync Schema
+ *
+ * Responsibility:
+ * Defines the client-side SQLite schema for PowerSync offline synchronization.
+ * It mirrors the authoritative PostgreSQL schema defined in packages/database.
+ *
+ * Boundaries:
+ * - Specific to the mobile application's local SQLite database.
+ * - Does not handle synchronization logic (handled by PowerSync Cloud).
+ *
+ * Critical invariants:
+ * - Must strictly match the PostgreSQL schema columns and types for successful replication.
+ * - All tables must have an 'id' column as the primary key (automatically handled by PowerSync).
+ *
+ * Side effects:
+ * - Defines the physical structure of the local SQLite database on mobile devices.
+ *
+ * Change risk:
+ * - High. Schema mismatches between mobile and server will cause sync failures.
+ *
+ * Links:
+ * - packages/database/src/schema/ (PostgreSQL schema to mirror)
+ * - apps/mobile/src/lib/powersync/database.ts (PowerSync initialization)
+ *
+ * File:
+ * - packages/mobile-data/src/schema.ts
+ */
+
+import { column, Schema, Table } from '@powersync/react-native';
 
 // PowerSync schema for mobile offline sync
-export const powersyncSchema = new AppSchema({
-  app_users: {
-    id: schema.appUsers.id,
-    supabase_user_id: schema.appUsers.supabaseUserId,
-    email: schema.appUsers.email,
-    full_name: schema.appUsers.fullName,
-    created_at: schema.appUsers.createdAt,
-    updated_at: schema.appUsers.updatedAt,
-  },
-  workspaces: {
-    id: schema.workspaces.id,
-    name: schema.workspaces.name,
-    owner_id: schema.workspaces.ownerId,
-    created_at: schema.workspaces.createdAt,
-    updated_at: schema.workspaces.updatedAt,
-  },
-  workspace_memberships: {
-    id: schema.workspaceMemberships.id,
-    workspace_id: schema.workspaceMemberships.workspaceId,
-    user_id: schema.workspaceMemberships.userId,
-    role: schema.workspaceMemberships.role,
-    created_at: schema.workspaceMemberships.createdAt,
-  },
-  projects: {
-    id: schema.projects.id,
-    workspace_id: schema.projects.workspaceId,
-    name: schema.projects.name,
-    description: schema.projects.description,
-    color: schema.projects.color,
-    icon: schema.projects.icon,
-    status: schema.projects.status,
-    created_at: schema.projects.createdAt,
-    updated_at: schema.projects.updatedAt,
-  },
-  tasks: {
-    id: schema.tasks.id,
-    workspace_id: schema.tasks.workspaceId,
-    project_id: schema.tasks.projectId,
-    parent_id: schema.tasks.parentId,
-    title: schema.tasks.title,
-    description: schema.tasks.description,
-    status: schema.tasks.status,
-    priority: schema.tasks.priority,
-    due_date: schema.tasks.dueDate,
-    due_time: schema.tasks.dueTime,
-    estimated_duration: schema.tasks.estimatedDuration,
-    completed_at: schema.tasks.completedAt,
-    calendar_event_id: schema.tasks.calendarEventId,
-    recurrence_rule: schema.tasks.recurrenceRule,
-    recurrence_id: schema.tasks.recurrenceId,
-    energy_level: schema.tasks.energyLevel,
-    context_tags: schema.tasks.contextTags,
-    is_milestone: schema.tasks.isMilestone,
-    created_at: schema.tasks.createdAt,
-    updated_at: schema.tasks.updatedAt,
-  },
-  task_dependencies: {
-    id: schema.taskDependencies.id,
-    task_id: schema.taskDependencies.taskId,
-    depends_on_task_id: schema.taskDependencies.dependsOnTaskId,
-    type: schema.taskDependencies.type,
-    created_at: schema.taskDependencies.createdAt,
-  },
-  task_notes: {
-    id: schema.taskNotes.id,
-    task_id: schema.taskNotes.taskId,
-    content: schema.taskNotes.content,
-    created_at: schema.taskNotes.createdAt,
-    updated_at: schema.taskNotes.updatedAt,
-  },
-  task_assignees: {
-    id: schema.taskAssignees.id,
-    task_id: schema.taskAssignees.taskId,
-    user_id: schema.taskAssignees.userId,
-    assigned_by: schema.taskAssignees.assignedBy,
-    assigned_at: schema.taskAssignees.assignedAt,
-    is_primary: schema.taskAssignees.isPrimary,
-  },
-  task_comments: {
-    id: schema.taskComments.id,
-    task_id: schema.taskComments.taskId,
-    user_id: schema.taskComments.userId,
-    content: schema.taskComments.content,
-    parent_id: schema.taskComments.parentId,
-    mentions: schema.taskComments.mentions,
-    created_at: schema.taskComments.createdAt,
-    updated_at: schema.taskComments.updatedAt,
-  },
-  task_attachments: {
-    id: schema.taskAttachments.id,
-    task_id: schema.taskAttachments.taskId,
-    uploaded_by: schema.taskAttachments.uploadedBy,
-    file_name: schema.taskAttachments.fileName,
-    file_type: schema.taskAttachments.fileType,
-    file_size: schema.taskAttachments.fileSize,
-    storage_path: schema.taskAttachments.storagePath,
-    storage_bucket: schema.taskAttachments.storageBucket,
-    metadata: schema.taskAttachments.metadata,
-    created_at: schema.taskAttachments.createdAt,
-  },
-  time_entries: {
-    id: schema.timeEntries.id,
-    task_id: schema.timeEntries.taskId,
-    user_id: schema.timeEntries.userId,
-    description: schema.timeEntries.description,
-    started_at: schema.timeEntries.startedAt,
-    stopped_at: schema.timeEntries.stoppedAt,
-    duration: schema.timeEntries.duration,
-    is_billable: schema.timeEntries.isBillable,
-    billable_rate: schema.timeEntries.billableRate,
-    metadata: schema.timeEntries.metadata,
-    created_at: schema.timeEntries.createdAt,
-    updated_at: schema.timeEntries.updatedAt,
-  },
-  calendars: {
-    id: schema.calendars.id,
-    workspace_id: schema.calendars.workspaceId,
-    name: schema.calendars.name,
-    description: schema.calendars.description,
-    color: schema.calendars.color,
-    is_default: schema.calendars.isDefault,
-    provider: schema.calendars.provider,
-    provider_calendar_id: schema.calendars.providerCalendarId,
-    created_at: schema.calendars.createdAt,
-    updated_at: schema.calendars.updatedAt,
-  },
-  events: {
-    id: schema.events.id,
-    workspace_id: schema.events.workspaceId,
-    calendar_id: schema.events.calendarId,
-    title: schema.events.title,
-    description: schema.events.description,
-    location: schema.events.location,
-    is_all_day: schema.events.isAllDay,
-    start: schema.events.start,
-    end: schema.events.end,
-    timezone: schema.events.timezone,
-    recurrence_rule: schema.events.recurrenceRule,
-    recurrence_id: schema.events.recurrenceId,
-    provider_event_id: schema.events.providerEventId,
-    task_id: schema.events.taskId,
-    created_at: schema.events.createdAt,
-    updated_at: schema.events.updatedAt,
-  },
-  event_attendees: {
-    id: schema.eventAttendees.id,
-    event_id: schema.eventAttendees.eventId,
-    email: schema.eventAttendees.email,
-    name: schema.eventAttendees.name,
-    status: schema.eventAttendees.status,
-    is_organizer: schema.eventAttendees.isOrganizer,
-    created_at: schema.eventAttendees.createdAt,
-  },
-  scheduling_links: {
-    id: schema.schedulingLinks.id,
-    workspace_id: schema.schedulingLinks.workspaceId,
-    user_id: schema.schedulingLinks.userId,
-    name: schema.schedulingLinks.name,
-    slug: schema.schedulingLinks.slug,
-    description: schema.schedulingLinks.description,
-    calendar_id: schema.schedulingLinks.calendarId,
-    event_duration: schema.schedulingLinks.eventDuration,
-    buffer_before: schema.schedulingLinks.bufferBefore,
-    buffer_after: schema.schedulingLinks.bufferAfter,
-    min_booking_notice: schema.schedulingLinks.minBookingNotice,
-    max_booking_notice: schema.schedulingLinks.maxBookingNotice,
-    availability_start: schema.schedulingLinks.availabilityStart,
-    availability_end: schema.schedulingLinks.availabilityEnd,
-    available_days: schema.schedulingLinks.availableDays,
-    is_active: schema.schedulingLinks.isActive,
-    requires_approval: schema.schedulingLinks.requiresApproval,
-    max_daily_bookings: schema.schedulingLinks.maxDailyBookings,
-    created_at: schema.schedulingLinks.createdAt,
-    updated_at: schema.schedulingLinks.updatedAt,
-  },
+// Manual schema definition matching PostgreSQL schema from @life-os/database
+// This is a temporary approach until drizzle-driver integration is stable
+
+const app_users = new Table({
+  supabase_user_id: column.text,
+  email: column.text,
+  full_name: column.text,
+  created_at: column.text,
+  updated_at: column.text,
 });
+
+const workspaces = new Table({
+  name: column.text,
+  owner_id: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const workspace_memberships = new Table({
+  workspace_id: column.text,
+  user_id: column.text,
+  role: column.text,
+  created_at: column.text,
+});
+
+const projects = new Table({
+  workspace_id: column.text,
+  name: column.text,
+  description: column.text,
+  color: column.text,
+  icon: column.text,
+  status: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const tasks = new Table({
+  workspace_id: column.text,
+  project_id: column.text,
+  parent_id: column.text,
+  title: column.text,
+  description: column.text,
+  status: column.text,
+  priority: column.text,
+  due_date: column.text,
+  due_time: column.text,
+  estimated_duration: column.integer,
+  completed_at: column.text,
+  calendar_event_id: column.text,
+  recurrence_rule: column.text,
+  recurrence_id: column.text,
+  energy_level: column.text,
+  context_tags: column.text,
+  is_milestone: column.integer,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const task_dependencies = new Table({
+  task_id: column.text,
+  depends_on_task_id: column.text,
+  type: column.text,
+  created_at: column.text,
+});
+
+const task_notes = new Table({
+  task_id: column.text,
+  content: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const task_assignees = new Table({
+  task_id: column.text,
+  user_id: column.text,
+  assigned_by: column.text,
+  assigned_at: column.text,
+  is_primary: column.integer,
+});
+
+const task_comments = new Table({
+  task_id: column.text,
+  user_id: column.text,
+  content: column.text,
+  parent_id: column.text,
+  mentions: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const task_attachments = new Table({
+  task_id: column.text,
+  uploaded_by: column.text,
+  fileName: column.text,
+  fileType: column.text,
+  fileSize: column.text,
+  storage_path: column.text,
+  storage_bucket: column.text,
+  metadata: column.text,
+  created_at: column.text,
+});
+
+const time_entries = new Table({
+  task_id: column.text,
+  user_id: column.text,
+  description: column.text,
+  started_at: column.text,
+  stopped_at: column.text,
+  duration: column.text,
+  is_billable: column.integer,
+  billable_rate: column.text,
+  metadata: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const calendars = new Table({
+  workspace_id: column.text,
+  name: column.text,
+  description: column.text,
+  color: column.text,
+  is_default: column.integer,
+  provider: column.text,
+  provider_calendar_id: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const events = new Table({
+  workspace_id: column.text,
+  calendar_id: column.text,
+  title: column.text,
+  description: column.text,
+  location: column.text,
+  is_all_day: column.integer,
+  start: column.text,
+  end: column.text,
+  timezone: column.text,
+  recurrence_rule: column.text,
+  recurrence_id: column.text,
+  provider_event_id: column.text,
+  task_id: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+const event_attendees = new Table({
+  event_id: column.text,
+  email: column.text,
+  name: column.text,
+  status: column.text,
+  is_organizer: column.integer,
+  created_at: column.text,
+});
+
+const scheduling_links = new Table({
+  workspace_id: column.text,
+  user_id: column.text,
+  name: column.text,
+  slug: column.text,
+  description: column.text,
+  calendar_id: column.text,
+  event_duration: column.integer,
+  buffer_before: column.integer,
+  buffer_after: column.integer,
+  min_booking_notice: column.integer,
+  max_booking_notice: column.integer,
+  availability_start: column.text,
+  availability_end: column.text,
+  available_days: column.text,
+  timezone: column.text,
+  is_active: column.integer,
+  requires_approval: column.integer,
+  max_daily_bookings: column.integer,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
+export const powersyncSchema = new Schema({
+  app_users,
+  workspaces,
+  workspace_memberships,
+  projects,
+  tasks,
+  task_dependencies,
+  task_notes,
+  task_assignees,
+  task_comments,
+  task_attachments,
+  time_entries,
+  calendars,
+  events,
+  event_attendees,
+  scheduling_links,
+});
+
+// Export types for use in the app
+export type Database = (typeof powersyncSchema)['types'];
+export type ProjectRecord = Database['projects'];
+export type TaskRecord = Database['tasks'];
 
 export default powersyncSchema;
