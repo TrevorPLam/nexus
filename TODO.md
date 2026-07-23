@@ -341,8 +341,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-008: Add relational and workspace consistency constraints
 
-- [ ] **Task ID**: T-008
-- **Status**: `ready`
+- [x] **Task ID**: T-008
+- **Status**: `done`
 - **Related files**: `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts`, `supabase/migrations`, `packages/database/drizzle.config.ts`
 - **Definition of Done**:
   - Task parent, comment parent, task-event, and event-task relationships have explicit foreign-key behavior where supported.
@@ -359,16 +359,16 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-008-1** | `AGENT` | `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts` | Map every foreign key, missing self-reference, cross-domain link, and delete action.
-- [ ] **T-008-2** | `AGENT` | `supabase/migrations` | Research PostgreSQL composite foreign keys and the least disruptive migration strategy for existing tables.
-- [ ] **T-008-3** | `AGENT` | `supabase/migrations` | Check for existing orphan or cross-workspace data before selecting constraint enforcement order.
+- [x] **T-008-1** | `AGENT` | `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts` | Map every foreign key, missing self-reference, cross-domain link, and delete action.
+- [x] **T-008-2** | `AGENT` | `supabase/migrations` | Research PostgreSQL composite foreign keys and the least disruptive migration strategy for existing tables.
+- [x] **T-008-3** | `AGENT` | `supabase/migrations` | Check for existing orphan or cross-workspace data before selecting constraint enforcement order.
 
 ### Subtasks
 
-- [ ] **T-008-4** | `AGENT` | `packages/database` | Add failing integration tests for invalid parent, task-event, and cross-workspace references.
-- [ ] **T-008-5** | `AGENT` | `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts` | Add the corresponding Drizzle relationship definitions and constraint intent.
-- [ ] **T-008-6** | `AGENT` | `supabase/migrations` | Generate or write the reviewed migration with validation-safe constraint creation.
-- [ ] **T-008-7** | `AGENT` | `packages/database` | Run focused PostgreSQL integration tests and inspect the generated migration for destructive behavior.
+- [x] **T-008-4** | `AGENT` | `packages/database` | Add failing integration tests for invalid parent, task-event, and cross-workspace references.
+- [x] **T-008-5** | `AGENT` | `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts` | Add the corresponding Drizzle relationship definitions and constraint intent.
+- [x] **T-008-6** | `AGENT` | `supabase/migrations` | Generate or write the reviewed migration with validation-safe constraint creation.
+- [x] **T-008-7** | `AGENT` | `packages/database` | Run focused PostgreSQL integration tests and inspect the generated migration for destructive behavior.
 
 ### Validation Commands
 

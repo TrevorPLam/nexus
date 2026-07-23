@@ -25,10 +25,10 @@ export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
   workspaceId: uuid('workspace_id')
     .notNull()
-    .references(() => workspaces.id),
+    .references(() => workspaces.id, { onDelete: 'cascade' }),
   calendarId: uuid('calendar_id')
     .notNull()
-    .references(() => calendars.id),
+    .references(() => calendars.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
   description: text('description'),
   location: text('location'),
@@ -39,7 +39,7 @@ export const events = pgTable('events', {
   recurrenceRule: text('recurrence_rule'), // RRULE format
   recurrenceId: uuid('recurrence_id'), // For recurring event instances
   providerEventId: text('provider_event_id'), // External event ID
-  taskId: uuid('task_id'), // Link to task
+  taskId: uuid('task_id'), // Link to task - FK added in migration to avoid circular dependency
   metadata: jsonb('metadata').$type<Record<string, unknown>>(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -49,7 +49,7 @@ export const eventAttendees = pgTable('event_attendees', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')
     .notNull()
-    .references(() => events.id),
+    .references(() => events.id, { onDelete: 'cascade' }),
   email: text('email').notNull(),
   name: text('name'),
   status: text('status').notNull().default('needs_action'), // 'needs_action', 'accepted', 'declined', 'tentative'
