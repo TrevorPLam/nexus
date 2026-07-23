@@ -1126,8 +1126,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-025: Implement web hook tests - useTaskHelpers
 
-- [ ] TASK-025
-- Status: ready
+- [x] TASK-025
+- Status: done
 - Related Files: `apps/web/src/hooks/useTaskHelpers.test.ts`, `apps/web/src/hooks/useTaskHelpers.ts`
 - Definition of Done: All 3 utility function tests implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
@@ -1142,40 +1142,40 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-025-001 | AGENT | `apps/web/src/hooks/useTaskHelpers.ts`
+- [x] TASK-025-001 | AGENT | `apps/web/src/hooks/useTaskHelpers.ts`
   Read useTaskHelpers utility functions to understand functionality and return values.
 
-- [ ] TASK-025-002 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-002 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getPriorityColor returns correct color for each priority level
 
-- [ ] TASK-025-003 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-003 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getPriorityColor returns gray for unknown priority
 
-- [ ] TASK-025-004 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-004 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getTimelineDays returns 14 days starting from Sunday
 
-- [ ] TASK-025-005 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-005 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getTaskPosition returns null for task without due date
 
-- [ ] TASK-025-006 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-006 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getTaskPosition returns null for task outside timeline range
 
-- [ ] TASK-025-007 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+- [x] TASK-025-007 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Implement test: getTaskPosition calculates correct position and width
 
-- [ ] TASK-025-008 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
-  Run useTaskHelpers tests: `pnpm --filter @life-os/web test -- useTaskHelpers`
+- [x] TASK-025-008 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+  Run useTaskHelpers tests: `pnpm --filter @life-os/web test -- useTaskHelpers` - 6/6 tests passed
 
-- [ ] TASK-025-009 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-025-009 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
 ## TASK-026: Implement web hook tests - useWorkProjects
 
-- [ ] TASK-026
-- Status: ready
-- Related Files: `apps/web/src/hooks/useWorkProjects.test.ts`, `apps/web/src/hooks/useWorkProjects.ts`
+- [x] TASK-026
+- Status: done
+- Related Files: `apps/web/src/hooks/useWorkProjects.test.tsx`, `apps/web/src/hooks/useWorkProjects.ts`
 - Definition of Done: All 4 test placeholders implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
 - Rules to Follow:
@@ -1190,26 +1190,26 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-026-001 | AGENT | `apps/web/src/hooks/useWorkProjects.ts`
+- [x] TASK-026-001 | AGENT | `apps/web/src/hooks/useWorkProjects.ts`
   Read useWorkProjects hook to understand functionality and return values.
 
-- [ ] TASK-026-002 | AGENT | `apps/web/src/hooks/useWorkProjects.test.ts`
+- [x] TASK-026-002 | AGENT | `apps/web/src/hooks/useWorkProjects.test.tsx`
   Implement test: fetches projects for workspace
 
-- [ ] TASK-026-003 | AGENT | `apps/web/src/hooks/useWorkProjects.test.ts`
+- [x] TASK-026-003 | AGENT | `apps/web/src/hooks/useWorkProjects.test.tsx`
   Implement test: creates project and invalidates query
 
-- [ ] TASK-026-004 | AGENT | `apps/web/src/hooks/useWorkProjects.test.ts`
+- [x] TASK-026-004 | AGENT | `apps/web/src/hooks/useWorkProjects.test.tsx`
   Implement test: updates project and invalidates query
 
-- [ ] TASK-026-005 | AGENT | `apps/web/src/hooks/useWorkProjects.test.ts`
+- [x] TASK-026-005 | AGENT | `apps/web/src/hooks/useWorkProjects.test.tsx`
   Implement test: deletes project and invalidates queries
 
-- [ ] TASK-026-006 | AGENT | `apps/web/src/hooks/useWorkProjects.test.ts`
-  Run useWorkProjects tests: `pnpm --filter @life-os/web test -- useWorkProjects`
+- [x] TASK-026-006 | AGENT | `apps/web/src/hooks/useWorkProjects.test.tsx`
+  Run useWorkProjects tests: `pnpm --filter @life-os/web test -- useWorkProjects` - 5/5 tests passed
 
-- [ ] TASK-026-007 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-026-007 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
