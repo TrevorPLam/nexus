@@ -59,7 +59,8 @@ interface AuthContextValue {
   session: any | null;
   selectedWorkspace: Workspace | null;
   isLoading: boolean;
-  signIn: () => Promise<void>;
+  isSigningIn: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   selectWorkspace: (workspace: Workspace) => void;
 }
@@ -71,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<any | null>(null);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   const supabase = createClient();
 
@@ -132,10 +134,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [supabase]);
 
-  const signIn = async () => {
-    // TODO: Implement sign-in flow
-    // This will integrate with Supabase Auth
-    throw new Error('Sign-in not yet implemented');
+  const signIn = async (email: string, password: string) => {
+    setIsSigningIn(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+      // Auth state change listener will update user and session automatically
+    } catch (error) {
+      // Re-throw error for caller to handle
+      throw error;
+    } finally {
+      setIsSigningIn(false);
+    }
   };
 
   const signOut = async () => {
@@ -154,6 +170,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     selectedWorkspace,
     isLoading,
+    isSigningIn,
     signIn,
     signOut,
     selectWorkspace,
