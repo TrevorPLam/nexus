@@ -11,7 +11,7 @@ import {
   events,
   calendars,
 } from '@life-os/database';
-import { eq, and, desc, asc, sql, gt, inArray } from 'drizzle-orm';
+import { eq, and, desc, asc, sql, inArray } from 'drizzle-orm';
 
 import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
@@ -28,38 +28,36 @@ export async function withTransaction<T>(
 // Project Operations
 export async function createProject(
   data: typeof schema.projects.$inferInsert,
-  userId?: string,
-  workspaceId?: string,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const [project] = await tx.insert(projects).values(data).returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [project] = await tx.insert(projects).values(data).returning();
 
-    if (!project) {
-      throw new Error('Failed to create project');
-    }
+      if (!project) {
+        throw new Error('Failed to create project');
+      }
 
-    // Create audit log
-    if (userId && workspaceId) {
-      await createAuditLog({
-        userId,
-        workspaceId,
-        action: 'create',
-        entityType: 'project',
-        entityId: project.id,
-        changes: { new: data },
-      });
-    }
-
-    // Create outbox event for sync
-    await createOutboxEvent({
-      eventType: 'project.created',
-      aggregateType: 'project',
-      aggregateId: project.id,
-      payload: { project },
-    });
-
-    return project;
-  });
+      return project;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'project',
+          entityId: data.id || 'pending',
+          changes: { new: data },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'project.created',
+          aggregateType: 'project',
+          aggregateId: data.id || 'pending',
+          payload: { project: data },
+        }
+      : undefined,
+  );
 }
 
 export async function getProjectById(id: string) {
@@ -67,23 +65,43 @@ export async function getProjectById(id: string) {
   return project;
 }
 
-export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cursor?: string) {
+export async function getProjectsByWorkspace(
+  workspaceId: string,
+  limit = 50,
+  cursor?: string,
+  includeDeleted = false,
+) {
   const conditions = [eq(projects.workspaceId, workspaceId)];
 
+  // Exclude deleted projects by default
+  if (!includeDeleted) {
+    conditions.push(sql`${projects.status} != 'deleted'`);
+  }
+
   if (cursor) {
-    conditions.push(gt(projects.createdAt, new Date(cursor)));
+    const cursorData = JSON.parse(cursor);
+    conditions.push(
+      sql`(${projects.createdAt} < ${new Date(cursorData.createdAt)} OR (${projects.createdAt} = ${new Date(cursorData.createdAt)} AND ${projects.id} > ${cursorData.id}))`,
+    );
   }
 
   const results = await db
     .select()
     .from(projects)
     .where(and(...conditions))
-    .orderBy(desc(projects.createdAt))
+    .orderBy(desc(projects.createdAt), asc(projects.id))
     .limit(limit + 1); // Fetch one extra to determine if there's a next page
 
   const hasMore = results.length > limit;
   const items = hasMore ? results.slice(0, -1) : results;
-  const nextCursor = hasMore && items.length > 0 ? items[items.length - 1].createdAt.toISOString() : null;
+  const lastItem = items.length > 0 ? items[items.length - 1] : null;
+  const nextCursor =
+    hasMore && lastItem
+      ? JSON.stringify({
+          createdAt: lastItem.createdAt.toISOString(),
+          id: lastItem.id,
+        })
+      : null;
 
   return {
     items,
@@ -95,42 +113,40 @@ export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cu
 export async function updateProject(
   id: string,
   data: Partial<typeof schema.projects.$inferInsert>,
-  userId?: string,
-  workspaceId?: string,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const [project] = await tx
-      .update(projects)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(projects.id, id))
-      .returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [project] = await tx
+        .update(projects)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(projects.id, id))
+        .returning();
 
-    if (!project) {
-      throw new Error('Failed to update project');
-    }
+      if (!project) {
+        throw new Error('Failed to update project');
+      }
 
-    // Create audit log
-    if (userId && workspaceId) {
-      await createAuditLog({
-        userId,
-        workspaceId,
-        action: 'update',
-        entityType: 'project',
-        entityId: project.id,
-        changes: { old: {}, new: data },
-      });
-    }
-
-    // Create outbox event for sync
-    await createOutboxEvent({
-      eventType: 'project.updated',
-      aggregateType: 'project',
-      aggregateId: project.id,
-      payload: { project },
-    });
-
-    return project;
-  });
+      return project;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'project',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'project.updated',
+          aggregateType: 'project',
+          aggregateId: id,
+          payload: { project: data },
+        }
+      : undefined,
+  );
 }
 
 export async function deleteProject(id: string) {
@@ -145,38 +161,36 @@ export async function deleteProject(id: string) {
 // Task Operations
 export async function createTask(
   data: typeof schema.tasks.$inferInsert,
-  userId?: string,
-  workspaceId?: string,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const [task] = await tx.insert(tasks).values(data).returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [task] = await tx.insert(tasks).values(data).returning();
 
-    if (!task) {
-      throw new Error('Failed to create task');
-    }
+      if (!task) {
+        throw new Error('Failed to create task');
+      }
 
-    // Create audit log
-    if (userId && workspaceId) {
-      await createAuditLog({
-        userId,
-        workspaceId,
-        action: 'create',
-        entityType: 'task',
-        entityId: task.id,
-        changes: { new: data },
-      });
-    }
-
-    // Create outbox event for sync
-    await createOutboxEvent({
-      eventType: 'task.created',
-      aggregateType: 'task',
-      aggregateId: task.id,
-      payload: { task },
-    });
-
-    return task;
-  });
+      return task;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task',
+          entityId: data.id || 'pending',
+          changes: { new: data },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.created',
+          aggregateType: 'task',
+          aggregateId: data.id || 'pending',
+          payload: { task: data },
+        }
+      : undefined,
+  );
 }
 
 export async function getTaskById(id: string) {
@@ -184,23 +198,56 @@ export async function getTaskById(id: string) {
   return task ?? null;
 }
 
-export async function getTasksByWorkspace(workspaceId: string, limit = 50, cursor?: string) {
+export async function getTasksByWorkspace(
+  workspaceId: string,
+  limit = 50,
+  cursor?: string,
+  includeCancelled = false,
+) {
   const conditions = [eq(tasks.workspaceId, workspaceId)];
 
+  // Exclude cancelled tasks by default
+  if (!includeCancelled) {
+    conditions.push(sql`${tasks.status} != 'cancelled'`);
+  }
+
   if (cursor) {
-    conditions.push(gt(tasks.createdAt, new Date(cursor)));
+    const cursorData = JSON.parse(cursor);
+    // Composite cursor matching: asc(dueDate), desc(priority), asc(createdAt), asc(id)
+    // For asc: use >, for desc: use <
+    conditions.push(
+      sql`(${tasks.dueDate} > ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} OR 
+          (${tasks.dueDate} = ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} AND 
+           ${tasks.priority} < ${cursorData.priority}) OR 
+          (${tasks.dueDate} = ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} AND 
+           ${tasks.priority} = ${cursorData.priority} AND 
+           ${tasks.createdAt} > ${new Date(cursorData.createdAt)}) OR
+          (${tasks.dueDate} = ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} AND 
+           ${tasks.priority} = ${cursorData.priority} AND 
+           ${tasks.createdAt} = ${new Date(cursorData.createdAt)} AND 
+           ${tasks.id} > ${cursorData.id}))`,
+    );
   }
 
   const results = await db
     .select()
     .from(tasks)
     .where(and(...conditions))
-    .orderBy(asc(tasks.dueDate), desc(tasks.priority), asc(tasks.createdAt))
+    .orderBy(asc(tasks.dueDate), desc(tasks.priority), asc(tasks.createdAt), asc(tasks.id))
     .limit(limit + 1);
 
   const hasMore = results.length > limit;
   const items = hasMore ? results.slice(0, -1) : results;
-  const nextCursor = hasMore && items.length > 0 ? items[items.length - 1].createdAt.toISOString() : null;
+  const lastItem = items.length > 0 ? items[items.length - 1] : null;
+  const nextCursor =
+    hasMore && lastItem
+      ? JSON.stringify({
+          dueDate: lastItem.dueDate?.toISOString() || null,
+          priority: lastItem.priority,
+          createdAt: lastItem.createdAt.toISOString(),
+          id: lastItem.id,
+        })
+      : null;
 
   return {
     items,
@@ -209,12 +256,19 @@ export async function getTasksByWorkspace(workspaceId: string, limit = 50, curso
   };
 }
 
-export async function getTasksByProject(projectId: string) {
+export async function getTasksByProject(projectId: string, includeCancelled = false) {
+  const conditions = [eq(tasks.projectId, projectId)];
+
+  // Exclude cancelled tasks by default
+  if (!includeCancelled) {
+    conditions.push(sql`${tasks.status} != 'cancelled'`);
+  }
+
   return db
     .select()
     .from(tasks)
-    .where(eq(tasks.projectId, projectId))
-    .orderBy(asc(tasks.dueDate), desc(tasks.priority));
+    .where(and(...conditions))
+    .orderBy(asc(tasks.dueDate), desc(tasks.priority), asc(tasks.id));
 }
 
 export async function getFilteredTasks(filters: {
@@ -227,8 +281,14 @@ export async function getFilteredTasks(filters: {
   dueAfter?: Date;
   limit?: number;
   cursor?: string;
+  includeCancelled?: boolean;
 }) {
   const conditions = [eq(tasks.workspaceId, filters.workspaceId)];
+
+  // Exclude cancelled tasks by default unless explicitly requested
+  if (!filters.includeCancelled && filters.status !== 'cancelled') {
+    conditions.push(sql`${tasks.status} != 'cancelled'`);
+  }
 
   if (filters.projectId) {
     conditions.push(eq(tasks.projectId, filters.projectId));
@@ -258,20 +318,40 @@ export async function getFilteredTasks(filters: {
   }
 
   const limit = filters.limit || 50;
-  let query = db
+
+  // Add cursor predicate if provided
+  if (filters.cursor) {
+    const cursorData = JSON.parse(filters.cursor);
+    // Composite cursor matching: asc(dueDate), desc(priority), asc(id)
+    conditions.push(
+      sql`(${tasks.dueDate} > ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} OR 
+          (${tasks.dueDate} = ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} AND 
+           ${tasks.priority} < ${cursorData.priority}) OR 
+          (${tasks.dueDate} = ${cursorData.dueDate ? new Date(cursorData.dueDate) : null} AND 
+           ${tasks.priority} = ${cursorData.priority} AND 
+           ${tasks.id} > ${cursorData.id}))`,
+    );
+  }
+
+  const query = db
     .select()
     .from(tasks)
     .where(and(...conditions))
-    .orderBy(asc(tasks.dueDate), desc(tasks.priority))
-    .limit(limit);
+    .orderBy(asc(tasks.dueDate), desc(tasks.priority), asc(tasks.id))
+    .limit(limit + 1);
 
-  if (filters.cursor) {
-    query = query.where(sql`${tasks.id} > ${filters.cursor}`);
-  }
-
-  const items = await query;
-  const hasMore = items.length === limit;
-  const nextCursor = hasMore ? items[items.length - 1].id : undefined;
+  const results = await query;
+  const hasMore = results.length > limit;
+  const items = hasMore ? results.slice(0, -1) : results;
+  const lastItem = items.length > 0 ? items[items.length - 1] : null;
+  const nextCursor =
+    hasMore && lastItem
+      ? JSON.stringify({
+          dueDate: lastItem.dueDate?.toISOString() || null,
+          priority: lastItem.priority,
+          id: lastItem.id,
+        })
+      : null;
 
   return { items, nextCursor, hasMore };
 }
@@ -297,86 +377,83 @@ export async function searchTasks(workspaceId: string, query: string, limit = 20
 export async function updateTask(
   id: string,
   data: Partial<typeof schema.tasks.$inferInsert>,
-  userId?: string,
-  workspaceId?: string,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
 
-    // Auto-set completedAt when status is 'done'
-    if (data.status === 'done' && !data.completedAt) {
-      updateData.completedAt = new Date();
-    }
+      // Auto-set completedAt when status is 'done'
+      if (data.status === 'done' && !data.completedAt) {
+        updateData.completedAt = new Date();
+      }
 
-    // Clear completedAt when status is not 'done'
-    if (data.status && data.status !== 'done') {
-      updateData.completedAt = null;
-    }
+      // Clear completedAt when status is not 'done'
+      if (data.status && data.status !== 'done') {
+        updateData.completedAt = null;
+      }
 
-    const [task] = await tx.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
+      const [task] = await tx.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
 
-    if (!task) {
-      throw new Error('Failed to update task');
-    }
+      if (!task) {
+        throw new Error('Failed to update task');
+      }
 
-    // Create audit log
-    if (userId && workspaceId) {
-      await createAuditLog({
-        userId,
-        workspaceId,
-        action: 'update',
-        entityType: 'task',
-        entityId: task.id,
-        changes: { old: {}, new: data },
-      });
-    }
-
-    // Create outbox event for sync
-    await createOutboxEvent({
-      eventType: 'task.updated',
-      aggregateType: 'task',
-      aggregateId: task.id,
-      payload: { task },
-    });
-
-    return task;
-  });
+      return task;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.updated',
+          aggregateType: 'task',
+          aggregateId: id,
+          payload: { task: data },
+        }
+      : undefined,
+  );
 }
 
-export async function deleteTask(id: string, userId?: string, workspaceId?: string) {
-  return withTransaction(async (tx) => {
-    const [task] = await tx
-      .update(tasks)
-      .set({ status: 'cancelled', updatedAt: new Date() })
-      .where(eq(tasks.id, id))
-      .returning();
+export async function deleteTask(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [task] = await tx
+        .update(tasks)
+        .set({ status: 'cancelled', updatedAt: new Date() })
+        .where(eq(tasks.id, id))
+        .returning();
 
-    if (!task) {
-      throw new Error('Failed to delete task');
-    }
+      if (!task) {
+        throw new Error('Failed to delete task');
+      }
 
-    // Create audit log
-    if (userId && workspaceId) {
-      await createAuditLog({
-        userId,
-        workspaceId,
-        action: 'delete',
-        entityType: 'task',
-        entityId: task.id,
-        changes: { old: { status: task.status } },
-      });
-    }
-
-    // Create outbox event for sync
-    await createOutboxEvent({
-      eventType: 'task.deleted',
-      aggregateType: 'task',
-      aggregateId: task.id,
-      payload: { task },
-    });
-
-    return task;
-  });
+      return task;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'task',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.deleted',
+          aggregateType: 'task',
+          aggregateId: id,
+          payload: { taskId: id },
+        }
+      : undefined,
+  );
 }
 
 // Task Dependency Operations
@@ -558,41 +635,104 @@ export async function deleteTaskNote(id: string, context?: CommandContext) {
 }
 
 // Batch Task Operations
-export async function batchCompleteTasks(taskIds: string[]) {
-  return db
-    .update(tasks)
-    .set({
-      status: 'done',
-      completedAt: new Date(),
-      updatedAt: new Date(),
-    })
-    .where(inArray(tasks.id, taskIds))
-    .returning();
+export async function batchCompleteTasks(taskIds: string[], context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      return tx
+        .update(tasks)
+        .set({
+          status: 'done',
+          completedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(inArray(tasks.id, taskIds))
+        .returning();
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task',
+          entityId: 'batch',
+          changes: { new: { status: 'done' } },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.batch_completed',
+          aggregateType: 'task',
+          aggregateId: 'batch',
+          payload: { taskIds },
+        }
+      : undefined,
+  );
 }
 
-export async function batchDeferTasks(taskIds: string[], deferToDate: Date) {
-  return db
-    .update(tasks)
-    .set({
-      dueDate: deferToDate,
-      updatedAt: new Date(),
-    })
-    .where(inArray(tasks.id, taskIds))
-    .returning();
+export async function batchDeferTasks(taskIds: string[], deferToDate: Date, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      return tx
+        .update(tasks)
+        .set({
+          dueDate: deferToDate,
+          updatedAt: new Date(),
+        })
+        .where(inArray(tasks.id, taskIds))
+        .returning();
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task',
+          entityId: 'batch',
+          changes: { new: { dueDate: deferToDate } },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.batch_deferred',
+          aggregateType: 'task',
+          aggregateId: 'batch',
+          payload: { taskIds, deferToDate },
+        }
+      : undefined,
+  );
 }
 
-export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date) {
-  return db
-    .update(tasks)
-    .set({
-      dueDate: newDueDate,
-      updatedAt: new Date(),
-    })
-    .where(inArray(tasks.id, taskIds))
-    .returning();
+export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      return tx
+        .update(tasks)
+        .set({
+          dueDate: newDueDate,
+          updatedAt: new Date(),
+        })
+        .where(inArray(tasks.id, taskIds))
+        .returning();
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task',
+          entityId: 'batch',
+          changes: { new: { dueDate: newDueDate } },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.batch_rescheduled',
+          aggregateType: 'task',
+          aggregateId: 'batch',
+          payload: { taskIds, newDueDate },
+        }
+      : undefined,
+  );
 }
 
-export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string) {
+export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string, context?: CommandContext) {
   const updateData: Record<string, unknown> = { status: newStatus, updatedAt: new Date() };
 
   if (newStatus === 'done') {
@@ -601,7 +741,28 @@ export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string
     updateData.completedAt = null;
   }
 
-  return db.update(tasks).set(updateData).where(inArray(tasks.id, taskIds)).returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      return tx.update(tasks).set(updateData).where(inArray(tasks.id, taskIds)).returning();
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task',
+          entityId: 'batch',
+          changes: { new: { status: newStatus } },
+        }
+      : undefined,
+    context?.userId && context?.workspaceId
+      ? {
+          eventType: 'task.batch_status_updated',
+          aggregateType: 'task',
+          aggregateId: 'batch',
+          payload: { taskIds, newStatus },
+        }
+      : undefined,
+  );
 }
 
 // Task Assignee Operations
@@ -954,13 +1115,15 @@ export async function createTaskWithDependencies(
       const [task] = await tx.insert(tasks).values(taskData).returning();
 
       if (dependencies.length > 0) {
-        await tx.insert(taskDependencies).values(
-          dependencies.map((dep: { dependsOnTaskId: string; type: string }) => ({
-            taskId: task.id,
-            dependsOnTaskId: dep.dependsOnTaskId,
-            type: dep.type,
-          })),
-        );
+        await tx
+          .insert(taskDependencies)
+          .values(
+            dependencies.map((dep: { dependsOnTaskId: string; type: string }) => ({
+              taskId: task.id,
+              dependsOnTaskId: dep.dependsOnTaskId,
+              type: dep.type,
+            })) as typeof schema.taskDependencies.$inferInsert[],
+          );
       }
 
       return task;
@@ -994,14 +1157,16 @@ export async function createTaskWithAssignees(
       const [task] = await tx.insert(tasks).values(taskData).returning();
 
       if (assignees.length > 0) {
-        await tx.insert(taskAssignees).values(
-          assignees.map((assignee: { userId: string; assignedBy: string; isPrimary?: boolean }) => ({
-            taskId: task.id,
-            userId: assignee.userId,
-            assignedBy: assignee.assignedBy,
-            isPrimary: assignee.isPrimary ?? false,
-          })),
-        );
+        await tx
+          .insert(taskAssignees)
+          .values(
+            assignees.map((assignee: { userId: string; assignedBy: string; isPrimary?: boolean }) => ({
+              taskId: task.id,
+              userId: assignee.userId,
+              assignedBy: assignee.assignedBy,
+              isPrimary: assignee.isPrimary ?? false,
+            })) as typeof schema.taskAssignees.$inferInsert[],
+          );
       }
 
       return task;

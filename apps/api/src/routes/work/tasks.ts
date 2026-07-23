@@ -10,6 +10,7 @@ import {
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
+import { extractCommandContext } from '../../lib/command-context.js';
 
 const tasksRouter = new Hono();
 
@@ -30,6 +31,7 @@ tasksRouter.post(
   async (c) => {
     const data = c.req.valid('json');
     try {
+      const context = await extractCommandContext(c);
       const task = await workOps.createTask({
         ...data,
         status: data.status || 'todo',
@@ -38,7 +40,7 @@ tasksRouter.post(
         metadata: null,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
         estimatedDuration: data.estimatedDuration,
-      });
+      }, context);
       return c.json(task, 201);
     } catch (error) {
       console.error('Error creating task:', error);
@@ -49,6 +51,9 @@ tasksRouter.post(
 
 tasksRouter.get('/tasks/:id', requireEntityAccess('tasks'), async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Invalid task ID' }, 400);
+  }
   try {
     const task = await workOps.getTaskById(id);
     if (!task) {
@@ -74,26 +79,41 @@ tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, as
   const dueAfter = c.req.query('dueAfter');
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const cursor = c.req.query('cursor');
+  const includeCancelled = c.req.query('includeCancelled') === 'true';
+
+  // Validate cursor format if provided
+  let parsedCursor: string | undefined;
+  if (cursor) {
+    try {
+      JSON.parse(cursor);
+      parsedCursor = cursor;
+    } catch {
+      return c.json({ error: 'Invalid cursor format' }, 400);
+    }
+  }
 
   try {
     // If any filter parameters are provided, use filtered query with pagination
     if (projectId || status || priority || search || dueBefore || dueAfter) {
-      const result = await workOps.getFilteredTasks({
+      const filterParams: Record<string, unknown> = {
         workspaceId,
-        projectId,
-        status,
-        priority,
-        searchQuery: search,
-        dueBefore: dueBefore ? new Date(dueBefore) : undefined,
-        dueAfter: dueAfter ? new Date(dueAfter) : undefined,
         limit,
-        cursor,
-      });
+        includeCancelled,
+      };
+      if (projectId) filterParams.projectId = projectId;
+      if (status) filterParams.status = status;
+      if (priority) filterParams.priority = priority;
+      if (search) filterParams.searchQuery = search;
+      if (dueBefore) filterParams.dueBefore = new Date(dueBefore);
+      if (dueAfter) filterParams.dueAfter = new Date(dueAfter);
+      if (parsedCursor) filterParams.cursor = parsedCursor;
+
+      const result = await workOps.getFilteredTasks(filterParams as any);
       return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
     }
 
     // Otherwise, get paginated tasks for workspace
-    const result = await workOps.getTasksByWorkspace(workspaceId, limit, cursor);
+    const result = await workOps.getTasksByWorkspace(workspaceId, limit, parsedCursor, includeCancelled);
     return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -106,8 +126,10 @@ tasksRouter.get('/projects/:projectId/tasks', requireWorkspaceMembership, async 
   if (!projectId) {
     return c.json({ error: 'Invalid project ID' }, 400);
   }
+  const includeCancelled = c.req.query('includeCancelled') === 'true';
+
   try {
-    const tasks = await workOps.getTasksByProject(projectId);
+    const tasks = await workOps.getTasksByProject(projectId, includeCancelled);
     return c.json({ tasks });
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -133,11 +155,12 @@ tasksRouter.put(
     }
     const data = c.req.valid('json');
     try {
+      const context = await extractCommandContext(c);
       const updateData: Record<string, unknown> = { ...data };
       if (data.dueDate) {
         updateData.dueDate = new Date(data.dueDate);
       }
-      const task = await workOps.updateTask(id, updateData);
+      const task = await workOps.updateTask(id, updateData, context);
       if (!task) {
         return c.json({ error: 'Task not found' }, 404);
       }
@@ -155,7 +178,8 @@ tasksRouter.delete('/tasks/:id', requireWorkspaceMembership, idempotencyMiddlewa
     return c.json({ error: 'Invalid task ID' }, 400);
   }
   try {
-    const task = await workOps.deleteTask(id, undefined, undefined);
+    const context = await extractCommandContext(c);
+    const task = await workOps.deleteTask(id, context);
     if (!task) {
       return c.json({ error: 'Task not found' }, 404);
     }

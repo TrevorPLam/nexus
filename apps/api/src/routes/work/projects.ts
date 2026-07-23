@@ -13,6 +13,7 @@ import * as workOps from '../../lib/work-operations.js';
 import { db } from '../../lib/db.js';
 import { workspaceMemberships, appUsers, workspaces } from '@life-os/database';
 import { eq } from 'drizzle-orm';
+import { extractCommandContext } from '../../lib/command-context.js';
 
 const projectsRouter = new Hono();
 
@@ -21,7 +22,7 @@ projectsRouter.use('*', authMiddleware);
 
 // Get user's workspaces
 projectsRouter.get('/workspaces', async (c) => {
-  const user = c.get('user');
+  const user = c.get('user') as { id: string } | undefined;
   if (!user) {
     return c.json({ error: 'Unauthorized' }, 401);
   }
@@ -66,11 +67,12 @@ projectsRouter.post(
   async (c) => {
     const data = c.req.valid('json');
     try {
+      const context = await extractCommandContext(c);
       const project = await workOps.createProject({
         ...data,
         status: 'active',
         metadata: null,
-      });
+      }, context);
       return c.json(project, 201);
     } catch (error) {
       console.error('Error creating project:', error);
@@ -98,11 +100,31 @@ projectsRouter.get('/projects/:id', requireEntityAccess('projects'), async (c) =
 
 projectsRouter.get('/workspaces/:workspaceId/projects', requireWorkspaceMembership, async (c) => {
   const workspaceId = c.req.param('workspaceId');
+  if (!workspaceId) {
+    return c.json({ error: 'Invalid workspace ID' }, 400);
+  }
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const cursor = c.req.query('cursor');
+  const includeDeleted = c.req.query('includeDeleted') === 'true';
+
+  // Validate cursor format if provided
+  let parsedCursor: string | undefined;
+  if (cursor) {
+    try {
+      JSON.parse(cursor);
+      parsedCursor = cursor;
+    } catch {
+      return c.json({ error: 'Invalid cursor format' }, 400);
+    }
+  }
 
   try {
-    const result = await workOps.getProjectsByWorkspace(workspaceId, limit, cursor);
+    const result = await workOps.getProjectsByWorkspace(
+      workspaceId,
+      limit,
+      parsedCursor,
+      includeDeleted,
+    );
     return c.json({ projects: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -128,11 +150,12 @@ projectsRouter.put(
     }
     const data = c.req.valid('json');
     try {
+      const context = await extractCommandContext(c);
       // Filter out undefined values to avoid type errors
       const updateData = Object.fromEntries(
         Object.entries(data).filter(([_, v]) => v !== undefined)
       );
-      const project = await workOps.updateProject(id, updateData);
+      const project = await workOps.updateProject(id, updateData, context);
       if (!project) {
         return c.json({ error: 'Project not found' }, 404);
       }

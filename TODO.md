@@ -380,8 +380,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-009: Centralize atomic Work and Calendar commands
 
-- [ ] **Task ID**: T-009
-- **Status**: `ready`
+- [x] **Task ID**: T-009
+- **Status**: `done`
 - **Related files**: `apps/api/src/lib/work-operations.ts`, `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/audit.ts`, `apps/api/src/lib/idempotency.ts`, `apps/api/src/routes/work`, `apps/api/src/routes/calendar`
 - **Definition of Done**:
   - Canonical command handlers own transaction boundaries, authorization context, audit records, outbox records, and idempotency behavior.
@@ -398,18 +398,44 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-009-1** | `AGENT` | `apps/api/src/lib` | Inventory existing transaction, audit, outbox, and idempotency helpers and identify duplicated mutation behavior.
-- [ ] **T-009-2** | `AGENT` | `apps/api/src/lib` | Research Drizzle transaction typing and command-handler boundaries suitable for the existing monorepo.
-- [ ] **T-009-3** | `AGENT` | `apps/api/src/lib` | Produce a command map for Project, Task, Calendar, Event, Attendee, Dependency, Assignee, Note, Comment, Attachment, and Time Entry mutations.
+- [x] **T-009-1** | `AGENT` | `apps/api/src/lib` | Inventory existing transaction, audit, outbox, and idempotency helpers and identify duplicated mutation behavior.
+- [x] **T-009-2** | `AGENT` | `apps/api/src/lib` | Research Drizzle transaction typing and command-handler boundaries suitable for the existing monorepo.
+- [x] **T-009-3** | `AGENT` | `apps/api/src/lib` | Produce a command map for Project, Task, Calendar, Event, Attendee, Dependency, Assignee, Note, Comment, Attachment, and Time Entry mutations.
+
+**Analysis Findings:**
+
+**Existing Infrastructure:**
+- `command-context.ts` provides `executeCommand` (with idempotency) and `executeCommandWithoutIdempotency`
+- These already handle transactions, audit logs, outbox events, and idempotency atomically
+- `audit.ts` and `idempotency.ts` provide the underlying helpers
+
+**Duplicated Mutation Behavior:**
+- `work-operations.ts` has inconsistent patterns:
+  - Old pattern: `withTransaction` with manual audit/outbox (createProject, createTask, updateTask, deleteTask)
+  - New pattern: `executeCommandWithoutIdempotency` (createTaskNote, createTaskAssignee, etc.)
+  - No audit/outbox: createTaskDependency, get* operations
+  - No transaction/audit/outbox: batchCompleteTasks, batchDeferTasks, batchRescheduleTasks, batchUpdateTaskStatus
+- `calendar-operations.ts` uses `executeCommandWithoutIdempotency` but receives undefined userId/workspaceId
+
+**Route Layer Issues:**
+- Routes don't pass CommandContext (userId, workspaceId, idempotencyKey, endpoint) to operations
+- Middleware sets `user` and `workspaceMembership` in Hono context but routes don't extract and pass to operations
+- Idempotency is handled at middleware level, not integrated with command execution
+- Operations that expect context receive undefined, causing missing audit logs
+
+**Command Map (Mutations Requiring Centralization):**
+- Work: createProject, updateProject, deleteProject, createTask, updateTask, deleteTask, createTaskDependency, deleteTaskDependency, batchCompleteTasks, batchDeferTasks, batchRescheduleTasks, batchUpdateTaskStatus
+- Calendar: createCalendar, updateCalendar, deleteCalendar, createEvent, updateEvent, deleteEvent, createEventAttendee, updateEventAttendee, deleteEventAttendee, createSchedulingLink, updateSchedulingLink, deleteSchedulingLink
+- Integration: linkEventToTask, unlinkEventFromTask, bookSlot
 
 ### Subtasks
 
-- [ ] **T-009-4** | `AGENT` | `apps/api/src/lib/*.test.ts` | Write failing transaction, rollback, audit, outbox, and idempotency tests for one representative Work command and one Calendar command.
-- [ ] **T-009-5** | `AGENT` | `apps/api/src/lib` | Implement the typed Unit of Work and command context without changing all routes at once.
-- [ ] **T-009-6** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Migrate Work compound mutations and child mutations to canonical commands.
-- [ ] **T-009-7** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Migrate Calendar mutations and booking-related writes to canonical commands.
-- [ ] **T-009-8** | `AGENT` | `apps/api/src/routes` | Make routes validate, authorize, invoke commands, and map typed errors only.
-- [ ] **T-009-9** | `AGENT` | `apps/api/src/lib/*.test.ts` | Run focused command tests and verify audit/outbox records are committed or rolled back with domain writes.
+- [x] **T-009-4** | `AGENT` | `apps/api/src/lib/*.test.ts` | Write failing transaction, rollback, audit, outbox, and idempotency tests for one representative Work command and one Calendar command.
+- [x] **T-009-5** | `AGENT` | `apps/api/src/lib` | Implement the typed Unit of Work and command context without changing all routes at once.
+- [x] **T-009-6** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Migrate Work compound mutations and child mutations to canonical commands.
+- [x] **T-009-7** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Migrate Calendar mutations and booking-related writes to canonical commands.
+- [x] **T-009-8** | `AGENT` | `apps/api/src/routes` | Make routes validate, authorize, invoke commands, and map typed errors only.
+- [x] **T-009-9** | `AGENT` | `apps/api/src/lib/*.test.ts` | Run focused command tests and verify audit/outbox records are committed or rolled back with domain writes.
 
 ### Validation Commands
 
@@ -421,8 +447,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-010: Correct Work lifecycle, soft deletion, and pagination
 
-- [ ] **Task ID**: T-010
-- **Status**: `ready`
+- [x] **Task ID**: T-010
+- **Status**: `done`
 - **Related files**: `apps/api/src/lib/work-operations.ts`, `apps/api/src/routes/work/projects.ts`, `apps/api/src/routes/work/tasks.ts`, `packages/contracts/src/work.ts`, `apps/api/src/lib/work-operations.test.ts`
 - **Definition of Done**:
   - Normal Project queries exclude deleted projects unless an explicit administrative filter requests them.
@@ -440,16 +466,16 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-010-1** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Map each Work list query’s filters, order, indexes, cursor, and lifecycle semantics.
-- [ ] **T-010-2** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Research stable keyset pagination for nullable dates, priority ordering, and descending/ascending mixed keys.
-- [ ] **T-010-3** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Confirm desired product behavior for cancelled tasks and deleted projects from existing UI and contracts before implementation.
+- [x] **T-010-1** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Map each Work list query's filters, order, indexes, cursor, and lifecycle semantics.
+- [x] **T-010-2** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Research stable keyset pagination for nullable dates, priority ordering, and descending/ascending mixed keys.
+- [x] **T-010-3** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Confirm desired product behavior for cancelled tasks and deleted projects from existing UI and contracts before implementation.
 
 ### Subtasks
 
-- [ ] **T-010-4** | `AGENT` | `apps/api/src/lib/work-operations.test.ts` | Add failing tests for lifecycle filtering, duplicate/skip-free pagination, and combined filters.
-- [ ] **T-010-5** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Implement lifecycle predicates and stable composite cursors.
-- [ ] **T-010-6** | `AGENT` | `apps/api/src/routes/work/*.ts` | Validate cursor and filter inputs at the route boundary and preserve response compatibility.
-- [ ] **T-010-7** | `AGENT` | `apps/api/src/lib/work-operations.test.ts` | Run focused query tests and inspect generated SQL/query plans if integration fixtures are available.
+- [x] **T-010-4** | `AGENT` | `apps/api/src/lib/work-operations.test.ts` | Add failing tests for lifecycle filtering, duplicate/skip-free pagination, and combined filters.
+- [x] **T-010-5** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Implement lifecycle predicates and stable composite cursors.
+- [x] **T-010-6** | `AGENT` | `apps/api/src/routes/work/*.ts` | Validate cursor and filter inputs at the route boundary and preserve response compatibility.
+- [x] **T-010-7** | `AGENT` | `apps/api/src/lib/work-operations.test.ts` | Run focused query tests and inspect generated SQL/query plans if integration fixtures are available.
 
 ### Validation Commands
 
