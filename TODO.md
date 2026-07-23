@@ -487,8 +487,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-011: Correct Calendar recurrence, availability, and booking invariants
 
-- [ ] **Task ID**: T-011
-- **Status**: `ready`
+- [x] **Task ID**: T-011
+- **Status**: `done`
 - **Related files**: `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/recurrence.ts`, `apps/api/src/lib/availability.ts`, `apps/api/src/routes/calendar/scheduling-links.ts`, `apps/api/src/routes/calendar/recurring.ts`, `packages/contracts/src/calendar.ts`, `apps/api/src/lib/calendar-operations.test.ts`
 - **Definition of Done**:
   - Event overlap detection uses one correct interval predicate.
@@ -506,17 +506,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-011-1** | `AGENT` | `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/recurrence.ts` | Trace recurrence identity, generated instance identity, overlap logic, and event timezone semantics.
-- [ ] **T-011-2** | `AGENT` | `apps/api/src/routes/calendar/scheduling-links.ts` | Map every scheduling-link field to enforcement behavior and document unresolved product decisions in this task.
-- [ ] **T-011-3** | `AGENT` | `apps/api/src/lib` | Research PostgreSQL conflict prevention or transaction isolation options compatible with Supabase transaction pooling.
+- [x] **T-011-1** | `AGENT` | `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/recurrence.ts` | Trace recurrence identity, generated instance identity, overlap logic, and event timezone semantics.
+- [x] **T-011-2** | `AGENT` | `apps/api/src/routes/calendar/scheduling-links.ts` | Map every scheduling-link field to enforcement behavior and document unresolved product decisions in this task.
+- [x] **T-011-3** | `AGENT` | `apps/api/src/lib` | Research PostgreSQL conflict prevention or transaction isolation options compatible with Supabase transaction pooling.
 
 ### Subtasks
 
-- [ ] **T-011-4** | `AGENT` | `apps/api/src/lib/calendar-operations.test.ts` | Add failing tests for overlap boundaries, buffers, timezone/DST, max daily bookings, approval, and concurrent booking behavior.
-- [ ] **T-011-5** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Implement correct availability policies and interval conflict handling.
-- [ ] **T-011-6** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Implement the atomic booking command and attendee creation behavior.
-- [ ] **T-011-7** | `AGENT` | `apps/api/src/routes/calendar/scheduling-links.ts` | Map typed booking and availability errors to stable HTTP responses.
-- [ ] **T-011-8** | `AGENT` | `apps/api/src/lib/calendar-operations.test.ts` | Run focused calendar tests and record the concurrency test result.
+- [x] **T-011-4** | `AGENT` | `apps/api/src/lib/calendar-operations.test.ts` | Add failing tests for overlap boundaries, buffers, timezone/DST, max daily bookings, approval, and concurrent booking behavior.
+- [x] **T-011-5** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Implement correct availability policies and interval conflict handling.
+- [x] **T-011-6** | `AGENT` | `apps/api/src/lib/calendar-operations.ts` | Implement the atomic booking command and attendee creation behavior.
+- [x] **T-011-7** | `AGENT` | `apps/api/src/routes/calendar/scheduling-links.ts` | Map typed booking and availability errors to stable HTTP responses.
+- [x] **T-011-8** | `AGENT` | `apps/api/src/lib/calendar-operations.test.ts` | Run focused calendar tests and record the concurrency test result.
 
 ### Validation Commands
 

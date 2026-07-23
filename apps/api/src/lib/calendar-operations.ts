@@ -1,6 +1,6 @@
 import * as schema from '@life-os/database';
 import { calendars, events, eventAttendees, schedulingLinks } from '@life-os/database';
-import { eq, and, desc, asc, gte, lte, or, isNull, gt } from 'drizzle-orm';
+import { eq, and, desc, asc, gte, lte, or, isNull, gt, sql } from 'drizzle-orm';
 
 import { db } from './db.js';
 import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
@@ -665,13 +665,11 @@ export async function getAvailableSlots(
       actualSlotEnd.setMinutes(actualSlotStart.getMinutes() + duration);
 
       // Check if this slot conflicts with existing events
+      // Overlap predicate: slotStart < eventEnd && slotEnd > eventStart
       const hasConflict = existingEvents.some((event) => {
         const eventStart = new Date(event.start);
         const eventEnd = new Date(event.end);
-        return (
-          (actualSlotStart < eventEnd && actualSlotEnd > eventStart) ||
-          (actualSlotStart < eventEnd && actualSlotEnd > eventStart)
-        );
+        return actualSlotStart < eventEnd && actualSlotEnd > eventStart;
       });
 
       if (!hasConflict) {
@@ -695,15 +693,84 @@ export async function getAvailableSlots(
 
 function parseTime(timeStr: string): { hour: number; minute: number } {
   const [hour, minute] = timeStr.split(':').map(Number);
-  return { hour, minute };
+  return { hour: hour || 0, minute: minute || 0 };
 }
 
-// Booking with conflict detection
+// Booking with conflict detection and atomic event+attendee creation
+export async function bookSlotAtomic(
+  calendarId: string,
+  start: Date,
+  end: Date,
+  eventData: typeof schema.events.$inferInsert,
+  attendeeData: Omit<typeof schema.eventAttendees.$inferInsert, 'eventId' | 'status'>,
+  requiresApproval = false,
+  context?: CommandContext,
+): Promise<{ event: typeof schema.events.$inferSelect; attendee: typeof schema.eventAttendees.$inferSelect }> {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      // Lock overlapping events with SELECT FOR UPDATE to prevent concurrent bookings
+      const overlappingEvents = await tx
+        .select()
+        .from(events)
+        .where(
+          and(
+            eq(events.calendarId, calendarId),
+            sql`${events.start} < ${end} AND ${events.end} > ${start}`,
+          ),
+        )
+        .for('update');
+
+      // Check for conflicts
+      const hasConflict = overlappingEvents.some((event: typeof schema.events.$inferSelect) => {
+        const eventStart = new Date(event.start);
+        const eventEnd = new Date(event.end);
+        return start < eventEnd && end > eventStart;
+      });
+
+      if (hasConflict) {
+        throw new Error('Slot is no longer available');
+      }
+
+      // Create the event
+      const [event] = await tx.insert(events).values(eventData).returning();
+
+      // Create the attendee with appropriate status
+      const [attendee] = await tx
+        .insert(eventAttendees)
+        .values({
+          ...attendeeData,
+          eventId: event.id,
+          status: requiresApproval ? 'pending' : 'accepted',
+        })
+        .returning();
+
+      return { event, attendee };
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'booking',
+          entityId: eventData.id || 'pending',
+          changes: { new: { event: eventData, attendee: attendeeData } },
+        }
+      : undefined,
+    {
+      eventType: 'booking.created',
+      aggregateType: 'event',
+      aggregateId: eventData.id || 'pending',
+      payload: { event: eventData, attendee: attendeeData, requiresApproval },
+    },
+  );
+}
+
+// Legacy booking function for backward compatibility
 export async function bookSlot(
   calendarId: string,
   start: Date,
   end: Date,
   eventData: typeof schema.events.$inferInsert,
+  requiresApproval = false,
 ): Promise<typeof schema.events.$inferSelect> {
   // Check for conflicts
   const existingEvents = await getEventsByCalendar(

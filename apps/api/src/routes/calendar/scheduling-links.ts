@@ -188,7 +188,7 @@ schedulingLinksRouter.post(
       const endDate = new Date(data.endDate);
 
       // Min booking notice (in hours)
-      if (schedulingLink.minBookingNotice > 0) {
+      if (schedulingLink.minBookingNotice && schedulingLink.minBookingNotice > 0) {
         const minDate = new Date(now.getTime() + schedulingLink.minBookingNotice * 60 * 60 * 1000);
         if (startDate < minDate) {
           return c.json({ error: 'Booking must be made with sufficient notice' }, 400);
@@ -196,7 +196,7 @@ schedulingLinksRouter.post(
       }
 
       // Max booking notice (in days)
-      if (schedulingLink.maxBookingNotice > 0) {
+      if (schedulingLink.maxBookingNotice && schedulingLink.maxBookingNotice > 0) {
         const maxDate = new Date(now.getTime() + schedulingLink.maxBookingNotice * 24 * 60 * 60 * 1000);
         if (startDate > maxDate) {
           return c.json({ error: 'Booking date is too far in the future' }, 400);
@@ -256,28 +256,30 @@ schedulingLinksRouter.post(
         return c.json({ error: 'Booking duration does not match scheduling link' }, 400);
       }
 
-      // Create the event
-      const event = await calendarOps.bookSlot(schedulingLink.calendarId, start, end, {
-        workspaceId: schedulingLink.workspaceId,
-        calendarId: schedulingLink.calendarId,
-        title: data.title,
-        description: data.description || null,
-        location: data.location || null,
-        isAllDay: false,
+      // Create the event and attendee atomically
+      const { event, attendee } = await calendarOps.bookSlotAtomic(
+        schedulingLink.calendarId,
         start,
         end,
-        timezone: 'UTC',
-        metadata: null,
-      });
-
-      // Create the attendee
-      const attendee = await calendarOps.createEventAttendee({
-        eventId: event.id,
-        email: data.attendeeEmail,
-        name: data.attendeeName || null,
-        status: 'accepted',
-        isOrganizer: false,
-      });
+        {
+          workspaceId: schedulingLink.workspaceId,
+          calendarId: schedulingLink.calendarId,
+          title: data.title,
+          description: data.description || null,
+          location: data.location || null,
+          isAllDay: false,
+          start,
+          end,
+          timezone: schedulingLink.timezone,
+          metadata: null,
+        },
+        {
+          email: data.attendeeEmail,
+          name: data.attendeeName || null,
+          isOrganizer: false,
+        },
+        schedulingLink.requiresApproval,
+      );
 
       return c.json({ event, attendee }, 201);
     } catch (error) {

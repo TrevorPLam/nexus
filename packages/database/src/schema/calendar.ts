@@ -79,6 +79,7 @@ export const schedulingLinks = pgTable('scheduling_links', {
   availabilityStart: text('availability_start'), // HH:MM format
   availabilityEnd: text('availability_end'), // HH:MM format
   availableDays: jsonb('available_days').$type<number[]>(), // Array of available days (0-6, Sunday=0)
+  timezone: text('timezone').notNull().default('UTC'), // Timezone for availability windows
   isActive: boolean('is_active').notNull().default(true),
   requiresApproval: boolean('requires_approval').notNull().default(false),
   maxDailyBookings: integer('max_daily_bookings'), // Max bookings per day
