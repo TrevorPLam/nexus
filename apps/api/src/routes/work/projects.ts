@@ -8,11 +8,47 @@ import {
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
+import { db } from '../../lib/db.js';
+import { workspaceMemberships, appUsers, workspaces } from '@life-os/database';
+import { eq } from 'drizzle-orm';
 
 const projectsRouter = new Hono();
 
 // Apply authentication middleware to all routes
 projectsRouter.use('*', authMiddleware);
+
+// Get user's workspaces
+projectsRouter.get('/workspaces', async (c) => {
+  const user = c.get('user');
+  if (!user) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
+  try {
+    // Get the app_user record for the authenticated user
+    const [appUser] = await db.select().from(appUsers).where(eq(appUsers.supabaseUserId, user.id));
+
+    if (!appUser) {
+      return c.json({ error: 'User not found' }, 404);
+    }
+
+    // Get user's workspace memberships with workspace details
+    const memberships = await db
+      .select({
+        id: workspaces.id,
+        name: workspaces.name,
+        role: workspaceMemberships.role,
+      })
+      .from(workspaceMemberships)
+      .innerJoin(workspaces, eq(workspaceMemberships.workspaceId, workspaces.id))
+      .where(eq(workspaceMemberships.userId, appUser.id));
+
+    return c.json({ workspaces: memberships });
+  } catch (error) {
+    console.error('Error fetching workspaces:', error);
+    return c.json({ error: 'Failed to fetch workspaces' }, 500);
+  }
+});
 
 projectsRouter.post(
   '/projects',

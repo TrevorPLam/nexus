@@ -23,20 +23,22 @@ interface Event {
   isFocusTime?: boolean;
 }
 
-export function useCalendarData(workspaceId: string) {
+export function useCalendarData(workspaceId: string | null) {
   const queryClient = useQueryClient();
 
   // Calendars query
   const { data: calendarsData, isLoading: calendarsLoading } = useQuery({
     queryKey: ['calendars', workspaceId],
-    queryFn: () => apiClient.getCalendars(workspaceId) as Promise<{ calendars: Calendar[] }>,
+    queryFn: () => apiClient.getCalendars(workspaceId!) as Promise<{ calendars: Calendar[] }>,
+    enabled: !!workspaceId,
   });
   const calendars = calendarsData?.calendars || [];
 
   // Events query
   const { data: eventsData } = useQuery({
     queryKey: ['events', workspaceId],
-    queryFn: () => apiClient.getEvents(workspaceId) as Promise<{ events: Event[] }>,
+    queryFn: () => apiClient.getEvents(workspaceId!) as Promise<{ events: Event[] }>,
+    enabled: !!workspaceId,
   });
   const events = eventsData?.events || [];
 

@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Task } from '../app/work/types';
 
 export function useWorkTasks(
-  workspaceId: string,
+  workspaceId: string | null,
   selectedProject: string | null,
   filterPriority: string | null,
 ) {
@@ -12,7 +12,8 @@ export function useWorkTasks(
 
   const { data: tasksData } = useQuery({
     queryKey: ['tasks', workspaceId, selectedProject, filterPriority],
-    queryFn: () => apiClient.getTasks(workspaceId) as Promise<{ tasks: Task[] }>,
+    queryFn: () => apiClient.getTasks(workspaceId!) as Promise<{ tasks: Task[] }>,
+    enabled: !!workspaceId,
   });
 
   const tasks = tasksData?.tasks || [];

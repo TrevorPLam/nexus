@@ -18,7 +18,7 @@ import { useWorkState } from './hooks/useWorkState';
 import type { WorkView, Task, Project } from './types';
 
 export default function WorkPage() {
-  const { workspaceId } = useAuth();
+  const { workspaceId, workspaceState } = useAuth();
   const [view, setView] = useState<WorkView>('projects');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [filterPriority, setFilterPriority] = useState<string | null>(null);
@@ -26,8 +26,8 @@ export default function WorkPage() {
   const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<Project | null>(null);
   const [timelineDate, setTimelineDate] = useState(new Date());
 
-  // Fallback to default workspace if auth not loaded
-  const effectiveWorkspaceId = workspaceId || 'default-workspace';
+  // Only fetch data when workspace is selected
+  const effectiveWorkspaceId = workspaceState === 'selected' ? workspaceId : null;
 
   const {
     projects,

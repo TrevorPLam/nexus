@@ -24,8 +24,9 @@ import type { Event } from './types';
 import { type AvailableSlot } from './utils/findAvailableSlots';
 
 export default function CalendarPage() {
-  const { workspaceId } = useAuth();
-  const effectiveWorkspaceId = workspaceId || 'default-workspace';
+  const { workspaceId, workspaceState } = useAuth();
+  // Only fetch data when workspace is selected
+  const effectiveWorkspaceId = workspaceState === 'selected' ? workspaceId : null;
   const [view, setView] = useState<'calendars' | 'events' | 'scheduling'>('calendars');
   const [calendarView, setCalendarView] = useState<'month' | 'week' | 'day'>('month');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);

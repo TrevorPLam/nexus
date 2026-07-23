@@ -3,12 +3,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { Project } from '../app/work/types';
 
-export function useWorkProjects(workspaceId: string) {
+export function useWorkProjects(workspaceId: string | null) {
   const queryClient = useQueryClient();
 
   const { data: projectsData, isLoading: projectsLoading } = useQuery({
     queryKey: ['projects', workspaceId],
-    queryFn: () => apiClient.getProjects(workspaceId) as Promise<{ projects: Project[] }>,
+    queryFn: () => apiClient.getProjects(workspaceId!) as Promise<{ projects: Project[] }>,
+    enabled: !!workspaceId,
   });
 
   const projects = projectsData?.projects || [];

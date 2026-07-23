@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { Attendee, SchedulingLink } from '../app/calendar/types';
 
-export function useEventDetails(selectedEvent: { id: string } | null, workspaceId: string) {
+export function useEventDetails(selectedEvent: { id: string } | null, workspaceId: string | null) {
   const queryClient = useQueryClient();
 
   // Event attendees query
@@ -42,7 +42,8 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
   const { data: schedulingLinksData } = useQuery({
     queryKey: ['schedulingLinks', workspaceId],
     queryFn: () =>
-      apiClient.getSchedulingLinks(workspaceId) as Promise<{ schedulingLinks: SchedulingLink[] }>,
+      apiClient.getSchedulingLinks(workspaceId!) as Promise<{ schedulingLinks: SchedulingLink[] }>,
+    enabled: !!workspaceId,
   });
   const schedulingLinks = schedulingLinksData?.schedulingLinks || [];
 

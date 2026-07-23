@@ -105,8 +105,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-003: Resolve the authenticated user workspace from membership
 
-- [ ] **Task ID**: T-003
-- **Status**: `blocked`
+- [x] **Task ID**: T-003
+- **Status**: `done`
 - **Related files**: `apps/web/src/contexts/AuthContext.tsx`, `apps/web/src/contexts/AuthContext.test.tsx`, `apps/api/src/lib/middleware.ts`, `packages/contracts/src/common.ts`, `packages/database/src/schema/core.ts`
 - **Definition of Done**:
   - The hard-coded `default-workspace` value is removed.
@@ -123,17 +123,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-003-1** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Trace auth initialization, session changes, workspace schema, and available workspace endpoints.
-- [ ] **T-003-2** | `AGENT` | `apps/api/src/lib/middleware.ts` | Research the least-privilege membership lookup and determine whether the API needs a dedicated current-workspace endpoint.
-- [ ] **T-003-3** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Record the chosen loading/no-membership/selected-workspace contract in this task before implementation.
+- [x] **T-003-1** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Trace auth initialization, session changes, workspace schema, and available workspace endpoints.
+- [x] **T-003-2** | `AGENT` | `apps/api/src/lib/middleware.ts` | Research the least-privilege membership lookup and determine whether the API needs a dedicated current-workspace endpoint.
+- [x] **T-003-3** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Record the chosen loading/no-membership/selected-workspace contract in this task before implementation.
 
 ### Subtasks
 
-- [ ] **T-003-4** | `AGENT` | `apps/web/src/contexts/AuthContext.test.tsx` | Add failing tests for real UUID selection, loading, and no-membership behavior.
-- [ ] **T-003-5** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Replace the fallback workspace with the researched membership-backed state flow.
-- [ ] **T-003-6** | `AGENT` | `apps/web/src/app/work/page.tsx` | Prevent Work queries and mutations until a valid workspace UUID is available.
-- [ ] **T-003-7** | `AGENT` | `apps/web/src/app/calendar/page.tsx` | Prevent Calendar queries and mutations until a valid workspace UUID is available.
-- [ ] **T-003-8** | `AGENT` | `apps/web/src/contexts/AuthContext.test.tsx` | Run focused context/page tests and verify no `default-workspace` reference remains in application code.
+- [x] **T-003-4** | `AGENT` | `apps/web/src/contexts/AuthContext.test.tsx` | Add failing tests for real UUID selection, loading, and no-membership behavior.
+- [x] **T-003-5** | `AGENT` | `apps/web/src/contexts/AuthContext.tsx` | Replace the fallback workspace with the researched membership-backed state flow.
+- [x] **T-003-6** | `AGENT` | `apps/web/src/app/work/page.tsx` | Prevent Work queries and mutations until a valid workspace UUID is available.
+- [x] **T-003-7** | `AGENT` | `apps/web/src/app/calendar/page.tsx` | Prevent Calendar queries and mutations until a valid workspace UUID is available.
+- [x] **T-003-8** | `AGENT` | `apps/web/src/contexts/AuthContext.test.tsx` | Run focused context/page tests and verify no `default-workspace` reference remains in application code.
 
 ### Validation Commands
 

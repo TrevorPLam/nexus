@@ -45,6 +45,11 @@ class ApiClient {
     return (await response.json()) as T;
   }
 
+  // Workspaces
+  async getWorkspaces() {
+    return this.request('/v1/work/workspaces');
+  }
+
   // Projects
   async getProjects(workspaceId: string) {
     return this.request(`/v1/work/workspaces/${workspaceId}/projects`);
