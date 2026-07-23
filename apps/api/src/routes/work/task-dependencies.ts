@@ -2,7 +2,7 @@ import { CreateTaskDependencyRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
-import { authMiddleware } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
 
 const taskDependenciesRouter = new Hono();
@@ -12,6 +12,7 @@ taskDependenciesRouter.use('*', authMiddleware);
 
 taskDependenciesRouter.post(
   '/task-dependencies',
+  requireWorkspaceMembership,
   validator('json', (value, c) => {
     const parsed = CreateTaskDependencyRequest.safeParse(value);
     if (!parsed.success) {
@@ -31,8 +32,11 @@ taskDependenciesRouter.post(
   },
 );
 
-taskDependenciesRouter.get('/tasks/:taskId/dependencies', async (c) => {
+taskDependenciesRouter.get('/tasks/:taskId/dependencies', requireWorkspaceMembership, async (c) => {
   const taskId = c.req.param('taskId');
+  if (!taskId) {
+    return c.json({ error: 'Invalid task ID' }, 400);
+  }
   try {
     const dependencies = await workOps.getTaskDependencies(taskId);
     return c.json({ dependencies });
@@ -42,8 +46,11 @@ taskDependenciesRouter.get('/tasks/:taskId/dependencies', async (c) => {
   }
 });
 
-taskDependenciesRouter.delete('/task-dependencies/:id', async (c) => {
+taskDependenciesRouter.delete('/task-dependencies/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Invalid dependency ID' }, 400);
+  }
   try {
     const dependency = await workOps.deleteTaskDependency(id);
     if (!dependency) {

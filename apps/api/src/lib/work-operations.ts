@@ -9,14 +9,53 @@ import {
   taskAttachments,
   timeEntries,
 } from '@life-os/database';
-import { eq, and, desc, asc, or, like, sql, gt, inArray } from 'drizzle-orm';
+import { eq, and, desc, asc, sql, gt, inArray } from 'drizzle-orm';
 
 import { db } from './db.js';
+import { createAuditLog, createOutboxEvent } from './audit.js';
+
+// Transaction wrapper for complex operations
+export async function withTransaction<T>(
+  callback: (tx: any) => Promise<T>,
+): Promise<T> {
+  return db.transaction(callback);
+}
 
 // Project Operations
-export async function createProject(data: typeof schema.projects.$inferInsert) {
-  const [project] = await db.insert(projects).values(data).returning();
-  return project;
+export async function createProject(
+  data: typeof schema.projects.$inferInsert,
+  userId?: string,
+  workspaceId?: string,
+) {
+  return withTransaction(async (tx) => {
+    const [project] = await tx.insert(projects).values(data).returning();
+
+    if (!project) {
+      throw new Error('Failed to create project');
+    }
+
+    // Create audit log
+    if (userId && workspaceId) {
+      await createAuditLog({
+        userId,
+        workspaceId,
+        action: 'create',
+        entityType: 'project',
+        entityId: project.id,
+        changes: { new: data },
+      });
+    }
+
+    // Create outbox event for sync
+    await createOutboxEvent({
+      eventType: 'project.created',
+      aggregateType: 'project',
+      aggregateId: project.id,
+      payload: { project },
+    });
+
+    return project;
+  });
 }
 
 export async function getProjectById(id: string) {
@@ -40,7 +79,7 @@ export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cu
 
   const hasMore = results.length > limit;
   const items = hasMore ? results.slice(0, -1) : results;
-  const nextCursor = hasMore ? items[items.length - 1].createdAt.toISOString() : null;
+  const nextCursor = hasMore && items.length > 0 ? items[items.length - 1].createdAt.toISOString() : null;
 
   return {
     items,
@@ -52,13 +91,42 @@ export async function getProjectsByWorkspace(workspaceId: string, limit = 50, cu
 export async function updateProject(
   id: string,
   data: Partial<typeof schema.projects.$inferInsert>,
+  userId?: string,
+  workspaceId?: string,
 ) {
-  const [project] = await db
-    .update(projects)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(projects.id, id))
-    .returning();
-  return project;
+  return withTransaction(async (tx) => {
+    const [project] = await tx
+      .update(projects)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(projects.id, id))
+      .returning();
+
+    if (!project) {
+      throw new Error('Failed to update project');
+    }
+
+    // Create audit log
+    if (userId && workspaceId) {
+      await createAuditLog({
+        userId,
+        workspaceId,
+        action: 'update',
+        entityType: 'project',
+        entityId: project.id,
+        changes: { old: {}, new: data },
+      });
+    }
+
+    // Create outbox event for sync
+    await createOutboxEvent({
+      eventType: 'project.updated',
+      aggregateType: 'project',
+      aggregateId: project.id,
+      payload: { project },
+    });
+
+    return project;
+  });
 }
 
 export async function deleteProject(id: string) {
@@ -71,14 +139,45 @@ export async function deleteProject(id: string) {
 }
 
 // Task Operations
-export async function createTask(data: typeof schema.tasks.$inferInsert) {
-  const [task] = await db.insert(tasks).values(data).returning();
-  return task;
+export async function createTask(
+  data: typeof schema.tasks.$inferInsert,
+  userId?: string,
+  workspaceId?: string,
+) {
+  return withTransaction(async (tx) => {
+    const [task] = await tx.insert(tasks).values(data).returning();
+
+    if (!task) {
+      throw new Error('Failed to create task');
+    }
+
+    // Create audit log
+    if (userId && workspaceId) {
+      await createAuditLog({
+        userId,
+        workspaceId,
+        action: 'create',
+        entityType: 'task',
+        entityId: task.id,
+        changes: { new: data },
+      });
+    }
+
+    // Create outbox event for sync
+    await createOutboxEvent({
+      eventType: 'task.created',
+      aggregateType: 'task',
+      aggregateId: task.id,
+      payload: { task },
+    });
+
+    return task;
+  });
 }
 
 export async function getTaskById(id: string) {
   const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
-  return task;
+  return task ?? null;
 }
 
 export async function getTasksByWorkspace(workspaceId: string, limit = 50, cursor?: string) {
@@ -97,7 +196,7 @@ export async function getTasksByWorkspace(workspaceId: string, limit = 50, curso
 
   const hasMore = results.length > limit;
   const items = hasMore ? results.slice(0, -1) : results;
-  const nextCursor = hasMore ? items[items.length - 1].createdAt.toISOString() : null;
+  const nextCursor = hasMore && items.length > 0 ? items[items.length - 1].createdAt.toISOString() : null;
 
   return {
     items,
@@ -122,6 +221,8 @@ export async function getFilteredTasks(filters: {
   searchQuery?: string;
   dueBefore?: Date;
   dueAfter?: Date;
+  limit?: number;
+  cursor?: string;
 }) {
   const conditions = [eq(tasks.workspaceId, filters.workspaceId)];
 
@@ -138,11 +239,9 @@ export async function getFilteredTasks(filters: {
   }
 
   if (filters.searchQuery) {
+    // Use ILIKE search for title and description
     conditions.push(
-      or(
-        like(tasks.title, `%${filters.searchQuery}%`),
-        like(tasks.description, `%${filters.searchQuery}%`),
-      ),
+      sql`(${tasks.title} ILIKE ${'%' + filters.searchQuery + '%'} OR ${tasks.description} ILIKE ${'%' + filters.searchQuery + '%'})`,
     );
   }
 
@@ -154,41 +253,136 @@ export async function getFilteredTasks(filters: {
     conditions.push(sql`${tasks.dueDate} >= ${filters.dueAfter}`);
   }
 
-  return db
+  const limit = filters.limit || 50;
+  let query = db
     .select()
     .from(tasks)
     .where(and(...conditions))
-    .orderBy(asc(tasks.dueDate), desc(tasks.priority));
-}
+    .orderBy(asc(tasks.dueDate), desc(tasks.priority))
+    .limit(limit);
 
-export async function updateTask(id: string, data: Partial<typeof schema.tasks.$inferInsert>) {
-  const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
-
-  // Auto-set completedAt when status is 'done'
-  if (data.status === 'done' && !data.completedAt) {
-    updateData.completedAt = new Date();
+  if (filters.cursor) {
+    query = query.where(sql`${tasks.id} > ${filters.cursor}`);
   }
 
-  // Clear completedAt when status is not 'done'
-  if (data.status && data.status !== 'done') {
-    updateData.completedAt = null;
-  }
+  const items = await query;
+  const hasMore = items.length === limit;
+  const nextCursor = hasMore ? items[items.length - 1].id : undefined;
 
-  const [task] = await db.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
-  return task;
+  return { items, nextCursor, hasMore };
 }
 
-export async function deleteTask(id: string) {
-  const [task] = await db
-    .update(tasks)
-    .set({ status: 'cancelled', updatedAt: new Date() })
-    .where(eq(tasks.id, id))
-    .returning();
-  return task;
+// Full-text search function with ranking
+export async function searchTasks(workspaceId: string, query: string, limit = 20) {
+  return db
+    .select({
+      task: tasks,
+      rank: sql<number>`ts_rank(${tasks.searchVector}, plainto_tsquery('english', ${query}))`.as('rank'),
+    })
+    .from(tasks)
+    .where(
+      and(
+        eq(tasks.workspaceId, workspaceId),
+        sql`${tasks.searchVector} @@ plainto_tsquery('english', ${query})`,
+      ),
+    )
+    .orderBy(sql`ts_rank(${tasks.searchVector}, plainto_tsquery('english', ${query})) DESC`)
+    .limit(limit);
+}
+
+export async function updateTask(
+  id: string,
+  data: Partial<typeof schema.tasks.$inferInsert>,
+  userId?: string,
+  workspaceId?: string,
+) {
+  return withTransaction(async (tx) => {
+    const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
+
+    // Auto-set completedAt when status is 'done'
+    if (data.status === 'done' && !data.completedAt) {
+      updateData.completedAt = new Date();
+    }
+
+    // Clear completedAt when status is not 'done'
+    if (data.status && data.status !== 'done') {
+      updateData.completedAt = null;
+    }
+
+    const [task] = await tx.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
+
+    if (!task) {
+      throw new Error('Failed to update task');
+    }
+
+    // Create audit log
+    if (userId && workspaceId) {
+      await createAuditLog({
+        userId,
+        workspaceId,
+        action: 'update',
+        entityType: 'task',
+        entityId: task.id,
+        changes: { old: {}, new: data },
+      });
+    }
+
+    // Create outbox event for sync
+    await createOutboxEvent({
+      eventType: 'task.updated',
+      aggregateType: 'task',
+      aggregateId: task.id,
+      payload: { task },
+    });
+
+    return task;
+  });
+}
+
+export async function deleteTask(id: string, userId?: string, workspaceId?: string) {
+  return withTransaction(async (tx) => {
+    const [task] = await tx
+      .update(tasks)
+      .set({ status: 'cancelled', updatedAt: new Date() })
+      .where(eq(tasks.id, id))
+      .returning();
+
+    if (!task) {
+      throw new Error('Failed to delete task');
+    }
+
+    // Create audit log
+    if (userId && workspaceId) {
+      await createAuditLog({
+        userId,
+        workspaceId,
+        action: 'delete',
+        entityType: 'task',
+        entityId: task.id,
+        changes: { old: { status: task.status } },
+      });
+    }
+
+    // Create outbox event for sync
+    await createOutboxEvent({
+      eventType: 'task.deleted',
+      aggregateType: 'task',
+      aggregateId: task.id,
+      payload: { task },
+    });
+
+    return task;
+  });
 }
 
 // Task Dependency Operations
 export async function createTaskDependency(data: typeof schema.taskDependencies.$inferInsert) {
+  // Check for circular dependency before creating
+  const hasCycle = await checkCircularDependency(data.taskId, data.dependsOnTaskId);
+  if (hasCycle) {
+    throw new Error('Cannot create circular dependency');
+  }
+
   const [dependency] = await db.insert(taskDependencies).values(data).returning();
   return dependency;
 }
@@ -203,6 +397,33 @@ export async function deleteTaskDependency(id: string) {
     .where(eq(taskDependencies.id, id))
     .returning();
   return dependency;
+}
+
+// Circular dependency validation using DFS
+async function checkCircularDependency(taskId: string, dependsOnTaskId: string): Promise<boolean> {
+  // If dependsOnTaskId depends on taskId (directly or indirectly), we have a cycle
+  return hasPath(dependsOnTaskId, taskId, new Set());
+}
+
+async function hasPath(from: string, to: string, visited: Set<string>): Promise<boolean> {
+  if (from === to) return true;
+  if (visited.has(from)) return false;
+
+  visited.add(from);
+
+  // Get all tasks that depend on 'from'
+  const dependencies = await db
+    .select()
+    .from(taskDependencies)
+    .where(eq(taskDependencies.dependsOnTaskId, from));
+
+  for (const dep of dependencies) {
+    if (await hasPath(dep.taskId, to, visited)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 // Batch operations
@@ -448,4 +669,197 @@ export async function updateTimeEntry(
 export async function deleteTimeEntry(id: string) {
   const [entry] = await db.delete(timeEntries).where(eq(timeEntries.id, id)).returning();
   return entry;
+}
+
+// Transaction-based complex operations
+
+// Create task with dependencies in a single transaction
+export async function createTaskWithDependencies(
+  taskData: typeof schema.tasks.$inferInsert,
+  dependencies: Array<{ dependsOnTaskId: string; type: string }>,
+) {
+  return withTransaction(async (tx) => {
+    const [task] = await tx.insert(tasks).values(taskData).returning();
+
+    if (dependencies.length > 0) {
+      await tx.insert(taskDependencies).values(
+        dependencies.map((dep) => ({
+          taskId: task.id,
+          dependsOnTaskId: dep.dependsOnTaskId,
+          type: dep.type,
+        })),
+      );
+    }
+
+    return task;
+  });
+}
+
+// Create task with assignees in a single transaction
+export async function createTaskWithAssignees(
+  taskData: typeof schema.tasks.$inferInsert,
+  assignees: Array<{ userId: string; assignedBy: string; isPrimary?: boolean }>,
+) {
+  return withTransaction(async (tx) => {
+    const [task] = await tx.insert(tasks).values(taskData).returning();
+
+    if (assignees.length > 0) {
+      await tx.insert(taskAssignees).values(
+        assignees.map((assignee) => ({
+          taskId: task.id,
+          userId: assignee.userId,
+          assignedBy: assignee.assignedBy,
+          isPrimary: assignee.isPrimary ?? false,
+        })),
+      );
+    }
+
+    return task;
+  });
+}
+
+// Delete project with all its tasks (soft delete cascade)
+export async function deleteProjectWithTasks(projectId: string) {
+  return withTransaction(async (tx) => {
+    // Soft delete all tasks in the project
+    await tx
+      .update(tasks)
+      .set({ status: 'cancelled', updatedAt: new Date() })
+      .where(eq(tasks.projectId, projectId));
+
+    // Soft delete the project
+    const [project] = await tx
+      .update(projects)
+      .set({ status: 'deleted', updatedAt: new Date() })
+      .where(eq(projects.id, projectId))
+      .returning();
+
+    return project;
+  });
+}
+
+// Move task to different project
+export async function moveTaskToProject(taskId: string, newProjectId: string) {
+  return withTransaction(async (tx) => {
+    const [task] = await tx
+      .update(tasks)
+      .set({ projectId: newProjectId, updatedAt: new Date() })
+      .where(eq(tasks.id, taskId))
+      .returning();
+
+    return task;
+  });
+}
+
+// Complete task with time entry in a single transaction
+export async function completeTaskWithTimeEntry(
+  taskId: string,
+  timeEntryData: typeof schema.timeEntries.$inferInsert,
+) {
+  return withTransaction(async (tx) => {
+    // Update task status
+    const [task] = await tx
+      .update(tasks)
+      .set({ status: 'done', completedAt: new Date(), updatedAt: new Date() })
+      .where(eq(tasks.id, taskId))
+      .returning();
+
+    // Create time entry if provided
+    if (timeEntryData) {
+      await tx.insert(timeEntries).values(timeEntryData);
+    }
+
+    return task;
+  });
+}
+
+// Batch delete tasks with their dependencies
+export async function batchDeleteTasksWithDependencies(taskIds: string[]) {
+  return withTransaction(async (tx) => {
+    // Delete dependencies
+    await tx.delete(taskDependencies).where(inArray(taskDependencies.taskId, taskIds));
+
+    // Delete assignees
+    await tx.delete(taskAssignees).where(inArray(taskAssignees.taskId, taskIds));
+
+    // Delete comments
+    await tx.delete(taskComments).where(inArray(taskComments.taskId, taskIds));
+
+    // Delete attachments
+    await tx.delete(taskAttachments).where(inArray(taskAttachments.taskId, taskIds));
+
+    // Delete time entries
+    await tx.delete(timeEntries).where(inArray(timeEntries.taskId, taskIds));
+
+    // Soft delete tasks
+    const deletedTasks = await tx
+      .update(tasks)
+      .set({ status: 'cancelled', updatedAt: new Date() })
+      .where(inArray(tasks.id, taskIds))
+      .returning();
+
+    return deletedTasks;
+  });
+}
+
+// Clone task with all its data (for templates)
+export async function cloneTaskWithDependencies(
+  originalTaskId: string,
+  newTaskData: Partial<typeof schema.tasks.$inferInsert>,
+) {
+  return withTransaction(async (tx) => {
+    // Get original task
+    const [originalTask] = await tx.select().from(tasks).where(eq(tasks.id, originalTaskId));
+    if (!originalTask) {
+      throw new Error('Original task not found');
+    }
+
+    // Create new task
+    const [newTask] = await tx
+      .insert(tasks)
+      .values({
+        ...originalTask,
+        ...newTaskData,
+        id: undefined, // Generate new ID
+        title: newTaskData.title || `${originalTask.title} (Copy)`,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    // Copy dependencies
+    const originalDependencies = await tx
+      .select()
+      .from(taskDependencies)
+      .where(eq(taskDependencies.taskId, originalTaskId));
+
+    if (originalDependencies.length > 0) {
+      await tx.insert(taskDependencies).values(
+        originalDependencies.map((dep) => ({
+          taskId: newTask.id,
+          dependsOnTaskId: dep.dependsOnTaskId,
+          type: dep.type,
+        })),
+      );
+    }
+
+    // Copy assignees
+    const originalAssignees = await tx
+      .select()
+      .from(taskAssignees)
+      .where(eq(taskAssignees.taskId, originalTaskId));
+
+    if (originalAssignees.length > 0) {
+      await tx.insert(taskAssignees).values(
+        originalAssignees.map((assignee) => ({
+          taskId: newTask.id,
+          userId: assignee.userId,
+          assignedBy: assignee.assignedBy,
+          isPrimary: assignee.isPrimary,
+        })),
+      );
+    }
+
+    return newTask;
+  });
 }

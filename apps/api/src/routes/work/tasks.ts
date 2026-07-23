@@ -34,7 +34,7 @@ tasksRouter.post(
         completedAt: null,
         metadata: null,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        estimatedDuration: data.estimatedDuration ? String(data.estimatedDuration) : null,
+        estimatedDuration: data.estimatedDuration,
       });
       return c.json(task, 201);
     } catch (error) {
@@ -60,6 +60,9 @@ tasksRouter.get('/tasks/:id', async (c) => {
 
 tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, async (c) => {
   const workspaceId = c.req.param('workspaceId');
+  if (!workspaceId) {
+    return c.json({ error: 'Invalid workspace ID' }, 400);
+  }
   const projectId = c.req.query('projectId');
   const status = c.req.query('status');
   const priority = c.req.query('priority');
@@ -70,9 +73,9 @@ tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, as
   const cursor = c.req.query('cursor');
 
   try {
-    // If any filter parameters are provided, use filtered query (without pagination for now)
+    // If any filter parameters are provided, use filtered query with pagination
     if (projectId || status || priority || search || dueBefore || dueAfter) {
-      const tasks = await workOps.getFilteredTasks({
+      const result = await workOps.getFilteredTasks({
         workspaceId,
         projectId,
         status,
@@ -80,21 +83,26 @@ tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, as
         searchQuery: search,
         dueBefore: dueBefore ? new Date(dueBefore) : undefined,
         dueAfter: dueAfter ? new Date(dueAfter) : undefined,
+        limit,
+        cursor,
       });
-      return c.json({ tasks });
+      return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
     }
 
     // Otherwise, get paginated tasks for workspace
     const result = await workOps.getTasksByWorkspace(workspaceId, limit, cursor);
-    return c.json(result);
+    return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
   } catch (error) {
     console.error('Error fetching tasks:', error);
     return c.json({ error: 'Failed to fetch tasks' }, 500);
   }
 });
 
-tasksRouter.get('/projects/:projectId/tasks', async (c) => {
+tasksRouter.get('/projects/:projectId/tasks', requireWorkspaceMembership, async (c) => {
   const projectId = c.req.param('projectId');
+  if (!projectId) {
+    return c.json({ error: 'Invalid project ID' }, 400);
+  }
   try {
     const tasks = await workOps.getTasksByProject(projectId);
     return c.json({ tasks });
@@ -106,6 +114,7 @@ tasksRouter.get('/projects/:projectId/tasks', async (c) => {
 
 tasksRouter.put(
   '/tasks/:id',
+  requireWorkspaceMembership,
   idempotencyMiddleware,
   validator('json', (value, c) => {
     const parsed = UpdateTaskRequest.safeParse(value);
@@ -116,16 +125,14 @@ tasksRouter.put(
   }),
   async (c) => {
     const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Invalid task ID' }, 400);
+    }
     const data = c.req.valid('json');
     try {
       const updateData: Record<string, unknown> = { ...data };
       if (data.dueDate) {
         updateData.dueDate = new Date(data.dueDate);
-      }
-      if (data.estimatedDuration !== undefined) {
-        updateData.estimatedDuration = data.estimatedDuration
-          ? String(data.estimatedDuration)
-          : null;
       }
       const task = await workOps.updateTask(id, updateData);
       if (!task) {
@@ -139,10 +146,13 @@ tasksRouter.put(
   },
 );
 
-tasksRouter.delete('/tasks/:id', idempotencyMiddleware, async (c) => {
+tasksRouter.delete('/tasks/:id', requireWorkspaceMembership, idempotencyMiddleware, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Invalid task ID' }, 400);
+  }
   try {
-    const task = await workOps.deleteTask(id);
+    const task = await workOps.deleteTask(id, undefined, undefined);
     if (!task) {
       return c.json({ error: 'Task not found' }, 404);
     }
@@ -153,8 +163,11 @@ tasksRouter.delete('/tasks/:id', idempotencyMiddleware, async (c) => {
   }
 });
 
-tasksRouter.get('/tasks/:taskId/subtasks', async (c) => {
+tasksRouter.get('/tasks/:taskId/subtasks', requireWorkspaceMembership, async (c) => {
   const taskId = c.req.param('taskId');
+  if (!taskId) {
+    return c.json({ error: 'Invalid task ID' }, 400);
+  }
   try {
     const subtasks = await workOps.getSubtasks(taskId);
     return c.json({ subtasks });

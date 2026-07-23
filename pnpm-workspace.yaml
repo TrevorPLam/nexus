@@ -30,6 +30,7 @@ catalogs:
     prettier: ^3.9.6
     react: ^18.3.0
     react-dom: ^18.3.0
+    rrule: ^2.8.1
     tailwindcss: ^4.3.3
     typescript: ^5.9.0
     zod: ^4.0.0

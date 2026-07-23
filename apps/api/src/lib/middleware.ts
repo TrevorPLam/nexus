@@ -1,5 +1,5 @@
 import { workspaceMemberships, appUsers } from '@life-os/database';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { Context, Next } from 'hono';
 
 import { getAuthUser } from './auth.js';
@@ -63,6 +63,9 @@ export async function requireWorkspaceMembership(c: Context, next: Next) {
     if (!membership) {
       return c.json({ error: 'Forbidden: Not a member of this workspace' }, 403);
     }
+
+    // Set workspace context for RLS policies
+    await db.execute(sql`SELECT set_config('app.workspace_id', ${workspaceId}::text, true)`);
 
     // Set workspace membership in context
     c.set('workspaceMembership', membership);

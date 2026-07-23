@@ -38,8 +38,11 @@ eventsRouter.post(
   },
 );
 
-eventsRouter.get('/events/:id', async (c) => {
+eventsRouter.get('/events/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Event ID required' }, 400);
+  }
   try {
     const event = await calendarOps.getEventWithAttendees(id);
     if (!event) {
@@ -114,8 +117,11 @@ eventsRouter.put(
   },
 );
 
-eventsRouter.delete('/events/:id', async (c) => {
+eventsRouter.delete('/events/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Event ID required' }, 400);
+  }
   try {
     const event = await calendarOps.deleteEvent(id);
     if (!event) {
@@ -129,8 +135,11 @@ eventsRouter.delete('/events/:id', async (c) => {
 });
 
 // Task-Event Linking
-eventsRouter.get('/tasks/:taskId/events', async (c) => {
+eventsRouter.get('/tasks/:taskId/events', requireWorkspaceMembership, async (c) => {
   const taskId = c.req.param('taskId');
+  if (!taskId) {
+    return c.json({ error: 'Task ID required' }, 400);
+  }
   try {
     const events = await calendarOps.getEventsByTask(taskId);
     return c.json({ events });
@@ -140,8 +149,11 @@ eventsRouter.get('/tasks/:taskId/events', async (c) => {
   }
 });
 
-eventsRouter.post('/events/:eventId/link-task', async (c) => {
+eventsRouter.post('/events/:eventId/link-task', requireWorkspaceMembership, async (c) => {
   const eventId = c.req.param('eventId');
+  if (!eventId) {
+    return c.json({ error: 'Event ID required' }, 400);
+  }
   const taskId = c.req.query('taskId');
   try {
     if (!taskId) {
@@ -158,8 +170,11 @@ eventsRouter.post('/events/:eventId/link-task', async (c) => {
   }
 });
 
-eventsRouter.post('/events/:eventId/unlink-task', async (c) => {
+eventsRouter.post('/events/:eventId/unlink-task', requireWorkspaceMembership, async (c) => {
   const eventId = c.req.param('eventId');
+  if (!eventId) {
+    return c.json({ error: 'Event ID required' }, 400);
+  }
   try {
     const event = await calendarOps.unlinkEventFromTask(eventId);
     if (!event) {
@@ -169,6 +184,10 @@ eventsRouter.post('/events/:eventId/unlink-task', async (c) => {
   } catch (error) {
     console.error('Error unlinking event from task:', error);
     return c.json({ error: 'Failed to unlink event from task' }, 500);
+  }
+});
+
+export default eventsRouter;
   }
 });
 

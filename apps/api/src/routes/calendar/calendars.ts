@@ -36,8 +36,11 @@ calendarsRouter.post(
   },
 );
 
-calendarsRouter.get('/calendars/:id', async (c) => {
+calendarsRouter.get('/calendars/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Calendar ID required' }, 400);
+  }
   try {
     const calendar = await calendarOps.getCalendarById(id);
     if (!calendar) {
@@ -66,6 +69,7 @@ calendarsRouter.get('/workspaces/:workspaceId/calendars', requireWorkspaceMember
 
 calendarsRouter.put(
   '/calendars/:id',
+  requireWorkspaceMembership,
   validator('json', (value, c) => {
     const parsed = UpdateCalendarRequest.safeParse(value);
     if (!parsed.success) {
@@ -75,9 +79,14 @@ calendarsRouter.put(
   }),
   async (c) => {
     const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Calendar ID required' }, 400);
+    }
     const data = c.req.valid('json');
+    // Remove workspaceId from update data as it should not be changed
+    const { workspaceId: _, ...updateData } = data;
     try {
-      const calendar = await calendarOps.updateCalendar(id, data);
+      const calendar = await calendarOps.updateCalendar(id, updateData);
       if (!calendar) {
         return c.json({ error: 'Calendar not found' }, 404);
       }
@@ -89,8 +98,11 @@ calendarsRouter.put(
   },
 );
 
-calendarsRouter.delete('/calendars/:id', async (c) => {
+calendarsRouter.delete('/calendars/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Calendar ID required' }, 400);
+  }
   try {
     const calendar = await calendarOps.deleteCalendar(id);
     if (!calendar) {

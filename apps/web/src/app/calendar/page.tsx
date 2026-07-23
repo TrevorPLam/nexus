@@ -2,6 +2,7 @@
 
 import { Button } from '@life-os/ui';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
 import { useCalendarData } from '../../hooks/useCalendarData';
 import { useEventDetails } from '../../hooks/useEventDetails';
@@ -23,6 +24,8 @@ import type { Event } from './types';
 import { type AvailableSlot } from './utils/findAvailableSlots';
 
 export default function CalendarPage() {
+  const { workspaceId } = useAuth();
+  const effectiveWorkspaceId = workspaceId || 'default-workspace';
   const [view, setView] = useState<'calendars' | 'events' | 'scheduling'>('calendars');
   const [calendarView, setCalendarView] = useState<'month' | 'week' | 'day'>('month');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -37,8 +40,6 @@ export default function CalendarPage() {
   const [workingHours, setWorkingHours] = useState({ start: '09:00', end: '17:00' });
   const [defaultLocation, setDefaultLocation] = useState('');
 
-  const workspaceId = 'default-workspace'; // TODO: Get from auth context
-
   // Custom hooks for data fetching and mutations
   const {
     calendars,
@@ -50,7 +51,7 @@ export default function CalendarPage() {
     createEventMutation,
     updateEventMutation,
     deleteEventMutation,
-  } = useCalendarData(workspaceId);
+  } = useCalendarData(effectiveWorkspaceId);
 
   const {
     attendees,
@@ -60,7 +61,7 @@ export default function CalendarPage() {
     createSchedulingLinkMutation,
     updateSchedulingLinkMutation,
     deleteSchedulingLinkMutation,
-  } = useEventDetails(selectedEvent, workspaceId);
+  } = useEventDetails(selectedEvent, effectiveWorkspaceId);
 
   // State management hooks
   const calendarState = useCalendarState({

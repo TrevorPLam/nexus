@@ -40,8 +40,11 @@ projectsRouter.post(
   },
 );
 
-projectsRouter.get('/projects/:id', async (c) => {
+projectsRouter.get('/projects/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Invalid project ID' }, 400);
+  }
   try {
     const project = await workOps.getProjectById(id);
     if (!project) {
@@ -61,7 +64,7 @@ projectsRouter.get('/workspaces/:workspaceId/projects', requireWorkspaceMembersh
 
   try {
     const result = await workOps.getProjectsByWorkspace(workspaceId, limit, cursor);
-    return c.json(result);
+    return c.json({ projects: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
   } catch (error) {
     console.error('Error fetching projects:', error);
     return c.json({ error: 'Failed to fetch projects' }, 500);
@@ -70,6 +73,7 @@ projectsRouter.get('/workspaces/:workspaceId/projects', requireWorkspaceMembersh
 
 projectsRouter.put(
   '/projects/:id',
+  requireWorkspaceMembership,
   idempotencyMiddleware,
   validator('json', (value, c) => {
     const parsed = UpdateProjectRequest.safeParse(value);
@@ -80,9 +84,16 @@ projectsRouter.put(
   }),
   async (c) => {
     const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Invalid project ID' }, 400);
+    }
     const data = c.req.valid('json');
     try {
-      const project = await workOps.updateProject(id, data);
+      // Filter out undefined values to avoid type errors
+      const updateData = Object.fromEntries(
+        Object.entries(data).filter(([_, v]) => v !== undefined)
+      );
+      const project = await workOps.updateProject(id, updateData);
       if (!project) {
         return c.json({ error: 'Project not found' }, 404);
       }
@@ -94,8 +105,11 @@ projectsRouter.put(
   },
 );
 
-projectsRouter.delete('/projects/:id', idempotencyMiddleware, async (c) => {
+projectsRouter.delete('/projects/:id', requireWorkspaceMembership, idempotencyMiddleware, async (c) => {
   const id = c.req.param('id');
+  if (!id) {
+    return c.json({ error: 'Invalid project ID' }, 400);
+  }
   try {
     const project = await workOps.deleteProject(id);
     if (!project) {

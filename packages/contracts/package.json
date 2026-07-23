@@ -17,6 +17,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "rrule": "catalog:",
     "zod": "^4.0.0"
   },
   "devDependencies": {

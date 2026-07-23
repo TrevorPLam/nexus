@@ -1,13 +1,7 @@
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-interface Project {
-  id: string;
-  name: string;
-  description: string | null;
-  color: string | null;
-  status: string;
-}
+import type { Project } from '../app/work/types';
 
 export function useWorkProjects(workspaceId: string) {
   const queryClient = useQueryClient();

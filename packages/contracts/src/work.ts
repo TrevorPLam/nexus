@@ -44,6 +44,7 @@ export const CreateTaskRequest = z.object({
   recurrenceId: z.string().uuid().optional(),
   energyLevel: EnergyLevel.optional(),
   contextTags: z.string().optional(),
+  isMilestone: z.boolean().default(false),
 });
 
 export const UpdateTaskRequest = CreateTaskRequest.partial();
@@ -95,6 +96,7 @@ export const TaskResponse = z.object({
   recurrenceId: z.string().uuid().nullable(),
   energyLevel: EnergyLevel.nullable(),
   contextTags: z.string().nullable(),
+  isMilestone: z.boolean(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),

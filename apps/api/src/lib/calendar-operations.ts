@@ -221,10 +221,12 @@ export async function getRecurringEventInstances(recurrenceId: string) {
 }
 
 export async function getBaseRecurringEvent(recurrenceId: string) {
+  // The base event is the one that has this recurrenceId as its own id (not as recurrenceId)
+  // Instances have recurrenceId pointing to the base event's id
   const [event] = await db
     .select()
     .from(events)
-    .where(and(eq(events.recurrenceId, recurrenceId), isNull(events.recurrenceId)));
+    .where(and(eq(events.id, recurrenceId), isNull(events.recurrenceId)));
   return event;
 }
 
@@ -313,4 +315,126 @@ export async function updateSchedulingLink(
 export async function deleteSchedulingLink(id: string) {
   const [link] = await db.delete(schedulingLinks).where(eq(schedulingLinks.id, id)).returning();
   return link;
+}
+
+// Availability Slot Generation
+export interface AvailableSlot {
+  start: Date;
+  end: Date;
+}
+
+export async function getAvailableSlots(
+  calendarId: string,
+  startDate: Date,
+  endDate: Date,
+  duration: number, // in minutes
+  availabilityStart?: string, // HH:MM format
+  availabilityEnd?: string, // HH:MM format
+  availableDays?: number[], // Array of available days (0-6, Sunday=0)
+  bufferBefore?: number, // Buffer time before event in minutes
+  bufferAfter?: number, // Buffer time after event in minutes
+): Promise<AvailableSlot[]> {
+  const slots: AvailableSlot[] = [];
+  const current = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Parse availability times
+  const availStart = availabilityStart ? parseTime(availabilityStart) : { hour: 9, minute: 0 };
+  const availEnd = availabilityEnd ? parseTime(availabilityEnd) : { hour: 17, minute: 0 };
+  const daysOfWeek = availableDays || [0, 1, 2, 3, 4, 5, 6]; // Default to all days
+
+  // Get existing events for the calendar
+  const existingEvents = await getEventsByCalendar(calendarId, startDate, endDate);
+
+  // Iterate through each day in the range
+  while (current < end) {
+    const dayOfWeek = current.getDay(); // 0-6, Sunday=0
+
+    // Skip if day is not available
+    if (!daysOfWeek.includes(dayOfWeek)) {
+      current.setDate(current.getDate() + 1);
+      current.setHours(0, 0, 0, 0);
+      continue;
+    }
+
+    // Set the start time for this day
+    const dayStart = new Date(current);
+    dayStart.setHours(availStart.hour, availStart.minute, 0, 0);
+
+    // Set the end time for this day
+    const dayEnd = new Date(current);
+    dayEnd.setHours(availEnd.hour, availEnd.minute, 0, 0);
+
+    // Generate slots for this day
+    let slotStart = new Date(dayStart);
+    const slotEnd = new Date(slotStart);
+    slotEnd.setMinutes(slotStart.getMinutes() + duration + (bufferAfter || 0));
+
+    while (slotStart.getTime() + duration * 60000 <= dayEnd.getTime()) {
+      // Add buffer before to the actual slot start
+      const actualSlotStart = new Date(slotStart);
+      actualSlotStart.setMinutes(actualSlotStart.getMinutes() + (bufferBefore || 0));
+
+      const actualSlotEnd = new Date(actualSlotStart);
+      actualSlotEnd.setMinutes(actualSlotStart.getMinutes() + duration);
+
+      // Check if this slot conflicts with existing events
+      const hasConflict = existingEvents.some((event) => {
+        const eventStart = new Date(event.start);
+        const eventEnd = new Date(event.end);
+        return (
+          (actualSlotStart < eventEnd && actualSlotEnd > eventStart) ||
+          (actualSlotStart < eventEnd && actualSlotEnd > eventStart)
+        );
+      });
+
+      if (!hasConflict) {
+        slots.push({
+          start: actualSlotStart,
+          end: actualSlotEnd,
+        });
+      }
+
+      // Move to next slot
+      slotStart.setMinutes(slotStart.getMinutes() + duration + (bufferAfter || 0));
+    }
+
+    // Move to next day
+    current.setDate(current.getDate() + 1);
+    current.setHours(0, 0, 0, 0);
+  }
+
+  return slots;
+}
+
+function parseTime(timeStr: string): { hour: number; minute: number } {
+  const [hour, minute] = timeStr.split(':').map(Number);
+  return { hour, minute };
+}
+
+// Booking with conflict detection
+export async function bookSlot(
+  calendarId: string,
+  start: Date,
+  end: Date,
+  eventData: typeof schema.events.$inferInsert,
+): Promise<typeof schema.events.$inferSelect> {
+  // Check for conflicts
+  const existingEvents = await getEventsByCalendar(
+    calendarId,
+    new Date(start.getTime() - 86400000), // Check one day before
+    new Date(end.getTime() + 86400000), // Check one day after
+  );
+
+  const hasConflict = existingEvents.some((event) => {
+    const eventStart = new Date(event.start);
+    const eventEnd = new Date(event.end);
+    return start < eventEnd && end > eventStart;
+  });
+
+  if (hasConflict) {
+    throw new Error('Slot is no longer available');
+  }
+
+  return createEvent(eventData);
 }

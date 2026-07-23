@@ -1,3 +1,19 @@
+import {
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  CreateTaskRequest,
+  UpdateTaskRequest,
+  CreateTaskDependencyRequest,
+  CreateTaskAssigneeRequest,
+  CreateTaskCommentRequest,
+  UpdateTaskCommentRequest,
+  CreateTaskAttachmentRequest,
+  CreateTimeEntryRequest,
+  UpdateTimeEntryRequest,
+  CreateTaskNoteRequest,
+  UpdateTaskNoteRequest,
+} from '@life-os/contracts';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 interface ApiError {
@@ -182,14 +198,14 @@ class ApiClient {
     return this.request(`/v1/work/tasks/${taskId}/notes`);
   }
 
-  async createTaskNote(data: unknown) {
+  async createTaskNote(data: CreateTaskNoteRequest) {
     return this.request('/v1/work/task-notes', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async updateTaskNote(id: string, data: unknown) {
+  async updateTaskNote(id: string, data: UpdateTaskNoteRequest) {
     return this.request(`/v1/work/task-notes/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),

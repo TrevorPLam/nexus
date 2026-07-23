@@ -43,7 +43,32 @@ export const CreateEventRequest = EventRequestBase.refine(
   },
 );
 
-export const UpdateEventRequest = EventRequestBase.partial();
+export const UpdateEventRequest = z.object({
+  workspaceId: z.string().uuid().optional(),
+  calendarId: z.string().uuid().optional(),
+  title: z.string().min(1).max(500).optional(),
+  description: z.string().max(5000).nullable().optional(),
+  location: z.string().max(500).nullable().optional(),
+  isAllDay: z.boolean().optional(),
+  start: z.string().datetime().optional(),
+  end: z.string().datetime().optional(),
+  timezone: z.string().optional(),
+  recurrenceRule: z.string().optional(),
+  recurrenceId: z.string().uuid().optional(),
+  providerEventId: z.string().optional(),
+  taskId: z.string().uuid().optional(),
+}).refine(
+  (data) => {
+    if (data.start && data.end) {
+      return new Date(data.start) < new Date(data.end);
+    }
+    return true;
+  },
+  {
+    message: 'start date must be before end date',
+    path: ['end'],
+  },
+);
 
 export const CreateEventAttendeeRequest = z.object({
   eventId: z.string().uuid(),
@@ -126,7 +151,23 @@ export const CreateSchedulingLinkRequest = z.object({
   maxDailyBookings: z.number().int().positive().optional(),
 });
 
-export const UpdateSchedulingLinkRequest = CreateSchedulingLinkRequest.partial();
+export const UpdateSchedulingLinkRequest = z.object({
+  workspaceId: z.string().uuid().optional(),
+  name: z.string().min(1).max(200).optional(),
+  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional(),
+  description: z.string().max(1000).optional(),
+  calendarId: z.string().uuid().optional(),
+  eventDuration: z.number().int().positive().max(480).optional(),
+  bufferBefore: z.number().int().min(0).optional(),
+  bufferAfter: z.number().int().min(0).optional(),
+  minBookingNotice: z.number().int().min(0).optional(),
+  maxBookingNotice: z.number().int().min(0).optional(),
+  availabilityStart: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+  availabilityEnd: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+  availableDays: z.array(z.number().int().min(0).max(6)).optional(),
+  requiresApproval: z.boolean().optional(),
+  maxDailyBookings: z.number().int().positive().optional(),
+});
 
 export const SchedulingLinkResponse = z.object({
   id: z.string().uuid(),
@@ -150,4 +191,48 @@ export const SchedulingLinkResponse = z.object({
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+});
+
+// Availability query and booking schemas
+export const AvailabilityQueryRequest = z.object({
+  schedulingLinkId: z.string().uuid(),
+  startDate: z.string().datetime(),
+  endDate: z.string().datetime(),
+}).refine(
+  (data) => new Date(data.startDate) < new Date(data.endDate),
+  {
+    message: 'startDate must be before endDate',
+    path: ['endDate'],
+  },
+);
+
+export const AvailableSlotResponse = z.object({
+  start: z.date(),
+  end: z.date(),
+});
+
+export const AvailabilityResponse = z.object({
+  slots: z.array(AvailableSlotResponse),
+});
+
+export const BookingRequest = z.object({
+  schedulingLinkId: z.string().uuid(),
+  start: z.string().datetime(),
+  end: z.string().datetime(),
+  title: z.string().min(1).max(500),
+  description: z.string().max(5000).optional(),
+  location: z.string().max(500).optional(),
+  attendeeEmail: z.string().email(),
+  attendeeName: z.string().max(200).optional(),
+}).refine(
+  (data) => new Date(data.start) < new Date(data.end),
+  {
+    message: 'start must be before end',
+    path: ['end'],
+  },
+);
+
+export const BookingResponse = z.object({
+  event: EventResponse,
+  attendee: EventAttendeeResponse.optional(),
 });

@@ -1,18 +1,7 @@
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-interface Task {
-  id: string;
-  title: string;
-  status: string;
-  priority: string;
-  dueDate: string | null;
-  projectId: string | null;
-  parentId: string | null;
-  description?: string | null;
-  energyLevel?: string | null;
-  estimatedDuration?: number | null;
-}
+import type { Task } from '../app/work/types';
 
 export function useWorkTasks(
   workspaceId: string,
