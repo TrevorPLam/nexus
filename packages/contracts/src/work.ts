@@ -23,7 +23,18 @@ export const CreateProjectRequest = z.object({
   icon: z.string().max(50).optional(),
 });
 
-export const UpdateProjectRequest = CreateProjectRequest.partial();
+export const UpdateProjectRequest = z
+  .object({
+    name: z.string().min(1).max(200).optional(),
+    description: z.string().max(1000).optional(),
+    color: z
+      .string()
+      .regex(/^#[0-9A-Fa-f]{6}$/)
+      .optional(),
+    icon: z.string().max(50).optional(),
+    status: ProjectStatus.optional(),
+  })
+  .strict();
 
 export const CreateTaskRequest = z.object({
   workspaceId: z.string().uuid(),
@@ -47,13 +58,37 @@ export const CreateTaskRequest = z.object({
   isMilestone: z.boolean().default(false),
 });
 
-export const UpdateTaskRequest = CreateTaskRequest.partial();
+export const UpdateTaskRequest = z
+  .object({
+    title: z.string().min(1).max(500).optional(),
+    description: z.string().max(5000).optional(),
+    status: TaskStatus.optional(),
+    priority: TaskPriority.optional(),
+    dueDate: z.string().datetime().optional(),
+    dueTime: z
+      .string()
+      .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .optional(),
+    estimatedDuration: z.number().int().positive().optional(),
+    calendarEventId: z.string().uuid().optional(),
+    recurrenceRule: z.string().optional(),
+    energyLevel: EnergyLevel.optional(),
+    contextTags: z.string().optional(),
+    isMilestone: z.boolean().optional(),
+  })
+  .strict();
 
 export const CreateTaskDependencyRequest = z.object({
   taskId: z.string().uuid(),
   dependsOnTaskId: z.string().uuid(),
   type: DependencyType.default('finish_to_start'),
 });
+
+export const UpdateTaskDependencyRequest = z
+  .object({
+    type: DependencyType.optional(),
+  })
+  .strict();
 
 export const CreateTaskNoteRequest = z.object({
   taskId: z.string().uuid(),
@@ -124,6 +159,12 @@ export const CreateTaskAssigneeRequest = z.object({
   isPrimary: z.boolean().default(false),
 });
 
+export const UpdateTaskAssigneeRequest = z
+  .object({
+    isPrimary: z.boolean().optional(),
+  })
+  .strict();
+
 export const TaskAssigneeResponse = z.object({
   id: z.string().uuid(),
   taskId: z.string().uuid(),
@@ -164,6 +205,16 @@ export const CreateTaskAttachmentRequest = z.object({
   storageBucket: z.string().default('attachments'),
 });
 
+export const UpdateTaskAttachmentRequest = z
+  .object({
+    fileName: z.string().min(1).max(500).optional(),
+    fileType: z.string().min(1).max(100).optional(),
+    fileSize: z.string().min(1).optional(),
+    storagePath: z.string().min(1).max(1000).optional(),
+    storageBucket: z.string().optional(),
+  })
+  .strict();
+
 export const TaskAttachmentResponse = z.object({
   id: z.string().uuid(),
   taskId: z.string().uuid(),
@@ -187,13 +238,15 @@ export const CreateTimeEntryRequest = z.object({
   billableRate: z.string().optional(),
 });
 
-export const UpdateTimeEntryRequest = z.object({
-  description: z.string().max(1000).optional(),
-  stoppedAt: z.string().datetime().optional(),
-  duration: z.number().int().positive().optional(),
-  isBillable: z.boolean().optional(),
-  billableRate: z.string().optional(),
-});
+export const UpdateTimeEntryRequest = z
+  .object({
+    description: z.string().max(1000).optional(),
+    stoppedAt: z.string().datetime().optional(),
+    duration: z.number().int().positive().optional(),
+    isBillable: z.boolean().optional(),
+    billableRate: z.string().optional(),
+  })
+  .strict();
 
 export const TimeEntryResponse = z.object({
   id: z.string().uuid(),

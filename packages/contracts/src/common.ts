@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+// HTTP serialization schemas
+// Request dates are ISO 8601 datetime strings
+// Response dates are Date objects
+export const HttpDate = z.string().datetime();
+export const HttpDateNullable = z.string().datetime().nullable();
+
 export const IdSchema = z.object({
   id: z.string().uuid(),
 });

@@ -42,7 +42,18 @@ describe('API Client Package', () => {
     it('getProject calls correct endpoint', async () => {
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'project-123' }),
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'Test Project',
+          description: null,
+          color: null,
+          icon: null,
+          status: 'active',
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       } as Response);
 
       await client.getProject('project-123');
@@ -59,13 +70,19 @@ describe('API Client Package', () => {
         json: async () => ({ id: 'new-project' }),
       } as Response);
 
-      await client.createProject({ name: 'New Project' });
+      await client.createProject({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'New Project',
+      });
 
       expect(global.fetch).toHaveBeenCalledWith(
         'http://test-api.com/v1/work/projects',
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ name: 'New Project' }),
+          body: JSON.stringify({
+            workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+            name: 'New Project',
+          }),
         }),
       );
     });
@@ -89,7 +106,29 @@ describe('API Client Package', () => {
     it('getTask calls correct endpoint', async () => {
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'task-123' }),
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'Test Task',
+          description: null,
+          status: 'todo',
+          priority: 'medium',
+          dueDate: null,
+          dueTime: null,
+          estimatedDuration: null,
+          completedAt: null,
+          projectId: null,
+          parentId: null,
+          calendarEventId: null,
+          recurrenceRule: null,
+          recurrenceId: null,
+          energyLevel: null,
+          contextTags: null,
+          isMilestone: false,
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       } as Response);
 
       await client.getTask('task-123');
@@ -106,7 +145,13 @@ describe('API Client Package', () => {
         json: async () => ({ id: 'new-task' }),
       } as Response);
 
-      await client.createTask({ title: 'New Task' });
+      await client.createTask({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'New Task',
+        status: 'todo',
+        priority: 'medium',
+        isMilestone: false,
+      });
 
       expect(global.fetch).toHaveBeenCalledWith(
         'http://test-api.com/v1/work/tasks',
@@ -156,7 +201,18 @@ describe('API Client Package', () => {
 
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'project-123' }),
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'Test Project',
+          description: null,
+          color: null,
+          icon: null,
+          status: 'active',
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       } as Response);
 
       await clientWithToken.getProject('project-123');
@@ -180,7 +236,18 @@ describe('API Client Package', () => {
 
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'project-123' }),
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'Test Project',
+          description: null,
+          color: null,
+          icon: null,
+          status: 'active',
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       } as Response);
 
       await clientWithToken.getProject('project-123');
@@ -211,10 +278,24 @@ describe('API Client Package', () => {
 
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
-        json: async () => ({ id: 'project-123' }),
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'Test Project',
+          description: null,
+          color: null,
+          icon: null,
+          status: 'active',
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       } as Response);
 
-      await clientWithToken.createProject({ name: 'New Project' });
+      await clientWithToken.createProject({
+        workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'New Project',
+      });
 
       expect(global.fetch).toHaveBeenCalledWith(
         'http://test-api.com/v1/work/projects',
@@ -236,7 +317,7 @@ describe('API Client Package', () => {
       vi.mocked(global.fetch).mockResolvedValue({
         ok: false,
         status: 401,
-        json: async () => ({ error: 'Unauthorized' }),
+        json: async () => ({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }),
       } as Response);
 
       await expect(clientWithToken.getProject('project-123')).rejects.toThrow('Unauthorized');
@@ -247,7 +328,7 @@ describe('API Client Package', () => {
     it('throws error on failed request', async () => {
       vi.mocked(global.fetch).mockResolvedValue({
         ok: false,
-        json: async () => ({ error: 'Not found' }),
+        json: async () => ({ error: { code: 'NOT_FOUND', message: 'Not found' } }),
       } as Response);
 
       await expect(client.getProject('invalid-id')).rejects.toThrow('Not found');
@@ -266,6 +347,153 @@ describe('API Client Package', () => {
   describe('Default Export', () => {
     it('exports default apiClient instance', () => {
       expect(apiClient).toBeInstanceOf(ApiClient);
+    });
+  });
+
+  describe('Response Validation', () => {
+    it('rejects invalid project response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'invalid-uuid', name: 'Test' }),
+      } as Response);
+
+      await expect(client.getProject('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'invalid-uuid', title: 'Test' }),
+      } as Response);
+
+      await expect(client.getTask('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid calendar response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'invalid-uuid', name: 'Test' }),
+      } as Response);
+
+      await expect(client.getCalendar('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid event response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'invalid-uuid', title: 'Test' }),
+      } as Response);
+
+      await expect(client.getEvent('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects task response missing isMilestone field', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'Test Task',
+          status: 'todo',
+          priority: 'medium',
+          isMilestone: false,
+        }),
+      } as Response);
+
+      await expect(client.getTask('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects task response with invalid UUID', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          id: 'not-a-uuid',
+          workspaceId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'Test Task',
+          status: 'todo',
+          priority: 'medium',
+          dueDate: null,
+          dueTime: null,
+          estimatedDuration: null,
+          completedAt: null,
+          projectId: null,
+          parentId: null,
+          calendarEventId: null,
+          recurrenceRule: null,
+          recurrenceId: null,
+          energyLevel: null,
+          contextTags: null,
+          isMilestone: false,
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
+      } as Response);
+
+      await expect(client.getTask('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task dependency response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTaskDependencies('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task assignee response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTaskAssignees('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task comment response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTaskComments('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task attachment response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTaskAttachments('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid task note response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTaskNotes('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid time entry response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', taskId: '123' }],
+      } as Response);
+
+      await expect(client.getTimeEntries('123')).rejects.toThrow('Invalid response');
+    });
+
+    it('rejects invalid event attendee response', async () => {
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => [{ id: 'invalid-uuid', eventId: '123' }],
+      } as Response);
+
+      await expect(client.getEventAttendees('123')).rejects.toThrow('Invalid response');
     });
   });
 });
