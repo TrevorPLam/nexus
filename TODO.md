@@ -1293,8 +1293,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-028: Implement web hook tests - useCalendarData
 
-- [ ] TASK-028
-- Status: ready
+- [x] TASK-028
+- Status: done
 - Related Files: `apps/web/src/hooks/useCalendarData.test.ts`, `apps/web/src/hooks/useCalendarData.ts`
 - Definition of Done: All 8 test placeholders implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
@@ -1310,45 +1310,45 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-028-001 | AGENT | `apps/web/src/hooks/useCalendarData.ts`
+- [x] TASK-028-001 | AGENT | `apps/web/src/hooks/useCalendarData.ts`
   Read useCalendarData hook to understand functionality and return values.
 
-- [ ] TASK-028-002 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-002 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: fetches calendars for workspace
 
-- [ ] TASK-028-003 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-003 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: fetches events for workspace
 
-- [ ] TASK-028-004 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-004 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: creates calendar and invalidates query
 
-- [ ] TASK-028-005 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-005 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: updates calendar and invalidates query
 
-- [ ] TASK-028-006 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-006 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: deletes calendar and invalidates queries
 
-- [ ] TASK-028-007 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-007 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: creates event and invalidates query
 
-- [ ] TASK-028-008 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-008 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: updates event and invalidates query
 
-- [ ] TASK-028-009 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+- [x] TASK-028-009 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
   Implement test: deletes event and invalidates query
 
-- [ ] TASK-028-010 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
-  Run useCalendarData tests: `pnpm --filter @life-os/web test -- useCalendarData`
+- [x] TASK-028-010 | AGENT | `apps/web/src/hooks/useCalendarData.test.ts`
+  Run useCalendarData tests: `pnpm --filter @life-os/web exec vitest run src/hooks/useCalendarData.test.ts` - 9/9 tests passed
 
-- [ ] TASK-028-011 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-028-011 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
 ## TASK-029: Implement worker background job processing tests
 
-- [ ] TASK-029
-- Status: ready
+- [x] TASK-029
+- Status: done
 - Related Files: `apps/worker/src/index.test.ts`, `apps/worker/src/index.ts`
 - Definition of Done: All 4 test placeholders implemented, tests pass
 - Out of Scope: None
@@ -1364,25 +1364,25 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-029-001 | AGENT | `apps/worker/src/index.ts`
+- [x] TASK-029-001 | AGENT | `apps/worker/src/index.ts`
   Read worker index to understand job processing logic and pg-boss integration.
 
-- [ ] TASK-029-002 | AGENT | `apps/worker/src/index.test.ts`
+- [x] TASK-029-002 | AGENT | `apps/worker/src/index.test.ts`
   Implement test: implements background job processing logic
 
-- [ ] TASK-029-003 | AGENT | `apps/worker/src/index.test.ts`
+- [x] TASK-029-003 | AGENT | `apps/worker/src/index.test.ts`
   Implement test: handles pg-boss job queue events
 
-- [ ] TASK-029-004 | AGENT | `apps/worker/src/index.test.ts`
+- [x] TASK-029-004 | AGENT | `apps/worker/src/index.test.ts`
   Implement test: processes audit log events
 
-- [ ] TASK-029-005 | AGENT | `apps/worker/src/index.test.ts`
+- [x] TASK-029-005 | AGENT | `apps/worker/src/index.test.ts`
   Implement test: processes outbox events for publishing
 
-- [ ] TASK-029-006 | AGENT | `apps/worker/src/index.test.ts`
+- [x] TASK-029-006 | AGENT | `apps/worker/src/index.test.ts`
   Run worker tests: `pnpm --filter @life-os/worker test`
 
-- [ ] TASK-029-007 | AGENT | `apps/worker/src/`
+- [x] TASK-029-007 | AGENT | `apps/worker/src/`
   Run type checking: `pnpm --filter @life-os/worker typecheck`
 
 ---
@@ -1428,8 +1428,8 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ## TASK-030: Add test script to mobile package
 
-- [ ] TASK-030
-- Status: ready
+- [x] TASK-030
+- Status: done
 - Related Files: `apps/mobile/package.json`, `apps/mobile/vitest.config.ts`
 - Definition of Done: Mobile package has test script, vitest.config.ts exists, tests can run via turbo
 - Out of Scope: Test implementation (separate tasks)
@@ -1470,8 +1470,8 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ## TASK-031: Add test script to worker package
 
-- [ ] TASK-031
-- Status: ready
+- [x] TASK-031
+- Status: done
 - Related Files: `apps/worker/package.json`, `apps/worker/vitest.config.ts`
 - Definition of Done: Worker package has test script, vitest.config.ts exists, tests can run via turbo
 - Out of Scope: Test implementation (separate tasks)
@@ -1487,25 +1487,25 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ### Subtasks
 
-- [ ] TASK-031-001 | AGENT | `apps/worker/package.json`
+- [x] TASK-031-001 | AGENT | `apps/worker/package.json`
   Read package.json to verify vitest is in devDependencies and understand current script structure.
 
-- [ ] TASK-031-002 | AGENT | `apps/worker/package.json`
+- [x] TASK-031-002 | AGENT | `apps/worker/package.json`
   Add test script to scripts section: `"test": "vitest"`
 
-- [ ] TASK-031-003 | AGENT | `apps/worker/vitest.config.ts`
+- [x] TASK-031-003 | AGENT | `apps/worker/vitest.config.ts`
   Verify vitest.config.ts exists or create it following the pattern from apps/api/vitest.config.ts with node environment.
 
-- [ ] TASK-031-004 | AGENT | `apps/worker/vitest.config.ts`
+- [x] TASK-031-004 | AGENT | `apps/worker/vitest.config.ts`
   Ensure vitest.config.ts includes proper coverage settings for worker code.
 
-- [ ] TASK-031-005 | AGENT | `apps/worker/package.json`
+- [x] TASK-031-005 | AGENT | `apps/worker/package.json`
   Run worker test to verify configuration: `pnpm --filter @life-os/worker test --run`
 
-- [ ] TASK-031-006 | AGENT | `apps/worker/`
+- [x] TASK-031-006 | AGENT | `apps/worker/`
   Run type checking: `pnpm --filter @life-os/worker typecheck`
 
-- [ ] TASK-031-007 | AGENT | `apps/worker/`
+- [x] TASK-031-007 | AGENT | `apps/worker/`
   Update turbo.json to ensure worker test task has proper inputs and outputs configuration if needed.
 
 ---
