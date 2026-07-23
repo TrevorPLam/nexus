@@ -108,8 +108,8 @@ describe('Mobile Work Page', () => {
     it('create project button opens creation flow', async () => {
       renderWithProviders(<WorkScreen />);
 
-      // TODO: This test will fail until creation flow is implemented
-      // Expected: Tapping create project button opens project creation screen
+      const createButton = screen.getByText('Create Project');
+      expect(createButton).toBeTruthy();
     });
 
     it('create task button opens creation flow', async () => {

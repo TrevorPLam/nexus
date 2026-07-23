@@ -36,10 +36,12 @@
  */
 
 import type { ProjectRecord, TaskRecord } from '@life-os/mobile-data';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 
 import { useAuth } from '../../src/contexts/AuthContext';
 import { useProjects, useTasks, useCreateProject, useCreateTask, useUpdateTaskStatus } from '../../src/hooks/useWork';
+import { ProjectCreationModal } from './components/ProjectCreationModal';
 
 export default function WorkScreen() {
   const { selectedWorkspace, isLoading: authLoading } = useAuth();
@@ -48,6 +50,8 @@ export default function WorkScreen() {
   const createProject = useCreateProject();
   const createTask = useCreateTask();
   const updateTaskStatus = useUpdateTaskStatus();
+
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   // These hooks are ready for use when creation flows are implemented
   void createProject;
@@ -77,8 +81,7 @@ export default function WorkScreen() {
   }
 
   const handleCreateProject = () => {
-    // TODO: Open project creation modal
-    console.log('Create project');
+    setIsProjectModalOpen(true);
   };
 
   const handleCreateTask = () => {
@@ -155,6 +158,11 @@ export default function WorkScreen() {
           </View>
         )}
       </ScrollView>
+
+      <ProjectCreationModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+      />
     </View>
   );
 }
