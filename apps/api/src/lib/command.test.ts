@@ -1,111 +1,491 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { executeCommand, executeCommandWithoutIdempotency, CommandContext } from './command-context.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
+import { createAuditLog, createOutboxEvent } from './audit.js';
 
-describe('Command Pattern - Expected Behavior Documentation', () => {
+// Mock the dependencies
+vi.mock('./idempotency.js');
+vi.mock('./audit.js');
+vi.mock('./db.js', () => ({
+  db: {
+    transaction: vi.fn(),
+  },
+}));
+
+describe('Command Pattern - Implementation Verification', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('Transaction Boundaries', () => {
-    it('should wrap task creation in a transaction', () => {
-      // TODO: Implement command pattern that wraps all mutations in transactions
-      // Expected: Task creation should be wrapped in a transaction
-      expect(true).toBe(true); // Placeholder
+    it('should wrap task creation in a transaction', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({}); // Mock transaction object
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(context, mockCommand);
+
+      expect(db.transaction).toHaveBeenCalled();
+      expect(mockCommand).toHaveBeenCalled();
     });
 
-    it('should rollback transaction on error', () => {
-      // TODO: Implement proper rollback on domain write failure
-      // Expected: If domain write fails, transaction should rollback
-      expect(true).toBe(true); // Placeholder
+    it('should rollback transaction on error', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockRejectedValue(new Error('Domain write failed'));
+      (db.transaction as any).mockImplementation(async (callback) => {
+        try {
+          return callback({});
+        } catch (error) {
+          throw error; // Transaction should rollback on error
+        }
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await expect(executeCommand(context, mockCommand)).rejects.toThrow('Domain write failed');
     });
   });
 
   describe('Audit Log Creation', () => {
-    it('should create audit log on task creation', () => {
-      // TODO: Implement audit log creation for task mutations
-      // Expected: createAuditLog should be called with userId, workspaceId, action='create'
-      expect(true).toBe(true); // Placeholder
+    it('should create audit log on task creation', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        {
+          action: 'create',
+          entityType: 'task',
+          entityId: 'task-1',
+        },
+      );
+
+      expect(createAuditLog).toHaveBeenCalledWith({
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        action: 'create',
+        entityType: 'task',
+        entityId: 'task-1',
+        changes: {},
+      });
     });
 
-    it('should create audit log on task update', () => {
-      // TODO: Implement audit log creation for task updates
-      // Expected: createAuditLog should be called with action='update' and old/new changes
-      expect(true).toBe(true); // Placeholder
+    it('should create audit log on task update', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        {
+          action: 'update',
+          entityType: 'task',
+          entityId: 'task-1',
+          changes: { status: 'done' },
+        },
+      );
+
+      expect(createAuditLog).toHaveBeenCalledWith({
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        action: 'update',
+        entityType: 'task',
+        entityId: 'task-1',
+        changes: { status: 'done' },
+      });
     });
 
-    it('should create audit log on task deletion', () => {
-      // TODO: Implement audit log creation for task deletion
-      // Expected: createAuditLog should be called with action='delete' and old state
-      expect(true).toBe(true); // Placeholder
+    it('should create audit log on task deletion', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        {
+          action: 'delete',
+          entityType: 'task',
+          entityId: 'task-1',
+        },
+      );
+
+      expect(createAuditLog).toHaveBeenCalledWith({
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        action: 'delete',
+        entityType: 'task',
+        entityId: 'task-1',
+        changes: {},
+      });
     });
   });
 
   describe('Outbox Event Creation', () => {
-    it('should create outbox event on task creation', () => {
-      // TODO: Implement outbox event creation for task mutations
-      // Expected: createOutboxEvent should be called with eventType='task.created'
-      expect(true).toBe(true); // Placeholder
+    it('should create outbox event on task creation', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        undefined,
+        {
+          eventType: 'task.created',
+          aggregateType: 'task',
+          aggregateId: 'task-1',
+          payload: { id: 'task-1' },
+        },
+      );
+
+      expect(createOutboxEvent).toHaveBeenCalledWith({
+        eventType: 'task.created',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1' },
+      });
     });
 
-    it('should create outbox event on task update', () => {
-      // TODO: Implement outbox event creation for task updates
-      // Expected: createOutboxEvent should be called with eventType='task.updated'
-      expect(true).toBe(true); // Placeholder
+    it('should create outbox event on task update', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        undefined,
+        {
+          eventType: 'task.updated',
+          aggregateType: 'task',
+          aggregateId: 'task-1',
+          payload: { id: 'task-1', status: 'done' },
+        },
+      );
+
+      expect(createOutboxEvent).toHaveBeenCalledWith({
+        eventType: 'task.updated',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1', status: 'done' },
+      });
     });
 
-    it('should create outbox event on task deletion', () => {
-      // TODO: Implement outbox event creation for task deletion
-      // Expected: createOutboxEvent should be called with eventType='task.deleted'
-      expect(true).toBe(true); // Placeholder
+    it('should create outbox event on task deletion', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        undefined,
+        {
+          eventType: 'task.deleted',
+          aggregateType: 'task',
+          aggregateId: 'task-1',
+          payload: { id: 'task-1' },
+        },
+      );
+
+      expect(createOutboxEvent).toHaveBeenCalledWith({
+        eventType: 'task.deleted',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1' },
+      });
     });
   });
 
   describe('Idempotency Key Handling', () => {
-    it('should check idempotency key before executing command', () => {
-      // TODO: Implement idempotency key check before command execution
-      // Expected: checkIdempotencyKey should be called with key, userId, endpoint
-      expect(true).toBe(true); // Placeholder
+    it('should check idempotency key before executing command', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        idempotencyKey: 'key-123',
+        endpoint: '/api/work/tasks',
+      };
+
+      vi.mocked(checkIdempotencyKey).mockResolvedValue({ isDuplicate: false });
+
+      await executeCommand(context, mockCommand);
+
+      expect(checkIdempotencyKey).toHaveBeenCalledWith('key-123', 'user-1', '/api/work/tasks');
     });
 
-    it('should return cached response on duplicate idempotency key', () => {
-      // TODO: Implement cached response return for duplicate keys
-      // Expected: Should return original response without re-executing command
-      expect(true).toBe(true); // Placeholder
+    it('should return cached response on duplicate idempotency key', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        idempotencyKey: 'key-123',
+        endpoint: '/api/work/tasks',
+      };
+
+      vi.mocked(checkIdempotencyKey).mockResolvedValue({
+        isDuplicate: true,
+        responseStatus: '200',
+        responseBody: { id: 'task-1' },
+      });
+
+      const result = await executeCommand(context, mockCommand);
+
+      expect(result).toEqual({
+        data: { id: 'task-1' },
+        isIdempotent: true,
+      });
+      expect(mockCommand).not.toHaveBeenCalled();
     });
 
-    it('should store idempotency key after successful command', () => {
-      // TODO: Implement idempotency key storage after successful execution
-      // Expected: createIdempotencyKey should be called with response details
-      expect(true).toBe(true); // Placeholder
+    it('should store idempotency key after successful command', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        idempotencyKey: 'key-123',
+        endpoint: '/api/work/tasks',
+      };
+
+      vi.mocked(checkIdempotencyKey).mockResolvedValue({ isDuplicate: false });
+
+      await executeCommand(context, mockCommand);
+
+      expect(createIdempotencyKey).toHaveBeenCalledWith({
+        key: 'key-123',
+        userId: 'user-1',
+        endpoint: '/api/work/tasks',
+        responseStatus: '200',
+        responseBody: { id: 'task-1' },
+      });
     });
   });
 
   describe('Atomic Audit and Outbox in Transaction', () => {
-    it('should commit audit and outbox together with domain write', () => {
-      // TODO: Implement atomic commit of domain + audit + outbox
-      // Expected: All writes should commit together in single transaction
-      expect(true).toBe(true); // Placeholder
+    it('should commit audit and outbox together with domain write', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        {
+          action: 'create',
+          entityType: 'task',
+          entityId: 'task-1',
+        },
+        {
+          eventType: 'task.created',
+          aggregateType: 'task',
+          aggregateId: 'task-1',
+          payload: { id: 'task-1' },
+        },
+      );
+
+      expect(createAuditLog).toHaveBeenCalled();
+      expect(createOutboxEvent).toHaveBeenCalled();
+      expect(db.transaction).toHaveBeenCalled();
     });
 
-    it('should rollback audit and outbox on domain write failure', () => {
-      // TODO: Implement rollback of audit/outbox on domain failure
-      // Expected: If domain write fails, audit and outbox should rollback
-      expect(true).toBe(true); // Placeholder
+    it('should rollback audit and outbox on domain write failure', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockRejectedValue(new Error('Domain write failed'));
+      (db.transaction as any).mockImplementation(async (callback) => {
+        try {
+          return callback({});
+        } catch (error) {
+          throw error;
+        }
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await expect(
+        executeCommand(
+          context,
+          mockCommand,
+          {
+            action: 'create',
+            entityType: 'task',
+            entityId: 'task-1',
+          },
+          {
+            eventType: 'task.created',
+            aggregateType: 'task',
+            aggregateId: 'task-1',
+            payload: { id: 'task-1' },
+          },
+        ),
+      ).rejects.toThrow('Domain write failed');
+
+      // Transaction should rollback, so audit/outbox should not be committed
+      expect(createAuditLog).not.toHaveBeenCalled();
+      expect(createOutboxEvent).not.toHaveBeenCalled();
     });
   });
 
   describe('Calendar Command Pattern', () => {
-    it('should wrap event creation in a transaction', () => {
-      // TODO: Implement command pattern for calendar mutations
-      // Expected: Event creation should be wrapped in transaction
-      expect(true).toBe(true); // Placeholder
+    it('should wrap event creation in a transaction', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(context, mockCommand);
+
+      expect(db.transaction).toHaveBeenCalled();
     });
 
-    it('should create audit log on event creation', () => {
-      // TODO: Implement audit log creation for event mutations
-      // Expected: createAuditLog should be called with entityType='event'
-      expect(true).toBe(true); // Placeholder
+    it('should create audit log on event creation', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        {
+          action: 'create',
+          entityType: 'event',
+          entityId: 'event-1',
+        },
+      );
+
+      expect(createAuditLog).toHaveBeenCalledWith({
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+        action: 'create',
+        entityType: 'event',
+        entityId: 'event-1',
+        changes: {},
+      });
     });
 
-    it('should create outbox event on event creation', () => {
-      // TODO: Implement outbox event creation for event mutations
-      // Expected: createOutboxEvent should be called with eventType='event.created'
-      expect(true).toBe(true); // Placeholder
+    it('should create outbox event on event creation', async () => {
+      const { db } = await import('./db.js');
+      const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
+      (db.transaction as any).mockImplementation(async (callback) => {
+        return callback({});
+      });
+
+      const context: CommandContext = {
+        userId: 'user-1',
+        workspaceId: 'workspace-1',
+      };
+
+      await executeCommand(
+        context,
+        mockCommand,
+        undefined,
+        {
+          eventType: 'event.created',
+          aggregateType: 'event',
+          aggregateId: 'event-1',
+          payload: { id: 'event-1' },
+        },
+      );
+
+      expect(createOutboxEvent).toHaveBeenCalledWith({
+        eventType: 'event.created',
+        aggregateType: 'event',
+        aggregateId: 'event-1',
+        payload: { id: 'event-1' },
+      });
     });
   });
 });
