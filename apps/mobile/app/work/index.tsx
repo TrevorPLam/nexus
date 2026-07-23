@@ -43,6 +43,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { useProjects, useTasks, useCreateProject, useCreateTask, useUpdateTaskStatus } from '../../src/hooks/useWork';
 import { ProjectCreationModal } from './components/ProjectCreationModal';
 import { TaskCreationModal } from './components/TaskCreationModal';
+import { TaskDetailsModal } from './components/TaskDetailsModal';
 
 export default function WorkScreen() {
   const { selectedWorkspace, isLoading: authLoading } = useAuth();
@@ -54,6 +55,7 @@ export default function WorkScreen() {
 
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<TaskRecord | null>(null);
 
   // These hooks are ready for use when creation flows are implemented
   void createProject;
@@ -90,9 +92,8 @@ export default function WorkScreen() {
     setIsTaskModalOpen(true);
   };
 
-  const handleTaskPress = (taskId: string) => {
-    // TODO: Open task details
-    console.log('Task pressed:', taskId);
+  const handleTaskPress = (task: TaskRecord) => {
+    setSelectedTask(task);
   };
 
   const renderProject = ({ item }: { item: ProjectRecord }) => (
@@ -103,7 +104,7 @@ export default function WorkScreen() {
   );
 
   const renderTask = ({ item }: { item: TaskRecord }) => (
-    <TouchableOpacity style={styles.listItem} onPress={() => handleTaskPress(item.id)}>
+    <TouchableOpacity style={styles.listItem} onPress={() => handleTaskPress(item)}>
       <Text style={styles.listItemTitle}>{item.title}</Text>
       <View style={styles.taskMeta}>
         <Text style={styles.taskStatus}>{item.status}</Text>
@@ -169,6 +170,14 @@ export default function WorkScreen() {
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
       />
+
+      {selectedTask && (
+        <TaskDetailsModal
+          isOpen={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+          task={selectedTask}
+        />
+      )}
     </View>
   );
 }

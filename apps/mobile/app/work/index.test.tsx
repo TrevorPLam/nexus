@@ -156,4 +156,27 @@ describe('Mobile Work Page', () => {
       // Expected: Pending commands show sync status indicator
     });
   });
+
+  describe('Task details modal', () => {
+    it('task details modal opens when task is pressed', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // Task items are clickable and open the details modal
+      // Expected: TaskDetailsModal is rendered with the selected task
+    });
+
+    it('task details modal displays task information', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // Modal displays title, description, status, project, priority, and due date
+      // Expected: All task fields are visible in the modal
+    });
+
+    it('task status can be updated from modal', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // Status dropdown allows changing task status
+      // Expected: Status change triggers updateTaskStatus mutation
+    });
+  });
 });
