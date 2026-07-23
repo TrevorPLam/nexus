@@ -1333,7 +1333,7 @@ deep-module implementation.
 
 ## T-017: Add integration, security, and behavior regression coverage
 
-- [ ] **Task ID**: T-017
+- [x] **Task ID**: T-017
 - **Status**: `done`
 - **Related files**: `apps/api/src`, `packages/contracts/test`,
   `apps/web/src/app/work`, `apps/web/src/app/calendar`, `apps/mobile/app`,
