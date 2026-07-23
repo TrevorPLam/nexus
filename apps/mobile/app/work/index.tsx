@@ -42,6 +42,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator
 import { useAuth } from '../../src/contexts/AuthContext';
 import { useProjects, useTasks, useCreateProject, useCreateTask, useUpdateTaskStatus } from '../../src/hooks/useWork';
 import { ProjectCreationModal } from './components/ProjectCreationModal';
+import { TaskCreationModal } from './components/TaskCreationModal';
 
 export default function WorkScreen() {
   const { selectedWorkspace, isLoading: authLoading } = useAuth();
@@ -52,6 +53,7 @@ export default function WorkScreen() {
   const updateTaskStatus = useUpdateTaskStatus();
 
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   // These hooks are ready for use when creation flows are implemented
   void createProject;
@@ -85,8 +87,7 @@ export default function WorkScreen() {
   };
 
   const handleCreateTask = () => {
-    // TODO: Open task creation modal
-    console.log('Create task');
+    setIsTaskModalOpen(true);
   };
 
   const handleTaskPress = (taskId: string) => {
@@ -162,6 +163,11 @@ export default function WorkScreen() {
       <ProjectCreationModal
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
+      />
+
+      <TaskCreationModal
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
       />
     </View>
   );
