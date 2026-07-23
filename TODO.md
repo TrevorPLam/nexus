@@ -302,8 +302,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-007: Enforce membership-based RLS for Work and Calendar
 
-- [ ] **Task ID**: T-007
-- **Status**: `ready`
+- [x] **Task ID**: T-007
+- **Status**: `done`
 - **Related files**: `supabase/migrations/0001_work_rls_policies.sql`, `supabase/migrations/0008_calendar_rls_policies.sql`, `packages/database/src/schema/core.ts`, `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts`, `apps/api/src/lib/middleware.ts`
 - **Definition of Done**:
   - RLS policies resolve access from authenticated identity and workspace membership, not only a mutable workspace setting.
@@ -320,16 +320,16 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-007-1** | `AGENT` | `supabase/migrations`, `packages/database/src/schema/core.ts` | Read all existing membership, auth, helper-function, and RLS migrations in application order.
-- [ ] **T-007-2** | `AGENT` | `supabase/migrations` | Research Supabase `auth.uid()`, SECURITY DEFINER membership helpers, search path hardening, and FORCE RLS behavior.
-- [ ] **T-007-3** | `AGENT` | `supabase/migrations` | Verify migration ordering and identify whether policy replacement requires `DROP POLICY` statements or a new migration.
+- [x] **T-007-1** | `AGENT` | `supabase/migrations`, `packages/database/src/schema/core.ts` | Read all existing membership, auth, helper-function, and RLS migrations in application order.
+- [x] **T-007-2** | `AGENT` | `supabase/migrations` | Research Supabase `auth.uid()`, SECURITY DEFINER membership helpers, search path hardening, and FORCE RLS behavior.
+- [x] **T-007-3** | `AGENT` | `supabase/migrations` | Verify migration ordering and identify whether policy replacement requires `DROP POLICY` statements or a new migration.
 
 ### Subtasks
 
-- [ ] **T-007-4** | `AGENT` | `supabase/migrations` | Write the RLS integration test fixture or SQL test harness before changing policies.
-- [ ] **T-007-5** | `AGENT` | `supabase/migrations/0009_membership_rls_work_calendar.sql` | Add the smallest migration that replaces unsafe Work and Calendar predicates with membership-based policies.
-- [ ] **T-007-6** | `AGENT` | `supabase/migrations` | Add the scheduling-link identity mapping and verify child-resource policies through parent entities.
-- [ ] **T-007-7** | `AGENT` | `supabase/migrations` | Run the focused two-user/two-workspace matrix against a clean local Supabase database.
+- [x] **T-007-4** | `AGENT` | `supabase/migrations` | Write the RLS integration test fixture or SQL test harness before changing policies.
+- [x] **T-007-5** | `AGENT` | `supabase/migrations/0009_membership_rls_work_calendar.sql` | Add the smallest migration that replaces unsafe Work and Calendar predicates with membership-based policies.
+- [x] **T-007-6** | `AGENT` | `supabase/migrations` | Add the scheduling-link identity mapping and verify child-resource policies through parent entities.
+- [x] **T-007-7** | `AGENT` | `supabase/migrations` | Run the focused two-user/two-workspace matrix against a clean local Supabase database.
 
 ### Validation Commands
 
