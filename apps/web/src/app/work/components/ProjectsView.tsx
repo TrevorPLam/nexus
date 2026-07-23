@@ -61,11 +61,7 @@ export function ProjectsView({
                   <h3 className="text-lg font-semibold">{project.name}</h3>
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onPress={() => onEditProject(project)}
-                  >
+                  <Button variant="secondary" size="small" onPress={() => onEditProject(project)}>
                     <Edit2 className="w-3 h-3" />
                   </Button>
                   <Button

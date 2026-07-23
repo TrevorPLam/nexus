@@ -32,15 +32,18 @@ tasksRouter.post(
     const data = c.req.valid('json');
     try {
       const context = await extractCommandContext(c);
-      const task = await workOps.createTask({
-        ...data,
-        status: data.status || 'todo',
-        priority: data.priority || 'medium',
-        completedAt: null,
-        metadata: null,
-        dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        estimatedDuration: data.estimatedDuration,
-      }, context);
+      const task = await workOps.createTask(
+        {
+          ...data,
+          status: data.status || 'todo',
+          priority: data.priority || 'medium',
+          completedAt: null,
+          metadata: null,
+          dueDate: data.dueDate ? new Date(data.dueDate) : null,
+          estimatedDuration: data.estimatedDuration,
+        },
+        context,
+      );
       return c.json(task, 201);
     } catch (error) {
       console.error('Error creating task:', error);
@@ -109,11 +112,20 @@ tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, as
       if (parsedCursor) filterParams.cursor = parsedCursor;
 
       const result = await workOps.getFilteredTasks(filterParams as any);
-      return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
+      return c.json({
+        tasks: result.items,
+        nextCursor: result.nextCursor,
+        hasMore: result.hasMore,
+      });
     }
 
     // Otherwise, get paginated tasks for workspace
-    const result = await workOps.getTasksByWorkspace(workspaceId, limit, parsedCursor, includeCancelled);
+    const result = await workOps.getTasksByWorkspace(
+      workspaceId,
+      limit,
+      parsedCursor,
+      includeCancelled,
+    );
     return c.json({ tasks: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
   } catch (error) {
     console.error('Error fetching tasks:', error);

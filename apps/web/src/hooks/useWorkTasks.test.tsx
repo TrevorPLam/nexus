@@ -49,10 +49,9 @@ describe('useWorkTasks', () => {
     ];
     vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', 'project-1', null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', 'project-1', null), {
+      wrapper,
+    });
 
     await waitFor(() => {
       expect(result.current.tasks).toEqual(mockTasks);
@@ -70,10 +69,7 @@ describe('useWorkTasks', () => {
     ];
     vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, 'high'),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, 'high'), { wrapper });
 
     await waitFor(() => {
       expect(result.current.tasks).toEqual(mockTasks);
@@ -85,15 +81,12 @@ describe('useWorkTasks', () => {
   });
 
   it('fetches tasks for workspace with both project and priority filters', async () => {
-    const mockTasks = [
-      { id: '1', title: 'Task 1', projectId: 'project-1', priority: 'high' },
-    ];
+    const mockTasks = [{ id: '1', title: 'Task 1', projectId: 'project-1', priority: 'high' }];
     vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', 'project-1', 'high'),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', 'project-1', 'high'), {
+      wrapper,
+    });
 
     await waitFor(() => {
       expect(result.current.tasks).toEqual(mockTasks);
@@ -133,27 +126,17 @@ describe('useWorkTasks', () => {
   });
 
   it('exposes loading state', () => {
-    vi.mocked(apiClient.getTasks).mockImplementation(
-      () => new Promise(() => {}),
-    );
+    vi.mocked(apiClient.getTasks).mockImplementation(() => new Promise(() => {}));
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     expect(result.current.isLoading).toBe(true);
   });
 
   it('exposes error state on fetch failure', async () => {
-    vi.mocked(apiClient.getTasks).mockRejectedValue(
-      new Error('Failed to fetch tasks'),
-    );
+    vi.mocked(apiClient.getTasks).mockRejectedValue(new Error('Failed to fetch tasks'));
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
@@ -166,10 +149,7 @@ describe('useWorkTasks', () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
     vi.mocked(apiClient.createTask).mockResolvedValue(mockTask as any);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     await result.current.createTaskMutation.mutateAsync({
       title: 'New Task',
@@ -194,10 +174,7 @@ describe('useWorkTasks', () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
     vi.mocked(apiClient.updateTask).mockResolvedValue(mockTask as any);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     await result.current.updateTaskMutation.mutateAsync({
       id: '1',
@@ -213,10 +190,7 @@ describe('useWorkTasks', () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
     vi.mocked(apiClient.deleteTask).mockResolvedValue(undefined);
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     await result.current.deleteTaskMutation.mutateAsync('1');
 
@@ -234,14 +208,9 @@ describe('useWorkTasks', () => {
 
   it('exposes error state on create task failure', async () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
-    vi.mocked(apiClient.createTask).mockRejectedValue(
-      new Error('Failed to create task'),
-    );
+    vi.mocked(apiClient.createTask).mockRejectedValue(new Error('Failed to create task'));
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     result.current.createTaskMutation.mutate({
       title: 'New Task',
@@ -254,14 +223,9 @@ describe('useWorkTasks', () => {
 
   it('exposes error state on update task failure', async () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
-    vi.mocked(apiClient.updateTask).mockRejectedValue(
-      new Error('Failed to update task'),
-    );
+    vi.mocked(apiClient.updateTask).mockRejectedValue(new Error('Failed to update task'));
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     result.current.updateTaskMutation.mutate({
       id: '1',
@@ -275,14 +239,9 @@ describe('useWorkTasks', () => {
 
   it('exposes error state on delete task failure', async () => {
     vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
-    vi.mocked(apiClient.deleteTask).mockRejectedValue(
-      new Error('Failed to delete task'),
-    );
+    vi.mocked(apiClient.deleteTask).mockRejectedValue(new Error('Failed to delete task'));
 
-    const { result } = renderHook(
-      () => useWorkTasks('workspace-1', null, null),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
     result.current.deleteTaskMutation.mutate('1');
 

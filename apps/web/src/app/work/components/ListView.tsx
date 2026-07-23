@@ -188,7 +188,9 @@ export function ListView({
                       onTaskStatusChange(task.id, nextStatus);
                     }}
                     className={`flex-shrink-0 ${
-                      task.status === 'done' ? 'text-green-500' : 'text-gray-400 hover:text-blue-500'
+                      task.status === 'done'
+                        ? 'text-green-500'
+                        : 'text-gray-400 hover:text-blue-500'
                     }`}
                   >
                     <StatusIcon className="w-5 h-5" />
@@ -226,9 +228,7 @@ export function ListView({
                           <span>{new Date(task.dueDate).toLocaleDateString()}</span>
                         </div>
                       )}
-                      {task.estimatedDuration && (
-                        <span>{task.estimatedDuration}m</span>
-                      )}
+                      {task.estimatedDuration && <span>{task.estimatedDuration}m</span>}
                     </div>
                   </div>
 

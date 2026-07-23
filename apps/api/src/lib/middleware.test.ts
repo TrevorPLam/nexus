@@ -262,7 +262,10 @@ describe('Middleware', () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await requireEntityAccess('tasks')(c as any, next);
-      expect(c.json).toHaveBeenCalledWith({ error: 'Forbidden: Not a member of this workspace' }, 403);
+      expect(c.json).toHaveBeenCalledWith(
+        { error: 'Forbidden: Not a member of this workspace' },
+        403,
+      );
       expect(next).not.toHaveBeenCalled();
     });
 

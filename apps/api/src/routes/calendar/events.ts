@@ -3,7 +3,12 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware, requireWorkspaceMembership, requireEntityAccess, requireWorkspaceAccess } from '../../lib/middleware.js';
+import {
+  authMiddleware,
+  requireWorkspaceMembership,
+  requireEntityAccess,
+  requireWorkspaceAccess,
+} from '../../lib/middleware.js';
 
 const eventsRouter = new Hono();
 

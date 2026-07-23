@@ -49,11 +49,7 @@ export function TaskSubtasks({
             ({completedCount}/{totalCount})
           </span>
         </div>
-        <Button
-          variant="secondary"
-          size="small"
-          onPress={() => setIsAdding(true)}
-        >
+        <Button variant="secondary" size="small" onPress={() => setIsAdding(true)}>
           <Plus className="w-4 h-4 mr-1" />
           Add
         </Button>
@@ -95,9 +91,7 @@ export function TaskSubtasks({
       {/* Subtasks List */}
       <div className="space-y-2">
         {subtasks.length === 0 && !isAdding ? (
-          <div className="text-center py-4 text-gray-500 text-sm">
-            No subtasks yet
-          </div>
+          <div className="text-center py-4 text-gray-500 text-sm">No subtasks yet</div>
         ) : (
           subtasks.map((subtask) => (
             <div
@@ -117,24 +111,16 @@ export function TaskSubtasks({
               <div className="flex-1 min-w-0">
                 <p
                   className={`text-sm ${
-                    subtask.status === 'done'
-                      ? 'text-gray-400 line-through'
-                      : 'text-gray-900'
+                    subtask.status === 'done' ? 'text-gray-400 line-through' : 'text-gray-900'
                   }`}
                 >
                   {subtask.title}
                 </p>
                 {subtask.description && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
-                    {subtask.description}
-                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{subtask.description}</p>
                 )}
               </div>
-              <Button
-                variant="secondary"
-                size="small"
-                onPress={() => onDeleteSubtask(subtask.id)}
-              >
+              <Button variant="secondary" size="small" onPress={() => onDeleteSubtask(subtask.id)}>
                 <X className="w-4 h-4" />
               </Button>
             </div>

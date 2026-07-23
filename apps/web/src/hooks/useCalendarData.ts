@@ -1,51 +1,30 @@
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { Calendar, Event } from '../app/calendar/types';
 
-interface Calendar {
-  id: string;
-  name: string;
-  description: string | null;
-  color: string | null;
-  isDefault: boolean;
-  provider: string | null;
-}
-
-interface Event {
-  id: string;
-  title: string;
-  description: string | null;
-  location: string | null;
-  isAllDay: boolean;
-  start: string;
-  end: string;
-  calendarId: string;
-  recurrenceRule?: string | null;
-  isFocusTime?: boolean;
-}
-
-export function useCalendarData(workspaceId: string | null) {
+export function useCalendarData(workspaceId: string | null, dateRange?: { startDate: string; endDate: string }) {
   const queryClient = useQueryClient();
 
   // Calendars query
-  const { data: calendarsData, isLoading: calendarsLoading } = useQuery({
+  const { data: calendarsData = [], isLoading: calendarsLoading } = useQuery<Calendar[]>({
     queryKey: ['calendars', workspaceId],
-    queryFn: () => apiClient.getCalendars(workspaceId!) as Promise<{ calendars: Calendar[] }>,
+    queryFn: () => apiClient.getCalendars(workspaceId!) as Promise<Calendar[]>,
     enabled: !!workspaceId,
   });
-  const calendars = calendarsData?.calendars || [];
+  const calendars = calendarsData;
 
-  // Events query
-  const { data: eventsData } = useQuery({
-    queryKey: ['events', workspaceId],
-    queryFn: () => apiClient.getEvents(workspaceId!) as Promise<{ events: Event[] }>,
+  // Events query with date range support
+  const { data: eventsData = [] } = useQuery<Event[]>({
+    queryKey: ['events', workspaceId, dateRange],
+    queryFn: () => apiClient.getEvents(workspaceId!, dateRange) as Promise<Event[]>,
     enabled: !!workspaceId,
   });
-  const events = eventsData?.events || [];
+  const events = eventsData;
 
   // Create calendar mutation
   const createCalendarMutation = useMutation({
     mutationFn: (data: { name: string; description?: string; color?: string }) =>
-      apiClient.createCalendar({ workspaceId, ...data }),
+      apiClient.createCalendar({ workspaceId: workspaceId!, ...data, isDefault: false, provider: 'local' }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['calendars', workspaceId] });
     },
@@ -85,7 +64,13 @@ export function useCalendarData(workspaceId: string | null) {
       description?: string;
       location?: string;
       recurrenceRule?: string;
-    }) => apiClient.createEvent({ workspaceId, ...data }),
+    }) =>
+      apiClient.createEvent({
+        workspaceId: workspaceId!,
+        ...data,
+        isAllDay: data.isAllDay ?? false,
+        timezone: 'UTC',
+      }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['events', workspaceId] });
     },
@@ -93,7 +78,7 @@ export function useCalendarData(workspaceId: string | null) {
 
   // Update event mutation
   const updateEventMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Event> }) =>
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof apiClient.updateEvent>[1] }) =>
       apiClient.updateEvent(id, data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['events', workspaceId] });

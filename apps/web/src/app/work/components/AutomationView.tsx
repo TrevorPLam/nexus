@@ -86,7 +86,8 @@ export function AutomationView({
           <Settings2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No automations yet</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            Create automation rules to streamline your workflow. Automatically assign tasks, send notifications, and more.
+            Create automation rules to streamline your workflow. Automatically assign tasks, send
+            notifications, and more.
           </p>
           <Button onPress={onNewRule}>
             <Plus className="w-4 h-4 mr-2" />
@@ -140,7 +141,10 @@ export function AutomationView({
                         </div>
                         {rule.conditions.length > 0 && (
                           <div className="flex items-center gap-2 text-gray-600">
-                            <span>{rule.conditions.length} condition{rule.conditions.length > 1 ? 's' : ''}</span>
+                            <span>
+                              {rule.conditions.length} condition
+                              {rule.conditions.length > 1 ? 's' : ''}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -152,31 +156,15 @@ export function AutomationView({
                       size="small"
                       onPress={() => onToggleRule(rule.id, !rule.isActive)}
                     >
-                      {rule.isActive ? (
-                        <Pause className="w-4 h-4" />
-                      ) : (
-                        <Play className="w-4 h-4" />
-                      )}
+                      {rule.isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     </Button>
-                    <Button
-                      variant="secondary"
-                      size="small"
-                      onPress={() => onRunRule(rule.id)}
-                    >
+                    <Button variant="secondary" size="small" onPress={() => onRunRule(rule.id)}>
                       <Play className="w-4 h-4" />
                     </Button>
-                    <Button
-                      variant="secondary"
-                      size="small"
-                      onPress={() => onEditRule(rule)}
-                    >
+                    <Button variant="secondary" size="small" onPress={() => onEditRule(rule)}>
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button
-                      variant="secondary"
-                      size="small"
-                      onPress={() => onDeleteRule(rule.id)}
-                    >
+                    <Button variant="secondary" size="small" onPress={() => onDeleteRule(rule.id)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -221,9 +209,7 @@ export function AutomationView({
                 </div>
                 <h4 className="font-medium text-sm">Completion follow-up</h4>
               </div>
-              <p className="text-xs text-gray-500">
-                Add a comment when a task is marked as done
-              </p>
+              <p className="text-xs text-gray-500">Add a comment when a task is marked as done</p>
             </div>
           </div>
         </div>

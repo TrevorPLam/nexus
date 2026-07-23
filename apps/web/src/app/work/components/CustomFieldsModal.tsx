@@ -70,7 +70,9 @@ export function CustomFieldsModal({
                 <label className="block text-sm font-medium mb-2">Field Type</label>
                 <select
                   value={fieldForm.type}
-                  onChange={(e) => setFieldForm({ ...fieldForm, type: e.target.value as CustomFieldType })}
+                  onChange={(e) =>
+                    setFieldForm({ ...fieldForm, type: e.target.value as CustomFieldType })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
                   {fieldTypes.map((type) => (
@@ -93,9 +95,7 @@ export function CustomFieldsModal({
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     rows={3}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Separate options with commas
-                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Separate options with commas</p>
                 </div>
               )}
 

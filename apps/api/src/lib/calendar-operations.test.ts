@@ -346,9 +346,11 @@ describe('Calendar Operations', () => {
 
     it('should wrap event creation in transaction', async () => {
       const { db } = await import('./db.js');
-      const transactionSpy = vi.spyOn(db, 'transaction').mockImplementation(async (callback: any) => {
-        return callback(db);
-      });
+      const transactionSpy = vi
+        .spyOn(db, 'transaction')
+        .mockImplementation(async (callback: any) => {
+          return callback(db);
+        });
 
       await createEvent(
         {
@@ -420,9 +422,11 @@ describe('Calendar Operations', () => {
 
     it('should commit audit and outbox together with domain write in transaction', async () => {
       const { db } = await import('./db.js');
-      const transactionSpy = vi.spyOn(db, 'transaction').mockImplementation(async (callback: any) => {
-        return callback(db);
-      });
+      const transactionSpy = vi
+        .spyOn(db, 'transaction')
+        .mockImplementation(async (callback: any) => {
+          return callback(db);
+        });
       const auditSpy = vi.spyOn(await import('./audit.js'), 'createAuditLog');
       const outboxSpy = vi.spyOn(await import('./audit.js'), 'createOutboxEvent');
 

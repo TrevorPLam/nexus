@@ -121,9 +121,7 @@ function AttendeeItem({ attendee, onDelete }: AttendeeItemProps) {
         <User className="w-4 h-4 text-gray-500" />
         <div>
           <span className="text-sm">{attendee.name || attendee.email}</span>
-          {attendee.name && (
-            <span className="text-xs text-gray-500 ml-2">({attendee.email})</span>
-          )}
+          {attendee.name && <span className="text-xs text-gray-500 ml-2">({attendee.email})</span>}
         </div>
         {attendee.isOrganizer && <Badge variant="success">Organizer</Badge>}
         <Badge

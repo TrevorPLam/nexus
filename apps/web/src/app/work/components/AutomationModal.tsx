@@ -4,7 +4,12 @@ import { Button, Modal, Select, TextArea } from '@life-os/ui';
 import { Plus, Trash2, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-import type { AutomationRule, AutomationTrigger, AutomationAction, AutomationCondition } from '../types-automation';
+import type {
+  AutomationRule,
+  AutomationTrigger,
+  AutomationAction,
+  AutomationCondition,
+} from '../types-automation';
 
 interface AutomationModalProps {
   isOpen: boolean;
@@ -78,7 +83,7 @@ export function AutomationModal({
   isPending,
 }: AutomationModalProps) {
   const [selectedTriggerType, setSelectedTriggerType] = useState(
-    editingRule?.trigger.type || 'task_status_changed'
+    editingRule?.trigger.type || 'task_status_changed',
   );
 
   const addAction = () => {
@@ -179,7 +184,9 @@ export function AutomationModal({
                 onChange={(e) => setRuleForm({ ...ruleForm, isActive: e.target.checked })}
                 className="rounded"
               />
-              <label htmlFor="isActive" className="text-sm">Active</label>
+              <label htmlFor="isActive" className="text-sm">
+                Active
+              </label>
             </div>
 
             {/* Trigger Section */}
@@ -193,9 +200,17 @@ export function AutomationModal({
                     // Reset trigger based on type
                     const baseTrigger: AutomationTrigger = { type: e.target.value as any };
                     if (e.target.value === 'task_status_changed') {
-                      updateTrigger({ ...baseTrigger, type: 'task_status_changed', toStatus: 'done' });
+                      updateTrigger({
+                        ...baseTrigger,
+                        type: 'task_status_changed',
+                        toStatus: 'done',
+                      });
                     } else if (e.target.value === 'task_due_date_approaching') {
-                      updateTrigger({ ...baseTrigger, type: 'task_due_date_approaching', daysBefore: 1 });
+                      updateTrigger({
+                        ...baseTrigger,
+                        type: 'task_due_date_approaching',
+                        daysBefore: 1,
+                      });
                     } else {
                       updateTrigger(baseTrigger);
                     }
@@ -215,7 +230,11 @@ export function AutomationModal({
                     <select
                       value={(ruleForm.trigger as any).toStatus || ''}
                       onChange={(e) =>
-                        updateTrigger({ ...ruleForm.trigger, type: 'task_status_changed', toStatus: e.target.value })
+                        updateTrigger({
+                          ...ruleForm.trigger,
+                          type: 'task_status_changed',
+                          toStatus: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                     >
@@ -260,7 +279,9 @@ export function AutomationModal({
               </div>
               <div className="space-y-2">
                 {ruleForm.conditions.length === 0 ? (
-                  <p className="text-xs text-gray-500">No conditions - rule applies to all matching triggers</p>
+                  <p className="text-xs text-gray-500">
+                    No conditions - rule applies to all matching triggers
+                  </p>
                 ) : (
                   ruleForm.conditions.map((condition, index) => (
                     <div key={index} className="flex gap-2 items-center">
@@ -293,7 +314,9 @@ export function AutomationModal({
                       <input
                         type="text"
                         value={condition.value as string}
-                        onChange={(e) => updateCondition(index, { ...condition, value: e.target.value })}
+                        onChange={(e) =>
+                          updateCondition(index, { ...condition, value: e.target.value })
+                        }
                         className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                         placeholder="Value"
                       />
@@ -348,7 +371,9 @@ export function AutomationModal({
                       {action.type === 'set_status' && (
                         <select
                           value={(action as any).status}
-                          onChange={(e) => updateAction(index, { ...action, status: e.target.value as any })}
+                          onChange={(e) =>
+                            updateAction(index, { ...action, status: e.target.value as any })
+                          }
                           className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                         >
                           <option value="todo">To Do</option>
@@ -361,7 +386,9 @@ export function AutomationModal({
                       {action.type === 'set_priority' && (
                         <select
                           value={(action as any).priority}
-                          onChange={(e) => updateAction(index, { ...action, priority: e.target.value as any })}
+                          onChange={(e) =>
+                            updateAction(index, { ...action, priority: e.target.value as any })
+                          }
                           className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                         >
                           <option value="low">Low</option>
@@ -371,14 +398,26 @@ export function AutomationModal({
                         </select>
                       )}
 
-                      {(action.type === 'assign_to' || action.type === 'add_comment' || action.type === 'add_tag' || action.type === 'remove_tag') && (
+                      {(action.type === 'assign_to' ||
+                        action.type === 'add_comment' ||
+                        action.type === 'add_tag' ||
+                        action.type === 'remove_tag') && (
                         <input
                           type="text"
-                          value={(action as any).userId || (action as any).template || (action as any).tag || ''}
+                          value={
+                            (action as any).userId ||
+                            (action as any).template ||
+                            (action as any).tag ||
+                            ''
+                          }
                           onChange={(e) => {
                             if (action.type === 'assign_to') {
                               updateAction(index, { ...action, userId: e.target.value } as any);
-                            } else if (action.type === 'add_comment' || action.type === 'add_tag' || action.type === 'remove_tag') {
+                            } else if (
+                              action.type === 'add_comment' ||
+                              action.type === 'add_tag' ||
+                              action.type === 'remove_tag'
+                            ) {
                               updateAction(index, { ...action, template: e.target.value } as any);
                             }
                           }}
@@ -391,17 +430,18 @@ export function AutomationModal({
                         <input
                           type="number"
                           value={(action as any).offsetDays || 0}
-                          onChange={(e) => updateAction(index, { ...action, offsetDays: parseInt(e.target.value, 10) } as any)}
+                          onChange={(e) =>
+                            updateAction(index, {
+                              ...action,
+                              offsetDays: parseInt(e.target.value, 10),
+                            } as any)
+                          }
                           className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                           placeholder="Days offset"
                         />
                       )}
 
-                      <Button
-                        variant="secondary"
-                        size="small"
-                        onPress={() => removeAction(index)}
-                      >
+                      <Button variant="secondary" size="small" onPress={() => removeAction(index)}>
                         <Trash2 className="w-3 h-3" />
                       </Button>
                     </div>

@@ -81,40 +81,24 @@ export function TaskAttachments({
       {/* Upload Area */}
       <div
         className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-          isDragging
-            ? 'border-blue-400 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+          isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <input
-          type="file"
-          id="file-upload"
-          className="hidden"
-          onChange={handleFileSelect}
-        />
-        <label
-          htmlFor="file-upload"
-          className="cursor-pointer block"
-        >
+        <input type="file" id="file-upload" className="hidden" onChange={handleFileSelect} />
+        <label htmlFor="file-upload" className="cursor-pointer block">
           <Paperclip className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-sm text-gray-600">
-            Drag and drop files here, or click to browse
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            Images, PDFs, documents up to 10MB
-          </p>
+          <p className="text-sm text-gray-600">Drag and drop files here, or click to browse</p>
+          <p className="text-xs text-gray-400 mt-1">Images, PDFs, documents up to 10MB</p>
         </label>
       </div>
 
       {/* Attachments List */}
       <div className="space-y-2">
         {attachments.length === 0 ? (
-          <div className="text-center py-4 text-gray-500 text-sm">
-            No attachments yet
-          </div>
+          <div className="text-center py-4 text-gray-500 text-sm">No attachments yet</div>
         ) : (
           attachments.map((attachment) => (
             <div

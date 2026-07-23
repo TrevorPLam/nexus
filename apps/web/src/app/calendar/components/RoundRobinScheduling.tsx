@@ -44,22 +44,16 @@ export function RoundRobinScheduling({
   const [isEditing, setIsEditing] = useState(false);
   const [configName, setConfigName] = useState(config?.name || '');
   const [selectedMembers, setSelectedMembers] = useState<string[]>(
-    config?.members.map((m) => m.id) || []
+    config?.members.map((m) => m.id) || [],
   );
   const [distributionMethod, setDistributionMethod] = useState<
     RoundRobinConfig['distributionMethod']
   >(config?.distributionMethod || 'round-robin');
-  const [maxDailyBookings, setMaxDailyBookings] = useState(
-    config?.maxDailyBookings || 5
-  );
-  const [bufferMinutes, setBufferMinutes] = useState(
-    config?.bufferMinutes || 15
-  );
+  const [maxDailyBookings, setMaxDailyBookings] = useState(config?.maxDailyBookings || 5);
+  const [bufferMinutes, setBufferMinutes] = useState(config?.bufferMinutes || 15);
 
   const handleSave = () => {
-    const selectedMemberData = teamMembers.filter((m) =>
-      selectedMembers.includes(m.id)
-    );
+    const selectedMemberData = teamMembers.filter((m) => selectedMembers.includes(m.id));
 
     const configData: Omit<RoundRobinConfig, 'id'> = {
       name: configName,
@@ -96,9 +90,7 @@ export function RoundRobinScheduling({
 
   const toggleMember = (memberId: string) => {
     setSelectedMembers((prev) =>
-      prev.includes(memberId)
-        ? prev.filter((id) => id !== memberId)
-        : [...prev, memberId]
+      prev.includes(memberId) ? prev.filter((id) => id !== memberId) : [...prev, memberId],
     );
   };
 
@@ -181,7 +173,9 @@ export function RoundRobinScheduling({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Buffer Between Meetings (minutes)</label>
+            <label className="block text-sm font-medium mb-1">
+              Buffer Between Meetings (minutes)
+            </label>
             <input
               type="number"
               value={bufferMinutes}
@@ -258,8 +252,8 @@ export function RoundRobinScheduling({
 
           <div className="text-xs text-gray-500 bg-green-50 p-3 rounded-lg border border-green-200">
             <p>
-              <strong>Active:</strong> Bookings will be automatically distributed
-              among team members based on the selected method.
+              <strong>Active:</strong> Bookings will be automatically distributed among team members
+              based on the selected method.
             </p>
           </div>
         </div>

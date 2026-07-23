@@ -116,7 +116,9 @@ export function KanbanView({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {columns.map((column) => (
           <div key={column.id} className="flex flex-col h-full">
-            <div className={`${column.color} px-4 py-2 rounded-t-lg flex items-center justify-between`}>
+            <div
+              className={`${column.color} px-4 py-2 rounded-t-lg flex items-center justify-between`}
+            >
               <h3 className="font-semibold text-sm">{column.title}</h3>
               <span className="text-xs bg-white px-2 py-0.5 rounded-full">
                 {getTasksByStatus(column.id).length}
@@ -168,7 +170,9 @@ export function KanbanView({
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: getProjectColor(task.projectId) }}
                       />
-                      <span className="text-xs text-gray-500">{getProjectName(task.projectId)}</span>
+                      <span className="text-xs text-gray-500">
+                        {getProjectName(task.projectId)}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span
@@ -184,16 +188,12 @@ export function KanbanView({
                       )}
                     </div>
                     {task.energyLevel && (
-                      <div className="mt-2 text-xs text-gray-500">
-                        Energy: {task.energyLevel}
-                      </div>
+                      <div className="mt-2 text-xs text-gray-500">Energy: {task.energyLevel}</div>
                     )}
                   </div>
                 ))}
                 {getTasksByStatus(column.id).length === 0 && (
-                  <div className="text-center py-8 text-gray-400 text-sm">
-                    No tasks
-                  </div>
+                  <div className="text-center py-8 text-gray-400 text-sm">No tasks</div>
                 )}
               </div>
             </div>

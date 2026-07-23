@@ -1,7 +1,17 @@
 'use client';
 
 import { Button } from '@life-os/ui';
-import { Plus, LayoutDashboard, Edit, Trash2, BarChart3, PieChart, Clock, Users, TrendingUp } from 'lucide-react';
+import {
+  Plus,
+  LayoutDashboard,
+  Edit,
+  Trash2,
+  BarChart3,
+  PieChart,
+  Clock,
+  Users,
+  TrendingUp,
+} from 'lucide-react';
 
 import type { Dashboard, DashboardWidget } from '../types-reporting';
 
@@ -65,7 +75,8 @@ export function DashboardsView({
           <LayoutDashboard className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No dashboards yet</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            Create dashboards with customizable widgets to track project progress, team workload, and key metrics.
+            Create dashboards with customizable widgets to track project progress, team workload,
+            and key metrics.
           </p>
           <Button onPress={onNewDashboard}>
             <Plus className="w-4 h-4 mr-2" />
@@ -159,7 +170,9 @@ export function DashboardsView({
               <TrendingUp className="w-5 h-5 text-blue-600" />
               <h4 className="font-medium text-sm">Task Completion</h4>
             </div>
-            <p className="text-xs text-gray-500">Track completed tasks over time with customizable grouping</p>
+            <p className="text-xs text-gray-500">
+              Track completed tasks over time with customizable grouping
+            </p>
           </div>
           <div className="p-4 bg-white border border-gray-200 rounded-lg">
             <div className="flex items-center gap-3 mb-2">

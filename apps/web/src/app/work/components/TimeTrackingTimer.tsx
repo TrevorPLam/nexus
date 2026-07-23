@@ -75,7 +75,9 @@ export function TimeTrackingTimer({
         <Clock className="w-4 h-4 text-gray-500" />
         <div className="flex-1">
           <div className="text-sm font-medium text-gray-900 truncate">{taskTitle}</div>
-          <div className="text-2xl font-mono font-semibold text-gray-700">{formatTime(elapsed)}</div>
+          <div className="text-2xl font-mono font-semibold text-gray-700">
+            {formatTime(elapsed)}
+          </div>
         </div>
       </div>
 

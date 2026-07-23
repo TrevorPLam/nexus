@@ -24,7 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchWorkspaces = async () => {
     try {
-      const response = (await apiClient.getWorkspaces()) as { workspaces: Array<{ id: string; name: string }> };
+      const response = (await apiClient.getWorkspaces()) as {
+        workspaces: Array<{ id: string; name: string }>;
+      };
       const workspaces = response.workspaces || [];
 
       if (workspaces.length === 0) {

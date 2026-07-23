@@ -27,7 +27,9 @@ export function ProjectTemplatesView({
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Project Templates</h2>
-          <p className="text-gray-600 mt-1">Pre-configured project structures to accelerate your workflow</p>
+          <p className="text-gray-600 mt-1">
+            Pre-configured project structures to accelerate your workflow
+          </p>
         </div>
         <Button onPress={onNewTemplate}>
           <Plus className="w-4 h-4 mr-2" />
@@ -44,7 +46,8 @@ export function ProjectTemplatesView({
           <FolderOpen className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No templates yet</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            Create project templates with pre-defined tasks, subtasks, and configurations to standardize your workflows.
+            Create project templates with pre-defined tasks, subtasks, and configurations to
+            standardize your workflows.
           </p>
           <Button onPress={onNewTemplate}>
             <Plus className="w-4 h-4 mr-2" />
@@ -92,7 +95,8 @@ export function ProjectTemplatesView({
                 </div>
                 {template.projectConfig.description && (
                   <div className="text-xs text-gray-500 line-clamp-1">
-                    <span className="font-medium">Description:</span> {template.projectConfig.description}
+                    <span className="font-medium">Description:</span>{' '}
+                    {template.projectConfig.description}
                   </div>
                 )}
               </div>
@@ -108,11 +112,7 @@ export function ProjectTemplatesView({
                     Use Template
                   </Button>
                 </div>
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onPress={() => onEditTemplate(template)}
-                >
+                <Button variant="secondary" size="small" onPress={() => onEditTemplate(template)}>
                   <Edit className="w-4 h-4" />
                 </Button>
                 <Button

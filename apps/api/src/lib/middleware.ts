@@ -1,4 +1,12 @@
-import { workspaceMemberships, appUsers, tasks, projects, events, calendars, schedulingLinks } from '@life-os/database';
+import {
+  workspaceMemberships,
+  appUsers,
+  tasks,
+  projects,
+  events,
+  calendars,
+  schedulingLinks,
+} from '@life-os/database';
 import { eq, and, sql } from 'drizzle-orm';
 import { Context, type Next } from 'hono';
 
@@ -177,7 +185,10 @@ export function requireEntityAccess(tableName: string) {
       }
 
       // Get the app_user record for the authenticated user
-      const [appUser] = await db.select().from(appUsers).where(eq(appUsers.supabaseUserId, user.id));
+      const [appUser] = await db
+        .select()
+        .from(appUsers)
+        .where(eq(appUsers.supabaseUserId, user.id));
 
       if (!appUser) {
         return c.json({ error: 'User not found' }, 404);
@@ -199,7 +210,9 @@ export function requireEntityAccess(tableName: string) {
       }
 
       // Set workspace context for RLS policies
-      await db.execute(sql`SELECT set_config('app.workspace_id', ${entity.workspaceId}::text, true)`);
+      await db.execute(
+        sql`SELECT set_config('app.workspace_id', ${entity.workspaceId}::text, true)`,
+      );
 
       // Set workspace membership in context
       c.set('workspaceMembership', membership);

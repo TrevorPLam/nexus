@@ -19,9 +19,7 @@ import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
 
 // Transaction wrapper for complex operations
-export async function withTransaction<T>(
-  callback: (tx: any) => Promise<T>,
-): Promise<T> {
+export async function withTransaction<T>(callback: (tx: any) => Promise<T>): Promise<T> {
   return db.transaction(callback);
 }
 
@@ -159,10 +157,7 @@ export async function deleteProject(id: string) {
 }
 
 // Task Operations
-export async function createTask(
-  data: typeof schema.tasks.$inferInsert,
-  context?: CommandContext,
-) {
+export async function createTask(data: typeof schema.tasks.$inferInsert, context?: CommandContext) {
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {
@@ -361,7 +356,9 @@ export async function searchTasks(workspaceId: string, query: string, limit = 20
   return db
     .select({
       task: tasks,
-      rank: sql<number>`ts_rank(${tasks.searchVector}, plainto_tsquery('english', ${query}))`.as('rank'),
+      rank: sql<number>`ts_rank(${tasks.searchVector}, plainto_tsquery('english', ${query}))`.as(
+        'rank',
+      ),
     })
     .from(tasks)
     .where(
@@ -382,7 +379,10 @@ export async function updateTask(
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {
-      const updateData: Partial<typeof schema.tasks.$inferInsert> = { ...data, updatedAt: new Date() };
+      const updateData: Partial<typeof schema.tasks.$inferInsert> = {
+        ...data,
+        updatedAt: new Date(),
+      };
 
       // Auto-set completedAt when status is 'done'
       if (data.status === 'done' && !data.completedAt) {
@@ -668,7 +668,11 @@ export async function batchCompleteTasks(taskIds: string[], context?: CommandCon
   );
 }
 
-export async function batchDeferTasks(taskIds: string[], deferToDate: Date, context?: CommandContext) {
+export async function batchDeferTasks(
+  taskIds: string[],
+  deferToDate: Date,
+  context?: CommandContext,
+) {
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {
@@ -700,7 +704,11 @@ export async function batchDeferTasks(taskIds: string[], deferToDate: Date, cont
   );
 }
 
-export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date, context?: CommandContext) {
+export async function batchRescheduleTasks(
+  taskIds: string[],
+  newDueDate: Date,
+  context?: CommandContext,
+) {
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {
@@ -732,7 +740,11 @@ export async function batchRescheduleTasks(taskIds: string[], newDueDate: Date, 
   );
 }
 
-export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string, context?: CommandContext) {
+export async function batchUpdateTaskStatus(
+  taskIds: string[],
+  newStatus: string,
+  context?: CommandContext,
+) {
   const updateData: Record<string, unknown> = { status: newStatus, updatedAt: new Date() };
 
   if (newStatus === 'done') {
@@ -1115,15 +1127,13 @@ export async function createTaskWithDependencies(
       const [task] = await tx.insert(tasks).values(taskData).returning();
 
       if (dependencies.length > 0) {
-        await tx
-          .insert(taskDependencies)
-          .values(
-            dependencies.map((dep: { dependsOnTaskId: string; type: string }) => ({
-              taskId: task.id,
-              dependsOnTaskId: dep.dependsOnTaskId,
-              type: dep.type,
-            })) as typeof schema.taskDependencies.$inferInsert[],
-          );
+        await tx.insert(taskDependencies).values(
+          dependencies.map((dep: { dependsOnTaskId: string; type: string }) => ({
+            taskId: task.id,
+            dependsOnTaskId: dep.dependsOnTaskId,
+            type: dep.type,
+          })) as (typeof schema.taskDependencies.$inferInsert)[],
+        );
       }
 
       return task;
@@ -1157,16 +1167,16 @@ export async function createTaskWithAssignees(
       const [task] = await tx.insert(tasks).values(taskData).returning();
 
       if (assignees.length > 0) {
-        await tx
-          .insert(taskAssignees)
-          .values(
-            assignees.map((assignee: { userId: string; assignedBy: string; isPrimary?: boolean }) => ({
+        await tx.insert(taskAssignees).values(
+          assignees.map(
+            (assignee: { userId: string; assignedBy: string; isPrimary?: boolean }) => ({
               taskId: task.id,
               userId: assignee.userId,
               assignedBy: assignee.assignedBy,
               isPrimary: assignee.isPrimary ?? false,
-            })) as typeof schema.taskAssignees.$inferInsert[],
-          );
+            }),
+          ) as (typeof schema.taskAssignees.$inferInsert)[],
+        );
       }
 
       return task;
@@ -1441,10 +1451,7 @@ export async function createTaskWithEventCommand(
       }
 
       // Update task with calendar event ID
-      await tx
-        .update(tasks)
-        .set({ calendarEventId: createdEvent.id })
-        .where(eq(tasks.id, task.id));
+      await tx.update(tasks).set({ calendarEventId: createdEvent.id }).where(eq(tasks.id, task.id));
 
       event = createdEvent;
     }
@@ -1607,7 +1614,10 @@ export async function unlinkTaskEventCommand(
 
     // Unlink event from task
     if (eventId) {
-      await tx.update(events).set({ taskId: null, updatedAt: new Date() }).where(eq(events.id, eventId));
+      await tx
+        .update(events)
+        .set({ taskId: null, updatedAt: new Date() })
+        .where(eq(events.id, eventId));
     }
 
     // Update task to remove calendar event ID

@@ -44,8 +44,7 @@ describe('Calendar Events Routes', () => {
 
     const pairs = new Set(
       eventsRouter.routes.map(
-        (route) =>
-          `${(route as { method: string }).method}:${(route as { path: string }).path}`,
+        (route) => `${(route as { method: string }).method}:${(route as { path: string }).path}`,
       ),
     );
 

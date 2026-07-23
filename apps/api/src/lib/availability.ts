@@ -74,18 +74,18 @@ function generateDailySlots(
 
   // Get availability window
   const dateMidnight = getDateOnly(date);
-  const startMinutes = config.availabilityStart
-    ? parseTimeToMinutes(config.availabilityStart)
-    : 0; // Midnight
-  const endMinutes = config.availabilityEnd
-    ? parseTimeToMinutes(config.availabilityEnd)
-    : 24 * 60; // End of day
+  const startMinutes = config.availabilityStart ? parseTimeToMinutes(config.availabilityStart) : 0; // Midnight
+  const endMinutes = config.availabilityEnd ? parseTimeToMinutes(config.availabilityEnd) : 24 * 60; // End of day
 
   const slotDuration = config.eventDuration;
   const totalDuration = config.bufferBefore + slotDuration + config.bufferAfter;
 
   // Generate slots
-  for (let currentMinutes = startMinutes; currentMinutes + totalDuration <= endMinutes; currentMinutes += slotDuration) {
+  for (
+    let currentMinutes = startMinutes;
+    currentMinutes + totalDuration <= endMinutes;
+    currentMinutes += slotDuration
+  ) {
     const slotStart = new Date(dateMidnight.getTime() + currentMinutes * 60 * 1000);
     const slotEnd = new Date(slotStart.getTime() + totalDuration * 60 * 1000);
 
@@ -94,9 +94,7 @@ function generateDailySlots(
       const eventStartWithBuffer = new Date(
         event.start.getTime() - config.bufferBefore * 60 * 1000,
       );
-      const eventEndWithBuffer = new Date(
-        event.end.getTime() + config.bufferAfter * 60 * 1000,
-      );
+      const eventEndWithBuffer = new Date(event.end.getTime() + config.bufferAfter * 60 * 1000);
       return slotStart < eventEndWithBuffer && slotEnd > eventStartWithBuffer;
     });
 
@@ -131,9 +129,7 @@ export function calculateAvailableSlots(
 
   // Apply booking notice constraints
   const now = new Date();
-  const minBookingDate = new Date(
-    now.getTime() + schedulingLink.minBookingNotice * 60 * 60 * 1000,
-  );
+  const minBookingDate = new Date(now.getTime() + schedulingLink.minBookingNotice * 60 * 60 * 1000);
   const maxBookingDate =
     schedulingLink.maxBookingNotice > 0
       ? new Date(now.getTime() + schedulingLink.maxBookingNotice * 24 * 60 * 60 * 1000)
@@ -162,7 +158,7 @@ export function calculateAvailableSlots(
   // Apply max daily bookings constraint if specified
   if (schedulingLink.maxDailyBookings && schedulingLink.maxDailyBookings > 0) {
     const slotsByDay = new Map<string, TimeSlot[]>();
-    
+
     allSlots.forEach((slot) => {
       const dayKey = getDateOnly(slot.start).toISOString();
       if (!slotsByDay.has(dayKey)) {

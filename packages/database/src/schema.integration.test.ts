@@ -2,10 +2,10 @@ import { describe, it } from 'vitest';
 
 /**
  * Integration tests for database constraint validation.
- * 
+ *
  * These tests document the SQL queries that should be run against a local Supabase
  * instance to verify constraint violations before and after migration 0010.
- * 
+ *
  * To run these checks manually against your local Supabase:
  * 1. Start your local Supabase: supabase start
  * 2. Connect to the database: supabase db reset
@@ -19,7 +19,7 @@ describe('Schema constraint validation', () => {
     // FROM tasks t
     // WHERE t.project_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM projects p 
+    //     SELECT 1 FROM projects p
     //     WHERE p.id = t.project_id
     //   );
     // Expected: 0 rows after migration 0010
@@ -28,7 +28,7 @@ describe('Schema constraint validation', () => {
 
   it('should identify cross-workspace task-project references', () => {
     // SQL to find tasks referencing projects in different workspaces:
-    // SELECT t.id as task_id, t.workspace_id as task_workspace, 
+    // SELECT t.id as task_id, t.workspace_id as task_workspace,
     //        p.id as project_id, p.workspace_id as project_workspace
     // FROM tasks t
     // JOIN projects p ON t.project_id = p.id
@@ -43,7 +43,7 @@ describe('Schema constraint validation', () => {
     // FROM tasks t
     // WHERE t.parent_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM tasks parent 
+    //     SELECT 1 FROM tasks parent
     //     WHERE parent.id = t.parent_id
     //   );
     // Expected: 0 rows after migration 0010 (FK constraint added)
@@ -56,7 +56,7 @@ describe('Schema constraint validation', () => {
     // FROM tasks t
     // WHERE t.calendar_event_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM events e 
+    //     SELECT 1 FROM events e
     //     WHERE e.id = t.calendar_event_id
     //   );
     // Expected: 0 rows after migration 0010 (FK constraint added)
@@ -80,7 +80,7 @@ describe('Schema constraint validation', () => {
     // FROM events e
     // WHERE e.calendar_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM calendars c 
+    //     SELECT 1 FROM calendars c
     //     WHERE c.id = e.calendar_id
     //   );
     // Expected: 0 rows after migration 0010 (FK constraint with delete action)
@@ -104,7 +104,7 @@ describe('Schema constraint validation', () => {
     // FROM events e
     // WHERE e.task_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM tasks t 
+    //     SELECT 1 FROM tasks t
     //     WHERE t.id = e.task_id
     //   );
     // Expected: 0 rows after migration 0010 (FK constraint added)
@@ -128,7 +128,7 @@ describe('Schema constraint validation', () => {
     // FROM task_comments tc
     // WHERE tc.parent_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM task_comments parent 
+    //     SELECT 1 FROM task_comments parent
     //     WHERE parent.id = tc.parent_id
     //   );
     // Expected: 0 rows after migration 0010 (FK constraint added)
@@ -141,7 +141,7 @@ describe('Schema constraint validation', () => {
     // FROM scheduling_links sl
     // WHERE sl.calendar_id IS NOT NULL
     //   AND NOT EXISTS (
-    //     SELECT 1 FROM calendars c 
+    //     SELECT 1 FROM calendars c
     //     WHERE c.id = sl.calendar_id
     //   );
     // Expected: 0 rows after migration 0010 (FK already exists, but verify)

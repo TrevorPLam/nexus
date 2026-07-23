@@ -1,6 +1,10 @@
 import { Hono } from 'hono';
 
-import { authMiddleware, idempotencyMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
+import {
+  authMiddleware,
+  idempotencyMiddleware,
+  requireWorkspaceMembership,
+} from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
 import { CreateTaskAssigneeRequest } from '@life-os/contracts';
 

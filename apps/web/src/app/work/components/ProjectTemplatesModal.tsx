@@ -99,7 +99,9 @@ export function ProjectTemplatesModal({
 
   const removeSubtask = (taskIndex: number, subtaskIndex: number) => {
     const newTasks = [...templateForm.tasks];
-    newTasks[taskIndex].subtasks = newTasks[taskIndex].subtasks.filter((_, i) => i !== subtaskIndex);
+    newTasks[taskIndex].subtasks = newTasks[taskIndex].subtasks.filter(
+      (_, i) => i !== subtaskIndex,
+    );
     setTemplateForm({ ...templateForm, tasks: newTasks });
   };
 
@@ -189,7 +191,9 @@ export function ProjectTemplatesModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Default Project Description (optional)</label>
+                <label className="block text-sm font-medium mb-2">
+                  Default Project Description (optional)
+                </label>
                 <TextArea
                   placeholder="Description for projects created from this template"
                   value={templateForm.projectConfig.description}
@@ -211,7 +215,9 @@ export function ProjectTemplatesModal({
                   onChange={(e) => setTemplateForm({ ...templateForm, isPublic: e.target.checked })}
                   className="rounded"
                 />
-                <label htmlFor="isPublic" className="text-sm">Available to all workspace members</label>
+                <label htmlFor="isPublic" className="text-sm">
+                  Available to all workspace members
+                </label>
               </div>
 
               <div className="border-t pt-4">
@@ -242,13 +248,17 @@ export function ProjectTemplatesModal({
                             <input
                               type="text"
                               value={task.title}
-                              onChange={(e) => updateTask(index, { ...task, title: e.target.value })}
+                              onChange={(e) =>
+                                updateTask(index, { ...task, title: e.target.value })
+                              }
                               className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-sm"
                               placeholder="Task title"
                             />
                             <select
                               value={task.priority}
-                              onChange={(e) => updateTask(index, { ...task, priority: e.target.value as any })}
+                              onChange={(e) =>
+                                updateTask(index, { ...task, priority: e.target.value as any })
+                              }
                               className="px-2 py-1.5 border border-gray-300 rounded-md text-sm"
                             >
                               <option value="low">Low</option>
@@ -263,7 +273,9 @@ export function ProjectTemplatesModal({
                               <textarea
                                 placeholder="Task description (optional)"
                                 value={task.description || ''}
-                                onChange={(e) => updateTask(index, { ...task, description: e.target.value })}
+                                onChange={(e) =>
+                                  updateTask(index, { ...task, description: e.target.value })
+                                }
                                 className="w-full px-2 py-1.5 border border-gray-300 rounded-md text-sm"
                                 rows={2}
                               />
@@ -275,7 +287,9 @@ export function ProjectTemplatesModal({
                                   onChange={(e) =>
                                     updateTask(index, {
                                       ...task,
-                                      estimatedDuration: e.target.value ? parseInt(e.target.value, 10) : null,
+                                      estimatedDuration: e.target.value
+                                        ? parseInt(e.target.value, 10)
+                                        : null,
                                     })
                                   }
                                   className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-sm"
@@ -283,7 +297,10 @@ export function ProjectTemplatesModal({
                                 <select
                                   value={task.energyLevel || ''}
                                   onChange={(e) =>
-                                    updateTask(index, { ...task, energyLevel: e.target.value as any || null })
+                                    updateTask(index, {
+                                      ...task,
+                                      energyLevel: (e.target.value as any) || null,
+                                    })
                                   }
                                   className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-sm"
                                 >
@@ -311,7 +328,9 @@ export function ProjectTemplatesModal({
                                       <input
                                         type="text"
                                         value={subtask.title}
-                                        onChange={(e) => updateSubtask(index, subIndex, e.target.value)}
+                                        onChange={(e) =>
+                                          updateSubtask(index, subIndex, e.target.value)
+                                        }
                                         className="flex-1 px-2 py-1 border border-gray-300 rounded-md text-xs"
                                         placeholder="Subtask title"
                                       />
@@ -329,11 +348,7 @@ export function ProjectTemplatesModal({
                             </div>
                           )}
                         </div>
-                        <Button
-                          variant="secondary"
-                          size="small"
-                          onPress={() => removeTask(index)}
-                        >
+                        <Button variant="secondary" size="small" onPress={() => removeTask(index)}>
                           <Trash2 className="w-3 h-3" />
                         </Button>
                       </div>

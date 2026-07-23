@@ -150,11 +150,7 @@ class ApiClient {
   }
 
   async getTasksByProject(projectId: string) {
-    return this.request(
-      `/v1/work/projects/${projectId}/tasks`,
-      {},
-      z.array(TaskResponse) as any,
-    );
+    return this.request(`/v1/work/projects/${projectId}/tasks`, {}, z.array(TaskResponse) as any);
   }
 
   async createTask(data: z.infer<typeof CreateTaskRequest>) {
@@ -281,11 +277,7 @@ class ApiClient {
 
   // Task Notes
   async getTaskNotes(taskId: string) {
-    return this.request(
-      `/v1/work/tasks/${taskId}/notes`,
-      {},
-      z.array(TaskNoteResponse) as any,
-    );
+    return this.request(`/v1/work/tasks/${taskId}/notes`, {}, z.array(TaskNoteResponse) as any);
   }
 
   async createTaskNote(data: z.infer<typeof CreateTaskNoteRequest>) {
@@ -454,11 +446,7 @@ class ApiClient {
   }
 
   async getSchedulingLink(id: string) {
-    return this.request(
-      `/v1/calendar/scheduling-links/${id}`,
-      {},
-      SchedulingLinkResponse as any,
-    );
+    return this.request(`/v1/calendar/scheduling-links/${id}`, {}, SchedulingLinkResponse as any);
   }
 
   async createSchedulingLink(data: z.infer<typeof CreateSchedulingLinkRequest>) {

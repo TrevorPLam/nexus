@@ -68,11 +68,14 @@ projectsRouter.post(
     const data = c.req.valid('json');
     try {
       const context = await extractCommandContext(c);
-      const project = await workOps.createProject({
-        ...data,
-        status: 'active',
-        metadata: null,
-      }, context);
+      const project = await workOps.createProject(
+        {
+          ...data,
+          status: 'active',
+          metadata: null,
+        },
+        context,
+      );
       return c.json(project, 201);
     } catch (error) {
       console.error('Error creating project:', error);
@@ -125,7 +128,11 @@ projectsRouter.get('/workspaces/:workspaceId/projects', requireWorkspaceMembersh
       parsedCursor,
       includeDeleted,
     );
-    return c.json({ projects: result.items, nextCursor: result.nextCursor, hasMore: result.hasMore });
+    return c.json({
+      projects: result.items,
+      nextCursor: result.nextCursor,
+      hasMore: result.hasMore,
+    });
   } catch (error) {
     console.error('Error fetching projects:', error);
     return c.json({ error: 'Failed to fetch projects' }, 500);
@@ -153,7 +160,7 @@ projectsRouter.put(
       const context = await extractCommandContext(c);
       // Filter out undefined values to avoid type errors
       const updateData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
+        Object.entries(data).filter(([_, v]) => v !== undefined),
       );
       const project = await workOps.updateProject(id, updateData, context);
       if (!project) {
@@ -167,21 +174,26 @@ projectsRouter.put(
   },
 );
 
-projectsRouter.delete('/projects/:id', requireWorkspaceMembership, idempotencyMiddleware, async (c) => {
-  const id = c.req.param('id');
-  if (!id) {
-    return c.json({ error: 'Invalid project ID' }, 400);
-  }
-  try {
-    const project = await workOps.deleteProject(id);
-    if (!project) {
-      return c.json({ error: 'Project not found' }, 404);
+projectsRouter.delete(
+  '/projects/:id',
+  requireWorkspaceMembership,
+  idempotencyMiddleware,
+  async (c) => {
+    const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Invalid project ID' }, 400);
     }
-    return c.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting project:', error);
-    return c.json({ error: 'Failed to delete project' }, 500);
-  }
-});
+    try {
+      const project = await workOps.deleteProject(id);
+      if (!project) {
+        return c.json({ error: 'Project not found' }, 404);
+      }
+      return c.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      return c.json({ error: 'Failed to delete project' }, 500);
+    }
+  },
+);
 
 export default projectsRouter;

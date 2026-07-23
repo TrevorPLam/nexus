@@ -8,7 +8,12 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware, requireWorkspaceMembership, requireEntityAccess, requireWorkspaceAccess } from '../../lib/middleware.js';
+import {
+  authMiddleware,
+  requireWorkspaceMembership,
+  requireEntityAccess,
+  requireWorkspaceAccess,
+} from '../../lib/middleware.js';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
 import { db } from '../../lib/db.js';
@@ -31,14 +36,17 @@ schedulingLinksRouter.post(
   async (c) => {
     const data = c.req.valid('json');
     const user = c.get('user') as any;
-    
+
     if (!user) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
     try {
       // Get the app_user record for the authenticated user
-      const [appUser] = await db.select().from(appUsers).where(eq(appUsers.supabaseUserId, user.id));
+      const [appUser] = await db
+        .select()
+        .from(appUsers)
+        .where(eq(appUsers.supabaseUserId, user.id));
 
       if (!appUser) {
         return c.json({ error: 'User not found' }, 404);
@@ -57,19 +65,23 @@ schedulingLinksRouter.post(
   },
 );
 
-schedulingLinksRouter.get('/scheduling-links/:id', requireEntityAccess('schedulingLinks'), async (c) => {
-  const id = c.req.param('id');
-  try {
-    const schedulingLink = await calendarOps.getSchedulingLinkById(id);
-    if (!schedulingLink) {
-      return c.json({ error: 'Scheduling link not found' }, 404);
+schedulingLinksRouter.get(
+  '/scheduling-links/:id',
+  requireEntityAccess('schedulingLinks'),
+  async (c) => {
+    const id = c.req.param('id');
+    try {
+      const schedulingLink = await calendarOps.getSchedulingLinkById(id);
+      if (!schedulingLink) {
+        return c.json({ error: 'Scheduling link not found' }, 404);
+      }
+      return c.json(schedulingLink);
+    } catch (error) {
+      console.error('Error fetching scheduling link:', error);
+      return c.json({ error: 'Failed to fetch scheduling link' }, 500);
     }
-    return c.json(schedulingLink);
-  } catch (error) {
-    console.error('Error fetching scheduling link:', error);
-    return c.json({ error: 'Failed to fetch scheduling link' }, 500);
-  }
-});
+  },
+);
 
 schedulingLinksRouter.get('/scheduling-links/slug/:slug', async (c) => {
   const slug = c.req.param('slug');
@@ -85,22 +97,26 @@ schedulingLinksRouter.get('/scheduling-links/slug/:slug', async (c) => {
   }
 });
 
-schedulingLinksRouter.get('/workspaces/:workspaceId/scheduling-links', requireWorkspaceMembership, async (c) => {
-  const workspaceId = c.req.param('workspaceId');
-  if (!workspaceId) {
-    return c.json({ error: 'Workspace ID required' }, 400);
-  }
-  const limit = parseInt(c.req.query('limit') || '50', 10);
-  const cursor = c.req.query('cursor');
+schedulingLinksRouter.get(
+  '/workspaces/:workspaceId/scheduling-links',
+  requireWorkspaceMembership,
+  async (c) => {
+    const workspaceId = c.req.param('workspaceId');
+    if (!workspaceId) {
+      return c.json({ error: 'Workspace ID required' }, 400);
+    }
+    const limit = parseInt(c.req.query('limit') || '50', 10);
+    const cursor = c.req.query('cursor');
 
-  try {
-    const result = await calendarOps.getSchedulingLinksByWorkspace(workspaceId, limit, cursor);
-    return c.json(result);
-  } catch (error) {
-    console.error('Error fetching scheduling links:', error);
-    return c.json({ error: 'Failed to fetch scheduling links' }, 500);
-  }
-});
+    try {
+      const result = await calendarOps.getSchedulingLinksByWorkspace(workspaceId, limit, cursor);
+      return c.json(result);
+    } catch (error) {
+      console.error('Error fetching scheduling links:', error);
+      return c.json({ error: 'Failed to fetch scheduling links' }, 500);
+    }
+  },
+);
 
 schedulingLinksRouter.get('/users/:userId/scheduling-links', async (c) => {
   const userId = c.req.param('userId');
@@ -145,19 +161,23 @@ schedulingLinksRouter.put(
   },
 );
 
-schedulingLinksRouter.delete('/scheduling-links/:id', requireEntityAccess('schedulingLinks'), async (c) => {
-  const id = c.req.param('id');
-  try {
-    const schedulingLink = await calendarOps.deleteSchedulingLink(id);
-    if (!schedulingLink) {
-      return c.json({ error: 'Scheduling link not found' }, 404);
+schedulingLinksRouter.delete(
+  '/scheduling-links/:id',
+  requireEntityAccess('schedulingLinks'),
+  async (c) => {
+    const id = c.req.param('id');
+    try {
+      const schedulingLink = await calendarOps.deleteSchedulingLink(id);
+      if (!schedulingLink) {
+        return c.json({ error: 'Scheduling link not found' }, 404);
+      }
+      return c.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting scheduling link:', error);
+      return c.json({ error: 'Failed to delete scheduling link' }, 500);
     }
-    return c.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting scheduling link:', error);
-    return c.json({ error: 'Failed to delete scheduling link' }, 500);
-  }
-});
+  },
+);
 
 // Public availability query endpoint (no auth required for public scheduling links)
 schedulingLinksRouter.post(
@@ -197,7 +217,9 @@ schedulingLinksRouter.post(
 
       // Max booking notice (in days)
       if (schedulingLink.maxBookingNotice && schedulingLink.maxBookingNotice > 0) {
-        const maxDate = new Date(now.getTime() + schedulingLink.maxBookingNotice * 24 * 60 * 60 * 1000);
+        const maxDate = new Date(
+          now.getTime() + schedulingLink.maxBookingNotice * 24 * 60 * 60 * 1000,
+        );
         if (startDate > maxDate) {
           return c.json({ error: 'Booking date is too far in the future' }, 400);
         }
@@ -211,7 +233,7 @@ schedulingLinksRouter.post(
         schedulingLink.eventDuration,
         schedulingLink.availabilityStart || undefined,
         schedulingLink.availabilityEnd || undefined,
-        schedulingLink.availableDays as number[] || undefined,
+        (schedulingLink.availableDays as number[]) || undefined,
         schedulingLink.bufferBefore || undefined,
         schedulingLink.bufferAfter || undefined,
       );

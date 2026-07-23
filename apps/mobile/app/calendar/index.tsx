@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native';
 import { usePowerSync, useQuery } from '@powersync/react';
 import { db } from '../../powersync';
 
@@ -31,9 +39,7 @@ export default function CalendarScreen() {
   );
 
   // Query events from PowerSync
-  const { data: events, isLoading: eventsLoading } = useQuery(
-    db.selectFrom('events').selectAll(),
-  );
+  const { data: events, isLoading: eventsLoading } = useQuery(db.selectFrom('events').selectAll());
 
   const handleCalendarPress = (calendar: Calendar) => {
     setSelectedCalendar(calendar);
@@ -76,7 +82,12 @@ export default function CalendarScreen() {
             style={[styles.toggleButton, view === 'calendars' && styles.toggleButtonActive]}
             onPress={() => setView('calendars')}
           >
-            <Text style={[styles.toggleButtonText, view === 'calendars' && styles.toggleButtonTextActive]}>
+            <Text
+              style={[
+                styles.toggleButtonText,
+                view === 'calendars' && styles.toggleButtonTextActive,
+              ]}
+            >
               Calendars
             </Text>
           </TouchableOpacity>
@@ -84,7 +95,9 @@ export default function CalendarScreen() {
             style={[styles.toggleButton, view === 'events' && styles.toggleButtonActive]}
             onPress={() => setView('events')}
           >
-            <Text style={[styles.toggleButtonText, view === 'events' && styles.toggleButtonTextActive]}>
+            <Text
+              style={[styles.toggleButtonText, view === 'events' && styles.toggleButtonTextActive]}
+            >
               Events
             </Text>
           </TouchableOpacity>
@@ -92,7 +105,12 @@ export default function CalendarScreen() {
             style={[styles.toggleButton, view === 'scheduling' && styles.toggleButtonActive]}
             onPress={() => setView('scheduling')}
           >
-            <Text style={[styles.toggleButtonText, view === 'scheduling' && styles.toggleButtonTextActive]}>
+            <Text
+              style={[
+                styles.toggleButtonText,
+                view === 'scheduling' && styles.toggleButtonTextActive,
+              ]}
+            >
               Scheduling
             </Text>
           </TouchableOpacity>

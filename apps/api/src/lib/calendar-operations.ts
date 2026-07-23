@@ -316,7 +316,10 @@ export async function deleteEventAttendee(id: string, context?: CommandContext) 
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {
-      const [attendee] = await tx.delete(eventAttendees).where(eq(eventAttendees.id, id)).returning();
+      const [attendee] = await tx
+        .delete(eventAttendees)
+        .where(eq(eventAttendees.id, id))
+        .returning();
       return attendee;
     },
     context?.userId && context?.workspaceId
@@ -705,7 +708,10 @@ export async function bookSlotAtomic(
   attendeeData: Omit<typeof schema.eventAttendees.$inferInsert, 'eventId' | 'status'>,
   requiresApproval = false,
   context?: CommandContext,
-): Promise<{ event: typeof schema.events.$inferSelect; attendee: typeof schema.eventAttendees.$inferSelect }> {
+): Promise<{
+  event: typeof schema.events.$inferSelect;
+  attendee: typeof schema.eventAttendees.$inferSelect;
+}> {
   return executeCommandWithoutIdempotency(
     context || {},
     async (tx) => {

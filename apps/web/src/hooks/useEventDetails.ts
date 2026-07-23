@@ -1,26 +1,25 @@
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import type { Attendee, SchedulingLink } from '../app/calendar/types';
 
 export function useEventDetails(selectedEvent: { id: string } | null, workspaceId: string | null) {
   const queryClient = useQueryClient();
 
   // Event attendees query
-  const { data: attendeesData } = useQuery({
+  const { data: attendeesData = [] } = useQuery<Attendee[]>({
     queryKey: ['eventAttendees', selectedEvent?.id],
     queryFn: () =>
       selectedEvent
-        ? (apiClient.getEventAttendees(selectedEvent.id) as Promise<{ attendees: Attendee[] }>)
-        : Promise.resolve({ attendees: [] }),
+        ? (apiClient.getEventAttendees(selectedEvent.id) as Promise<Attendee[]>)
+        : Promise.resolve([]),
     enabled: !!selectedEvent,
   });
-  const attendees = attendeesData?.attendees || [];
+  const attendees = attendeesData;
 
   // Create event attendee mutation
   const createAttendeeMutation = useMutation({
     mutationFn: (data: { eventId: string; email: string; name?: string }) =>
-      apiClient.createEventAttendee(data),
+      apiClient.createEventAttendee({ ...data, status: 'needs_action', isOrganizer: false }),
     onSuccess: () => {
       if (selectedEvent) {
         void queryClient.invalidateQueries({ queryKey: ['eventAttendees', selectedEvent.id] });
@@ -39,13 +38,13 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
   });
 
   // Scheduling links query
-  const { data: schedulingLinksData } = useQuery({
+  const { data: schedulingLinksData = [] } = useQuery<SchedulingLink[]>({
     queryKey: ['schedulingLinks', workspaceId],
     queryFn: () =>
-      apiClient.getSchedulingLinks(workspaceId!) as Promise<{ schedulingLinks: SchedulingLink[] }>,
+      apiClient.getSchedulingLinks(workspaceId!) as Promise<SchedulingLink[]>,
     enabled: !!workspaceId,
   });
-  const schedulingLinks = schedulingLinksData?.schedulingLinks || [];
+  const schedulingLinks = schedulingLinksData;
 
   // Create scheduling link mutation
   const createSchedulingLinkMutation = useMutation({
@@ -64,7 +63,13 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
       availableDays?: number[];
       requiresApproval?: boolean;
       maxDailyBookings?: number;
-    }) => apiClient.createSchedulingLink({ workspaceId, ...data }),
+    }) =>
+      apiClient.createSchedulingLink({
+        workspaceId: workspaceId!,
+        ...data,
+        availableDays: data.availableDays ?? [0, 1, 2, 3, 4, 5, 6],
+        requiresApproval: data.requiresApproval ?? false,
+      }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['schedulingLinks', workspaceId] });
     },
@@ -72,7 +77,7 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
 
   // Update scheduling link mutation
   const updateSchedulingLinkMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<SchedulingLink> }) =>
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof apiClient.updateSchedulingLink>[1] }) =>
       apiClient.updateSchedulingLink(id, data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['schedulingLinks', workspaceId] });

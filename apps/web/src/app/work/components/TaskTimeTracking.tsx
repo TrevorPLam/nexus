@@ -36,7 +36,9 @@ export function TaskTimeTracking({
       return sum + parseInt(entry.duration, 10);
     }
     if (entry.stoppedAt && entry.startedAt) {
-      return sum + (new Date(entry.stoppedAt).getTime() - new Date(entry.startedAt).getTime()) / 1000;
+      return (
+        sum + (new Date(entry.stoppedAt).getTime() - new Date(entry.startedAt).getTime()) / 1000
+      );
     }
     return sum;
   }, 0);
@@ -94,9 +96,7 @@ export function TaskTimeTracking({
       <div className="flex items-center gap-2">
         <Clock className="w-5 h-5 text-gray-600" />
         <h3 className="font-semibold text-gray-900">Time Tracking</h3>
-        <span className="text-sm text-gray-500">
-          ({formatDuration(totalDuration)})
-        </span>
+        <span className="text-sm text-gray-500">({formatDuration(totalDuration)})</span>
       </div>
 
       {/* Active Timer */}
@@ -113,10 +113,7 @@ export function TaskTimeTracking({
               </p>
             </div>
           </div>
-          <Button
-            variant="secondary"
-            onPress={() => onStopTracking(activeEntry.id)}
-          >
+          <Button variant="secondary" onPress={() => onStopTracking(activeEntry.id)}>
             <Pause className="w-4 h-4 mr-2" />
             Stop
           </Button>
@@ -130,11 +127,7 @@ export function TaskTimeTracking({
 
       {/* Add Manual Entry */}
       {!isAddingManual ? (
-        <Button
-          variant="secondary"
-          size="small"
-          onPress={() => setIsAddingManual(true)}
-        >
+        <Button variant="secondary" size="small" onPress={() => setIsAddingManual(true)}>
           <Plus className="w-4 h-4 mr-1" />
           Add Manual Entry
         </Button>
@@ -185,9 +178,7 @@ export function TaskTimeTracking({
       {/* Time Entries List */}
       <div className="space-y-2 max-h-[300px] overflow-y-auto">
         {completedEntries.length === 0 ? (
-          <div className="text-center py-4 text-gray-500 text-sm">
-            No time entries yet
-          </div>
+          <div className="text-center py-4 text-gray-500 text-sm">No time entries yet</div>
         ) : (
           completedEntries.map((entry) => (
             <div
@@ -212,11 +203,7 @@ export function TaskTimeTracking({
                   )}
                 </div>
               </div>
-              <Button
-                variant="secondary"
-                size="small"
-                onPress={() => onDeleteEntry(entry.id)}
-              >
+              <Button variant="secondary" size="small" onPress={() => onDeleteEntry(entry.id)}>
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>

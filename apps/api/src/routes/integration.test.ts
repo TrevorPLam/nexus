@@ -180,9 +180,7 @@ describe('Integration Routes', () => {
       const client = testClient(integrationRouter);
       const { createTaskWithEventCommand } = await import('../lib/work-operations.js');
 
-      vi.mocked(createTaskWithEventCommand).mockRejectedValue(
-        new Error('Event creation failed'),
-      );
+      vi.mocked(createTaskWithEventCommand).mockRejectedValue(new Error('Event creation failed'));
 
       const response = await client['tasks-with-event'].$post({
         json: {

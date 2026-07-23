@@ -6,7 +6,14 @@ import type { TaskComment, TaskAttachment, TimeEntry } from '../types';
 
 interface ActivityItem {
   id: string;
-  type: 'comment' | 'attachment' | 'time_entry' | 'status_change' | 'assignment' | 'created' | 'updated';
+  type:
+    | 'comment'
+    | 'attachment'
+    | 'time_entry'
+    | 'status_change'
+    | 'assignment'
+    | 'created'
+    | 'updated';
   userId: string;
   userName: string;
   timestamp: Date;
@@ -180,7 +187,9 @@ export function TaskActivityFeed({
                     <span className="font-medium text-sm">{activity.userName}</span>
                     <span className="text-sm text-gray-600">{getActivityText(activity)}</span>
                   </div>
-                  <div className="text-xs text-gray-400 mt-1">{formatTimestamp(activity.timestamp)}</div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    {formatTimestamp(activity.timestamp)}
+                  </div>
                 </div>
               </div>
             );

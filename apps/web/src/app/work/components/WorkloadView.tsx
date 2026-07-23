@@ -81,7 +81,8 @@ export function WorkloadView({
       return (
         taskDate.toDateString() === date.toDateString() &&
         // Simulate assignment by hashing task ID to member
-        (parseInt(task.id, 36) % mockTeamMembers.length) === mockTeamMembers.findIndex((m) => m.id === memberId)
+        parseInt(task.id, 36) % mockTeamMembers.length ===
+          mockTeamMembers.findIndex((m) => m.id === memberId)
       );
     });
 
@@ -151,8 +152,13 @@ export function WorkloadView({
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         {/* Header */}
         <div className="border-b border-gray-200">
-          <div className="grid" style={{ gridTemplateColumns: '200px repeat(auto-fit, minmax(80px, 1fr))' }}>
-            <div className="p-3 font-medium text-sm bg-gray-50 border-r border-gray-200">Team Member</div>
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: '200px repeat(auto-fit, minmax(80px, 1fr))' }}
+          >
+            <div className="p-3 font-medium text-sm bg-gray-50 border-r border-gray-200">
+              Team Member
+            </div>
             {weekDates.map((date) => (
               <div
                 key={date.toISOString()}
@@ -240,9 +246,9 @@ export function WorkloadView({
           <div className="text-sm text-blue-800">
             <p className="font-medium mb-1">Workload Summary</p>
             <p>
-              Showing {filteredTasks.length} active tasks across {mockTeamMembers.length} team members
-              for the next {viewWeeks} week{viewWeeks > 1 ? 's' : ''}. This view helps identify
-              resource allocation and prevent team burnout.
+              Showing {filteredTasks.length} active tasks across {mockTeamMembers.length} team
+              members for the next {viewWeeks} week{viewWeeks > 1 ? 's' : ''}. This view helps
+              identify resource allocation and prevent team burnout.
             </p>
           </div>
         </div>

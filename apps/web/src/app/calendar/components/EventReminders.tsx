@@ -65,11 +65,7 @@ export function EventReminders({
 
       {/* Add Reminder Form */}
       {!isAdding ? (
-        <Button
-          variant="secondary"
-          size="small"
-          onPress={() => setIsAdding(true)}
-        >
+        <Button variant="secondary" size="small" onPress={() => setIsAdding(true)}>
           <Plus className="w-4 h-4 mr-1" />
           Add Reminder
         </Button>
@@ -115,9 +111,7 @@ export function EventReminders({
       {/* Reminders List */}
       <div className="space-y-2">
         {reminders.length === 0 ? (
-          <div className="text-center py-4 text-gray-500 text-sm">
-            No reminders set
-          </div>
+          <div className="text-center py-4 text-gray-500 text-sm">No reminders set</div>
         ) : (
           reminders.map((reminder) => (
             <div
@@ -130,9 +124,7 @@ export function EventReminders({
                   <p className="text-sm font-medium text-gray-900">
                     {formatReminderTime(reminder.minutesBefore)}
                   </p>
-                  <p className="text-xs text-gray-500 capitalize">
-                    via {reminder.method}
-                  </p>
+                  <p className="text-xs text-gray-500 capitalize">via {reminder.method}</p>
                 </div>
               </div>
               <Button
@@ -150,8 +142,8 @@ export function EventReminders({
       {/* Info Text */}
       <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg border border-blue-200">
         <p>
-          <strong>Tip:</strong> Set multiple reminders to ensure you never miss an
-          important event. Reminders are sent based on your local timezone.
+          <strong>Tip:</strong> Set multiple reminders to ensure you never miss an important event.
+          Reminders are sent based on your local timezone.
         </p>
       </div>
     </div>

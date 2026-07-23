@@ -1,7 +1,20 @@
 'use client';
 
 import { Button } from '@life-os/ui';
-import { Plus, Settings2, Edit, Trash2, Eye, EyeOff, Hash, Calendar, CheckSquare, Link, Mail, Phone } from 'lucide-react';
+import {
+  Plus,
+  Settings2,
+  Edit,
+  Trash2,
+  Eye,
+  EyeOff,
+  Hash,
+  Calendar,
+  CheckSquare,
+  Link,
+  Mail,
+  Phone,
+} from 'lucide-react';
 
 import type { CustomField } from '../types-custom-fields';
 
@@ -80,7 +93,9 @@ export function CustomFieldsView({
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Custom Fields</h2>
-          <p className="text-gray-600 mt-1">Add custom properties to tasks for your specific workflow</p>
+          <p className="text-gray-600 mt-1">
+            Add custom properties to tasks for your specific workflow
+          </p>
         </div>
         <Button onPress={onNewField}>
           <Plus className="w-4 h-4 mr-2" />
@@ -180,11 +195,7 @@ export function CustomFieldsView({
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="secondary"
-                          size="small"
-                          onPress={() => onEditField(field)}
-                        >
+                        <Button variant="secondary" size="small" onPress={() => onEditField(field)}>
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button

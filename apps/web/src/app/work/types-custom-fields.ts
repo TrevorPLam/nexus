@@ -1,4 +1,14 @@
-export type CustomFieldType = 'text' | 'number' | 'date' | 'select' | 'multi_select' | 'checkbox' | 'url' | 'email' | 'phone' | 'progress';
+export type CustomFieldType =
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'select'
+  | 'multi_select'
+  | 'checkbox'
+  | 'url'
+  | 'email'
+  | 'phone'
+  | 'progress';
 
 export interface CustomField {
   id: string;

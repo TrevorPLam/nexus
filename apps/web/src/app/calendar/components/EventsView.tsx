@@ -14,7 +14,6 @@ interface EventsViewProps {
   onNavigateNext: () => void;
   onSetCalendarView: (view: 'month' | 'week' | 'day') => void;
   onNewEvent: () => void;
-  onSettings: () => void;
   onFindTime: () => void;
   onDayClick: (date: Date) => void;
   onEventClick: (event: Event) => void;
@@ -46,7 +45,6 @@ export function EventsView({
   onNavigateNext,
   onSetCalendarView,
   onNewEvent,
-  onSettings,
   onFindTime,
   onDayClick,
   onEventClick,
@@ -141,9 +139,6 @@ export function EventsView({
             <option value="week">Week</option>
             <option value="day">Day</option>
           </select>
-          <Button variant="secondary" onPress={onSettings}>
-            Settings
-          </Button>
           <Button variant="secondary" onPress={onFindTime}>
             Find Time
           </Button>

@@ -1,7 +1,20 @@
 'use client';
 
 import { Button } from '@life-os/ui';
-import { Plus, Target, Edit, Trash2, TrendingUp, AlertCircle, CheckCircle2, XCircle, Clock, Users, Building2, User } from 'lucide-react';
+import {
+  Plus,
+  Target,
+  Edit,
+  Trash2,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Users,
+  Building2,
+  User,
+} from 'lucide-react';
 
 import type { Goal } from '../types-goals';
 
@@ -13,13 +26,7 @@ interface GoalsViewProps {
   onDeleteGoal: (goalId: string) => void;
 }
 
-export function GoalsView({
-  goals,
-  loading,
-  onNewGoal,
-  onEditGoal,
-  onDeleteGoal,
-}: GoalsViewProps) {
+export function GoalsView({ goals, loading, onNewGoal, onEditGoal, onDeleteGoal }: GoalsViewProps) {
   const getStatusIcon = (status: Goal['status']) => {
     switch (status) {
       case 'on_track':
@@ -85,7 +92,9 @@ export function GoalsView({
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Goals & OKRs</h2>
-          <p className="text-gray-600 mt-1">Track objectives and key results across your organization</p>
+          <p className="text-gray-600 mt-1">
+            Track objectives and key results across your organization
+          </p>
         </div>
         <Button onPress={onNewGoal}>
           <Plus className="w-4 h-4 mr-2" />
@@ -102,7 +111,8 @@ export function GoalsView({
           <Target className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No goals yet</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            Create goals and key results to align your team and track progress toward strategic objectives.
+            Create goals and key results to align your team and track progress toward strategic
+            objectives.
           </p>
           <Button onPress={onNewGoal}>
             <Plus className="w-4 h-4 mr-2" />
@@ -126,7 +136,9 @@ export function GoalsView({
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="font-semibold text-gray-900">{goal.name}</h3>
                         <div className="flex items-center gap-2">
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(goal.status)}`}>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(goal.status)}`}
+                          >
                             {goal.status.replace('_', ' ')}
                           </span>
                           <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
@@ -143,7 +155,10 @@ export function GoalsView({
                           <span>{goal.period.name}</span>
                         </div>
                         <span>•</span>
-                        <span>{goal.keyResults.length} key result{goal.keyResults.length !== 1 ? 's' : ''}</span>
+                        <span>
+                          {goal.keyResults.length} key result
+                          {goal.keyResults.length !== 1 ? 's' : ''}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -161,7 +176,9 @@ export function GoalsView({
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-                    <span className="text-sm font-medium text-gray-900">{Math.round(goal.progress)}%</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {Math.round(goal.progress)}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
@@ -185,7 +202,9 @@ export function GoalsView({
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                   <h5 className="text-sm font-medium text-gray-900">{kr.title}</h5>
-                                  <KRStatusIcon className={`w-3 h-3 ${getStatusColor(kr.status).split(' ')[0]}`} />
+                                  <KRStatusIcon
+                                    className={`w-3 h-3 ${getStatusColor(kr.status).split(' ')[0]}`}
+                                  />
                                 </div>
                                 {kr.description && (
                                   <p className="text-xs text-gray-600">{kr.description}</p>
@@ -196,13 +215,19 @@ export function GoalsView({
                                   {kr.currentValue} / {kr.targetValue}
                                   {kr.unit && ` ${kr.unit}`}
                                 </div>
-                                <div className="text-xs text-gray-500">{Math.round(krProgress)}%</div>
+                                <div className="text-xs text-gray-500">
+                                  {Math.round(krProgress)}%
+                                </div>
                               </div>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-1.5">
                               <div
                                 className={`h-1.5 rounded-full transition-all ${
-                                  krProgress >= 100 ? 'bg-green-500' : krProgress >= 50 ? 'bg-blue-500' : 'bg-yellow-500'
+                                  krProgress >= 100
+                                    ? 'bg-green-500'
+                                    : krProgress >= 50
+                                      ? 'bg-blue-500'
+                                      : 'bg-yellow-500'
                                 }`}
                                 style={{ width: `${Math.min(krProgress, 100)}%` }}
                               />

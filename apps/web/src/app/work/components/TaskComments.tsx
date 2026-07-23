@@ -45,7 +45,7 @@ export function TaskComments({
   };
 
   const sortedComments = [...comments].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
   );
 
   return (
@@ -65,7 +65,10 @@ export function TaskComments({
           rows={3}
         />
         <div className="flex justify-end">
-          <Button disabled={!newComment.trim()} onPress={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}>
+          <Button
+            disabled={!newComment.trim()}
+            onPress={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
+          >
             <Send className="w-4 h-4 mr-2" />
             Send
           </Button>
@@ -82,14 +85,13 @@ export function TaskComments({
           </div>
         ) : (
           sortedComments.map((comment) => (
-            <div
-              key={comment.id}
-              className="bg-gray-50 rounded-lg p-4 border border-gray-200"
-            >
+            <div key={comment.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium text-sm">
-                    {comment.userId === currentUserId ? 'You' : comment.userId.slice(0, 2).toUpperCase()}
+                    {comment.userId === currentUserId
+                      ? 'You'
+                      : comment.userId.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <div className="font-medium text-sm">

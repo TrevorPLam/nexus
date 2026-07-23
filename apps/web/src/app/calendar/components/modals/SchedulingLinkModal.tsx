@@ -68,7 +68,11 @@ interface SchedulingFormFieldsProps {
   onFormChange: (form: SchedulingForm) => void;
 }
 
-function SchedulingFormFields({ schedulingForm, calendars, onFormChange }: SchedulingFormFieldsProps) {
+function SchedulingFormFields({
+  schedulingForm,
+  calendars,
+  onFormChange,
+}: SchedulingFormFieldsProps) {
   return (
     <div className="space-y-4">
       <FormField
@@ -146,7 +150,9 @@ function SchedulingFormFields({ schedulingForm, calendars, onFormChange }: Sched
           name="minBookingNotice"
           min={0}
           value={schedulingForm.minBookingNotice}
-          onChange={(value) => onFormChange({ ...schedulingForm, minBookingNotice: parseInt(value) })}
+          onChange={(value) =>
+            onFormChange({ ...schedulingForm, minBookingNotice: parseInt(value) })
+          }
         />
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -168,7 +174,9 @@ function SchedulingFormFields({ schedulingForm, calendars, onFormChange }: Sched
           <input
             type="checkbox"
             checked={schedulingForm.requiresApproval}
-            onChange={(e) => onFormChange({ ...schedulingForm, requiresApproval: e.target.checked })}
+            onChange={(e) =>
+              onFormChange({ ...schedulingForm, requiresApproval: e.target.checked })
+            }
           />
           Require approval for bookings
         </label>

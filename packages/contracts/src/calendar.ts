@@ -171,7 +171,12 @@ export const CreateSchedulingLinkRequest = z.object({
 export const UpdateSchedulingLinkRequest = z
   .object({
     name: z.string().min(1).max(200).optional(),
-    slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional(),
+    slug: z
+      .string()
+      .min(1)
+      .max(100)
+      .regex(/^[a-z0-9-]+$/)
+      .optional(),
     description: z.string().max(1000).optional(),
     calendarId: z.string().uuid().optional(),
     eventDuration: z.number().int().positive().max(480).optional(),
@@ -179,8 +184,14 @@ export const UpdateSchedulingLinkRequest = z
     bufferAfter: z.number().int().min(0).optional(),
     minBookingNotice: z.number().int().min(0).optional(),
     maxBookingNotice: z.number().int().min(0).optional(),
-    availabilityStart: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
-    availabilityEnd: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+    availabilityStart: z
+      .string()
+      .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .optional(),
+    availabilityEnd: z
+      .string()
+      .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .optional(),
     availableDays: z.array(z.number().int().min(0).max(6)).optional(),
     requiresApproval: z.boolean().optional(),
     maxDailyBookings: z.number().int().positive().optional(),
@@ -212,17 +223,16 @@ export const SchedulingLinkResponse = z.object({
 });
 
 // Availability query and booking schemas
-export const AvailabilityQueryRequest = z.object({
-  schedulingLinkId: z.string().uuid(),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime(),
-}).refine(
-  (data) => new Date(data.startDate) < new Date(data.endDate),
-  {
+export const AvailabilityQueryRequest = z
+  .object({
+    schedulingLinkId: z.string().uuid(),
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+  })
+  .refine((data) => new Date(data.startDate) < new Date(data.endDate), {
     message: 'startDate must be before endDate',
     path: ['endDate'],
-  },
-);
+  });
 
 export const AvailableSlotResponse = z.object({
   start: z.date(),
@@ -233,22 +243,21 @@ export const AvailabilityResponse = z.object({
   slots: z.array(AvailableSlotResponse),
 });
 
-export const BookingRequest = z.object({
-  schedulingLinkId: z.string().uuid(),
-  start: z.string().datetime(),
-  end: z.string().datetime(),
-  title: z.string().min(1).max(500),
-  description: z.string().max(5000).optional(),
-  location: z.string().max(500).optional(),
-  attendeeEmail: z.string().email(),
-  attendeeName: z.string().max(200).optional(),
-}).refine(
-  (data) => new Date(data.start) < new Date(data.end),
-  {
+export const BookingRequest = z
+  .object({
+    schedulingLinkId: z.string().uuid(),
+    start: z.string().datetime(),
+    end: z.string().datetime(),
+    title: z.string().min(1).max(500),
+    description: z.string().max(5000).optional(),
+    location: z.string().max(500).optional(),
+    attendeeEmail: z.string().email(),
+    attendeeName: z.string().max(200).optional(),
+  })
+  .refine((data) => new Date(data.start) < new Date(data.end), {
     message: 'start must be before end',
     path: ['end'],
-  },
-);
+  });
 
 export const BookingResponse = z.object({
   event: EventResponse,

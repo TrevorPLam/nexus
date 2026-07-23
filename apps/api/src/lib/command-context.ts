@@ -1,6 +1,9 @@
 import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
+import { Context } from 'hono';
+import { appUsers } from '@life-os/database';
+import { eq } from 'drizzle-orm';
 
 /**
  * Command context that provides transaction, audit, outbox, and idempotency
@@ -34,8 +37,44 @@ export interface OutboxConfig {
 }
 
 /**
+ * Extract CommandContext from Hono context
+ * This helper extracts user, workspace, and idempotency information from the Hono context
+ * and converts it to a CommandContext suitable for command execution
+ */
+export async function extractCommandContext(c: Context): Promise<CommandContext> {
+  const context: CommandContext = {};
+
+  // Extract user information
+  const user = c.get('user');
+  if (user) {
+    // Get the app_user record for the authenticated user
+    const [appUser] = await db.select().from(appUsers).where(eq(appUsers.supabaseUserId, user.id));
+    if (appUser) {
+      context.userId = appUser.id;
+    }
+  }
+
+  // Extract workspace information
+  const workspaceMembership = c.get('workspaceMembership');
+  if (workspaceMembership) {
+    context.workspaceId = workspaceMembership.workspaceId;
+  }
+
+  // Extract idempotency key
+  const idempotencyKey = c.req.header('Idempotency-Key');
+  if (idempotencyKey) {
+    context.idempotencyKey = idempotencyKey;
+  }
+
+  // Extract endpoint
+  context.endpoint = c.req.path;
+
+  return context;
+}
+
+/**
  * Execute a command within a transaction with automatic audit, outbox, and idempotency
- * 
+ *
  * @param context - Command context with user, workspace, and idempotency info
  * @param command - The command function to execute within the transaction
  * @param auditConfig - Audit log configuration

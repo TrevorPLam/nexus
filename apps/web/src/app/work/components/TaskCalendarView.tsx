@@ -166,15 +166,11 @@ export function TaskCalendarView({
               >
                 <div className="flex items-center justify-between mb-1">
                   <span
-                    className={`text-sm font-medium ${
-                      today ? 'text-blue-600' : 'text-gray-900'
-                    }`}
+                    className={`text-sm font-medium ${today ? 'text-blue-600' : 'text-gray-900'}`}
                   >
                     {date.getDate()}
                   </span>
-                  {today && (
-                    <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  )}
+                  {today && <div className="w-2 h-2 rounded-full bg-blue-500" />}
                 </div>
                 <div className="space-y-1">
                   {dayTasks.slice(0, 3).map((task) => (
@@ -190,16 +186,12 @@ export function TaskCalendarView({
                         color: 'white',
                       }}
                     >
-                      {task.status === 'done' && (
-                        <CheckCircle2 className="w-3 h-3 inline mr-1" />
-                      )}
+                      {task.status === 'done' && <CheckCircle2 className="w-3 h-3 inline mr-1" />}
                       {task.title}
                     </div>
                   ))}
                   {dayTasks.length > 3 && (
-                    <div className="text-xs text-gray-500 pl-1">
-                      +{dayTasks.length - 3} more
-                    </div>
+                    <div className="text-xs text-gray-500 pl-1">+{dayTasks.length - 3} more</div>
                   )}
                 </div>
               </div>

@@ -11,7 +11,7 @@ export function findAvailableSlots(
   events: Event[],
   startHour: number = 9,
   endHour: number = 17,
-  slotInterval: number = 30
+  slotInterval: number = 30,
 ): AvailableSlot[] {
   const dayEvents = events.filter((event) => {
     const eventDate = new Date(event.start);

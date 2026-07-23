@@ -2,7 +2,11 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { z } from 'zod';
 
-import { authMiddleware, requireWorkspaceMembership, requireWorkspaceAccess } from '../lib/middleware.js';
+import {
+  authMiddleware,
+  requireWorkspaceMembership,
+  requireWorkspaceAccess,
+} from '../lib/middleware.js';
 import {
   createTaskWithEventCommand,
   linkTaskEventCommand,

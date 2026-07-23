@@ -222,7 +222,7 @@ describe('API Client Package', () => {
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token-123',
+            Authorization: 'Bearer test-token-123',
           },
         }),
       );
@@ -264,7 +264,7 @@ describe('API Client Package', () => {
         'http://test-api.com/v1/work/projects/project-123',
         expect.not.objectContaining({
           headers: expect.objectContaining({
-            'Authorization': expect.any(String),
+            Authorization: expect.any(String),
           }),
         }),
       );
@@ -302,7 +302,7 @@ describe('API Client Package', () => {
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token-123',
+            Authorization: 'Bearer test-token-123',
           },
         }),
       );

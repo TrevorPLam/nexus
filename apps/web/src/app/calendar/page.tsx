@@ -15,7 +15,6 @@ import { AttendeeModal } from './components/modals/AttendeeModal';
 import { EventDetailModal } from './components/modals/EventDetailModal';
 import { FindTimeModal } from './components/modals/FindTimeModal';
 import { SchedulingLinkModal } from './components/modals/SchedulingLinkModal';
-import { SettingsModal } from './components/modals/SettingsModal';
 import { SchedulingView } from './components/SchedulingView';
 import { useCalendarState } from './hooks/useCalendarState';
 import { useEventState } from './hooks/useEventState';
@@ -37,9 +36,6 @@ export default function CalendarPage() {
   const [showFindTimeModal, setShowFindTimeModal] = useState(false);
   const [findTimeDuration, setFindTimeDuration] = useState(30);
   const [findTimeDate, setFindTimeDate] = useState(new Date());
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [workingHours, setWorkingHours] = useState({ start: '09:00', end: '17:00' });
-  const [defaultLocation, setDefaultLocation] = useState('');
 
   // Custom hooks for data fetching and mutations
   const {
@@ -99,7 +95,6 @@ export default function CalendarPage() {
     newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
     setCurrentDate(newDate);
   };
-
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
@@ -164,7 +159,6 @@ export default function CalendarPage() {
           }}
           onSetCalendarView={setCalendarView}
           onNewEvent={eventState.handleNewEvent}
-          onSettings={() => setShowSettingsModal(true)}
           onFindTime={() => setShowFindTimeModal(true)}
           onDayClick={(date) => {
             setCurrentDate(date);
@@ -269,17 +263,6 @@ export default function CalendarPage() {
           setShowFindTimeModal(false);
           eventState.handleNewEvent();
         }}
-      />
-
-      {/* Settings Modal */}
-      <SettingsModal
-        isOpen={showSettingsModal}
-        workingHours={workingHours}
-        defaultLocation={defaultLocation}
-        onClose={() => setShowSettingsModal(false)}
-        onSave={() => setShowSettingsModal(false)}
-        onWorkingHoursChange={setWorkingHours}
-        onDefaultLocationChange={setDefaultLocation}
       />
     </main>
   );

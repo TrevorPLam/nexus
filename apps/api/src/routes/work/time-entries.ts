@@ -1,11 +1,12 @@
 import { Hono } from 'hono';
 
-import { authMiddleware, idempotencyMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
-import * as workOps from '../../lib/work-operations.js';
 import {
-  CreateTimeEntryRequest,
-  UpdateTimeEntryRequest,
-} from '@life-os/contracts';
+  authMiddleware,
+  idempotencyMiddleware,
+  requireWorkspaceMembership,
+} from '../../lib/middleware.js';
+import * as workOps from '../../lib/work-operations.js';
+import { CreateTimeEntryRequest, UpdateTimeEntryRequest } from '@life-os/contracts';
 
 const timeEntriesRouter = new Hono();
 
