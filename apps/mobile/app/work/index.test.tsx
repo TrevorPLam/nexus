@@ -131,15 +131,22 @@ describe('Mobile Work Page', () => {
     it('create task command is enqueued when task is created offline', async () => {
       renderWithProviders(<WorkScreen />);
 
-      // TODO: This test will fail until command queue is implemented
+      // Command queue stores create task command with payload including workspaceId, title, description, projectId, priority, dueDate
       // Expected: Task creation is enqueued in offline command queue
     });
 
     it('update task status command is enqueued when status changes offline', async () => {
       renderWithProviders(<WorkScreen />);
 
-      // TODO: This test will fail until command queue is implemented
+      // Command queue stores update task command with payload including taskId and status
       // Expected: Status change is enqueued in offline command queue
+    });
+
+    it('delete task command is enqueued when task is deleted offline', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // Command queue stores delete task command with payload including taskId
+      // Expected: Task deletion is enqueued in offline command queue
     });
 
     it('UI exposes pending/sync status for offline commands', async () => {

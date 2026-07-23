@@ -136,6 +136,7 @@ export function useCreateProject() {
 export function useCreateTask() {
   const queryClient = useQueryClient();
   const { selectedWorkspace } = useAuth();
+  const { db } = usePowerSync();
 
   return useMutation({
     mutationFn: async (data: {
@@ -149,16 +150,17 @@ export function useCreateTask() {
         throw new Error('No workspace selected');
       }
 
-      // TODO: Enqueue create task command
-      // This will integrate with the backend command API
-      // For now, return placeholder
-      return {
-        id: 'placeholder',
-        ...data,
-        workspace_id: selectedWorkspace.id,
-        project_id: data.projectId || null,
-        status: 'todo',
-      } as TaskRecord;
+      // Enqueue create task command
+      const commandId = await enqueueCommand(db, 'create_task', {
+        workspaceId: selectedWorkspace.id,
+        title: data.title,
+        description: data.description,
+        projectId: data.projectId,
+        priority: data.priority || 'medium',
+        dueDate: data.dueDate,
+      });
+
+      return { id: commandId, ...data, workspace_id: selectedWorkspace.id } as TaskRecord;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -171,13 +173,17 @@ export function useCreateTask() {
  */
 export function useUpdateTaskStatus() {
   const queryClient = useQueryClient();
+  const { db } = usePowerSync();
 
   return useMutation({
     mutationFn: async ({ taskId, status }: { taskId: string; status: string }) => {
-      // TODO: Enqueue update task status command
-      // This will integrate with the backend command API
-      // For now, return placeholder
-      return { taskId, status };
+      // Enqueue update task command
+      const commandId = await enqueueCommand(db, 'update_task', {
+        taskId,
+        status,
+      });
+
+      return { id: commandId, taskId, status };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -190,13 +196,16 @@ export function useUpdateTaskStatus() {
  */
 export function useDeleteTask() {
   const queryClient = useQueryClient();
+  const { db } = usePowerSync();
 
   return useMutation({
     mutationFn: async (taskId: string) => {
-      // TODO: Enqueue delete task command
-      // This will integrate with the backend command API
-      // For now, return placeholder
-      return { taskId };
+      // Enqueue delete task command
+      const commandId = await enqueueCommand(db, 'delete_task', {
+        taskId,
+      });
+
+      return { id: commandId, taskId };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
