@@ -3,18 +3,16 @@
 import { Button } from '@life-os/ui';
 import { useState } from 'react';
 
+import { useAuth } from '../../contexts/AuthContext';
 import { useWorkProjects } from '../../hooks/useWorkProjects';
 import { useWorkTasks } from '../../hooks/useWorkTasks';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTaskDetails } from '../../hooks/useTaskDetails';
 
 import { KanbanView } from './components/KanbanView';
+import { ListView } from './components/ListView';
+import { ProjectModal } from './components/ProjectModal';
 import { ProjectsView } from './components/ProjectsView';
 import { TaskModal } from './components/TaskModal';
-import { ProjectModal } from './components/ProjectModal';
 import { TimelineView } from './components/TimelineView';
-import { ListView } from './components/ListView';
-import { WorkloadView } from './components/WorkloadView';
 import { useWorkState } from './hooks/useWorkState';
 import type { WorkView, Task } from './types';
 
@@ -36,13 +34,15 @@ export default function WorkPage() {
     deleteProjectMutation,
   } = useWorkProjects(effectiveWorkspaceId);
 
-  const { tasks, isLoading, isError, error, createTaskMutation, updateTaskMutation, deleteTaskMutation } = useWorkTasks(
-    effectiveWorkspaceId,
-    selectedProject,
-    filterPriority,
-  );
-
-  const taskDetails = useTaskDetails(null);
+  const {
+    tasks,
+    isLoading,
+    isError,
+    error,
+    createTaskMutation,
+    updateTaskMutation,
+    deleteTaskMutation,
+  } = useWorkTasks(effectiveWorkspaceId, selectedProject, filterPriority);
 
   const workState = useWorkState({
     projects,
@@ -50,8 +50,6 @@ export default function WorkPage() {
     updateProjectMutation,
     createTaskMutation,
     updateTaskMutation,
-    createDependencyMutation: taskDetails.createDependencyMutation,
-    createAssigneeMutation: taskDetails.createAssigneeMutation,
   });
 
   const handleViewChange = (newView: WorkView) => {
@@ -118,20 +116,28 @@ export default function WorkPage() {
       )}
 
       {isLoading && (
-        <div role="status" aria-live="polite" className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg"
+        >
           <p className="text-blue-800">Loading tasks...</p>
         </div>
       )}
 
       {createProjectMutation.error && (
         <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800">Error creating project: {createProjectMutation.error.message}</p>
+          <p className="text-red-800">
+            Error creating project: {createProjectMutation.error.message}
+          </p>
         </div>
       )}
 
       {updateProjectMutation.error && (
         <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800">Error updating project: {updateProjectMutation.error.message}</p>
+          <p className="text-red-800">
+            Error updating project: {updateProjectMutation.error.message}
+          </p>
         </div>
       )}
 
@@ -198,21 +204,7 @@ export default function WorkPage() {
           onProjectFilter={setSelectedProject}
           onTaskStatusChange={handleTaskStatusChange}
         />
-      ) : view === 'workload' ? (
-        <WorkloadView
-          tasks={tasks}
-          projects={projects}
-          selectedProject={selectedProject}
-          onProjectFilter={setSelectedProject}
-          onTaskClick={(task) => {
-            workState.handleEditTask(task);
-          }}
-        />
-      ) : (
-        <div className="p-8 text-center border-2 border-dashed border-gray-300 rounded-lg bg-white">
-          <p className="text-gray-600">List view coming soon</p>
-        </div>
-      )}
+      ) : null}
 
       {/* Project Modal */}
       <ProjectModal

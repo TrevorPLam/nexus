@@ -2,6 +2,8 @@
 
 import { Button, Modal, Input } from '@life-os/ui';
 import { Loader2 } from 'lucide-react';
+import { CreateProjectRequest } from '@life-os/contracts';
+import { useState } from 'react';
 
 import type { Project } from '../types';
 
@@ -40,11 +42,42 @@ export function ProjectModal({
   onSubmit,
   isPending,
 }: ProjectModalProps) {
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate using the contract schema
+    const result = CreateProjectRequest.safeParse({
+      workspaceId: 'temp', // Not used in validation
+      name: projectForm.name,
+      description: projectForm.description || undefined,
+      color: projectForm.color || undefined,
+      icon: projectForm.icon || undefined,
+    });
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach((err) => {
+        if (err.path[0]) {
+          errors[err.path[0] as string] = err.message;
+        }
+      });
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
+    onSubmit(e);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">{editingProject ? 'Edit Project' : 'Create Project'}</h2>
-        <form onSubmit={onSubmit}>
+        <h2 className="text-xl font-semibold">
+          {editingProject ? 'Edit Project' : 'Create Project'}
+        </h2>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Name</label>
@@ -53,6 +86,11 @@ export function ProjectModal({
                 value={projectForm.name}
                 onChangeText={(value) => setProjectForm({ ...projectForm, name: value })}
               />
+              {validationErrors.name && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.name}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Description (optional)</label>
@@ -63,6 +101,11 @@ export function ProjectModal({
                 onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm resize-vertical"
               />
+              {validationErrors.description && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.description}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Color</label>
@@ -73,12 +116,19 @@ export function ProjectModal({
                     type="button"
                     onClick={() => setProjectForm({ ...projectForm, color })}
                     className={`w-8 h-8 rounded-full border-2 transition-all ${
-                      projectForm.color === color ? 'border-gray-900 scale-110' : 'border-transparent'
+                      projectForm.color === color
+                        ? 'border-gray-900 scale-110'
+                        : 'border-transparent'
                     }`}
                     style={{ backgroundColor: color }}
                   />
                 ))}
               </div>
+              {validationErrors.color && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.color}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Icon (optional)</label>
@@ -87,6 +137,11 @@ export function ProjectModal({
                 value={projectForm.icon}
                 onChangeText={(value) => setProjectForm({ ...projectForm, icon: value })}
               />
+              {validationErrors.icon && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.icon}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex gap-2 justify-end mt-6">

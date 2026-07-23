@@ -2,6 +2,8 @@
 
 import { Button, Modal, Input, Select, TextArea } from '@life-os/ui';
 import { Loader2 } from 'lucide-react';
+import { CreateTaskRequest } from '@life-os/contracts';
+import { useState } from 'react';
 
 import type { Task, Project } from '../types';
 
@@ -21,8 +23,6 @@ interface TaskModalProps {
     energyLevel: 'low' | 'medium' | 'high';
     contextTags: string;
     isMilestone: boolean;
-    dependencies: Array<{ taskId: string; type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish' }>;
-    assignees: string[];
   };
   projects: Project[];
   setTaskForm: (form: TaskModalProps['taskForm']) => void;
@@ -61,11 +61,50 @@ export function TaskModal({
   onSubmit,
   isPending,
 }: TaskModalProps) {
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate using the contract schema
+    const result = CreateTaskRequest.safeParse({
+      workspaceId: 'temp', // Not used in validation
+      title: taskForm.title,
+      projectId: taskForm.projectId || undefined,
+      parentId: taskForm.parentId || undefined,
+      description: taskForm.description || undefined,
+      status: taskForm.status,
+      priority: taskForm.priority,
+      dueDate: taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : undefined,
+      dueTime: taskForm.dueTime || undefined,
+      estimatedDuration: taskForm.estimatedDuration
+        ? parseInt(taskForm.estimatedDuration, 10)
+        : undefined,
+      energyLevel: taskForm.energyLevel || undefined,
+      contextTags: taskForm.contextTags || undefined,
+      isMilestone: taskForm.isMilestone,
+    });
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach((err) => {
+        if (err.path[0]) {
+          errors[err.path[0] as string] = err.message;
+        }
+      });
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
+    onSubmit(e);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">{editingTask ? 'Edit Task' : 'Create Task'}</h2>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Title</label>
@@ -74,6 +113,11 @@ export function TaskModal({
                 value={taskForm.title}
                 onChangeText={(value) => setTaskForm({ ...taskForm, title: value })}
               />
+              {validationErrors.title && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.title}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Project</label>
@@ -89,7 +133,10 @@ export function TaskModal({
                 <Select
                   value={taskForm.status}
                   onChange={(value) =>
-                    setTaskForm({ ...taskForm, status: value as TaskModalProps['taskForm']['status'] })
+                    setTaskForm({
+                      ...taskForm,
+                      status: value as TaskModalProps['taskForm']['status'],
+                    })
                   }
                   options={statusOptions}
                 />
@@ -116,7 +163,9 @@ export function TaskModal({
                 onChange={(e) => setTaskForm({ ...taskForm, isMilestone: e.target.checked })}
                 className="rounded"
               />
-              <label htmlFor="isMilestone" className="text-sm">Mark as Milestone</label>
+              <label htmlFor="isMilestone" className="text-sm">
+                Mark as Milestone
+              </label>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -127,6 +176,11 @@ export function TaskModal({
                   onChange={(e) => setTaskForm({ ...taskForm, dueDate: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 />
+                {validationErrors.dueDate && (
+                  <p className="text-red-500 text-sm mt-1" role="alert">
+                    {validationErrors.dueDate}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Due Time</label>
@@ -136,6 +190,11 @@ export function TaskModal({
                   onChange={(e) => setTaskForm({ ...taskForm, dueTime: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                 />
+                {validationErrors.dueTime && (
+                  <p className="text-red-500 text-sm mt-1" role="alert">
+                    {validationErrors.dueTime}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -146,6 +205,11 @@ export function TaskModal({
                 value={taskForm.estimatedDuration}
                 onChangeText={(value) => setTaskForm({ ...taskForm, estimatedDuration: value })}
               />
+              {validationErrors.estimatedDuration && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.estimatedDuration}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Energy Level</label>
@@ -167,6 +231,11 @@ export function TaskModal({
                 value={taskForm.description}
                 onChangeText={(value) => setTaskForm({ ...taskForm, description: value })}
               />
+              {validationErrors.description && (
+                <p className="text-red-500 text-sm mt-1" role="alert">
+                  {validationErrors.description}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Context Tags (optional)</label>
@@ -175,99 +244,6 @@ export function TaskModal({
                 value={taskForm.contextTags}
                 onChangeText={(value) => setTaskForm({ ...taskForm, contextTags: value })}
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Dependencies (optional)</label>
-              <div className="space-y-2">
-                {taskForm.dependencies.map((dep, index) => (
-                  <div key={index} className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Task ID"
-                      value={dep.taskId}
-                      onChange={(e) => {
-                        const newDeps = [...taskForm.dependencies];
-                        newDeps[index] = { ...dep, taskId: e.target.value };
-                        setTaskForm({ ...taskForm, dependencies: newDeps });
-                      }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    />
-                    <select
-                      value={dep.type}
-                      onChange={(e) => {
-                        const newDeps = [...taskForm.dependencies];
-                        newDeps[index] = { ...dep, type: e.target.value as any };
-                        setTaskForm({ ...taskForm, dependencies: newDeps });
-                      }}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                      <option value="finish_to_start">Finish to Start</option>
-                      <option value="start_to_start">Start to Start</option>
-                      <option value="finish_to_finish">Finish to Finish</option>
-                      <option value="start_to_finish">Start to Finish</option>
-                    </select>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newDeps = taskForm.dependencies.filter((_, i) => i !== index);
-                        setTaskForm({ ...taskForm, dependencies: newDeps });
-                      }}
-                      className="px-2 py-2 text-red-500 hover:text-red-700"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setTaskForm({
-                      ...taskForm,
-                      dependencies: [...taskForm.dependencies, { taskId: '', type: 'finish_to_start' }],
-                    })
-                  }
-                  className="text-sm text-blue-600 hover:text-blue-700"
-                >
-                  + Add Dependency
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Assignees (optional)</label>
-              <div className="space-y-2">
-                {taskForm.assignees.map((assignee, index) => (
-                  <div key={index} className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="User ID or email"
-                      value={assignee}
-                      onChange={(e) => {
-                        const newAssignees = [...taskForm.assignees];
-                        newAssignees[index] = e.target.value;
-                        setTaskForm({ ...taskForm, assignees: newAssignees });
-                      }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newAssignees = taskForm.assignees.filter((_, i) => i !== index);
-                        setTaskForm({ ...taskForm, assignees: newAssignees });
-                      }}
-                      className="px-2 py-2 text-red-500 hover:text-red-700"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setTaskForm({ ...taskForm, assignees: [...taskForm.assignees, ''] })}
-                  className="text-sm text-blue-600 hover:text-blue-700"
-                >
-                  + Add Assignee
-                </button>
-              </div>
             </div>
           </div>
           <div className="flex gap-2 justify-end mt-6">

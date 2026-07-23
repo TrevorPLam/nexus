@@ -5,12 +5,38 @@ import type { Project, Task, ProjectForm, TaskForm } from '../types';
 
 interface UseWorkStateProps {
   projects: Project[];
-  createProjectMutation: UseMutationResult<unknown, Error, { name: string; description?: string; color?: string }, unknown>;
-  updateProjectMutation: UseMutationResult<unknown, Error, { id: string; data: { name?: string; description?: string; color?: string } }, unknown>;
-  createTaskMutation: UseMutationResult<unknown, Error, { title: string; projectId?: string; description?: string; priority?: 'low' | 'medium' | 'high' | 'urgent'; dueDate?: string; estimatedDuration?: number; energyLevel?: 'low' | 'medium' | 'high' }, unknown>;
-  updateTaskMutation: UseMutationResult<unknown, Error, { id: string; data: Partial<Task> }, unknown>;
-  createDependencyMutation: UseMutationResult<unknown, Error, { taskId: string; dependsOnTaskId: string; type: string }, unknown>;
-  createAssigneeMutation: UseMutationResult<unknown, Error, { taskId: string; userId: string; isPrimary: boolean }, unknown>;
+  createProjectMutation: UseMutationResult<
+    unknown,
+    Error,
+    { name: string; description?: string; color?: string },
+    unknown
+  >;
+  updateProjectMutation: UseMutationResult<
+    unknown,
+    Error,
+    { id: string; data: { name?: string; description?: string; color?: string } },
+    unknown
+  >;
+  createTaskMutation: UseMutationResult<
+    unknown,
+    Error,
+    {
+      title: string;
+      projectId?: string;
+      description?: string;
+      priority?: 'low' | 'medium' | 'high' | 'urgent';
+      dueDate?: string;
+      estimatedDuration?: number;
+      energyLevel?: 'low' | 'medium' | 'high';
+    },
+    unknown
+  >;
+  updateTaskMutation: UseMutationResult<
+    unknown,
+    Error,
+    { id: string; data: Partial<Task> },
+    unknown
+  >;
 }
 
 export function useWorkState({
@@ -19,8 +45,6 @@ export function useWorkState({
   updateProjectMutation,
   createTaskMutation,
   updateTaskMutation,
-  createDependencyMutation,
-  createAssigneeMutation,
 }: UseWorkStateProps) {
   // Project state
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -48,8 +72,6 @@ export function useWorkState({
     energyLevel: 'medium',
     contextTags: '',
     isMilestone: false,
-    dependencies: [],
-    assignees: [],
   });
 
   // Populate project form when editing
@@ -87,8 +109,6 @@ export function useWorkState({
         energyLevel: editingTask.energyLevel || 'medium',
         contextTags: editingTask.contextTags || '',
         isMilestone: editingTask.isMilestone || false,
-        dependencies: [],
-        assignees: [],
       });
     } else if (showTaskModal) {
       setTaskForm({
@@ -104,8 +124,6 @@ export function useWorkState({
         energyLevel: 'medium',
         contextTags: '',
         isMilestone: false,
-        dependencies: [],
-        assignees: [],
       });
     }
   }, [editingTask, showTaskModal, projects]);
@@ -176,8 +194,6 @@ export function useWorkState({
       energyLevel: 'medium',
       contextTags: '',
       isMilestone: false,
-      dependencies: [],
-      assignees: [],
     });
   };
 
@@ -192,7 +208,9 @@ export function useWorkState({
       priority: taskForm.priority,
       dueDate: taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : undefined,
       dueTime: taskForm.dueTime || undefined,
-      estimatedDuration: taskForm.estimatedDuration ? parseInt(taskForm.estimatedDuration, 10) : undefined,
+      estimatedDuration: taskForm.estimatedDuration
+        ? parseInt(taskForm.estimatedDuration, 10)
+        : undefined,
       energyLevel: taskForm.energyLevel || undefined,
       contextTags: taskForm.contextTags || undefined,
       isMilestone: taskForm.isMilestone,
@@ -201,31 +219,7 @@ export function useWorkState({
     if (editingTask) {
       updateTaskMutation.mutate({ id: editingTask.id, data: data as Partial<Task> });
     } else {
-      const result = await createTaskMutation.mutateAsync(data) as { id: string } | undefined;
-      // Save dependencies if any
-      if (taskForm.dependencies.length > 0 && result?.id) {
-        for (const dep of taskForm.dependencies) {
-          if (dep.taskId) {
-            await createDependencyMutation.mutateAsync({
-              taskId: result.id,
-              dependsOnTaskId: dep.taskId,
-              type: dep.type,
-            });
-          }
-        }
-      }
-      // Save assignees if any
-      if (taskForm.assignees.length > 0 && result?.id) {
-        for (const assigneeId of taskForm.assignees) {
-          if (assigneeId) {
-            await createAssigneeMutation.mutateAsync({
-              taskId: result.id,
-              userId: assigneeId,
-              isPrimary: false,
-            });
-          }
-        }
-      }
+      await createTaskMutation.mutateAsync(data);
     }
   };
 

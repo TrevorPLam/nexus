@@ -119,9 +119,7 @@ export interface TaskForm {
   energyLevel: 'low' | 'medium' | 'high';
   contextTags: string;
   isMilestone: boolean;
-  dependencies: Array<{ taskId: string; type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish' }>;
-  assignees: string[];
 }
 
-export type WorkView = 'projects' | 'kanban' | 'list' | 'timeline' | 'workload';
+export type WorkView = 'projects' | 'kanban' | 'list' | 'timeline';
 export type TaskStatus = 'todo' | 'in_progress' | 'done' | 'cancelled';
