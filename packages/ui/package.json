@@ -18,7 +18,8 @@
   "dependencies": {
     "react": "^18.3.0",
     "react-native": "^0.76.0",
-    "tamagui": "^1.100.0"
+    "tamagui": "^1.100.0",
+    "@tamagui/core": "^1.100.0"
   },
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",

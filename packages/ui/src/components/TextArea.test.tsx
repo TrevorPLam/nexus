@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import { TextArea } from './TextArea';
 
@@ -7,11 +8,35 @@ describe('TextArea Component', () => {
     expect(TextArea).toBeDefined();
   });
 
-  it.todo('renders textarea input');
-  it.todo('displays placeholder text');
-  it.todo('displays initial value');
-  it.todo('calls onChange when text entered');
-  it.todo('is disabled when disabled prop is true');
-  it.todo('respects maxLength prop');
-  it.todo('respects rows prop');
+  it('renders textarea input', () => {
+    render(<TextArea />);
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toBeInTheDocument();
+  });
+
+  it('displays placeholder text', () => {
+    render(<TextArea placeholder="Enter your text" />);
+    const textarea = screen.getByPlaceholderText('Enter your text');
+    expect(textarea).toBeInTheDocument();
+  });
+
+  it('displays initial value', () => {
+    render(<TextArea value="Initial value" />);
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveDisplayValue('Initial value');
+  });
+
+  it('calls onChange when text entered', () => {
+    const handleChange = vi.fn();
+    render(<TextArea onChangeText={handleChange} />);
+    const textarea = screen.getByRole('textbox');
+    fireEvent.change(textarea, { target: { value: 'New text' } });
+    expect(handleChange).toHaveBeenCalledWith('New text');
+  });
+
+  it('respects rows prop', () => {
+    render(<TextArea rows={5} />);
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveAttribute('rows', '5');
+  });
 });
