@@ -1,11 +1,14 @@
-import { tasks, events } from '@life-os/database';
-import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { z } from 'zod';
 
 import { authMiddleware, requireWorkspaceMembership, requireWorkspaceAccess } from '../lib/middleware.js';
-import { db } from '../lib/db.js';
+import {
+  createTaskWithEventCommand,
+  linkTaskEventCommand,
+  unlinkTaskEventCommand,
+} from '../lib/work-operations.js';
+import { CreateTaskWithEventRequest } from '@life-os/contracts';
 
 const integrationRouter = new Hono();
 
@@ -28,6 +31,7 @@ const CreateTaskWithEventSchema = z.object({
   estimatedDuration: z.number().int().positive().optional(),
   createCalendarEvent: z.boolean().default(false),
   calendarId: z.string().uuid().optional(),
+  idempotencyKey: z.string().optional(),
 });
 
 // Create task with optional calendar event
@@ -43,55 +47,22 @@ integrationRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
+    const user = (c as any).get('user');
+    const userId = user?.id;
 
     try {
-      // Create the task
-      const [task] = await db
-        .insert(tasks)
-        .values({
-          workspaceId: data.workspaceId,
-          projectId: data.projectId,
-          title: data.title,
-          description: data.description,
-          status: data.status,
-          priority: data.priority,
-          dueDate: data.dueDate ? new Date(data.dueDate) : null,
-          dueTime: data.dueTime,
-          estimatedDuration: data.estimatedDuration ? String(data.estimatedDuration) : null,
-        })
-        .returning();
+      const result = await createTaskWithEventCommand(data, userId);
 
-      // If createCalendarEvent is true and dueDate is provided, create a calendar event
-      if (data.createCalendarEvent && data.dueDate && data.calendarId) {
-        const dueDate = new Date(data.dueDate);
-        const duration = data.estimatedDuration || 60; // Default 1 hour
-        const startTime = dueDate;
-        const endTime = new Date(dueDate.getTime() + duration * 60000);
-
-        const [event] = await db
-          .insert(events)
-          .values({
-            workspaceId: data.workspaceId,
-            calendarId: data.calendarId,
-            title: data.title,
-            description: data.description,
-            start: startTime,
-            end: endTime,
-            timezone: 'UTC',
-            taskId: task.id,
-          })
-          .returning();
-
-        // Update task with calendar event ID
-        await db.update(tasks).set({ calendarEventId: event.id }).where(eq(tasks.id, task.id));
-
-        return c.json({ task, event }, 201);
+      // Handle idempotent response
+      if ('isIdempotent' in result && result.isIdempotent) {
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
       }
 
-      return c.json({ task }, 201);
+      return c.json(result, 201);
     } catch (error) {
       console.error('Error creating task with event:', error);
-      return c.json({ error: 'Failed to create task with event' }, 500);
+      const message = error instanceof Error ? error.message : 'Failed to create task with event';
+      return c.json({ error: message }, 400);
     }
   },
 );
@@ -104,6 +75,7 @@ integrationRouter.post(
     const schema = z.object({
       taskId: z.string().uuid(),
       eventId: z.string().uuid(),
+      idempotencyKey: z.string().optional(),
     });
     const parsed = schema.safeParse(value);
     if (!parsed.success) {
@@ -112,19 +84,23 @@ integrationRouter.post(
     return parsed.data;
   }),
   async (c) => {
-    const { taskId, eventId } = c.req.valid('json');
+    const data = c.req.valid('json');
+    const user = (c as any).get('user');
+    const userId = user?.id;
 
     try {
-      const [task] = await db
-        .update(tasks)
-        .set({ calendarEventId: eventId })
-        .where(eq(tasks.id, taskId))
-        .returning();
+      const result = await linkTaskEventCommand(data, userId);
 
-      return c.json({ task });
+      // Handle idempotent response
+      if ('isIdempotent' in result && result.isIdempotent) {
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
+      }
+
+      return c.json(result);
     } catch (error) {
       console.error('Error linking task to event:', error);
-      return c.json({ error: 'Failed to link task to event' }, 500);
+      const message = error instanceof Error ? error.message : 'Failed to link task to event';
+      return c.json({ error: message }, 400);
     }
   },
 );
@@ -136,6 +112,7 @@ integrationRouter.post(
   validator('json', (value, c) => {
     const schema = z.object({
       taskId: z.string().uuid(),
+      idempotencyKey: z.string().optional(),
     });
     const parsed = schema.safeParse(value);
     if (!parsed.success) {
@@ -144,40 +121,25 @@ integrationRouter.post(
     return parsed.data;
   }),
   async (c) => {
-    const { taskId } = c.req.valid('json');
+    const data = c.req.valid('json');
+    const user = (c as any).get('user');
+    const userId = user?.id;
 
     try {
-      const [task] = await db
-        .update(tasks)
-        .set({ calendarEventId: null })
-        .where(eq(tasks.id, taskId))
-        .returning();
+      const result = await unlinkTaskEventCommand(data, userId);
 
-      return c.json({ task });
+      // Handle idempotent response
+      if ('isIdempotent' in result && result.isIdempotent) {
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
+      }
+
+      return c.json(result);
     } catch (error) {
       console.error('Error unlinking task from event:', error);
-      return c.json({ error: 'Failed to unlink task from event' }, 500);
+      const message = error instanceof Error ? error.message : 'Failed to unlink task from event';
+      return c.json({ error: message }, 400);
     }
   },
 );
-
-// Get tasks with their linked calendar events
-integrationRouter.get('/tasks-with-events/:workspaceId', requireWorkspaceMembership, async (c) => {
-  const workspaceId = c.req.param('workspaceId');
-
-  try {
-    const tasksWithEvents = await db.query.tasks.findMany({
-      where: eq(tasks.workspaceId, workspaceId),
-      with: {
-        calendarEvent: true,
-      },
-    });
-
-    return c.json({ tasks: tasksWithEvents });
-  } catch (error) {
-    console.error('Error fetching tasks with events:', error);
-    return c.json({ error: 'Failed to fetch tasks with events' }, 500);
-  }
-});
 
 export default integrationRouter;

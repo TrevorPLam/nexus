@@ -8,11 +8,14 @@ import {
   taskComments,
   taskAttachments,
   timeEntries,
+  events,
+  calendars,
 } from '@life-os/database';
 import { eq, and, desc, asc, sql, gt, inArray } from 'drizzle-orm';
 
 import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
+import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
 // Transaction wrapper for complex operations
 export async function withTransaction<T>(
@@ -861,5 +864,328 @@ export async function cloneTaskWithDependencies(
     }
 
     return newTask;
+  });
+}
+
+// Integration Command: Create task with optional calendar event
+export async function createTaskWithEventCommand(
+  data: {
+    workspaceId: string;
+    projectId?: string;
+    title: string;
+    description?: string;
+    status: string;
+    priority: string;
+    dueDate?: string;
+    dueTime?: string;
+    estimatedDuration?: number;
+    createCalendarEvent: boolean;
+    calendarId?: string;
+    idempotencyKey?: string;
+  },
+  userId?: string,
+) {
+  const endpoint = 'POST /tasks-with-event';
+
+  // Check idempotency if key provided
+  if (data.idempotencyKey && userId) {
+    const idempotencyCheck = await checkIdempotencyKey(data.idempotencyKey, userId, endpoint);
+    if (idempotencyCheck.isDuplicate) {
+      return {
+        isIdempotent: true,
+        responseStatus: idempotencyCheck.responseStatus,
+        responseBody: idempotencyCheck.responseBody,
+      };
+    }
+  }
+
+  return withTransaction(async (tx) => {
+    // Verify project belongs to workspace if provided
+    if (data.projectId) {
+      const [project] = await tx
+        .select()
+        .from(projects)
+        .where(and(eq(projects.id, data.projectId), eq(projects.workspaceId, data.workspaceId)))
+        .limit(1);
+
+      if (!project) {
+        throw new Error('Project not found or does not belong to workspace');
+      }
+    }
+
+    // Verify calendar belongs to workspace if creating event
+    if (data.createCalendarEvent && data.calendarId) {
+      const [calendar] = await tx
+        .select()
+        .from(calendars)
+        .where(and(eq(calendars.id, data.calendarId), eq(calendars.workspaceId, data.workspaceId)))
+        .limit(1);
+
+      if (!calendar) {
+        throw new Error('Calendar not found or does not belong to workspace');
+      }
+    }
+
+    // Create task
+    const [task] = await tx
+      .insert(tasks)
+      .values({
+        workspaceId: data.workspaceId,
+        projectId: data.projectId,
+        title: data.title,
+        description: data.description,
+        status: data.status,
+        priority: data.priority,
+        dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        dueTime: data.dueTime,
+        estimatedDuration: data.estimatedDuration ? String(data.estimatedDuration) : null,
+      })
+      .returning();
+
+    if (!task) {
+      throw new Error('Failed to create task');
+    }
+
+    let event = null;
+
+    // Create calendar event if requested
+    if (data.createCalendarEvent && data.dueDate && data.calendarId) {
+      const dueDate = new Date(data.dueDate);
+      const duration = data.estimatedDuration || 60;
+      const startTime = dueDate;
+      const endTime = new Date(dueDate.getTime() + duration * 60000);
+
+      const [createdEvent] = await tx
+        .insert(events)
+        .values({
+          workspaceId: data.workspaceId,
+          calendarId: data.calendarId,
+          title: data.title,
+          description: data.description,
+          start: startTime,
+          end: endTime,
+          timezone: 'UTC',
+          taskId: task.id,
+        })
+        .returning();
+
+      if (!createdEvent) {
+        throw new Error('Failed to create event');
+      }
+
+      // Update task with calendar event ID
+      await tx
+        .update(tasks)
+        .set({ calendarEventId: createdEvent.id })
+        .where(eq(tasks.id, task.id));
+
+      event = createdEvent;
+    }
+
+    // Create audit log
+    if (userId) {
+      await createAuditLog({
+        userId,
+        workspaceId: data.workspaceId,
+        action: 'create',
+        entityType: 'task_with_event',
+        entityId: task.id,
+        changes: { new: data },
+      });
+    }
+
+    // Create outbox event
+    await createOutboxEvent({
+      eventType: 'task_with_event.created',
+      aggregateType: 'task',
+      aggregateId: task.id,
+      payload: { task, event },
+    });
+
+    // Store idempotency key if provided
+    const responseBody = { task, event };
+    if (data.idempotencyKey && userId) {
+      await createIdempotencyKey({
+        key: data.idempotencyKey,
+        userId,
+        endpoint,
+        responseStatus: '201',
+        responseBody,
+      });
+    }
+
+    return responseBody;
+  });
+}
+
+// Integration Command: Link task to calendar event
+export async function linkTaskEventCommand(
+  data: { taskId: string; eventId: string; idempotencyKey?: string },
+  userId?: string,
+) {
+  const endpoint = 'POST /link-task-event';
+
+  // Check idempotency if key provided
+  if (data.idempotencyKey && userId) {
+    const idempotencyCheck = await checkIdempotencyKey(data.idempotencyKey, userId, endpoint);
+    if (idempotencyCheck.isDuplicate) {
+      return {
+        isIdempotent: true,
+        responseStatus: idempotencyCheck.responseStatus,
+        responseBody: idempotencyCheck.responseBody,
+      };
+    }
+  }
+
+  return withTransaction(async (tx) => {
+    // Fetch task and event to verify workspace ownership
+    const [task] = await tx.select().from(tasks).where(eq(tasks.id, data.taskId)).limit(1);
+    const [event] = await tx.select().from(events).where(eq(events.id, data.eventId)).limit(1);
+
+    if (!task || !event) {
+      throw new Error('Task or event not found');
+    }
+
+    // Verify both belong to same workspace
+    if (task.workspaceId !== event.workspaceId) {
+      throw new Error('Task and event must belong to the same workspace');
+    }
+
+    // Link event to task
+    const [updatedEvent] = await tx
+      .update(events)
+      .set({ taskId: data.taskId, updatedAt: new Date() })
+      .where(eq(events.id, data.eventId))
+      .returning();
+
+    if (!updatedEvent) {
+      throw new Error('Failed to link event to task');
+    }
+
+    // Update task with calendar event ID
+    const [updatedTask] = await tx
+      .update(tasks)
+      .set({ calendarEventId: data.eventId, updatedAt: new Date() })
+      .where(eq(tasks.id, data.taskId))
+      .returning();
+
+    if (!updatedTask) {
+      throw new Error('Failed to update task');
+    }
+
+    // Create audit log
+    if (userId) {
+      await createAuditLog({
+        userId,
+        workspaceId: task.workspaceId,
+        action: 'update',
+        entityType: 'task_event_link',
+        entityId: data.taskId,
+        changes: { new: { eventId: data.eventId } },
+      });
+    }
+
+    // Create outbox event
+    await createOutboxEvent({
+      eventType: 'task_event.linked',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { task: updatedTask, event: updatedEvent },
+    });
+
+    // Store idempotency key if provided
+    const responseBody = { task: updatedTask };
+    if (data.idempotencyKey && userId) {
+      await createIdempotencyKey({
+        key: data.idempotencyKey,
+        userId,
+        endpoint,
+        responseStatus: '200',
+        responseBody,
+      });
+    }
+
+    return responseBody;
+  });
+}
+
+// Integration Command: Unlink task from calendar event
+export async function unlinkTaskEventCommand(
+  data: { taskId: string; idempotencyKey?: string },
+  userId?: string,
+) {
+  const endpoint = 'POST /unlink-task-event';
+
+  // Check idempotency if key provided
+  if (data.idempotencyKey && userId) {
+    const idempotencyCheck = await checkIdempotencyKey(data.idempotencyKey, userId, endpoint);
+    if (idempotencyCheck.isDuplicate) {
+      return {
+        isIdempotent: true,
+        responseStatus: idempotencyCheck.responseStatus,
+        responseBody: idempotencyCheck.responseBody,
+      };
+    }
+  }
+
+  return withTransaction(async (tx) => {
+    // Fetch task to get workspace and current event
+    const [task] = await tx.select().from(tasks).where(eq(tasks.id, data.taskId)).limit(1);
+
+    if (!task) {
+      throw new Error('Task not found');
+    }
+
+    const eventId = task.calendarEventId;
+
+    // Unlink event from task
+    if (eventId) {
+      await tx.update(events).set({ taskId: null, updatedAt: new Date() }).where(eq(events.id, eventId));
+    }
+
+    // Update task to remove calendar event ID
+    const [updatedTask] = await tx
+      .update(tasks)
+      .set({ calendarEventId: null, updatedAt: new Date() })
+      .where(eq(tasks.id, data.taskId))
+      .returning();
+
+    if (!updatedTask) {
+      throw new Error('Failed to update task');
+    }
+
+    // Create audit log
+    if (userId) {
+      await createAuditLog({
+        userId,
+        workspaceId: task.workspaceId,
+        action: 'update',
+        entityType: 'task_event_link',
+        entityId: data.taskId,
+        changes: { old: { eventId }, new: { eventId: null } },
+      });
+    }
+
+    // Create outbox event
+    await createOutboxEvent({
+      eventType: 'task_event.unlinked',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { task: updatedTask },
+    });
+
+    // Store idempotency key if provided
+    const responseBody = { task: updatedTask };
+    if (data.idempotencyKey && userId) {
+      await createIdempotencyKey({
+        key: data.idempotencyKey,
+        userId,
+        endpoint,
+        responseStatus: '200',
+        responseBody,
+      });
+    }
+
+    return responseBody;
   });
 }

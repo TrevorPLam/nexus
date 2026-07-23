@@ -145,8 +145,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-004: Establish one authenticated workspace authorization pipeline
 
-- [ ] **Task ID**: T-004
-- **Status**: `blocked`
+- [x] **Task ID**: T-004
+- **Status**: `done`
 - **Related files**: `apps/api/src/lib/middleware.ts`, `apps/api/src/lib/middleware.test.ts`, `apps/api/src/routes/work/*.ts`, `apps/api/src/routes/calendar/*.ts`, `apps/api/src/routes/integration.ts`
 - **Definition of Done**:
   - Every protected Work and Calendar read or mutation executes authentication followed by workspace membership authorization.
@@ -163,18 +163,54 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-004-1** | `AGENT` | `apps/api/src/routes` | Inventory every Work, Calendar, and integration route and classify it as authenticated-private, workspace-private, entity-private, or public.
-- [ ] **T-004-2** | `AGENT` | `apps/api/src/lib/middleware.ts` | Research Hono middleware composition and define one reusable authorization API for route and operation layers.
-- [ ] **T-004-3** | `AGENT` | `apps/api/src/routes` | Update the route inventory in this task if any endpoint is discovered outside the current route directories.
+- [x] **T-004-1** | `AGENT` | `apps/api/src/routes` | Inventory every Work, Calendar, and integration route and classify it as authenticated-private, workspace-private, entity-private, or public.
+- [x] **T-004-2** | `AGENT` | `apps/api/src/lib/middleware.ts` | Research Hono middleware composition and define one reusable authorization API for route and operation layers.
+- [x] **T-004-3** | `AGENT` | `apps/api/src/routes` | Update the route inventory in this task if any endpoint is discovered outside the current route directories.
+
+**Route Inventory Findings:**
+
+**Missing Authentication (Critical):**
+- integration.ts: All 4 routes have no auth middleware (POST /tasks-with-event, POST /link-task-event, POST /unlink-task-event, GET /tasks-with-events/:workspaceId)
+
+**Missing Workspace Membership (Authenticated but not workspace-scoped):**
+- tasks.ts: POST /tasks, GET /tasks/:id (entity-private)
+- projects.ts: GET /workspaces (user's workspaces), POST /projects, GET /projects/:id (entity-private)
+- batch-operations.ts: All 4 batch routes
+- events.ts: POST /events, GET /events/:id (entity-private), GET /calendars/:calendarId/events, PUT /events/:id (entity-private)
+- calendars.ts: POST /calendars, GET /calendars/:id (entity-private)
+- scheduling-links.ts: POST /scheduling-links, GET /scheduling-links/:id (entity-private), GET /scheduling-links/slug/:slug (public by slug), GET /users/:userId/scheduling-links, PUT /scheduling-links/:id (entity-private), DELETE /scheduling-links/:id (entity-private)
+- attendees.ts: All 4 routes
+- recurring.ts: Both routes
+
+**Correctly Protected (Workspace-scoped):**
+- tasks.ts: GET /workspaces/:workspaceId/tasks, GET /projects/:projectId/tasks, PUT /tasks/:id, DELETE /tasks/:id, GET /tasks/:taskId/subtasks
+- projects.ts: GET /workspaces/:workspaceId/projects, PUT /projects/:id, DELETE /projects/:id
+- task-dependencies.ts: All 3 routes
+- task-comments.ts: All 5 routes
+- task-assignees.ts: All 3 routes
+- task-attachments.ts: All 4 routes
+- task-notes.ts: All 5 routes
+- time-entries.ts: All 5 routes
+- events.ts: GET /workspaces/:workspaceId/events, DELETE /events/:id, GET /tasks/:taskId/events, POST /events/:eventId/link-task, POST /events/:eventId/unlink-task
+- calendars.ts: GET /workspaces/:workspaceId/calendars, PUT /calendars/:id, DELETE /calendars/:id
+- scheduling-links.ts: GET /workspaces/:workspaceId/scheduling-links
+
+**Public (Correctly No Auth):**
+- scheduling-links.ts: POST /scheduling-links/availability, POST /scheduling-links/book
+
+**Authorization Strategy:**
+1. Create `requireEntityAccess` middleware that derives workspace from entity and checks membership
+2. Create `requireWorkspaceAccess` helper for routes that accept workspaceId in body/query
+3. Fix integration.ts routes with full auth + workspace membership or remove them
 
 ### Subtasks
 
-- [ ] **T-004-4** | `AGENT` | `apps/api/src/lib/middleware.test.ts` | Write failing tests for missing auth, missing membership, same-workspace access, and cross-workspace denial.
-- [ ] **T-004-5** | `AGENT` | `apps/api/src/lib/middleware.ts` | Implement the reusable authorization helpers and consistent typed errors.
-- [ ] **T-004-6** | `AGENT` | `apps/api/src/routes/work/*.ts` | Apply the pipeline to Work entity, child-resource, and batch routes.
-- [ ] **T-004-7** | `AGENT` | `apps/api/src/routes/calendar/*.ts` | Apply the pipeline to Calendar entity, attendee, recurring, and scheduling-link private routes.
-- [ ] **T-004-8** | `AGENT` | `apps/api/src/routes/integration.ts` | Apply the pipeline or remove the route in favor of a canonical command implementation.
-- [ ] **T-004-9** | `AGENT` | `apps/api/src/lib/middleware.test.ts` | Run focused authorization tests and add an IDOR regression fixture for each resource family.
+- [x] **T-004-4** | `AGENT` | `apps/api/src/lib/middleware.test.ts` | Write failing tests for missing auth, missing membership, same-workspace access, and cross-workspace denial.
+- [x] **T-004-5** | `AGENT` | `apps/api/src/lib/middleware.ts` | Implement the reusable authorization helpers and consistent typed errors.
+- [x] **T-004-6** | `AGENT` | `apps/api/src/routes/work/*.ts` | Apply the pipeline to Work entity, child-resource, and batch routes.
+- [x] **T-004-7** | `AGENT` | `apps/api/src/routes/calendar/*.ts` | Apply the pipeline to Calendar entity, attendee, recurring, and scheduling-link private routes.
+- [x] **T-004-8** | `AGENT` | `apps/api/src/routes/integration.ts` | Apply the pipeline or remove the route in favor of a canonical command implementation.
+- [x] **T-004-9** | `AGENT` | `apps/api/src/lib/middleware.test.ts` | Run focused authorization tests and add an IDOR regression fixture for each resource family.
 
 ### Validation Commands
 
@@ -186,7 +222,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-005: Secure and transactionally replace task-event integration commands
 
 - [ ] **Task ID**: T-005
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/api/src/routes/integration.ts`, `apps/api/src/routes/integration.test.ts`, `apps/api/src/lib/work-operations.ts`, `apps/api/src/lib/calendar-operations.ts`, `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts`
 - **Definition of Done**:
   - Task creation with an optional event is a single authenticated workspace-scoped transaction.
@@ -203,17 +239,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-005-1** | `AGENT` | `apps/api/src/routes/integration.ts` | Read route tests, database relationships, audit/outbox helpers, and existing transaction wrappers.
-- [ ] **T-005-2** | `AGENT` | `apps/api/src/routes/integration.ts` | Research transaction-scoped Drizzle usage and idempotent command response design.
-- [ ] **T-005-3** | `AGENT` | `apps/api/src/routes/integration.ts` | Decide whether to retain the endpoint as a versioned command or remove it and document the replacement.
+- [x] **T-005-1** | `AGENT` | `apps/api/src/routes/integration.ts` | Read route tests, database relationships, audit/outbox helpers, and existing transaction wrappers.
+- [x] **T-005-2** | `AGENT` | `apps/api/src/routes/integration.ts` | Research transaction-scoped Drizzle usage and idempotent command response design.
+- [x] **T-005-3** | `AGENT` | `apps/api/src/routes/integration.ts` | Decide whether to retain the endpoint as a versioned command or remove it and document the replacement.
 
 ### Subtasks
 
-- [ ] **T-005-4** | `AGENT` | `apps/api/src/routes/integration.test.ts` | Write failing tests for unauthorized access, cross-workspace references, rollback, and idempotent replay.
-- [ ] **T-005-5** | `AGENT` | `packages/contracts/src/work.ts` | Add or refine the integration command request and response schemas.
-- [ ] **T-005-6** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Implement the transaction-scoped command with workspace checks and atomic audit/outbox behavior.
-- [ ] **T-005-7** | `AGENT` | `apps/api/src/routes/integration.ts` | Make the route validate and delegate only to the command handler.
-- [ ] **T-005-8** | `AGENT` | `apps/api/src/routes/integration.test.ts` | Run focused tests and verify no route-layer database writes remain.
+- [x] **T-005-4** | `AGENT` | `apps/api/src/routes/integration.test.ts` | Write failing tests for unauthorized access, cross-workspace references, rollback, and idempotent replay.
+- [x] **T-005-5** | `AGENT` | `packages/contracts/src/work.ts` | Add or refine the integration command request and response schemas.
+- [x] **T-005-6** | `AGENT` | `apps/api/src/lib/work-operations.ts` | Implement the transaction-scoped command with workspace checks and atomic audit/outbox behavior.
+- [x] **T-005-7** | `AGENT` | `apps/api/src/routes/integration.ts` | Make the route validate and delegate only to the command handler.
+- [x] **T-005-8** | `AGENT` | `apps/api/src/routes/integration.test.ts` | Run focused tests and verify no route-layer database writes remain.
 
 ### Validation Commands
 
@@ -225,7 +261,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-006: Make API contracts typed and response-validated
 
 - [ ] **Task ID**: T-006
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `packages/contracts/src/work.ts`, `packages/contracts/src/calendar.ts`, `packages/contracts/src/common.ts`, `packages/api-client/src/index.ts`, `packages/api-client/src/index.test.ts`
 - **Definition of Done**:
   - API-client request parameters use exported contract input types instead of `unknown`.
@@ -267,7 +303,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-007: Enforce membership-based RLS for Work and Calendar
 
 - [ ] **Task ID**: T-007
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `supabase/migrations/0001_work_rls_policies.sql`, `supabase/migrations/0008_calendar_rls_policies.sql`, `packages/database/src/schema/core.ts`, `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts`, `apps/api/src/lib/middleware.ts`
 - **Definition of Done**:
   - RLS policies resolve access from authenticated identity and workspace membership, not only a mutable workspace setting.
@@ -306,7 +342,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-008: Add relational and workspace consistency constraints
 
 - [ ] **Task ID**: T-008
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `packages/database/src/schema/work.ts`, `packages/database/src/schema/calendar.ts`, `supabase/migrations`, `packages/database/drizzle.config.ts`
 - **Definition of Done**:
   - Task parent, comment parent, task-event, and event-task relationships have explicit foreign-key behavior where supported.
@@ -345,7 +381,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-009: Centralize atomic Work and Calendar commands
 
 - [ ] **Task ID**: T-009
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/api/src/lib/work-operations.ts`, `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/audit.ts`, `apps/api/src/lib/idempotency.ts`, `apps/api/src/routes/work`, `apps/api/src/routes/calendar`
 - **Definition of Done**:
   - Canonical command handlers own transaction boundaries, authorization context, audit records, outbox records, and idempotency behavior.
@@ -386,7 +422,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-010: Correct Work lifecycle, soft deletion, and pagination
 
 - [ ] **Task ID**: T-010
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/api/src/lib/work-operations.ts`, `apps/api/src/routes/work/projects.ts`, `apps/api/src/routes/work/tasks.ts`, `packages/contracts/src/work.ts`, `apps/api/src/lib/work-operations.test.ts`
 - **Definition of Done**:
   - Normal Project queries exclude deleted projects unless an explicit administrative filter requests them.
@@ -426,7 +462,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-011: Correct Calendar recurrence, availability, and booking invariants
 
 - [ ] **Task ID**: T-011
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/api/src/lib/calendar-operations.ts`, `apps/api/src/lib/recurrence.ts`, `apps/api/src/lib/availability.ts`, `apps/api/src/routes/calendar/scheduling-links.ts`, `apps/api/src/routes/calendar/recurring.ts`, `packages/contracts/src/calendar.ts`, `apps/api/src/lib/calendar-operations.test.ts`
 - **Definition of Done**:
   - Event overlap detection uses one correct interval predicate.
@@ -467,7 +503,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-012: Wire Work filters and typed mutation state in the web application
 
 - [ ] **Task ID**: T-012
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/web/src/hooks/useWorkTasks.ts`, `apps/web/src/hooks/useWorkProjects.ts`, `apps/web/src/app/work/hooks/useWorkState.ts`, `apps/web/src/app/work/page.tsx`, `apps/web/src/app/work/page.test.tsx`, `packages/api-client/src/index.ts`
 - **Definition of Done**:
   - Project and priority filters passed to `useWorkTasks` are sent to the API and reflected in query keys.
@@ -506,7 +542,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-013: Complete the core Work web user journey
 
 - [ ] **Task ID**: T-013
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/web/src/app/work/page.tsx`, `apps/web/src/app/work/components/ProjectsView.tsx`, `apps/web/src/app/work/components/KanbanView.tsx`, `apps/web/src/app/work/components/ListView.tsx`, `apps/web/src/app/work/components/TaskModal.tsx`, `apps/web/src/app/work/components/ProjectModal.tsx`, `apps/web/src/app/work/components/WorkloadView.tsx`
 - **Definition of Done**:
   - The user can create, edit, archive/delete according to lifecycle rules, filter, open, and update a Project and Task through the canonical API.
@@ -546,7 +582,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-014: Complete the core Calendar web user journey
 
 - [ ] **Task ID**: T-014
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/web/src/app/calendar/page.tsx`, `apps/web/src/hooks/useCalendarData.ts`, `apps/web/src/hooks/useEventDetails.ts`, `apps/web/src/app/calendar/hooks`, `apps/web/src/app/calendar/components`, `apps/web/src/app/calendar/page.test.tsx`
 - **Definition of Done**:
   - The user can create, edit, delete, and inspect calendars/events with server-backed state.
@@ -585,7 +621,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-015: Implement mobile Work with PowerSync reads and typed commands
 
 - [ ] **Task ID**: T-015
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/mobile/app/work/index.tsx`, `apps/mobile/app/work/index.test.tsx`, `packages/mobile-data/src/schema.ts`, `packages/mobile-data/src`, `packages/api-client/src/index.ts`, `apps/mobile/powersync`
 - **Definition of Done**:
   - Mobile Work reads workspace-scoped Projects and Tasks from PowerSync.
@@ -624,7 +660,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-016: Complete mobile Calendar reads, mutations, and scheduling scope
 
 - [ ] **Task ID**: T-016
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/mobile/app/calendar/index.tsx`, `apps/mobile/app/calendar/index.test.tsx`, `packages/mobile-data/src/schema.ts`, `apps/mobile/powersync`, `packages/api-client/src/index.ts`
 - **Definition of Done**:
   - Calendar and Event reads are workspace-scoped and support a bounded date range.
@@ -663,7 +699,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-017: Add integration, security, and behavior regression coverage
 
 - [ ] **Task ID**: T-017
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `apps/api/src`, `packages/contracts/test`, `apps/web/src/app/work`, `apps/web/src/app/calendar`, `apps/mobile/app`, `supabase/migrations`, `tests`
 - **Definition of Done**:
   - Work and Calendar have real PostgreSQL/RLS tests for two users and two workspaces.
@@ -706,7 +742,7 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 ## T-018: Align module quality gates, OpenAPI, and repository documentation
 
 - [ ] **Task ID**: T-018
-- **Status**: `blocked`
+- **Status**: `ready`
 - **Related files**: `eslint.config.mjs`, `turbo.json`, `apps/api/src/index.ts`, `apps/api/src/routes`, `packages/contracts`, `packages/api-client`, `README.md`, `PROJECT.md`, `AGENTS.md`
 - **Definition of Done**:
   - Work and Calendar routes expose validated, versioned OpenAPI definitions or have a documented, approved reason for exclusion.

@@ -209,3 +209,60 @@ export const TimeEntryResponse = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+// Integration command schemas
+export const CreateTaskWithEventRequest = z.object({
+  workspaceId: z.string().uuid(),
+  projectId: z.string().uuid().optional(),
+  title: z.string().min(1).max(500),
+  description: z.string().max(5000).optional(),
+  status: TaskStatus.default('todo'),
+  priority: TaskPriority.default('medium'),
+  dueDate: z.string().datetime().optional(),
+  dueTime: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional(),
+  estimatedDuration: z.number().int().positive().optional(),
+  createCalendarEvent: z.boolean().default(false),
+  calendarId: z.string().uuid().optional(),
+  idempotencyKey: z.string().optional(),
+});
+
+export const CreateTaskWithEventResponse = z.object({
+  task: TaskResponse,
+  event: z
+    .object({
+      id: z.string().uuid(),
+      workspaceId: z.string().uuid(),
+      calendarId: z.string().uuid(),
+      title: z.string(),
+      description: z.string().nullable(),
+      start: z.date(),
+      end: z.date(),
+      timezone: z.string(),
+      taskId: z.string().uuid(),
+      createdAt: z.date(),
+      updatedAt: z.date(),
+    })
+    .optional(),
+});
+
+export const LinkTaskEventRequest = z.object({
+  taskId: z.string().uuid(),
+  eventId: z.string().uuid(),
+  idempotencyKey: z.string().optional(),
+});
+
+export const LinkTaskEventResponse = z.object({
+  task: TaskResponse,
+});
+
+export const UnlinkTaskEventRequest = z.object({
+  taskId: z.string().uuid(),
+  idempotencyKey: z.string().optional(),
+});
+
+export const UnlinkTaskEventResponse = z.object({
+  task: TaskResponse,
+});
