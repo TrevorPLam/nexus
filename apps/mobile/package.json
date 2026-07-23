@@ -16,6 +16,7 @@
     "@life-os/contracts": "workspace:*",
     "@life-os/mobile-data": "workspace:*",
     "@life-os/ui": "workspace:*",
+    "@op-engineering/op-sqlite": "catalog:",
     "@powersync/common": "^1.57.2",
     "@powersync/react-native": "^1.35.9",
     "@supabase/supabase-js": "^2.45.0",
