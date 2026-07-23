@@ -1087,8 +1087,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-024: Implement web hook tests - useTaskFilters
 
-- [ ] TASK-024
-- Status: ready
+- [x] TASK-024
+- Status: done
 - Related Files: `apps/web/src/hooks/useTaskFilters.test.ts`, `apps/web/src/hooks/useTaskFilters.ts`
 - Definition of Done: All 3 test placeholders implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
@@ -1104,23 +1104,23 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-024-001 | AGENT | `apps/web/src/hooks/useTaskFilters.ts`
+- [x] TASK-024-001 | AGENT | `apps/web/src/hooks/useTaskFilters.ts`
   Read useTaskFilters hook to understand functionality and return values.
 
-- [ ] TASK-024-002 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
+- [x] TASK-024-002 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
   Implement test: manages filter state
 
-- [ ] TASK-024-003 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
+- [x] TASK-024-003 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
   Implement test: resets filters to default
 
-- [ ] TASK-024-004 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
+- [x] TASK-024-004 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
   Implement test: applies multiple filters
 
-- [ ] TASK-024-005 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
-  Run useTaskFilters tests: `pnpm --filter @life-os/web test -- useTaskFilters`
+- [x] TASK-024-005 | AGENT | `apps/web/src/hooks/useTaskFilters.test.ts`
+  Run useTaskFilters tests: `pnpm --filter @life-os/web test -- useTaskFilters` - 4/4 tests passed
 
-- [ ] TASK-024-006 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-024-006 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
@@ -1129,13 +1129,12 @@ Generated from codebase TODO assessment on 2026-07-23
 - [ ] TASK-025
 - Status: ready
 - Related Files: `apps/web/src/hooks/useTaskHelpers.test.ts`, `apps/web/src/hooks/useTaskHelpers.ts`
-- Definition of Done: All 4 test placeholders implemented, tests pass
+- Definition of Done: All 3 utility function tests implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
 - Rules to Follow:
-  - Use Testing Library for hooks
-  - Test utility functions
-  - Test edge cases (null values, invalid dates)
-- Advanced Coding Pattern: Hook testing with React Testing Library
+  - Test utility functions (getPriorityColor, getTimelineDays, getTaskPosition)
+  - Test edge cases (null values, invalid dates, unknown priorities)
+- Advanced Coding Pattern: Utility function testing with Vitest
 - Anti-Patterns: Testing implementation details, missing edge cases
 - Imports/Exports: None
 - Depends On: None
@@ -1144,24 +1143,30 @@ Generated from codebase TODO assessment on 2026-07-23
 ### Subtasks
 
 - [ ] TASK-025-001 | AGENT | `apps/web/src/hooks/useTaskHelpers.ts`
-  Read useTaskHelpers hook to understand functionality and return values.
+  Read useTaskHelpers utility functions to understand functionality and return values.
 
 - [ ] TASK-025-002 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
-  Implement test: formats task due date
+  Implement test: getPriorityColor returns correct color for each priority level
 
 - [ ] TASK-025-003 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
-  Implement test: calculates task completion percentage
+  Implement test: getPriorityColor returns gray for unknown priority
 
 - [ ] TASK-025-004 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
-  Implement test: determines task urgency level
+  Implement test: getTimelineDays returns 14 days starting from Sunday
 
 - [ ] TASK-025-005 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
-  Implement test: formats task duration
+  Implement test: getTaskPosition returns null for task without due date
 
 - [ ] TASK-025-006 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+  Implement test: getTaskPosition returns null for task outside timeline range
+
+- [ ] TASK-025-007 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
+  Implement test: getTaskPosition calculates correct position and width
+
+- [ ] TASK-025-008 | AGENT | `apps/web/src/hooks/useTaskHelpers.test.ts`
   Run useTaskHelpers tests: `pnpm --filter @life-os/web test -- useTaskHelpers`
 
-- [ ] TASK-025-007 | AGENT | `apps/web/src/hooks/`
+- [ ] TASK-025-009 | AGENT | `apps/web/src/hooks/`
   Run type checking: `pnpm --filter @life-os/web typecheck`
 
 ---
