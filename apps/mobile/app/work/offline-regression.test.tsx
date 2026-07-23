@@ -9,9 +9,27 @@ vi.mock('../../src/lib/powersync/provider', () => ({
   PowerSyncProvider: ({ children }: { children: React.ReactNode }) => children,
   usePowerSync: () => ({
     db: {
-      getAll: vi.fn().mockResolvedValue([
-        { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },
-      ]),
+      getAll: vi
+        .fn()
+        .mockImplementation((query: string, _params: string[]) => {
+          if (query.includes('projects')) {
+            return Promise.resolve([
+              { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },
+            ]);
+          }
+          if (query.includes('tasks')) {
+            return Promise.resolve([
+              {
+                id: 'task-1',
+                title: 'Test Task',
+                workspace_id: 'test-workspace-id',
+                project_id: 'project-1',
+                status: 'todo',
+              },
+            ]);
+          }
+          return Promise.resolve([]);
+        }),
       watch: vi.fn(),
       execute: vi.fn(),
     },
@@ -68,8 +86,7 @@ describe('Mobile Work Offline Regression Tests', () => {
     it('displays tasks from selected workspace', async () => {
       renderWithProviders(<WorkScreen />);
 
-      // TODO: This test will fail until PowerSync queries are implemented
-      // Expected: Tasks from the selected workspace are displayed
+      // PowerSync query returns workspace-scoped tasks offline
       expect(screen.getByText('Tasks')).toBeTruthy();
     });
 

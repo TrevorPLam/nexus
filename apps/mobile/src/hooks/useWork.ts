@@ -77,9 +77,6 @@ export function useTasks(projectId?: string) {
   const { db } = usePowerSync();
   const { selectedWorkspace } = useAuth();
 
-  // db is ready for PowerSync query implementation
-  void db;
-
   return useQuery({
     queryKey: ['tasks', selectedWorkspace?.id, projectId],
     queryFn: async () => {
@@ -87,10 +84,16 @@ export function useTasks(projectId?: string) {
         return [];
       }
 
-      // TODO: Implement PowerSync query for workspace-scoped tasks
-      // This will use db.getAll() or db.watch() from PowerSync
-      // For now, return empty array as placeholder
-      return [] as TaskRecord[];
+      // Query tasks filtered by workspace_id and optionally by project_id
+      // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+      const result = await db.getAll(
+        projectId
+          ? 'SELECT * FROM tasks WHERE workspace_id = ? AND project_id = ? ORDER BY created_at DESC'
+          : 'SELECT * FROM tasks WHERE workspace_id = ? ORDER BY created_at DESC',
+        projectId ? [selectedWorkspace.id, projectId] : [selectedWorkspace.id],
+      );
+
+      return result as TaskRecord[];
     },
     enabled: !!selectedWorkspace,
   });
