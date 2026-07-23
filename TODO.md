@@ -1036,9 +1036,9 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-023: Implement web hook tests - useEventDetails
 
-- [ ] TASK-023
-- Status: ready
-- Related Files: `apps/web/src/hooks/useEventDetails.test.ts`, `apps/web/src/hooks/useEventDetails.ts`
+- [x] TASK-023
+- Status: done
+- Related Files: `apps/web/src/hooks/useEventDetails.test.tsx`, `apps/web/src/hooks/useEventDetails.ts`
 - Definition of Done: All 7 test placeholders implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
 - Rules to Follow:
@@ -1053,35 +1053,35 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-023-001 | AGENT | `apps/web/src/hooks/useEventDetails.ts`
+- [x] TASK-023-001 | AGENT | `apps/web/src/hooks/useEventDetails.ts`
   Read useEventDetails hook to understand functionality and return values.
 
-- [ ] TASK-023-002 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-002 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: fetches event attendees when event selected
 
-- [ ] TASK-023-003 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-003 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: creates event attendee and invalidates query
 
-- [ ] TASK-023-004 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-004 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: deletes event attendee and invalidates query
 
-- [ ] TASK-023-005 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-005 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: fetches scheduling links for workspace
 
-- [ ] TASK-023-006 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-006 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: creates scheduling link and invalidates query
 
-- [ ] TASK-023-007 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-007 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: updates scheduling link and invalidates query
 
-- [ ] TASK-023-008 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
+- [x] TASK-023-008 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
   Implement test: deletes scheduling link and invalidates query
 
-- [ ] TASK-023-009 | AGENT | `apps/web/src/hooks/useEventDetails.test.ts`
-  Run useEventDetails tests: `pnpm --filter @life-os/web test -- useEventDetails`
+- [x] TASK-023-009 | AGENT | `apps/web/src/hooks/useEventDetails.test.tsx`
+  Run useEventDetails tests: `pnpm --filter @life-os/web test -- useEventDetails` - 8/8 tests passed
 
-- [ ] TASK-023-010 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-023-010 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
