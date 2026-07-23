@@ -528,8 +528,8 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ## T-012: Wire Work filters and typed mutation state in the web application
 
-- [ ] **Task ID**: T-012
-- **Status**: `ready`
+- [x] **Task ID**: T-012
+- **Status**: `done`
 - **Related files**: `apps/web/src/hooks/useWorkTasks.ts`, `apps/web/src/hooks/useWorkProjects.ts`, `apps/web/src/app/work/hooks/useWorkState.ts`, `apps/web/src/app/work/page.tsx`, `apps/web/src/app/work/page.test.tsx`, `packages/api-client/src/index.ts`
 - **Definition of Done**:
   - Project and priority filters passed to `useWorkTasks` are sent to the API and reflected in query keys.
@@ -546,17 +546,17 @@ This task list converts the Work and Calendar module audit into a dependency-ord
 
 ### Initial Analysis
 
-- [ ] **T-012-1** | `AGENT` | `apps/web/src/hooks`, `apps/web/src/app/work` | Trace filter state from page controls through hooks to API query parameters and response rendering.
-- [ ] **T-012-2** | `AGENT` | `apps/web/src/app/work/hooks/useWorkState.ts` | Research the existing TanStack Query mutation types and identify the smallest typed hook interface.
-- [ ] **T-012-3** | `AGENT` | `apps/web/src/app/work` | Record any UI behavior corrections required before implementation.
+- [x] **T-012-1** | `AGENT` | `apps/web/src/hooks`, `apps/web/src/app/work` | Trace filter state from page controls through hooks to API query parameters and response rendering.
+- [x] **T-012-2** | `AGENT` | `apps/web/src/app/work/hooks/useWorkState.ts` | Research the existing TanStack Query mutation types and identify the smallest typed hook interface.
+- [x] **T-012-3** | `AGENT` | `apps/web/src/app/work` | Record any UI behavior corrections required before implementation.
 
 ### Subtasks
 
-- [ ] **T-012-4** | `AGENT` | `apps/web/src/hooks/useWorkTasks.test.ts`, `apps/web/src/app/work/page.test.tsx` | Write failing tests for filter query parameters, query-key changes, and mutation error rendering.
-- [ ] **T-012-5** | `AGENT` | `apps/web/src/hooks/useWorkTasks.ts` | Wire filters and typed request/response data into the hook.
-- [ ] **T-012-6** | `AGENT` | `apps/web/src/app/work/hooks/useWorkState.ts` | Replace `any` mutation props and direct `window.apiClient` calls with typed client methods.
-- [ ] **T-012-7** | `AGENT` | `apps/web/src/app/work/page.tsx` | Add accessible error/loading states without changing the module’s visual design scope.
-- [ ] **T-012-8** | `AGENT` | `apps/web/src/hooks/useWorkTasks.test.ts`, `apps/web/src/app/work/page.test.tsx` | Run focused web tests and typecheck.
+- [x] **T-012-4** | `AGENT` | `apps/web/src/hooks/useWorkTasks.test.ts`, `apps/web/src/app/work/page.test.tsx` | Write failing tests for filter query parameters, query-key changes, and mutation error rendering.
+- [x] **T-012-5** | `AGENT` | `apps/web/src/hooks/useWorkTasks.ts` | Wire filters and typed request/response data into the hook.
+- [x] **T-012-6** | `AGENT` | `apps/web/src/app/work/hooks/useWorkState.ts` | Replace `any` mutation props and direct `window.apiClient` calls with typed client methods.
+- [x] **T-012-7** | `AGENT` | `apps/web/src/app/work/page.tsx` | Add accessible error/loading states without changing the module's visual design scope.
+- [x] **T-012-8** | `AGENT` | `apps/web/src/hooks/useWorkTasks.test.ts`, `apps/web/src/app/work/page.test.tsx` | Run focused web tests and typecheck.
 
 ### Validation Commands
 

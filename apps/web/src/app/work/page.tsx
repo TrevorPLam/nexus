@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useWorkProjects } from '../../hooks/useWorkProjects';
 import { useWorkTasks } from '../../hooks/useWorkTasks';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTaskDetails } from '../../hooks/useTaskDetails';
 
 import { KanbanView } from './components/KanbanView';
 import { ProjectsView } from './components/ProjectsView';
@@ -15,15 +16,13 @@ import { TimelineView } from './components/TimelineView';
 import { ListView } from './components/ListView';
 import { WorkloadView } from './components/WorkloadView';
 import { useWorkState } from './hooks/useWorkState';
-import type { WorkView, Task, Project } from './types';
+import type { WorkView, Task } from './types';
 
 export default function WorkPage() {
   const { workspaceId, workspaceState } = useAuth();
   const [view, setView] = useState<WorkView>('projects');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [filterPriority, setFilterPriority] = useState<string | null>(null);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [selectedProjectForEdit, setSelectedProjectForEdit] = useState<Project | null>(null);
+  const [filterPriority] = useState<string | null>(null);
   const [timelineDate, setTimelineDate] = useState(new Date());
 
   // Only fetch data when workspace is selected
@@ -37,11 +36,13 @@ export default function WorkPage() {
     deleteProjectMutation,
   } = useWorkProjects(effectiveWorkspaceId);
 
-  const { tasks, createTaskMutation, updateTaskMutation, deleteTaskMutation } = useWorkTasks(
+  const { tasks, isLoading, isError, error, createTaskMutation, updateTaskMutation, deleteTaskMutation } = useWorkTasks(
     effectiveWorkspaceId,
     selectedProject,
     filterPriority,
   );
+
+  const taskDetails = useTaskDetails(null);
 
   const workState = useWorkState({
     projects,
@@ -49,6 +50,8 @@ export default function WorkPage() {
     updateProjectMutation,
     createTaskMutation,
     updateTaskMutation,
+    createDependencyMutation: taskDetails.createDependencyMutation,
+    createAssigneeMutation: taskDetails.createAssigneeMutation,
   });
 
   const handleViewChange = (newView: WorkView) => {
@@ -108,13 +111,48 @@ export default function WorkPage() {
         </div>
       </div>
 
+      {isError && (
+        <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">Error loading tasks: {error?.message || 'Unknown error'}</p>
+        </div>
+      )}
+
+      {isLoading && (
+        <div role="status" aria-live="polite" className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-blue-800">Loading tasks...</p>
+        </div>
+      )}
+
+      {createProjectMutation.error && (
+        <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">Error creating project: {createProjectMutation.error.message}</p>
+        </div>
+      )}
+
+      {updateProjectMutation.error && (
+        <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">Error updating project: {updateProjectMutation.error.message}</p>
+        </div>
+      )}
+
+      {createTaskMutation.error && (
+        <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">Error creating task: {createTaskMutation.error.message}</p>
+        </div>
+      )}
+
+      {updateTaskMutation.error && (
+        <div role="alert" className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">Error updating task: {updateTaskMutation.error.message}</p>
+        </div>
+      )}
+
       {view === 'projects' ? (
         <ProjectsView
           projects={projects}
           projectsLoading={projectsLoading}
           onNewProject={workState.handleNewProject}
           onEditProject={(project) => {
-            setSelectedProjectForEdit(project);
             workState.handleEditProject(project);
           }}
           onDeleteProject={(id) => deleteProjectMutation.mutate(id)}
@@ -127,7 +165,6 @@ export default function WorkPage() {
           selectedProject={selectedProject}
           onTaskDelete={(id) => deleteTaskMutation.mutate(id)}
           onTaskClick={(task) => {
-            setSelectedTask(task);
             workState.handleEditTask(task);
           }}
           onNewTask={() => workState.handleNewTask(selectedProject)}
@@ -141,7 +178,6 @@ export default function WorkPage() {
           selectedProject={selectedProject}
           currentDate={timelineDate}
           onTaskClick={(task) => {
-            setSelectedTask(task);
             workState.handleEditTask(task);
           }}
           onNewTask={() => workState.handleNewTask(selectedProject)}
@@ -156,7 +192,6 @@ export default function WorkPage() {
           selectedProject={selectedProject}
           onTaskDelete={(id) => deleteTaskMutation.mutate(id)}
           onTaskClick={(task) => {
-            setSelectedTask(task);
             workState.handleEditTask(task);
           }}
           onNewTask={() => workState.handleNewTask(selectedProject)}
@@ -170,7 +205,6 @@ export default function WorkPage() {
           selectedProject={selectedProject}
           onProjectFilter={setSelectedProject}
           onTaskClick={(task) => {
-            setSelectedTask(task);
             workState.handleEditTask(task);
           }}
         />
