@@ -72,6 +72,9 @@ eventsRouter.get('/calendars/:calendarId/events', async (c) => {
 
 eventsRouter.get('/workspaces/:workspaceId/events', requireWorkspaceMembership, async (c) => {
   const workspaceId = c.req.param('workspaceId');
+  if (!workspaceId) {
+    return c.json({ error: 'Workspace ID required' }, 400);
+  }
   const start = c.req.query('start');
   const end = c.req.query('end');
   try {
@@ -184,10 +187,6 @@ eventsRouter.post('/events/:eventId/unlink-task', requireWorkspaceMembership, as
   } catch (error) {
     console.error('Error unlinking event from task:', error);
     return c.json({ error: 'Failed to unlink event from task' }, 500);
-  }
-});
-
-export default eventsRouter;
   }
 });
 

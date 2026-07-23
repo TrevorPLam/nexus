@@ -30,6 +30,33 @@ vi.mock('../../lib/middleware.js', () => ({
 }));
 
 describe('Calendar Events Routes', () => {
+  it('loads the events router with the canonical route set', () => {
+    expect(eventsRouter).toBeDefined();
+    expect(eventsRouter.routes).toBeDefined();
+
+    const pairs = new Set(
+      eventsRouter.routes.map(
+        (route) =>
+          `${(route as { method: string }).method}:${(route as { path: string }).path}`,
+      ),
+    );
+
+    const expected = new Set([
+      'ALL:/*',
+      'POST:/events',
+      'GET:/events/:id',
+      'GET:/calendars/:calendarId/events',
+      'GET:/workspaces/:workspaceId/events',
+      'PUT:/events/:id',
+      'DELETE:/events/:id',
+      'GET:/tasks/:taskId/events',
+      'POST:/events/:eventId/link-task',
+      'POST:/events/:eventId/unlink-task',
+    ]);
+
+    expect([...pairs].sort()).toEqual([...expected].sort());
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
