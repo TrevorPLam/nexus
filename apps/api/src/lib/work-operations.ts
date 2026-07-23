@@ -16,6 +16,7 @@ import { eq, and, desc, asc, sql, gt, inArray } from 'drizzle-orm';
 import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
+import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
 
 // Transaction wrapper for complex operations
 export async function withTransaction<T>(
@@ -460,9 +461,31 @@ export async function getSubtasks(parentTaskId: string) {
 }
 
 // Task Note Operations
-export async function createTaskNote(data: typeof schema.taskNotes.$inferInsert) {
-  const [note] = await db.insert(taskNotes).values(data).returning();
-  return note;
+export async function createTaskNote(
+  data: typeof schema.taskNotes.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [note] = await tx.insert(taskNotes).values(data).returning();
+      return note;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_note',
+          entityId: data.taskId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_note.created',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { note: data },
+    },
+  );
 }
 
 export async function getTaskNoteById(id: string) {
@@ -481,18 +504,57 @@ export async function getTaskNotesByTask(taskId: string) {
 export async function updateTaskNote(
   id: string,
   data: Partial<typeof schema.taskNotes.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [note] = await db
-    .update(taskNotes)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(taskNotes.id, id))
-    .returning();
-  return note;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [note] = await tx
+        .update(taskNotes)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(taskNotes.id, id))
+        .returning();
+      return note;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task_note',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_note.updated',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { note: data },
+    },
+  );
 }
 
-export async function deleteTaskNote(id: string) {
-  const [note] = await db.delete(taskNotes).where(eq(taskNotes.id, id)).returning();
-  return note;
+export async function deleteTaskNote(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [note] = await tx.delete(taskNotes).where(eq(taskNotes.id, id)).returning();
+      return note;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'task_note',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'task_note.deleted',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { noteId: id },
+    },
+  );
 }
 
 // Batch Task Operations
@@ -543,24 +605,87 @@ export async function batchUpdateTaskStatus(taskIds: string[], newStatus: string
 }
 
 // Task Assignee Operations
-export async function createTaskAssignee(data: typeof schema.taskAssignees.$inferInsert) {
-  const [assignee] = await db.insert(taskAssignees).values(data).returning();
-  return assignee;
+export async function createTaskAssignee(
+  data: typeof schema.taskAssignees.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [assignee] = await tx.insert(taskAssignees).values(data).returning();
+      return assignee;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_assignee',
+          entityId: data.taskId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_assignee.created',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { assignee: data },
+    },
+  );
 }
 
 export async function getTaskAssignees(taskId: string) {
   return db.select().from(taskAssignees).where(eq(taskAssignees.taskId, taskId));
 }
 
-export async function deleteTaskAssignee(id: string) {
-  const [assignee] = await db.delete(taskAssignees).where(eq(taskAssignees.id, id)).returning();
-  return assignee;
+export async function deleteTaskAssignee(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [assignee] = await tx.delete(taskAssignees).where(eq(taskAssignees.id, id)).returning();
+      return assignee;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'task_assignee',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'task_assignee.deleted',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { assigneeId: id },
+    },
+  );
 }
 
 // Task Comment Operations
-export async function createTaskComment(data: typeof schema.taskComments.$inferInsert) {
-  const [comment] = await db.insert(taskComments).values(data).returning();
-  return comment;
+export async function createTaskComment(
+  data: typeof schema.taskComments.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [comment] = await tx.insert(taskComments).values(data).returning();
+      return comment;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_comment',
+          entityId: data.taskId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_comment.created',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { comment: data },
+    },
+  );
 }
 
 export async function getTaskCommentById(id: string) {
@@ -579,24 +704,85 @@ export async function getTaskCommentsByTask(taskId: string) {
 export async function updateTaskComment(
   id: string,
   data: Partial<typeof schema.taskComments.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [comment] = await db
-    .update(taskComments)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(taskComments.id, id))
-    .returning();
-  return comment;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [comment] = await tx
+        .update(taskComments)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(taskComments.id, id))
+        .returning();
+      return comment;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'task_comment',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_comment.updated',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { comment: data },
+    },
+  );
 }
 
-export async function deleteTaskComment(id: string) {
-  const [comment] = await db.delete(taskComments).where(eq(taskComments.id, id)).returning();
-  return comment;
+export async function deleteTaskComment(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [comment] = await tx.delete(taskComments).where(eq(taskComments.id, id)).returning();
+      return comment;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'task_comment',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'task_comment.deleted',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { commentId: id },
+    },
+  );
 }
 
 // Task Attachment Operations
-export async function createTaskAttachment(data: typeof schema.taskAttachments.$inferInsert) {
-  const [attachment] = await db.insert(taskAttachments).values(data).returning();
-  return attachment;
+export async function createTaskAttachment(
+  data: typeof schema.taskAttachments.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [attachment] = await tx.insert(taskAttachments).values(data).returning();
+      return attachment;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_attachment',
+          entityId: data.taskId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'task_attachment.created',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { attachment: data },
+    },
+  );
 }
 
 export async function getTaskAttachmentById(id: string) {
@@ -612,18 +798,59 @@ export async function getTaskAttachmentsByTask(taskId: string) {
     .orderBy(desc(taskAttachments.createdAt));
 }
 
-export async function deleteTaskAttachment(id: string) {
-  const [attachment] = await db
-    .delete(taskAttachments)
-    .where(eq(taskAttachments.id, id))
-    .returning();
-  return attachment;
+export async function deleteTaskAttachment(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [attachment] = await tx
+        .delete(taskAttachments)
+        .where(eq(taskAttachments.id, id))
+        .returning();
+      return attachment;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'task_attachment',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'task_attachment.deleted',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { attachmentId: id },
+    },
+  );
 }
 
 // Time Entry Operations
-export async function createTimeEntry(data: typeof schema.timeEntries.$inferInsert) {
-  const [entry] = await db.insert(timeEntries).values(data).returning();
-  return entry;
+export async function createTimeEntry(
+  data: typeof schema.timeEntries.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [entry] = await tx.insert(timeEntries).values(data).returning();
+      return entry;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'time_entry',
+          entityId: data.taskId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'time_entry.created',
+      aggregateType: 'task',
+      aggregateId: data.taskId,
+      payload: { entry: data },
+    },
+  );
 }
 
 export async function getTimeEntryById(id: string) {
@@ -660,18 +887,57 @@ export async function getTimeEntriesByUser(userId: string, startDate?: Date, end
 export async function updateTimeEntry(
   id: string,
   data: Partial<typeof schema.timeEntries.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [entry] = await db
-    .update(timeEntries)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(timeEntries.id, id))
-    .returning();
-  return entry;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [entry] = await tx
+        .update(timeEntries)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(timeEntries.id, id))
+        .returning();
+      return entry;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'time_entry',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'time_entry.updated',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { entry: data },
+    },
+  );
 }
 
-export async function deleteTimeEntry(id: string) {
-  const [entry] = await db.delete(timeEntries).where(eq(timeEntries.id, id)).returning();
-  return entry;
+export async function deleteTimeEntry(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [entry] = await tx.delete(timeEntries).where(eq(timeEntries.id, id)).returning();
+      return entry;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'time_entry',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'time_entry.deleted',
+      aggregateType: 'task',
+      aggregateId: id,
+      payload: { entryId: id },
+    },
+  );
 }
 
 // Transaction-based complex operations
@@ -680,45 +946,81 @@ export async function deleteTimeEntry(id: string) {
 export async function createTaskWithDependencies(
   taskData: typeof schema.tasks.$inferInsert,
   dependencies: Array<{ dependsOnTaskId: string; type: string }>,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const [task] = await tx.insert(tasks).values(taskData).returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [task] = await tx.insert(tasks).values(taskData).returning();
 
-    if (dependencies.length > 0) {
-      await tx.insert(taskDependencies).values(
-        dependencies.map((dep) => ({
-          taskId: task.id,
-          dependsOnTaskId: dep.dependsOnTaskId,
-          type: dep.type,
-        })),
-      );
-    }
+      if (dependencies.length > 0) {
+        await tx.insert(taskDependencies).values(
+          dependencies.map((dep: { dependsOnTaskId: string; type: string }) => ({
+            taskId: task.id,
+            dependsOnTaskId: dep.dependsOnTaskId,
+            type: dep.type,
+          })),
+        );
+      }
 
-    return task;
-  });
+      return task;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_with_dependencies',
+          entityId: taskData.id || 'pending',
+          changes: { new: { taskData, dependencies } },
+        }
+      : undefined,
+    {
+      eventType: 'task_with_dependencies.created',
+      aggregateType: 'task',
+      aggregateId: taskData.id || 'pending',
+      payload: { taskData, dependencies },
+    },
+  );
 }
 
 // Create task with assignees in a single transaction
 export async function createTaskWithAssignees(
   taskData: typeof schema.tasks.$inferInsert,
   assignees: Array<{ userId: string; assignedBy: string; isPrimary?: boolean }>,
+  context?: CommandContext,
 ) {
-  return withTransaction(async (tx) => {
-    const [task] = await tx.insert(tasks).values(taskData).returning();
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [task] = await tx.insert(tasks).values(taskData).returning();
 
-    if (assignees.length > 0) {
-      await tx.insert(taskAssignees).values(
-        assignees.map((assignee) => ({
-          taskId: task.id,
-          userId: assignee.userId,
-          assignedBy: assignee.assignedBy,
-          isPrimary: assignee.isPrimary ?? false,
-        })),
-      );
-    }
+      if (assignees.length > 0) {
+        await tx.insert(taskAssignees).values(
+          assignees.map((assignee: { userId: string; assignedBy: string; isPrimary?: boolean }) => ({
+            taskId: task.id,
+            userId: assignee.userId,
+            assignedBy: assignee.assignedBy,
+            isPrimary: assignee.isPrimary ?? false,
+          })),
+        );
+      }
 
-    return task;
-  });
+      return task;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'task_with_assignees',
+          entityId: taskData.id || 'pending',
+          changes: { new: { taskData, assignees } },
+        }
+      : undefined,
+    {
+      eventType: 'task_with_assignees.created',
+      aggregateType: 'task',
+      aggregateId: taskData.id || 'pending',
+      payload: { taskData, assignees },
+    },
+  );
 }
 
 // Delete project with all its tasks (soft delete cascade)

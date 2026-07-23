@@ -3,11 +3,34 @@ import { calendars, events, eventAttendees, schedulingLinks } from '@life-os/dat
 import { eq, and, desc, asc, gte, lte, or, isNull, gt } from 'drizzle-orm';
 
 import { db } from './db.js';
+import { executeCommandWithoutIdempotency, type CommandContext } from './command-context.js';
 
 // Calendar Operations
-export async function createCalendar(data: typeof schema.calendars.$inferInsert) {
-  const [calendar] = await db.insert(calendars).values(data).returning();
-  return calendar;
+export async function createCalendar(
+  data: typeof schema.calendars.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [calendar] = await tx.insert(calendars).values(data).returning();
+      return calendar;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'calendar',
+          entityId: data.id || 'pending',
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'calendar.created',
+      aggregateType: 'calendar',
+      aggregateId: data.id || 'pending',
+      payload: { calendar: data },
+    },
+  );
 }
 
 export async function getCalendarById(id: string) {
@@ -43,24 +66,85 @@ export async function getCalendarsByWorkspace(workspaceId: string, limit = 50, c
 export async function updateCalendar(
   id: string,
   data: Partial<typeof schema.calendars.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [calendar] = await db
-    .update(calendars)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(calendars.id, id))
-    .returning();
-  return calendar;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [calendar] = await tx
+        .update(calendars)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(calendars.id, id))
+        .returning();
+      return calendar;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'calendar',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'calendar.updated',
+      aggregateType: 'calendar',
+      aggregateId: id,
+      payload: { calendar: data },
+    },
+  );
 }
 
-export async function deleteCalendar(id: string) {
-  const [calendar] = await db.delete(calendars).where(eq(calendars.id, id)).returning();
-  return calendar;
+export async function deleteCalendar(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [calendar] = await tx.delete(calendars).where(eq(calendars.id, id)).returning();
+      return calendar;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'calendar',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'calendar.deleted',
+      aggregateType: 'calendar',
+      aggregateId: id,
+      payload: { calendarId: id },
+    },
+  );
 }
 
 // Event Operations
-export async function createEvent(data: typeof schema.events.$inferInsert) {
-  const [event] = await db.insert(events).values(data).returning();
-  return event;
+export async function createEvent(
+  data: typeof schema.events.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [event] = await tx.insert(events).values(data).returning();
+      return event;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'event',
+          entityId: data.id || 'pending',
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'event.created',
+      aggregateType: 'event',
+      aggregateId: data.id || 'pending',
+      payload: { event: data },
+    },
+  );
 }
 
 export async function getEventById(id: string) {
@@ -108,24 +192,88 @@ export async function getEventsByWorkspace(workspaceId: string, startDate?: Date
     .orderBy(asc(events.start));
 }
 
-export async function updateEvent(id: string, data: Partial<typeof schema.events.$inferInsert>) {
-  const [event] = await db
-    .update(events)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(events.id, id))
-    .returning();
-  return event;
+export async function updateEvent(
+  id: string,
+  data: Partial<typeof schema.events.$inferInsert>,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [event] = await tx
+        .update(events)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(events.id, id))
+        .returning();
+      return event;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'event',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'event.updated',
+      aggregateType: 'event',
+      aggregateId: id,
+      payload: { event: data },
+    },
+  );
 }
 
-export async function deleteEvent(id: string) {
-  const [event] = await db.delete(events).where(eq(events.id, id)).returning();
-  return event;
+export async function deleteEvent(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [event] = await tx.delete(events).where(eq(events.id, id)).returning();
+      return event;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'event',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'event.deleted',
+      aggregateType: 'event',
+      aggregateId: id,
+      payload: { eventId: id },
+    },
+  );
 }
 
 // Event Attendee Operations
-export async function createEventAttendee(data: typeof schema.eventAttendees.$inferInsert) {
-  const [attendee] = await db.insert(eventAttendees).values(data).returning();
-  return attendee;
+export async function createEventAttendee(
+  data: typeof schema.eventAttendees.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [attendee] = await tx.insert(eventAttendees).values(data).returning();
+      return attendee;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'event_attendee',
+          entityId: data.eventId,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'event_attendee.created',
+      aggregateType: 'event',
+      aggregateId: data.eventId,
+      payload: { attendee: data },
+    },
+  );
 }
 
 export async function getEventAttendees(eventId: string) {
@@ -135,18 +283,57 @@ export async function getEventAttendees(eventId: string) {
 export async function updateEventAttendee(
   id: string,
   data: Partial<typeof schema.eventAttendees.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [attendee] = await db
-    .update(eventAttendees)
-    .set(data)
-    .where(eq(eventAttendees.id, id))
-    .returning();
-  return attendee;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [attendee] = await tx
+        .update(eventAttendees)
+        .set(data)
+        .where(eq(eventAttendees.id, id))
+        .returning();
+      return attendee;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'event_attendee',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'event_attendee.updated',
+      aggregateType: 'event',
+      aggregateId: id,
+      payload: { attendee: data },
+    },
+  );
 }
 
-export async function deleteEventAttendee(id: string) {
-  const [attendee] = await db.delete(eventAttendees).where(eq(eventAttendees.id, id)).returning();
-  return attendee;
+export async function deleteEventAttendee(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [attendee] = await tx.delete(eventAttendees).where(eq(eventAttendees.id, id)).returning();
+      return attendee;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'event_attendee',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'event_attendee.deleted',
+      aggregateType: 'event',
+      aggregateId: id,
+      payload: { attendeeId: id },
+    },
+  );
 }
 
 // Batch operations
@@ -193,22 +380,60 @@ export async function getEventsByTask(taskId: string) {
   return db.select().from(events).where(eq(events.taskId, taskId)).orderBy(asc(events.start));
 }
 
-export async function linkEventToTask(eventId: string, taskId: string) {
-  const [event] = await db
-    .update(events)
-    .set({ taskId, updatedAt: new Date() })
-    .where(eq(events.id, eventId))
-    .returning();
-  return event;
+export async function linkEventToTask(eventId: string, taskId: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [event] = await tx
+        .update(events)
+        .set({ taskId, updatedAt: new Date() })
+        .where(eq(events.id, eventId))
+        .returning();
+      return event;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'event_task_link',
+          entityId: eventId,
+          changes: { new: { taskId } },
+        }
+      : undefined,
+    {
+      eventType: 'event_task.linked',
+      aggregateType: 'event',
+      aggregateId: eventId,
+      payload: { eventId, taskId },
+    },
+  );
 }
 
-export async function unlinkEventFromTask(eventId: string) {
-  const [event] = await db
-    .update(events)
-    .set({ taskId: null, updatedAt: new Date() })
-    .where(eq(events.id, eventId))
-    .returning();
-  return event;
+export async function unlinkEventFromTask(eventId: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [event] = await tx
+        .update(events)
+        .set({ taskId: null, updatedAt: new Date() })
+        .where(eq(events.id, eventId))
+        .returning();
+      return event;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'event_task_link',
+          entityId: eventId,
+          changes: { new: { taskId: null } },
+        }
+      : undefined,
+    {
+      eventType: 'event_task.unlinked',
+      aggregateType: 'event',
+      aggregateId: eventId,
+      payload: { eventId },
+    },
+  );
 }
 
 // Recurring Event Operations
@@ -231,9 +456,31 @@ export async function getBaseRecurringEvent(recurrenceId: string) {
 }
 
 // Scheduling Link Operations
-export async function createSchedulingLink(data: typeof schema.schedulingLinks.$inferInsert) {
-  const [link] = await db.insert(schedulingLinks).values(data).returning();
-  return link;
+export async function createSchedulingLink(
+  data: typeof schema.schedulingLinks.$inferInsert,
+  context?: CommandContext,
+) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [link] = await tx.insert(schedulingLinks).values(data).returning();
+      return link;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'create',
+          entityType: 'scheduling_link',
+          entityId: data.id || 'pending',
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'scheduling_link.created',
+      aggregateType: 'scheduling_link',
+      aggregateId: data.id || 'pending',
+      payload: { link: data },
+    },
+  );
 }
 
 export async function getSchedulingLinkById(id: string) {
@@ -303,18 +550,57 @@ export async function getSchedulingLinksByUser(userId: string, limit = 50, curso
 export async function updateSchedulingLink(
   id: string,
   data: Partial<typeof schema.schedulingLinks.$inferInsert>,
+  context?: CommandContext,
 ) {
-  const [link] = await db
-    .update(schedulingLinks)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(schedulingLinks.id, id))
-    .returning();
-  return link;
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [link] = await tx
+        .update(schedulingLinks)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(schedulingLinks.id, id))
+        .returning();
+      return link;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'update',
+          entityType: 'scheduling_link',
+          entityId: id,
+          changes: { new: data },
+        }
+      : undefined,
+    {
+      eventType: 'scheduling_link.updated',
+      aggregateType: 'scheduling_link',
+      aggregateId: id,
+      payload: { link: data },
+    },
+  );
 }
 
-export async function deleteSchedulingLink(id: string) {
-  const [link] = await db.delete(schedulingLinks).where(eq(schedulingLinks.id, id)).returning();
-  return link;
+export async function deleteSchedulingLink(id: string, context?: CommandContext) {
+  return executeCommandWithoutIdempotency(
+    context || {},
+    async (tx) => {
+      const [link] = await tx.delete(schedulingLinks).where(eq(schedulingLinks.id, id)).returning();
+      return link;
+    },
+    context?.userId && context?.workspaceId
+      ? {
+          action: 'delete',
+          entityType: 'scheduling_link',
+          entityId: id,
+          changes: {},
+        }
+      : undefined,
+    {
+      eventType: 'scheduling_link.deleted',
+      aggregateType: 'scheduling_link',
+      aggregateId: id,
+      payload: { linkId: id },
+    },
+  );
 }
 
 // Availability Slot Generation
