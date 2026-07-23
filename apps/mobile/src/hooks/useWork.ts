@@ -42,6 +42,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '../contexts/AuthContext';
 import { usePowerSync } from '../lib/powersync/provider';
+import { enqueueCommand } from '../lib/command-queue';
 
 /**
  * Hook to fetch projects for the selected workspace
@@ -105,6 +106,7 @@ export function useTasks(projectId?: string) {
 export function useCreateProject() {
   const queryClient = useQueryClient();
   const { selectedWorkspace } = useAuth();
+  const { db } = usePowerSync();
 
   return useMutation({
     mutationFn: async (data: { name: string; description?: string; color?: string }) => {
@@ -112,10 +114,15 @@ export function useCreateProject() {
         throw new Error('No workspace selected');
       }
 
-      // TODO: Enqueue create project command
-      // This will integrate with the backend command API
-      // For now, return placeholder
-      return { id: 'placeholder', ...data, workspace_id: selectedWorkspace.id } as ProjectRecord;
+      // Enqueue create project command
+      const commandId = await enqueueCommand(db, 'create_project', {
+        workspaceId: selectedWorkspace.id,
+        name: data.name,
+        description: data.description,
+        color: data.color,
+      });
+
+      return { id: commandId, ...data, workspace_id: selectedWorkspace.id } as ProjectRecord;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });

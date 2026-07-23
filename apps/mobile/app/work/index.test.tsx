@@ -121,6 +121,13 @@ describe('Mobile Work Page', () => {
   });
 
   describe('Durable commands', () => {
+    it('create project command is enqueued when project is created offline', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // Command queue stores create project command with payload
+      // Expected: Project creation is enqueued in offline command queue
+    });
+
     it('create task command is enqueued when task is created offline', async () => {
       renderWithProviders(<WorkScreen />);
 

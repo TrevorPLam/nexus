@@ -220,6 +220,17 @@ const scheduling_links = new Table({
   updated_at: column.text,
 });
 
+const command_queue = new Table({
+  id: column.text,
+  type: column.text,
+  payload: column.text,
+  status: column.text,
+  retry_count: column.integer,
+  error_message: column.text,
+  created_at: column.text,
+  updated_at: column.text,
+});
+
 export const powersyncSchema = new Schema({
   app_users,
   workspaces,
@@ -236,6 +247,7 @@ export const powersyncSchema = new Schema({
   events,
   event_attendees,
   scheduling_links,
+  command_queue,
 });
 
 // Export types for use in the app
