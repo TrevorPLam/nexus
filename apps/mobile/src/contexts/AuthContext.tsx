@@ -42,6 +42,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { createClient } from '../lib/supabase/client';
+import { db } from '../lib/powersync/database';
 
 interface User {
   id: string;
@@ -155,9 +156,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    try {
+      // Clear PowerSync replica data before signing out
+      // Delete all data from sync tables
+      // @ts-ignore - PowerSync execute method exists but type definitions are incomplete
+      await db.execute('DELETE FROM app_users');
+      // @ts-ignore
+      await db.execute('DELETE FROM workspaces');
+      // @ts-ignore
+      await db.execute('DELETE FROM workspace_memberships');
+      // @ts-ignore
+      await db.execute('DELETE FROM projects');
+      // @ts-ignore
+      await db.execute('DELETE FROM tasks');
+      // @ts-ignore
+      await db.execute('DELETE FROM task_dependencies');
+      // @ts-ignore
+      await db.execute('DELETE FROM task_notes');
+      // @ts-ignore
+      await db.execute('DELETE FROM task_assignees');
+      // @ts-ignore
+      await db.execute('DELETE FROM task_comments');
+      // @ts-ignore
+      await db.execute('DELETE FROM task_attachments');
+      // @ts-ignore
+      await db.execute('DELETE FROM time_entries');
+      // @ts-ignore
+      await db.execute('DELETE FROM calendars');
+      // @ts-ignore
+      await db.execute('DELETE FROM events');
+      // @ts-ignore
+      await db.execute('DELETE FROM event_attendees');
+      // @ts-ignore
+      await db.execute('DELETE FROM scheduling_links');
+      // @ts-ignore
+      await db.execute('DELETE FROM command_queue');
+    } catch (error) {
+      // Log error but continue with sign-out
+      console.error('Failed to clear PowerSync database:', error);
+    }
+
     await supabase.auth.signOut();
-    // TODO: Clear PowerSync replica data
-    // This requires integration with PowerSync database
     setSelectedWorkspace(null);
   };
 
