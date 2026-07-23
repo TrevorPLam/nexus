@@ -1,21 +1,11 @@
-import { defineConfig } from 'vitest/config';
+import { nodeConfig } from '@life-os/vitest-config';
 
-export default defineConfig({
+export default {
+  ...nodeConfig,
   test: {
-    globals: true,
-    environment: 'node',
-    watch: false,
-    testTimeout: 10000,
-    hookTimeout: 10000,
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    ...nodeConfig.test,
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      ...nodeConfig.test?.coverage,
       exclude: [
         'node_modules/',
         'dist/',
@@ -24,7 +14,6 @@ export default defineConfig({
         'vitest.config.ts',
         'drizzle/',
       ],
-      include: ['src/**/*.{ts,tsx}'],
     },
   },
-});
+};

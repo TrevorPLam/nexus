@@ -1,21 +1,10 @@
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
+import { jsdomConfig } from '@life-os/vitest-config';
 
-export default defineConfig({
-  plugins: [react()],
+export default {
+  ...jsdomConfig,
   test: {
-    globals: true,
-    environment: 'jsdom',
+    ...jsdomConfig.test,
     setupFiles: ['./src/test/setup.ts'],
-    watch: false,
-    testTimeout: 10000,
-    hookTimeout: 10000,
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
     deps: {
       optimizer: {
         web: {
@@ -23,20 +12,5 @@ export default defineConfig({
         },
       },
     },
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        '**/*.test.ts',
-        '**/*.test.tsx',
-        '**/*.spec.ts',
-        '**/*.spec.tsx',
-        'vitest.config.ts',
-        'src/test/setup.ts',
-      ],
-      include: ['src/**/*.{ts,tsx}'],
-    },
   },
-});
+};

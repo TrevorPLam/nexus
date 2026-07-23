@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",
+    "@life-os/vitest-config": "workspace:*",
     "typescript": "^5.9.0",
     "vitest": "^2.0.0",
     "@testing-library/react": "^14.0.0",

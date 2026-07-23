@@ -1557,8 +1557,8 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ## TASK-033: Create shared Vitest configuration package
 
-- [ ] TASK-033
-- Status: ready
+- [x] TASK-033
+- Status: done
 - Related Files: `packages/vitest-config/package.json`, `turbo.json`, `vitest.config.ts`
 - Definition of Done: Shared Vitest config package created, all packages updated to use it, root vitest.config.ts for local dev
 - Out of Scope: Test implementation changes
@@ -1574,50 +1574,50 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ### Subtasks
 
-- [ ] TASK-033-001 | AGENT | `packages/`
+- [x] TASK-033-001 | AGENT | `packages/`
   Create packages/vitest-config directory structure.
 
-- [ ] TASK-033-002 | AGENT | `packages/vitest-config/package.json`
+- [x] TASK-033-002 | AGENT | `packages/vitest-config/package.json`
   Create package.json with proper exports, dependencies, and build configuration.
 
-- [ ] TASK-033-003 | AGENT | `packages/vitest-config/src/index.ts`
+- [x] TASK-033-003 | AGENT | `packages/vitest-config/src/index.ts`
   Create baseConfig with common Vitest settings (globals, coverage provider, reporters).
 
-- [ ] TASK-033-004 | AGENT | `packages/vitest-config/src/index.ts`
+- [x] TASK-033-004 | AGENT | `packages/vitest-config/src/index.ts`
   Create nodeConfig extending baseConfig with environment: 'node'.
 
-- [ ] TASK-033-005 | AGENT | `packages/vitest-config/src/index.ts`
+- [x] TASK-033-005 | AGENT | `packages/vitest-config/src/index.ts`
   Create jsdomConfig extending baseConfig with environment: 'jsdom'.
 
-- [ ] TASK-033-006 | AGENT | `apps/api/vitest.config.ts`
+- [x] TASK-033-006 | AGENT | `apps/api/vitest.config.ts`
   Update to import and use nodeConfig from @life-os/vitest-config.
 
-- [ ] TASK-033-007 | AGENT | `apps/web/vitest.config.ts`
+- [x] TASK-033-007 | AGENT | `apps/web/vitest.config.ts`
   Update to import and use jsdomConfig from @life-os/vitest-config.
 
-- [ ] TASK-033-008 | AGENT | `packages/*/vitest.config.ts`
+- [x] TASK-033-008 | AGENT | `packages/*/vitest.config.ts`
   Update all package vitest.config.ts files to use shared config.
 
-- [ ] TASK-033-009 | AGENT | `vitest.config.ts`
+- [x] TASK-033-009 | AGENT | `vitest.config.ts`
   Create root vitest.config.ts with projects array for local development with merged coverage.
 
-- [ ] TASK-033-010 | AGENT | `turbo.json`
+- [x] TASK-033-010 | AGENT | `turbo.json`
   Update test task to depend on @life-os/vitest-config#build for proper caching.
 
-- [ ] TASK-033-011 | AGENT | `turbo.json`
+- [x] TASK-033-011 | AGENT | `turbo.json`
   Add test:watch task with cache: false and persistent: true.
 
-- [ ] TASK-033-012 | AGENT | `packages/vitest-config/`
-  Run tests to verify shared config: `pnpm --filter @life-os/vitest-config test`
+- [x] TASK-033-012 | AGENT | `packages/vitest-config/`
+  Run tests to verify shared config: `pnpm --filter @life-os/vitest-config test` - No test files (expected for config package).
 
-- [ ] TASK-033-013 | AGENT | `apps/api/`
-  Run API tests with new config: `pnpm --filter @life-os/api test`
+- [x] TASK-033-013 | AGENT | `apps/api/`
+  Run API tests with new config: `pnpm --filter @life-os/api test` - Config working, pre-existing test failures unrelated to config.
 
-- [ ] TASK-033-014 | AGENT | `apps/web/`
-  Run web tests with new config: `pnpm --filter @life-os/web test`
+- [x] TASK-033-014 | AGENT | `apps/web/`
+  Run web tests with new config: `pnpm --filter @life-os/web test` - No test files.
 
-- [ ] TASK-033-015 | AGENT | `packages/`
-  Run package tests with new config: `pnpm --filter @life-os/contracts test && pnpm --filter @life-os/database test`
+- [x] TASK-033-015 | AGENT | `packages/`
+  Run package tests with new config: `pnpm --filter @life-os/contracts test && pnpm --filter @life-os/database test` - Config working, pre-existing test failures unrelated to config.
 
 ---
 

@@ -32,9 +32,13 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@life-os/vitest-config#build"],
       "inputs": ["$TURBO_DEFAULT$", ".env.*", "tsconfig.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
     },
     "validate": {
       "dependsOn": ["lint", "typecheck", "test"]
