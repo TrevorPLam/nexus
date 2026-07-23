@@ -5,7 +5,7 @@ import React from 'react';
 // Mock Tamagui for testing
 vi.mock('@tamagui/core', () => ({
   styled: (component: any) => {
-    const StyledComponent = ({ onChangeText, multiline, numberOfLines, editable, onChange, disabled, ...props }: any) => {
+    const StyledComponent = ({ onChangeText, multiline, numberOfLines, editable, onChange, disabled, onPress, onStartShouldSetResponder, ...props }: any) => {
       // For textarea (TextInput), transform onChangeText to onChange
       if (component === 'textarea' && onChangeText) {
         const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -18,11 +18,15 @@ vi.mock('@tamagui/core', () => ({
           rows: numberOfLines,
         });
       }
-      // For select and other elements, pass through props as-is
+      // For other elements, transform React Native events to DOM events
+      const handleClick = onPress ? (e: React.MouseEvent) => onPress(e) : undefined;
       return React.createElement(component, {
         ...props,
         onChange,
         disabled,
+        onClick: handleClick,
+        // Ignore React Native specific props
+        onStartShouldSetResponder: undefined,
       });
     };
     StyledComponent.displayName = `Styled(${component.displayName || component.name || 'Component'})`;

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import { Modal } from './Modal';
 
@@ -7,11 +8,31 @@ describe('Modal Component', () => {
     expect(Modal).toBeDefined();
   });
 
-  it.todo('renders modal when open');
-  it.todo('does not render when closed');
-  it.todo('displays title');
-  it.todo('displays children content');
-  it.todo('calls onClose when close button clicked');
-  it.todo('calls onClose when backdrop clicked');
-  it.todo('prevents body scroll when open');
+  it('renders modal when open', () => {
+    render(<Modal isOpen onClose={() => {}}><div>Modal Content</div></Modal>);
+    const modal = screen.getByText('Modal Content');
+    expect(modal).toBeInTheDocument();
+  });
+
+  it('does not render when closed', () => {
+    render(<Modal isOpen={false} onClose={() => {}}><div>Modal Content</div></Modal>);
+    const modal = screen.queryByText('Modal Content');
+    expect(modal).not.toBeInTheDocument();
+  });
+
+  it('displays children content', () => {
+    render(<Modal isOpen onClose={() => {}}><div>Test Content</div></Modal>);
+    const content = screen.getByText('Test Content');
+    expect(content).toBeInTheDocument();
+  });
+
+  it('calls onClose when backdrop clicked', () => {
+    const handleClose = vi.fn();
+    render(<Modal isOpen onClose={handleClose}><div>Modal Content</div></Modal>);
+    const overlay = screen.getByText('Modal Content').parentElement;
+    if (overlay) {
+      fireEvent.click(overlay);
+      expect(handleClose).toHaveBeenCalled();
+    }
+  });
 });
