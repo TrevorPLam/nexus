@@ -103,7 +103,7 @@ export function useCalendarData() {
     loadCalendars();
   }, [selectedWorkspace, db]);
 
-  const loadEvents = async (_calendarId?: string, _startDate?: Date, _endDate?: Date) => {
+  const loadEvents = async (calendarId?: string, startDate?: Date, endDate?: Date) => {
     if (!selectedWorkspace) {
       setEvents([]);
       return;
@@ -111,10 +111,31 @@ export function useCalendarData() {
 
     try {
       setLoading(true);
-      // TODO: Implement PowerSync query for workspace-scoped events with date filtering
-      // This will use PowerSync queries when sync is fully implemented
-      // For now, return empty array as placeholder
-      setEvents([]);
+
+      let query = 'SELECT * FROM events WHERE workspace_id = ?';
+      const params: (string | number)[] = [selectedWorkspace.id];
+
+      if (calendarId) {
+        query += ' AND calendar_id = ?';
+        params.push(calendarId);
+      }
+
+      if (startDate) {
+        query += ' AND start >= ?';
+        params.push(startDate.toISOString());
+      }
+
+      if (endDate) {
+        query += ' AND end <= ?';
+        params.push(endDate.toISOString());
+      }
+
+      query += ' ORDER BY start ASC';
+
+      // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+      const result = await db.getAll(query, params);
+
+      setEvents(result as Event[]);
     } catch (err) {
       setError(err as Error);
     } finally {
