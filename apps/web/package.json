@@ -26,6 +26,7 @@
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",
     "@life-os/vitest-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
     "@testing-library/react": "^14.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@types/react": "^18.3.0",
