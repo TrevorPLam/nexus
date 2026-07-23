@@ -59,6 +59,7 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { CreateTaskRequest, UpdateTaskRequest, TaskResponse } from '@life-os/contracts';
 import { z } from 'zod';
+import { validator } from 'hono/validator';
 
 import {
   authMiddleware,

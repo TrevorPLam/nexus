@@ -1512,8 +1512,8 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ## TASK-032: Evaluate and remove @hono/standard-validator
 
-- [ ] TASK-032
-- Status: ready
+- [x] TASK-032
+- Status: done
 - Related Files: `apps/api/package.json`, `apps/api/src/`
 - Definition of Done: @hono/standard-validator removed if unused, or documented if actively used
 - Out of Scope: Hono API implementation changes
@@ -1529,28 +1529,28 @@ TASK-030, TASK-031, TASK-032 (test scripts) -> TASK-033 (Vitest config) -> TASK-
 
 ### Subtasks
 
-- [ ] TASK-032-001 | AGENT | `apps/api/src/`
+- [x] TASK-032-001 | AGENT | `apps/api/src/`
   Search codebase for all imports and usage of @hono/standard-validator to verify if actively used.
 
-- [ ] TASK-032-002 | AGENT | `apps/api/src/`
+- [x] TASK-032-002 | AGENT | `apps/api/src/`
   If @hono/standard-validator is used, evaluate if validation can be replaced with @hono/zod-openapi and Zod schemas from packages/contracts.
 
-- [ ] TASK-032-003 | AGENT | `apps/api/package.json`
+- [x] TASK-032-003 | AGENT | `apps/api/package.json`
   If @hono/standard-validator is unused or can be replaced, remove it from dependencies.
 
-- [ ] TASK-032-004 | AGENT | `apps/api/package.json`
+- [x] TASK-032-004 | AGENT | `apps/api/package.json`
   Run pnpm install to update lockfile: `pnpm install`
 
-- [ ] TASK-032-005 | AGENT | `apps/api/src/`
+- [x] TASK-032-005 | AGENT | `apps/api/src/`
   If replacement was needed, update validation code to use @hono/zod-openapi patterns.
 
-- [ ] TASK-032-006 | AGENT | `apps/api/src/`
+- [x] TASK-032-006 | AGENT | `apps/api/src/`
   Run API tests to verify changes: `pnpm --filter @life-os/api test`
 
-- [ ] TASK-032-007 | AGENT | `apps/api/`
+- [x] TASK-032-007 | AGENT | `apps/api/`
   Run type checking: `pnpm --filter @life-os/api typecheck`
 
-- [ ] TASK-032-008 | AGENT | `docs/code-commentary.md`
+- [x] TASK-032-008 | AGENT | `docs/code-commentary.md`
   Document the decision to keep or remove @hono/standard-validator with rationale.
 
 ---

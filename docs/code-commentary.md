@@ -274,6 +274,30 @@ and issuing the invoice does not charge the customer.
 
 ---
 
+## 9. Dependency Decisions
+
+### @hono/standard-validator (Removed July 23, 2026)
+
+**Decision:** Removed @hono/standard-validator from apps/api dependencies.
+
+**Rationale:**
+- The package was never actually used in the codebase
+- Validator middleware is available from 'hono/validator' (built into Hono core)
+- Project uses @hono/zod-openapi for validation with Zod schemas from packages/contracts
+- Removing unused dependencies reduces bundle size and maintenance burden
+
+**Changes made:**
+- Removed @hono/standard-validator from apps/api/package.json
+- Added missing import for validator from 'hono/validator' in apps/api/src/routes/work/tasks.ts
+- The validator function comes from Hono core, not the separate @hono/standard-validator package
+
+**Validation approach:**
+- All validation uses Zod schemas from packages/contracts
+- @hono/zod-openapi provides OpenAPI integration with Zod
+- hono/validator provides middleware for request validation
+
+---
+
 ## 8. Final Word
 
 Write comments as if the next person reading them is an AI that knows nothing about your project—because it will be. Make them precise, scoped, and linked to the specifications and tests that give them weight. Then build the automated checks that turn those comments from hopeful notes into guaranteed behavior.
