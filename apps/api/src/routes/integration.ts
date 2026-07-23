@@ -4,9 +4,13 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { z } from 'zod';
 
+import { authMiddleware, requireWorkspaceMembership, requireWorkspaceAccess } from '../lib/middleware.js';
 import { db } from '../lib/db.js';
 
 const integrationRouter = new Hono();
+
+// Apply authentication middleware to all routes
+integrationRouter.use('*', authMiddleware);
 
 // Schema for creating a task with calendar event
 const CreateTaskWithEventSchema = z.object({
@@ -29,6 +33,7 @@ const CreateTaskWithEventSchema = z.object({
 // Create task with optional calendar event
 integrationRouter.post(
   '/tasks-with-event',
+  requireWorkspaceAccess,
   validator('json', (value, c) => {
     const parsed = CreateTaskWithEventSchema.safeParse(value);
     if (!parsed.success) {
@@ -94,6 +99,7 @@ integrationRouter.post(
 // Link existing task to calendar event
 integrationRouter.post(
   '/link-task-event',
+  requireWorkspaceMembership,
   validator('json', (value, c) => {
     const schema = z.object({
       taskId: z.string().uuid(),
@@ -126,6 +132,7 @@ integrationRouter.post(
 // Unlink task from calendar event
 integrationRouter.post(
   '/unlink-task-event',
+  requireWorkspaceMembership,
   validator('json', (value, c) => {
     const schema = z.object({
       taskId: z.string().uuid(),
@@ -155,7 +162,7 @@ integrationRouter.post(
 );
 
 // Get tasks with their linked calendar events
-integrationRouter.get('/tasks-with-events/:workspaceId', async (c) => {
+integrationRouter.get('/tasks-with-events/:workspaceId', requireWorkspaceMembership, async (c) => {
   const workspaceId = c.req.param('workspaceId');
 
   try {

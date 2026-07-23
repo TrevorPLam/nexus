@@ -5,6 +5,8 @@ import { validator } from 'hono/validator';
 import {
   authMiddleware,
   requireWorkspaceMembership,
+  requireEntityAccess,
+  requireWorkspaceAccess,
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
@@ -52,6 +54,7 @@ projectsRouter.get('/workspaces', async (c) => {
 
 projectsRouter.post(
   '/projects',
+  requireWorkspaceAccess,
   idempotencyMiddleware,
   validator('json', (value, c) => {
     const parsed = CreateProjectRequest.safeParse(value);
@@ -76,7 +79,7 @@ projectsRouter.post(
   },
 );
 
-projectsRouter.get('/projects/:id', requireWorkspaceMembership, async (c) => {
+projectsRouter.get('/projects/:id', requireEntityAccess('projects'), async (c) => {
   const id = c.req.param('id');
   if (!id) {
     return c.json({ error: 'Invalid project ID' }, 400);

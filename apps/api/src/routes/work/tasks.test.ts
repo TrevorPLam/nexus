@@ -28,6 +28,14 @@ vi.mock('../../lib/middleware.js', () => ({
     c.set('workspaceId', 'test-workspace-id');
     await next();
   },
+  requireEntityAccess: () => async (c: Context, next: Next) => {
+    c.set('workspaceId', 'test-workspace-id');
+    await next();
+  },
+  requireWorkspaceAccess: async (c: Context, next: Next) => {
+    c.set('workspaceId', 'test-workspace-id');
+    await next();
+  },
   idempotencyMiddleware: async (_c: Context, next: Next) => {
     await next();
   },
@@ -82,7 +90,7 @@ describe('Work Tasks Routes', () => {
 
     expect(response.status).toBe(200);
     const data = await response.json();
-    expect(data).toHaveProperty('items');
+    expect(data).toHaveProperty('tasks');
     expect(getTasksByWorkspace).toHaveBeenCalled();
   });
 

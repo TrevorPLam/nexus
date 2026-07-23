@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
 
 const attendeesRouter = new Hono();
 
@@ -12,6 +12,7 @@ attendeesRouter.use('*', authMiddleware);
 
 attendeesRouter.post(
   '/event-attendees',
+  requireWorkspaceMembership,
   validator('json', (value, c) => {
     const parsed = CreateEventAttendeeRequest.safeParse(value);
     if (!parsed.success) {
@@ -35,7 +36,7 @@ attendeesRouter.post(
   },
 );
 
-attendeesRouter.get('/events/:eventId/attendees', async (c) => {
+attendeesRouter.get('/events/:eventId/attendees', requireWorkspaceMembership, async (c) => {
   const eventId = c.req.param('eventId');
   try {
     const attendees = await calendarOps.getEventAttendees(eventId);
@@ -46,7 +47,7 @@ attendeesRouter.get('/events/:eventId/attendees', async (c) => {
   }
 });
 
-attendeesRouter.put('/event-attendees/:id', async (c) => {
+attendeesRouter.put('/event-attendees/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
   const status = c.req.query('status');
   try {
@@ -64,7 +65,7 @@ attendeesRouter.put('/event-attendees/:id', async (c) => {
   }
 });
 
-attendeesRouter.delete('/event-attendees/:id', async (c) => {
+attendeesRouter.delete('/event-attendees/:id', requireWorkspaceMembership, async (c) => {
   const id = c.req.param('id');
   try {
     const attendee = await calendarOps.deleteEventAttendee(id);

@@ -8,7 +8,7 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership, requireEntityAccess, requireWorkspaceAccess } from '../../lib/middleware.js';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
 import { db } from '../../lib/db.js';
@@ -20,6 +20,7 @@ schedulingLinksRouter.use('*', authMiddleware);
 
 schedulingLinksRouter.post(
   '/scheduling-links',
+  requireWorkspaceAccess,
   validator('json', (value, c) => {
     const parsed = CreateSchedulingLinkRequest.safeParse(value);
     if (!parsed.success) {
@@ -56,7 +57,7 @@ schedulingLinksRouter.post(
   },
 );
 
-schedulingLinksRouter.get('/scheduling-links/:id', async (c) => {
+schedulingLinksRouter.get('/scheduling-links/:id', requireEntityAccess('schedulingLinks'), async (c) => {
   const id = c.req.param('id');
   try {
     const schedulingLink = await calendarOps.getSchedulingLinkById(id);
@@ -120,6 +121,7 @@ schedulingLinksRouter.get('/users/:userId/scheduling-links', async (c) => {
 
 schedulingLinksRouter.put(
   '/scheduling-links/:id',
+  requireEntityAccess('schedulingLinks'),
   validator('json', (value, c) => {
     const parsed = UpdateSchedulingLinkRequest.safeParse(value);
     if (!parsed.success) {
@@ -143,7 +145,7 @@ schedulingLinksRouter.put(
   },
 );
 
-schedulingLinksRouter.delete('/scheduling-links/:id', async (c) => {
+schedulingLinksRouter.delete('/scheduling-links/:id', requireEntityAccess('schedulingLinks'), async (c) => {
   const id = c.req.param('id');
   try {
     const schedulingLink = await calendarOps.deleteSchedulingLink(id);

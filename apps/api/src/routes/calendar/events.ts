@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership, requireEntityAccess, requireWorkspaceAccess } from '../../lib/middleware.js';
 
 const eventsRouter = new Hono();
 
@@ -12,6 +12,7 @@ eventsRouter.use('*', authMiddleware);
 
 eventsRouter.post(
   '/events',
+  requireWorkspaceAccess,
   validator('json', (value, c) => {
     const parsed = CreateEventRequest.safeParse(value);
     if (!parsed.success) {
@@ -38,7 +39,7 @@ eventsRouter.post(
   },
 );
 
-eventsRouter.get('/events/:id', requireWorkspaceMembership, async (c) => {
+eventsRouter.get('/events/:id', requireEntityAccess('events'), async (c) => {
   const id = c.req.param('id');
   if (!id) {
     return c.json({ error: 'Event ID required' }, 400);
@@ -55,7 +56,7 @@ eventsRouter.get('/events/:id', requireWorkspaceMembership, async (c) => {
   }
 });
 
-eventsRouter.get('/calendars/:calendarId/events', async (c) => {
+eventsRouter.get('/calendars/:calendarId/events', requireWorkspaceMembership, async (c) => {
   const calendarId = c.req.param('calendarId');
   const start = c.req.query('start');
   const end = c.req.query('end');
@@ -90,6 +91,7 @@ eventsRouter.get('/workspaces/:workspaceId/events', requireWorkspaceMembership, 
 
 eventsRouter.put(
   '/events/:id',
+  requireEntityAccess('events'),
   validator('json', (value, c) => {
     const parsed = UpdateEventRequest.safeParse(value);
     if (!parsed.success) {

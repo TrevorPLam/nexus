@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership, requireEntityAccess, requireWorkspaceAccess } from '../../lib/middleware.js';
 
 const calendarsRouter = new Hono();
 
@@ -12,6 +12,7 @@ calendarsRouter.use('*', authMiddleware);
 
 calendarsRouter.post(
   '/calendars',
+  requireWorkspaceAccess,
   validator('json', (value, c) => {
     const parsed = CreateCalendarRequest.safeParse(value);
     if (!parsed.success) {
@@ -36,7 +37,7 @@ calendarsRouter.post(
   },
 );
 
-calendarsRouter.get('/calendars/:id', requireWorkspaceMembership, async (c) => {
+calendarsRouter.get('/calendars/:id', requireEntityAccess('calendars'), async (c) => {
   const id = c.req.param('id');
   if (!id) {
     return c.json({ error: 'Calendar ID required' }, 400);

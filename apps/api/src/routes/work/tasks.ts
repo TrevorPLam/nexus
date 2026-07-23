@@ -5,6 +5,8 @@ import { validator } from 'hono/validator';
 import {
   authMiddleware,
   requireWorkspaceMembership,
+  requireEntityAccess,
+  requireWorkspaceAccess,
   idempotencyMiddleware,
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
@@ -16,6 +18,7 @@ tasksRouter.use('*', authMiddleware);
 
 tasksRouter.post(
   '/tasks',
+  requireWorkspaceAccess,
   idempotencyMiddleware,
   validator('json', (value, c) => {
     const parsed = CreateTaskRequest.safeParse(value);
@@ -44,7 +47,7 @@ tasksRouter.post(
   },
 );
 
-tasksRouter.get('/tasks/:id', async (c) => {
+tasksRouter.get('/tasks/:id', requireEntityAccess('tasks'), async (c) => {
   const id = c.req.param('id');
   try {
     const task = await workOps.getTaskById(id);

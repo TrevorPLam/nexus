@@ -27,6 +27,14 @@ vi.mock('../../lib/middleware.js', () => ({
     c.set('workspaceId', 'test-workspace-id');
     await next();
   },
+  requireEntityAccess: () => async (c: Context, next: Next) => {
+    c.set('workspaceId', 'test-workspace-id');
+    await next();
+  },
+  requireWorkspaceAccess: async (c: Context, next: Next) => {
+    c.set('workspaceId', 'test-workspace-id');
+    await next();
+  },
 }));
 
 describe('Calendar Events Routes', () => {

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { authMiddleware, idempotencyMiddleware } from '../../lib/middleware.js';
+import { authMiddleware, idempotencyMiddleware, requireWorkspaceAccess } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
 
 const batchOperationsRouter = new Hono();
@@ -8,7 +8,7 @@ const batchOperationsRouter = new Hono();
 // Apply authentication middleware to all routes
 batchOperationsRouter.use('*', authMiddleware);
 
-batchOperationsRouter.post('/tasks/batch/complete', idempotencyMiddleware, async (c) => {
+batchOperationsRouter.post('/tasks/batch/complete', requireWorkspaceAccess, idempotencyMiddleware, async (c) => {
   const { taskIds } = await c.req.json();
   if (!Array.isArray(taskIds) || taskIds.length === 0) {
     return c.json({ error: 'taskIds must be a non-empty array' }, 400);
@@ -23,7 +23,7 @@ batchOperationsRouter.post('/tasks/batch/complete', idempotencyMiddleware, async
   }
 });
 
-batchOperationsRouter.post('/tasks/batch/defer', idempotencyMiddleware, async (c) => {
+batchOperationsRouter.post('/tasks/batch/defer', requireWorkspaceAccess, idempotencyMiddleware, async (c) => {
   const { taskIds, deferToDate } = await c.req.json();
   if (!Array.isArray(taskIds) || taskIds.length === 0) {
     return c.json({ error: 'taskIds must be a non-empty array' }, 400);
@@ -41,7 +41,7 @@ batchOperationsRouter.post('/tasks/batch/defer', idempotencyMiddleware, async (c
   }
 });
 
-batchOperationsRouter.post('/tasks/batch/reschedule', idempotencyMiddleware, async (c) => {
+batchOperationsRouter.post('/tasks/batch/reschedule', requireWorkspaceAccess, idempotencyMiddleware, async (c) => {
   const { taskIds, newDueDate } = await c.req.json();
   if (!Array.isArray(taskIds) || taskIds.length === 0) {
     return c.json({ error: 'taskIds must be a non-empty array' }, 400);
@@ -59,7 +59,7 @@ batchOperationsRouter.post('/tasks/batch/reschedule', idempotencyMiddleware, asy
   }
 });
 
-batchOperationsRouter.post('/tasks/batch/update-status', idempotencyMiddleware, async (c) => {
+batchOperationsRouter.post('/tasks/batch/update-status', requireWorkspaceAccess, idempotencyMiddleware, async (c) => {
   const { taskIds, newStatus } = await c.req.json();
   if (!Array.isArray(taskIds) || taskIds.length === 0) {
     return c.json({ error: 'taskIds must be a non-empty array' }, 400);

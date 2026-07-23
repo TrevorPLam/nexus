@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 
 import * as calendarOps from '../../lib/calendar-operations.js';
-import { authMiddleware } from '../../lib/middleware.js';
+import { authMiddleware, requireWorkspaceMembership } from '../../lib/middleware.js';
 import { expandRecurringEvent } from '../../lib/recurrence.js';
 
 const recurringRouter = new Hono();
@@ -9,7 +9,7 @@ const recurringRouter = new Hono();
 // Apply authentication middleware to all routes
 recurringRouter.use('*', authMiddleware);
 
-recurringRouter.get('/recurring/:recurrenceId/instances', async (c) => {
+recurringRouter.get('/recurring/:recurrenceId/instances', requireWorkspaceMembership, async (c) => {
   const recurrenceId = c.req.param('recurrenceId');
   const startDate = c.req.query('start');
   const endDate = c.req.query('end');
@@ -63,7 +63,7 @@ recurringRouter.get('/recurring/:recurrenceId/instances', async (c) => {
   }
 });
 
-recurringRouter.get('/recurring/:recurrenceId/base', async (c) => {
+recurringRouter.get('/recurring/:recurrenceId/base', requireWorkspaceMembership, async (c) => {
   const recurrenceId = c.req.param('recurrenceId');
   try {
     const baseEvent = await calendarOps.getBaseRecurringEvent(recurrenceId);
