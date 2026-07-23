@@ -6,12 +6,16 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11"
+      "version": "10"
     },
     "runtime": {
       "name": "node",
-      "version": "24"
+      "version": "22"
     }
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
   },
   "scripts": {
     "dev": "turbo run dev",
