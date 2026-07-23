@@ -1215,9 +1215,9 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-027: Implement web hook tests - useTaskDetails
 
-- [ ] TASK-027
-- Status: ready
-- Related Files: `apps/web/src/hooks/useTaskDetails.test.ts`, `apps/web/src/hooks/useTaskDetails.ts`
+- [x] TASK-027
+- Status: done
+- Related Files: `apps/web/src/hooks/useTaskDetails.test.tsx`, `apps/web/src/hooks/useTaskDetails.ts`
 - Definition of Done: All 16 test placeholders implemented, tests pass
 - Out of Scope: Other web hooks (separate tasks)
 - Rules to Follow:
@@ -1232,62 +1232,62 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-027-001 | AGENT | `apps/web/src/hooks/useTaskDetails.ts`
+- [x] TASK-027-001 | AGENT | `apps/web/src/hooks/useTaskDetails.ts`
   Read useTaskDetails hook to understand functionality and return values.
 
-- [ ] TASK-027-002 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-002 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: fetches task dependencies when task selected
 
-- [ ] TASK-027-003 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-003 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: creates task dependency and invalidates query
 
-- [ ] TASK-027-004 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-004 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: deletes task dependency and invalidates query
 
-- [ ] TASK-027-005 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-005 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: fetches task assignees when task selected
 
-- [ ] TASK-027-006 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-006 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: creates task assignee and invalidates query
 
-- [ ] TASK-027-007 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-007 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: deletes task assignee and invalidates query
 
-- [ ] TASK-027-008 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-008 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: fetches task comments when task selected
 
-- [ ] TASK-027-009 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-009 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: creates task comment and invalidates query
 
-- [ ] TASK-027-010 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-010 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: deletes task comment and invalidates query
 
-- [ ] TASK-027-011 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-011 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: fetches time entries when task selected
 
-- [ ] TASK-027-012 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-012 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: creates time entry and invalidates query
 
-- [ ] TASK-027-013 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-013 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: updates time entry and invalidates query
 
-- [ ] TASK-027-014 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-014 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: deletes time entry and invalidates query
 
-- [ ] TASK-027-015 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-015 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: fetches task attachments when task selected
 
-- [ ] TASK-027-016 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-016 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: creates task attachment and invalidates query
 
-- [ ] TASK-027-017 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
+- [x] TASK-027-017 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
   Implement test: deletes task attachment and invalidates query
 
-- [ ] TASK-027-018 | AGENT | `apps/web/src/hooks/useTaskDetails.test.ts`
-  Run useTaskDetails tests: `pnpm --filter @life-os/web test -- useTaskDetails`
+- [x] TASK-027-018 | AGENT | `apps/web/src/hooks/useTaskDetails.test.tsx`
+  Run useTaskDetails tests: `pnpm --filter @life-os/web exec vitest run src/hooks/useTaskDetails.test.tsx` - 17/17 tests passed
 
-- [ ] TASK-027-019 | AGENT | `apps/web/src/hooks/`
-  Run type checking: `pnpm --filter @life-os/web typecheck`
+- [x] TASK-027-019 | AGENT | `apps/web/src/hooks/`
+  Run type checking: `pnpm --filter @life-os/web typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
