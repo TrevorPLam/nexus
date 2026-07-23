@@ -105,8 +105,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-003: Implement audit log creation for task mutations
 
-- [ ] TASK-003
-- Status: ready
+- [x] TASK-003
+- Status: done
 - Related Files: `apps/api/src/lib/command.test.ts`, `apps/api/src/lib/work-operations.ts`
 - Definition of Done: Audit logs created for all task mutations (create, update, delete), tests pass
 - Out of Scope: Calendar event audit logs (separate task)
@@ -150,8 +150,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-004: Implement outbox event creation for task mutations
 
-- [ ] TASK-004
-- Status: ready
+- [x] TASK-004
+- Status: done
 - Related Files: `apps/api/src/lib/command.test.ts`, `apps/api/src/lib/work-operations.ts`
 - Definition of Done: Outbox events created for all task mutations, worker can process them, tests pass
 - Out of Scope: Calendar event outbox events (separate task)
@@ -195,8 +195,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-005: Implement command pattern for calendar mutations
 
-- [ ] TASK-005
-- Status: ready
+- [x] TASK-005
+- Status: done
 - Related Files: `apps/api/src/lib/command.test.ts`, `apps/api/src/lib/calendar-operations.ts`
 - Definition of Done: Calendar mutations use command pattern, tests pass
 - Out of Scope: Task mutations (handled in TASK-003, TASK-004)
@@ -237,8 +237,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-006: Implement audit log creation for calendar mutations
 
-- [ ] TASK-006
-- Status: ready
+- [x] TASK-006
+- Status: done
 - Related Files: `apps/api/src/lib/command.test.ts`, `apps/api/src/lib/calendar-operations.ts`
 - Definition of Done: Audit logs created for all calendar mutations, tests pass
 - Out of Scope: Task audit logs (handled in TASK-003)
@@ -276,8 +276,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-007: Implement outbox event creation for calendar mutations
 
-- [ ] TASK-007
-- Status: ready
+- [x] TASK-007
+- Status: done
 - Related Files: `apps/api/src/lib/command.test.ts`, `apps/api/src/lib/calendar-operations.ts`
 - Definition of Done: Outbox events created for all calendar mutations, tests pass
 - Out of Scope: Task outbox events (handled in TASK-004)
@@ -315,8 +315,8 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-008: Implement PowerSync query for workspace-scoped projects
 
-- [ ] TASK-008
-- Status: ready
+- [x] TASK-008
+- Status: done
 - Related Files: `apps/mobile/src/hooks/useWork.ts`, `packages/mobile-data/src/`
 - Definition of Done: PowerSync query returns workspace-scoped projects, mobile app displays projects correctly
 - Out of Scope: Tasks, calendars, events (separate tasks)
@@ -332,28 +332,28 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-008-001 | AGENT | `packages/mobile-data/src/`
+- [x] TASK-008-001 | AGENT | `packages/mobile-data/src/`
   Read PowerSync schema to understand projects table structure and indexes.
 
-- [ ] TASK-008-002 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-008-002 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Read existing useWork hook to understand current implementation and auth context access.
 
-- [ ] TASK-008-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-008-003 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Implement PowerSync query for workspace-scoped projects using workspace_id from auth context.
 
-- [ ] TASK-008-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-008-004 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Add error handling and loading states to useProjects hook.
 
-- [ ] TASK-008-005 | AGENT | `apps/mobile/app/work/index.test.tsx`
+- [x] TASK-008-005 | AGENT | `apps/mobile/app/work/index.test.tsx`
   Update test to verify PowerSync query returns correct workspace-scoped projects.
 
-- [ ] TASK-008-006 | AGENT | `apps/mobile/app/work/offline-regression.test.tsx`
+- [x] TASK-008-006 | AGENT | `apps/mobile/app/work/offline-regression.test.tsx`
   Update offline regression test to verify projects work offline.
 
-- [ ] TASK-008-007 | AGENT | `apps/mobile/src/hooks/useWork.ts`
+- [x] TASK-008-007 | AGENT | `apps/mobile/src/hooks/useWork.ts`
   Run mobile tests: `pnpm --filter @life-os/mobile test`
 
-- [ ] TASK-008-008 | AGENT | `apps/mobile/src/hooks/`
+- [x] TASK-008-008 | AGENT | `apps/mobile/src/hooks/`
   Run type checking: `pnpm --filter @life-os/mobile typecheck`
 
 ---

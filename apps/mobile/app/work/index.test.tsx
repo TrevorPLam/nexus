@@ -9,8 +9,9 @@ vi.mock('../../src/lib/powersync/provider', () => ({
   PowerSyncProvider: ({ children }: { children: React.ReactNode }) => children,
   usePowerSync: () => ({
     db: {
-      getAll: vi.fn(),
-      watch: vi.fn(),
+      getAll: vi.fn().mockResolvedValue([
+        { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },
+      ]),
     },
     isInitialized: true,
     error: null,
