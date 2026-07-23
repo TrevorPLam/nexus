@@ -889,9 +889,9 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ## TASK-020: Implement UI component tests - Select
 
-- [ ] TASK-020
-- Status: ready
-- Related Files: `packages/ui/src/components/Select.test.tsx`, `packages/ui/src/components/Select.tsx`
+- [x] TASK-020
+- Status: done
+- Related Files: `packages/ui/src/components/Select.test.tsx`, `packages/ui/src/components/Select.tsx`, `packages/ui/src/test/setup.ts`
 - Definition of Done: All 6 test placeholders implemented, tests pass
 - Out of Scope: Other UI components (separate tasks)
 - Rules to Follow:
@@ -906,32 +906,32 @@ Generated from codebase TODO assessment on 2026-07-23
 
 ### Subtasks
 
-- [ ] TASK-020-001 | AGENT | `packages/ui/src/components/Select.tsx`
+- [x] TASK-020-001 | AGENT | `packages/ui/src/components/Select.tsx`
   Read Select component to understand props and behavior.
 
-- [ ] TASK-020-002 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-002 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: renders select input
 
-- [ ] TASK-020-003 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-003 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: renders options
 
-- [ ] TASK-020-004 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-004 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: displays placeholder when no value selected
 
-- [ ] TASK-020-005 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-005 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: calls onChange when option selected
 
-- [ ] TASK-020-006 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-006 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: is disabled when disabled prop is true
 
-- [ ] TASK-020-007 | AGENT | `packages/ui/src/components/Select.test.tsx`
+- [x] TASK-020-007 | AGENT | `packages/ui/src/components/Select.test.tsx`
   Implement test: displays selected value
 
-- [ ] TASK-020-008 | AGENT | `packages/ui/src/components/Select.test.tsx`
-  Run Select tests: `pnpm --filter @life-os/ui test -- Select`
+- [x] TASK-020-008 | AGENT | `packages/ui/src/components/Select.test.tsx`
+  Run Select tests: `pnpm --filter @life-os/ui test -- Select` - 7/7 tests passed
 
-- [ ] TASK-020-009 | AGENT | `packages/ui/src/components/`
-  Run type checking: `pnpm --filter @life-os/ui typecheck`
+- [x] TASK-020-009 | AGENT | `packages/ui/src/components/`
+  Run type checking: `pnpm --filter @life-os/ui typecheck` - Pre-existing type errors in UI package (not caused by this task)
 
 ---
 
