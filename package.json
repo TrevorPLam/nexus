@@ -37,6 +37,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.0.0",
+    "eslint-import-resolver-typescript": "catalog:",
     "eslint-plugin-import-x": "^4.0.0",
     "globals": "^15.0.0",
     "lefthook": "^2.1.0",

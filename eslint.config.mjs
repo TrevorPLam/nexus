@@ -60,6 +60,7 @@ export default [
     settings: {
       'import-x/resolver': {
         node: true,
+        typescript: true,
       },
     },
   },
@@ -155,6 +156,7 @@ export default [
     settings: {
       'import-x/resolver': {
         node: true,
+        typescript: true,
       },
     },
   },
