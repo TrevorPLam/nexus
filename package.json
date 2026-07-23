@@ -21,7 +21,13 @@
     "format": "prettier --ignore-path ./.prettierignore . --ignore-unknown --write",
     "format:check": "prettier --ignore-path ./.prettierignore . --ignore-unknown --check",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "validate": "turbo run validate",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "validate:contracts": "pnpm --filter @life-os/contracts exec vitest run test/work.test.ts test/calendar.test.ts",
+    "validate:api": "pnpm --filter @life-os/api exec vitest run src/lib src/routes",
+    "validate:web": "pnpm --filter @life-os/web exec vitest run src/app/work src/app/calendar",
+    "validate:mobile": "pnpm --filter @life-os/mobile exec vitest run app/work app/calendar",
+    "validate:all": "pnpm validate:contracts && pnpm validate:api && pnpm validate:web && pnpm validate:mobile"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.0.0",

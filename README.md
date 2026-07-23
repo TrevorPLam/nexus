@@ -2,6 +2,10 @@
 
 Life OS is a comprehensive personal productivity system designed to integrate work management and calendar functionality into a unified experience. Built as a high-performance monorepo, it leverages modern TypeScript tooling and a robust offline-first synchronization strategy.
 
+The API provides interactive OpenAPI documentation via Swagger UI at `/ui` (when running locally or in staging).
+
+**Note:** OpenAPI coverage is currently partial. Core CRUD endpoints (create/get) for Tasks and Events have full OpenAPI definitions, while bulk operations, filtering, and specialized endpoints use plain Hono methods. This means the generated OpenAPI spec is incomplete. Full OpenAPI coverage is planned for future iterations.
+
 ## 🏗️ Architecture Overview
 
 Life OS is architected as a monorepo using **pnpm workspaces** and **Turborepo** for efficient build orchestration and dependency management.
@@ -98,11 +102,21 @@ pnpm --filter @life-os/database generate
 pnpm --filter @life-os/database push
 ```
 
-## 🧪 Testing
+## 🧪 Testing & Validation
 ```bash
 # Run all tests
 pnpm test
 
+# Run full module validation (lint, typecheck, test)
+pnpm validate
+
 # Run tests with coverage
 pnpm turbo run test -- --coverage
+
+# Targeted module validation
+pnpm validate:contracts  # Validate contract schemas
+pnpm validate:api        # Validate API routes and lib
+pnpm validate:web        # Validate web Work/Calendar modules
+pnpm validate:mobile     # Validate mobile Work/Calendar modules
+pnpm validate:all        # Run all targeted validations
 ```
