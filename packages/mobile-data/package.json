@@ -20,7 +20,7 @@
     "@life-os/contracts": "workspace:*",
     "@powersync/drizzle-driver": "^0.8.0",
     "@powersync/react-native": "^1.0.0",
-    "drizzle-orm": "^0.45.0"
+    "drizzle-orm": "catalog:"
   },
   "devDependencies": {
     "@life-os/tsconfig": "workspace:*",

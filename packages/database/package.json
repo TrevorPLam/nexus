@@ -21,7 +21,7 @@
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.0",
+    "drizzle-orm": "catalog:",
     "postgres": "^3.4.0"
   },
   "devDependencies": {
