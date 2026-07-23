@@ -1629,3 +1629,83 @@ The project management software market in 2026 offers tools for every use case, 
 **Key Takeaway**: The best tool is the one your team will actually use. Adoption friction, learning curve, and fit with existing workflows matter more than feature count. Start with your team type, size, and primary workflow, then evaluate tools within that category.
 
 **Recommendation**: For most cross-functional teams, Asana (structured) or Monday.com (visual) provide the best balance of features, usability, and adoption. For software teams, Linear (modern/fast) or Jira (enterprise depth) lead. For knowledge-heavy teams, Notion excels. For budget-conscious teams needing everything, ClickUp delivers the best value.
+
+---
+
+## Dependency Validation
+
+The Life OS monorepo includes an automated dependency validation script to ensure dependency hygiene and prevent common anti-patterns.
+
+### Running the Validation
+
+```bash
+# Run dependency validation locally
+pnpm validate-deps
+```
+
+### Validation Checks
+
+The script performs the following checks:
+
+1. **Workspace Protocol Violations** - Ensures internal dependencies use `workspace:` protocol
+   - Error: Internal dependency "@life-os/contracts" should use "workspace:" protocol, but uses "^0.0.1"
+   - Fix: Change version to "workspace:*"
+
+2. **Catalog Mode Violations** - Ensures dependencies in catalog use `catalog:` protocol when catalogMode is strict
+   - Error: Dependency "zod" is in catalog but uses "^4.0.0" instead of "catalog:"
+   - Fix: Change version to "catalog:"
+
+3. **TypeScript Version Drift** - Detects inconsistent TypeScript versions across packages
+   - Warning: TypeScript version drift: @life-os/api uses ^5.9.0, but @life-os/vitest-config uses catalog:
+   - Fix: Align TypeScript versions across all packages
+
+4. **React/React Native Version Alignment** - Detects inconsistent React versions
+   - Warning: React version drift: @life-os/ui uses ^18.3.0, but @life-os/web uses ^18.2.0
+   - Fix: Align React versions across all packages
+
+5. **Missing Test Scripts** - Warns when vitest is in devDependencies but no test script exists
+   - Warning: Package has vitest in dependencies but no "test" script
+   - Fix: Add "test": "vitest" to scripts section
+
+6. **Missing Exports Field** - Warns when packages are missing exports field
+   - Warning: Package is missing "exports" field in package.json
+   - Fix: Add exports field to package.json
+
+### Fixing Common Issues
+
+**Catalog Protocol Violations**
+```json
+// Before
+"dependencies": {
+  "zod": "^4.0.0"
+}
+
+// After
+"dependencies": {
+  "zod": "catalog:"
+}
+```
+
+**Workspace Protocol Violations**
+```json
+// Before
+"dependencies": {
+  "@life-os/contracts": "^0.0.1"
+}
+
+// After
+"dependencies": {
+  "@life-os/contracts": "workspace:*"
+}
+```
+
+### CI Integration
+
+The validation script runs automatically on all pull requests via GitHub Actions (`.github/workflows/validate-deps.yml`). PRs with dependency violations will fail CI checks.
+
+### Severity Levels
+
+- **Error**: Violations that must be fixed (workspace protocol, catalog protocol)
+- **Warning**: Recommendations that should be addressed (version drift, missing scripts)
+
+The script exits with code 1 if any errors are found, causing CI to fail. Warnings do not cause CI failure but should be reviewed.
