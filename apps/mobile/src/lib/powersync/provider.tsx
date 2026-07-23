@@ -67,7 +67,7 @@ export function PowerSyncProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    init();
+    void init();
 
     return () => {
       mounted = false;

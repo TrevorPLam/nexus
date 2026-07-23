@@ -41,8 +41,8 @@ import type { ProjectRecord, TaskRecord } from '@life-os/mobile-data';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '../contexts/AuthContext';
-import { usePowerSync } from '../lib/powersync/provider';
 import { enqueueCommand } from '../lib/command-queue';
+import { usePowerSync } from '../lib/powersync/provider';
 
 /**
  * Hook to fetch projects for the selected workspace
@@ -59,7 +59,7 @@ export function useProjects() {
       }
 
       // Query projects filtered by workspace_id using PowerSync getAll
-      // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+      // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
       const result = await db.getAll(
         'SELECT * FROM projects WHERE workspace_id = ? ORDER BY created_at DESC',
         [selectedWorkspace.id],
@@ -86,7 +86,7 @@ export function useTasks(projectId?: string) {
       }
 
       // Query tasks filtered by workspace_id and optionally by project_id
-      // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+      // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
       const result = await db.getAll(
         projectId
           ? 'SELECT * FROM tasks WHERE workspace_id = ? AND project_id = ? ORDER BY created_at DESC'
@@ -125,7 +125,7 @@ export function useCreateProject() {
       return { id: commandId, ...data, workspace_id: selectedWorkspace.id } as ProjectRecord;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      void queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
 }
@@ -163,7 +163,7 @@ export function useCreateTask() {
       return { id: commandId, ...data, workspace_id: selectedWorkspace.id } as TaskRecord;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
@@ -186,7 +186,7 @@ export function useUpdateTaskStatus() {
       return { id: commandId, taskId, status };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
@@ -208,7 +208,7 @@ export function useDeleteTask() {
       return { id: commandId, taskId };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      void queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
