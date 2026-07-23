@@ -8,10 +8,12 @@
  * Boundaries:
  * - Specific to the mobile application's local SQLite database.
  * - Does not handle synchronization logic (handled by PowerSync Cloud).
+ * - Purely declarative schema definition; no runtime database operations.
  *
  * Critical invariants:
  * - Must strictly match the PostgreSQL schema columns and types for successful replication.
  * - All tables must have an 'id' column as the primary key (automatically handled by PowerSync).
+ * - Enum-like fields (status, priority) MUST match backend Zod schema constraints.
  *
  * Side effects:
  * - Defines the physical structure of the local SQLite database on mobile devices.
@@ -20,11 +22,21 @@
  * - High. Schema mismatches between mobile and server will cause sync failures.
  *
  * Links:
- * - packages/database/src/schema/ (PostgreSQL schema to mirror)
- * - apps/mobile/src/lib/powersync/database.ts (PowerSync initialization)
+ * - packages/database/src/schema/
+ * - apps/mobile/src/lib/powersync/database.ts
+ *
+ * Tags:
+ * - domain: database
+ * - risk: high
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: offline-sync, powersync, sqlite, mobile
  *
  * File:
  * - packages/mobile-data/src/schema.ts
+ *
+ * Last updated:
+ * - July 23, 2026
  */
 
 import { column, Schema, Table } from '@powersync/react-native';

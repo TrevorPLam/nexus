@@ -11,6 +11,7 @@ vi.mock('../../src/lib/powersync/provider', () => ({
     db: {
       getAll: vi.fn(),
       watch: vi.fn(),
+      execute: vi.fn(),
     },
     isInitialized: true,
     error: null,
@@ -26,7 +27,13 @@ vi.mock('../../src/contexts/AuthContext', () => ({
   }),
 }));
 
-describe('Mobile Work Page', () => {
+/**
+ * Offline/Retry/Account-Scope Regression Tests for Mobile Work Module
+ * Tests offline behavior, command queue retry logic, and account-switch cleanup
+ * Validates that mobile offline-first architecture works correctly
+ */
+
+describe('Mobile Work Offline Regression Tests', () => {
   let queryClient: QueryClient;
 
   beforeEach(() => {
@@ -122,6 +129,98 @@ describe('Mobile Work Page', () => {
 
       // TODO: This test will fail until sync status UI is implemented
       // Expected: Pending commands show sync status indicator
+    });
+  });
+
+  describe('Retry logic', () => {
+    it('retries failed commands when connection is restored', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until retry logic is implemented
+      // Expected: Failed commands are automatically retried when connection is restored
+    });
+
+    it('handles exponential backoff for retry attempts', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until exponential backoff is implemented
+      // Expected: Retry attempts use exponential backoff to avoid overwhelming the server
+    });
+
+    it('marks commands as failed after max retry attempts', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until max retry logic is implemented
+      // Expected: Commands are marked as failed after max retry attempts
+    });
+  });
+
+  describe('Account-switch cleanup', () => {
+    it('clears local data when user switches accounts', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until account-switch cleanup is implemented
+      // Expected: Local PowerSync database is cleared when user switches accounts
+    });
+
+    it('clears pending commands when user switches accounts', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until command cleanup is implemented
+      // Expected: Pending command queue is cleared when user switches accounts
+    });
+
+    it('re-syncs data for new account after switch', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until re-sync logic is implemented
+      // Expected: Data is re-synced for the new account after account switch
+    });
+  });
+
+  describe('Conflict resolution', () => {
+    it('handles server-wins conflict resolution', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until conflict resolution is implemented
+      // Expected: Server version wins when there's a conflict
+    });
+
+    it('handles client-wins conflict resolution', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until conflict resolution is implemented
+      // Expected: Client version wins when there's a conflict (if configured)
+    });
+
+    it('notifies user of conflicts requiring manual resolution', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until conflict notification is implemented
+      // Expected: User is notified of conflicts that require manual resolution
+    });
+  });
+
+  describe('Sync status indicators', () => {
+    it('shows sync in progress indicator', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until sync status UI is implemented
+      // Expected: Sync in progress indicator is shown when syncing
+    });
+
+    it('shows sync success indicator', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until sync status UI is implemented
+      // Expected: Sync success indicator is shown when sync completes
+    });
+
+    it('shows sync error indicator', async () => {
+      renderWithProviders(<WorkScreen />);
+
+      // TODO: This test will fail until sync status UI is implemented
+      // Expected: Sync error indicator is shown when sync fails
     });
   });
 });

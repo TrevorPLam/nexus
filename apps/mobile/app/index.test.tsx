@@ -6,21 +6,21 @@ import HomeScreen from './index';
 describe('Mobile Home Screen', () => {
   it('renders title', () => {
     render(<HomeScreen />);
-    expect(screen.getByText('Life OS')).toBeInTheDocument();
+    expect(screen.getByText('Life OS')).toBeTruthy();
   });
 
   it('renders subtitle', () => {
     render(<HomeScreen />);
-    expect(screen.getByText('Personal productivity system')).toBeInTheDocument();
+    expect(screen.getByText('Personal productivity system')).toBeTruthy();
   });
 
   it('renders Work button', () => {
     render(<HomeScreen />);
-    expect(screen.getByText('Work')).toBeInTheDocument();
+    expect(screen.getByText('Work')).toBeTruthy();
   });
 
   it('renders Calendar button', () => {
     render(<HomeScreen />);
-    expect(screen.getByText('Calendar')).toBeInTheDocument();
+    expect(screen.getByText('Calendar')).toBeTruthy();
   });
 });
