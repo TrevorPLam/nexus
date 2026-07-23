@@ -37,7 +37,14 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 
 import { Button, Input, Modal, TextArea } from '@life-os/ui';
 import { useCreateTask, useProjects } from '../../../src/hooks/useWork';
@@ -216,30 +223,16 @@ export function TaskCreationModal({ isOpen, onClose }: TaskCreationModalProps) {
           </View>
 
           <View style={styles.buttonContainer}>
-            <Button
-              variant="secondary"
-              onPress={handleClose}
-              disabled={createTask.isPending}
-            >
+            <Button variant="secondary" onPress={handleClose} disabled={createTask.isPending}>
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onPress={handleSubmit}
-              disabled={createTask.isPending}
-            >
-              {createTask.isPending ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                'Create'
-              )}
+            <Button variant="primary" onPress={handleSubmit} disabled={createTask.isPending}>
+              {createTask.isPending ? <ActivityIndicator size="small" color="white" /> : 'Create'}
             </Button>
           </View>
 
           {createTask.error && (
-            <Text style={styles.errorText}>
-              Failed to create task. Please try again.
-            </Text>
+            <Text style={styles.errorText}>Failed to create task. Please try again.</Text>
           )}
         </View>
       </ScrollView>

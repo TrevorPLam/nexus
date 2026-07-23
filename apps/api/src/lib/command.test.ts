@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { executeCommand, executeCommandWithoutIdempotency, CommandContext } from './command-context.js';
+import {
+  executeCommand,
+  executeCommandWithoutIdempotency,
+  CommandContext,
+} from './command-context.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
 
@@ -69,15 +73,11 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        {
-          action: 'create',
-          entityType: 'task',
-          entityId: 'task-1',
-        },
-      );
+      await executeCommand(context, mockCommand, {
+        action: 'create',
+        entityType: 'task',
+        entityId: 'task-1',
+      });
 
       expect(createAuditLog).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -101,16 +101,12 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        {
-          action: 'update',
-          entityType: 'task',
-          entityId: 'task-1',
-          changes: { status: 'done' },
-        },
-      );
+      await executeCommand(context, mockCommand, {
+        action: 'update',
+        entityType: 'task',
+        entityId: 'task-1',
+        changes: { status: 'done' },
+      });
 
       expect(createAuditLog).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -134,15 +130,11 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        {
-          action: 'delete',
-          entityType: 'task',
-          entityId: 'task-1',
-        },
-      );
+      await executeCommand(context, mockCommand, {
+        action: 'delete',
+        entityType: 'task',
+        entityId: 'task-1',
+      });
 
       expect(createAuditLog).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -168,17 +160,12 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        undefined,
-        {
-          eventType: 'task.created',
-          aggregateType: 'task',
-          aggregateId: 'task-1',
-          payload: { id: 'task-1' },
-        },
-      );
+      await executeCommand(context, mockCommand, undefined, {
+        eventType: 'task.created',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1' },
+      });
 
       expect(createOutboxEvent).toHaveBeenCalledWith({
         eventType: 'task.created',
@@ -200,17 +187,12 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        undefined,
-        {
-          eventType: 'task.updated',
-          aggregateType: 'task',
-          aggregateId: 'task-1',
-          payload: { id: 'task-1', status: 'done' },
-        },
-      );
+      await executeCommand(context, mockCommand, undefined, {
+        eventType: 'task.updated',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1', status: 'done' },
+      });
 
       expect(createOutboxEvent).toHaveBeenCalledWith({
         eventType: 'task.updated',
@@ -232,17 +214,12 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        undefined,
-        {
-          eventType: 'task.deleted',
-          aggregateType: 'task',
-          aggregateId: 'task-1',
-          payload: { id: 'task-1' },
-        },
-      );
+      await executeCommand(context, mockCommand, undefined, {
+        eventType: 'task.deleted',
+        aggregateType: 'task',
+        aggregateId: 'task-1',
+        payload: { id: 'task-1' },
+      });
 
       expect(createOutboxEvent).toHaveBeenCalledWith({
         eventType: 'task.deleted',
@@ -436,15 +413,11 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        {
-          action: 'create',
-          entityType: 'event',
-          entityId: 'event-1',
-        },
-      );
+      await executeCommand(context, mockCommand, {
+        action: 'create',
+        entityType: 'event',
+        entityId: 'event-1',
+      });
 
       expect(createAuditLog).toHaveBeenCalledWith({
         userId: 'user-1',
@@ -468,17 +441,12 @@ describe('Command Pattern - Implementation Verification', () => {
         workspaceId: 'workspace-1',
       };
 
-      await executeCommand(
-        context,
-        mockCommand,
-        undefined,
-        {
-          eventType: 'event.created',
-          aggregateType: 'event',
-          aggregateId: 'event-1',
-          payload: { id: 'event-1' },
-        },
-      );
+      await executeCommand(context, mockCommand, undefined, {
+        eventType: 'event.created',
+        aggregateType: 'event',
+        aggregateId: 'event-1',
+        payload: { id: 'event-1' },
+      });
 
       expect(createOutboxEvent).toHaveBeenCalledWith({
         eventType: 'event.created',

@@ -37,10 +37,24 @@
 
 import type { ProjectRecord, TaskRecord } from '@life-os/mobile-data';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native';
 
 import { useAuth } from '../../src/contexts/AuthContext';
-import { useProjects, useTasks, useCreateProject, useCreateTask, useUpdateTaskStatus } from '../../src/hooks/useWork';
+import {
+  useProjects,
+  useTasks,
+  useCreateProject,
+  useCreateTask,
+  useUpdateTaskStatus,
+} from '../../src/hooks/useWork';
 import { ProjectCreationModal } from './components/ProjectCreationModal';
 import { TaskCreationModal } from './components/TaskCreationModal';
 import { TaskDetailsModal } from './components/TaskDetailsModal';
@@ -77,7 +91,9 @@ export default function WorkScreen() {
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.card}>
-            <Text style={styles.cardText}>Please select a workspace to view projects and tasks.</Text>
+            <Text style={styles.cardText}>
+              Please select a workspace to view projects and tasks.
+            </Text>
           </View>
         </ScrollView>
       </View>
@@ -166,10 +182,7 @@ export default function WorkScreen() {
         onClose={() => setIsProjectModalOpen(false)}
       />
 
-      <TaskCreationModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-      />
+      <TaskCreationModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} />
 
       {selectedTask && (
         <TaskDetailsModal

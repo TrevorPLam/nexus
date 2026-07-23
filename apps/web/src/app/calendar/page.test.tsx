@@ -74,9 +74,15 @@ describe('Calendar Page', () => {
 
     // Check that navigation buttons exist (they have data-variant attribute)
     const navButtons = screen.getAllByRole('button');
-    const calendarsButton = navButtons.find(btn => btn.textContent === 'Calendars' && btn.getAttribute('data-variant'));
-    const eventsButton = navButtons.find(btn => btn.textContent === 'Events' && btn.getAttribute('data-variant'));
-    const schedulingButton = navButtons.find(btn => btn.textContent === 'Scheduling' && btn.getAttribute('data-variant'));
+    const calendarsButton = navButtons.find(
+      (btn) => btn.textContent === 'Calendars' && btn.getAttribute('data-variant'),
+    );
+    const eventsButton = navButtons.find(
+      (btn) => btn.textContent === 'Events' && btn.getAttribute('data-variant'),
+    );
+    const schedulingButton = navButtons.find(
+      (btn) => btn.textContent === 'Scheduling' && btn.getAttribute('data-variant'),
+    );
 
     expect(calendarsButton).toBeInTheDocument();
     expect(eventsButton).toBeInTheDocument();
@@ -176,7 +182,16 @@ describe('Calendar Page', () => {
       const { useCalendarData } = await import('../../hooks/useCalendarData');
       const mockDeleteMutate = vi.fn();
       (useCalendarData as any).mockReturnValue({
-        calendars: [{ id: '1', name: 'Test Calendar', description: null, color: null, isDefault: false, provider: null }],
+        calendars: [
+          {
+            id: '1',
+            name: 'Test Calendar',
+            description: null,
+            color: null,
+            isDefault: false,
+            provider: null,
+          },
+        ],
         calendarsLoading: false,
         events: [],
         createCalendarMutation: { mutate: vi.fn(), isPending: false },
@@ -215,7 +230,16 @@ describe('Calendar Page', () => {
       const { useCalendarData } = await import('../../hooks/useCalendarData');
       const mockCreateMutate = vi.fn();
       (useCalendarData as any).mockReturnValue({
-        calendars: [{ id: '1', name: 'Test Calendar', description: null, color: null, isDefault: false, provider: null }],
+        calendars: [
+          {
+            id: '1',
+            name: 'Test Calendar',
+            description: null,
+            color: null,
+            isDefault: false,
+            provider: null,
+          },
+        ],
         calendarsLoading: false,
         events: [],
         createCalendarMutation: { mutate: vi.fn(), isPending: false },
@@ -240,7 +264,16 @@ describe('Calendar Page', () => {
       const { useCalendarData } = await import('../../hooks/useCalendarData');
       const mockDeleteMutate = vi.fn();
       (useCalendarData as any).mockReturnValue({
-        calendars: [{ id: '1', name: 'Test Calendar', description: null, color: null, isDefault: false, provider: null }],
+        calendars: [
+          {
+            id: '1',
+            name: 'Test Calendar',
+            description: null,
+            color: null,
+            isDefault: false,
+            provider: null,
+          },
+        ],
         calendarsLoading: false,
         events: [],
         createCalendarMutation: { mutate: vi.fn(), isPending: false },
@@ -335,7 +368,11 @@ describe('Calendar Page', () => {
         calendars: [],
         calendarsLoading: false,
         events: [],
-        createCalendarMutation: { mutate: mockMutate, isPending: false, error: new Error('Failed to create calendar') },
+        createCalendarMutation: {
+          mutate: mockMutate,
+          isPending: false,
+          error: new Error('Failed to create calendar'),
+        },
         updateCalendarMutation: { mutate: vi.fn(), isPending: false },
         deleteCalendarMutation: { mutate: vi.fn(), isPending: false },
         createEventMutation: { mutate: vi.fn(), isPending: false },
@@ -357,13 +394,26 @@ describe('Calendar Page', () => {
         throw new Error('Failed to create event');
       });
       (useCalendarData as any).mockReturnValue({
-        calendars: [{ id: '1', name: 'Test Calendar', description: null, color: null, isDefault: false, provider: null }],
+        calendars: [
+          {
+            id: '1',
+            name: 'Test Calendar',
+            description: null,
+            color: null,
+            isDefault: false,
+            provider: null,
+          },
+        ],
         calendarsLoading: false,
         events: [],
         createCalendarMutation: { mutate: vi.fn(), isPending: false },
         updateCalendarMutation: { mutate: vi.fn(), isPending: false },
         deleteCalendarMutation: { mutate: vi.fn(), isPending: false },
-        createEventMutation: { mutate: mockMutate, isPending: false, error: new Error('Failed to create event') },
+        createEventMutation: {
+          mutate: mockMutate,
+          isPending: false,
+          error: new Error('Failed to create event'),
+        },
         updateEventMutation: { mutate: vi.fn(), isPending: false },
         deleteEventMutation: { mutate: vi.fn(), isPending: false },
       });

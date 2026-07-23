@@ -22,7 +22,7 @@
 'use client';
 
 import { Button } from '@life-os/ui';
-import { Plus, Search, Filter, MoreHorizontal, Clock, CheckCircle2, Circle } from 'lucide-react';
+import { Plus, Search, MoreHorizontal, Clock, CheckCircle2, Circle } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Task, Project } from '../types';

@@ -1,4 +1,4 @@
 {
   "extends": "@life-os/tsconfig/expo.json",
-  "include": ["src", "app", "expo-env.d.ts"]
+  "include": ["src", "app", "expo-env.d.ts", ".expo/types/**/*.ts"]
 }

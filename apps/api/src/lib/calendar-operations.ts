@@ -2132,4 +2132,3 @@ export async function bookSlotAtomic(
     },
   );
 }
-

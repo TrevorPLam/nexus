@@ -42,7 +42,10 @@ import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Calendar, Event } from '../app/calendar/types';
 
-export function useCalendarData(workspaceId: string | null, dateRange?: { startDate: string; endDate: string }) {
+export function useCalendarData(
+  workspaceId: string | null,
+  dateRange?: { startDate: string; endDate: string },
+) {
   const queryClient = useQueryClient();
 
   // Calendars query
@@ -64,7 +67,12 @@ export function useCalendarData(workspaceId: string | null, dateRange?: { startD
   // Create calendar mutation
   const createCalendarMutation = useMutation({
     mutationFn: (data: { name: string; description?: string; color?: string }) =>
-      apiClient.createCalendar({ workspaceId: workspaceId!, ...data, isDefault: false, provider: 'local' }),
+      apiClient.createCalendar({
+        workspaceId: workspaceId!,
+        ...data,
+        isDefault: false,
+        provider: 'local',
+      }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['calendars', workspaceId] });
     },

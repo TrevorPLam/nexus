@@ -22,7 +22,7 @@
 'use client';
 
 import { Button } from '@life-os/ui';
-import { ChevronLeft, ChevronRight, User, Calendar, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, User, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Task, Project } from '../types';

@@ -21,7 +21,7 @@
 
 'use client';
 
-import { Button, Modal, Select, TextArea } from '@life-os/ui';
+import { Button, Modal, TextArea } from '@life-os/ui';
 import { Plus, Trash2, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -217,7 +217,7 @@ export function AutomationModal({
                 <select
                   value={selectedTriggerType}
                   onChange={(e) => {
-                    setSelectedTriggerType(e.target.value);
+                    setSelectedTriggerType(e.target.value as any);
                     // Reset trigger based on type
                     const baseTrigger: AutomationTrigger = { type: e.target.value as any };
                     if (e.target.value === 'task_status_changed') {
@@ -372,13 +372,13 @@ export function AutomationModal({
                       <select
                         value={action.type}
                         onChange={(e) => {
-                          const newAction: AutomationAction = { type: e.target.value as any };
+                          const newAction: any = { type: e.target.value as any };
                           if (e.target.value === 'set_status') {
-                            (newAction as any).status = 'todo';
+                            newAction.status = 'todo';
                           } else if (e.target.value === 'set_priority') {
-                            (newAction as any).priority = 'medium';
+                            newAction.priority = 'medium';
                           }
-                          updateAction(index, newAction);
+                          updateAction(index, newAction as AutomationAction);
                         }}
                         className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                       >

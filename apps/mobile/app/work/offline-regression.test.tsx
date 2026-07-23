@@ -9,27 +9,25 @@ vi.mock('../../src/lib/powersync/provider', () => ({
   PowerSyncProvider: ({ children }: { children: React.ReactNode }) => children,
   usePowerSync: () => ({
     db: {
-      getAll: vi
-        .fn()
-        .mockImplementation((query: string, _params: string[]) => {
-          if (query.includes('projects')) {
-            return Promise.resolve([
-              { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },
-            ]);
-          }
-          if (query.includes('tasks')) {
-            return Promise.resolve([
-              {
-                id: 'task-1',
-                title: 'Test Task',
-                workspace_id: 'test-workspace-id',
-                project_id: 'project-1',
-                status: 'todo',
-              },
-            ]);
-          }
-          return Promise.resolve([]);
-        }),
+      getAll: vi.fn().mockImplementation((query: string, _params: string[]) => {
+        if (query.includes('projects')) {
+          return Promise.resolve([
+            { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },
+          ]);
+        }
+        if (query.includes('tasks')) {
+          return Promise.resolve([
+            {
+              id: 'task-1',
+              title: 'Test Task',
+              workspace_id: 'test-workspace-id',
+              project_id: 'project-1',
+              status: 'todo',
+            },
+          ]);
+        }
+        return Promise.resolve([]);
+      }),
       watch: vi.fn(),
       execute: vi.fn(),
     },
@@ -67,11 +65,7 @@ describe('Mobile Work Offline Regression Tests', () => {
   });
 
   const renderWithProviders = (component: React.ReactNode) => {
-    return render(
-      <QueryClientProvider client={queryClient}>
-        {component}
-      </QueryClientProvider>
-    );
+    return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
   };
 
   describe('Workspace-scoped reads', () => {

@@ -56,11 +56,13 @@ import { CalendarModal } from './components/CalendarModal';
 import { CalendarsView } from './components/CalendarsView';
 import { EventModal } from './components/EventModal';
 import { EventsView } from './components/EventsView';
-import { AttendeeModal } from './components/modals/AttendeeModal';
-import { EventDetailModal } from './components/modals/EventDetailModal';
-import { FindTimeModal } from './components/modals/FindTimeModal';
-import { SchedulingLinkModal } from './components/modals/SchedulingLinkModal';
 import { SchedulingView } from './components/SchedulingView';
+import {
+  AttendeeModal,
+  EventDetailModal,
+  FindTimeModal,
+  SchedulingLinkModal,
+} from './components/modals';
 import { useCalendarState } from './hooks/useCalendarState';
 import { useEventState } from './hooks/useEventState';
 import { useSchedulingState } from './hooks/useSchedulingState';

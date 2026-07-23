@@ -50,12 +50,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useWorkProjects } from '../../hooks/useWorkProjects';
 import { useWorkTasks } from '../../hooks/useWorkTasks';
 
-import { KanbanView } from './components/KanbanView';
-import { ListView } from './components/ListView';
-import { ProjectModal } from './components/ProjectModal';
-import { ProjectsView } from './components/ProjectsView';
-import { TaskModal } from './components/TaskModal';
-import { TimelineView } from './components/TimelineView';
+import {
+  KanbanView,
+  ListView,
+  ProjectModal,
+  ProjectsView,
+  TaskModal,
+  TimelineView,
+} from './components';
 import { useWorkState } from './hooks/useWorkState';
 import type { WorkView, Task } from './types';
 

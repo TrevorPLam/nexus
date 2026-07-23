@@ -10,9 +10,33 @@ describe('useTaskFilters', () => {
 
   it('manages filter state', () => {
     const tasks = [
-      { id: '1', title: 'Task 1', status: 'todo', priority: 'high', dueDate: '2024-01-01', projectId: 'proj-1', parentId: null },
-      { id: '2', title: 'Task 2', status: 'done', priority: 'high', dueDate: '2024-01-02', projectId: 'proj-1', parentId: null },
-      { id: '3', title: 'Task 3', status: 'todo', priority: 'medium', dueDate: '2024-01-03', projectId: 'proj-2', parentId: null },
+      {
+        id: '1',
+        title: 'Task 1',
+        status: 'todo',
+        priority: 'high',
+        dueDate: '2024-01-01',
+        projectId: 'proj-1',
+        parentId: null,
+      },
+      {
+        id: '2',
+        title: 'Task 2',
+        status: 'done',
+        priority: 'high',
+        dueDate: '2024-01-02',
+        projectId: 'proj-1',
+        parentId: null,
+      },
+      {
+        id: '3',
+        title: 'Task 3',
+        status: 'todo',
+        priority: 'medium',
+        dueDate: '2024-01-03',
+        projectId: 'proj-2',
+        parentId: null,
+      },
     ];
 
     const { getTasksByStatus } = useTaskFilters(tasks, 'proj-1', 'high');
@@ -27,9 +51,33 @@ describe('useTaskFilters', () => {
   });
   it('resets filters to default', () => {
     const tasks = [
-      { id: '1', title: 'Task 1', status: 'todo', priority: 'high', dueDate: '2024-01-01', projectId: 'proj-1', parentId: null },
-      { id: '2', title: 'Task 2', status: 'todo', priority: 'low', dueDate: '2024-01-02', projectId: 'proj-2', parentId: null },
-      { id: '3', title: 'Task 3', status: 'done', priority: 'medium', dueDate: '2024-01-03', projectId: 'proj-1', parentId: null },
+      {
+        id: '1',
+        title: 'Task 1',
+        status: 'todo',
+        priority: 'high',
+        dueDate: '2024-01-01',
+        projectId: 'proj-1',
+        parentId: null,
+      },
+      {
+        id: '2',
+        title: 'Task 2',
+        status: 'todo',
+        priority: 'low',
+        dueDate: '2024-01-02',
+        projectId: 'proj-2',
+        parentId: null,
+      },
+      {
+        id: '3',
+        title: 'Task 3',
+        status: 'done',
+        priority: 'medium',
+        dueDate: '2024-01-03',
+        projectId: 'proj-1',
+        parentId: null,
+      },
     ];
 
     const { getTasksByStatus } = useTaskFilters(tasks, null, null);
@@ -44,10 +92,42 @@ describe('useTaskFilters', () => {
   });
   it('applies multiple filters', () => {
     const tasks = [
-      { id: '1', title: 'Task 1', status: 'todo', priority: 'high', dueDate: '2024-01-01', projectId: 'proj-1', parentId: null },
-      { id: '2', title: 'Task 2', status: 'todo', priority: 'high', dueDate: '2024-01-02', projectId: 'proj-2', parentId: null },
-      { id: '3', title: 'Task 3', status: 'todo', priority: 'low', dueDate: '2024-01-03', projectId: 'proj-1', parentId: null },
-      { id: '4', title: 'Task 4', status: 'done', priority: 'high', dueDate: '2024-01-04', projectId: 'proj-1', parentId: null },
+      {
+        id: '1',
+        title: 'Task 1',
+        status: 'todo',
+        priority: 'high',
+        dueDate: '2024-01-01',
+        projectId: 'proj-1',
+        parentId: null,
+      },
+      {
+        id: '2',
+        title: 'Task 2',
+        status: 'todo',
+        priority: 'high',
+        dueDate: '2024-01-02',
+        projectId: 'proj-2',
+        parentId: null,
+      },
+      {
+        id: '3',
+        title: 'Task 3',
+        status: 'todo',
+        priority: 'low',
+        dueDate: '2024-01-03',
+        projectId: 'proj-1',
+        parentId: null,
+      },
+      {
+        id: '4',
+        title: 'Task 4',
+        status: 'done',
+        priority: 'high',
+        dueDate: '2024-01-04',
+        projectId: 'proj-1',
+        parentId: null,
+      },
     ];
 
     const { getTasksByStatus } = useTaskFilters(tasks, 'proj-1', 'high');

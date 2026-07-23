@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   email: session.user.email || '',
                   fullName: session.user.user_metadata?.full_name,
                 }
-              : null
+              : null,
           );
           setIsLoading(false);
         }
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 email: session.user.email || '',
                 fullName: session.user.user_metadata?.full_name,
               }
-            : null
+            : null,
         );
         // Clear workspace selection on sign-out
         if (!session) {

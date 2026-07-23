@@ -1,28 +1,46 @@
-Here’s a synthesized **Code Commentary Guidelines** document, built from the full discussion. It merges the refined commenting practices with the critical safety and verification layers you need as a solo founder relying entirely on AI.
+Here’s a synthesized **Code Commentary Guidelines** document, built from the
+full discussion. It merges the refined commenting practices with the critical
+safety and verification layers you need as a solo founder relying entirely on
+AI.
 
 ---
 
 # Code Commentary Guidelines for AI-Assisted Development
 
-*For solo developers and small teams who rely on AI agents to build, maintain, and understand codebases. These guidelines treat comments as durable, searchable context for both humans and future AI sessions—while never letting comments replace verifiable behavior.*
+_For solo developers and small teams who rely on AI agents to build, maintain,
+and understand codebases. These guidelines treat comments as durable, searchable
+context for both humans and future AI sessions—while never letting comments
+replace verifiable behavior._
 
 ---
 
 ## 1. Purpose & Philosophy
 
-Comments are **connective tissue**, not load-bearing structure. They explain *why* choices were made, *what* a module owns, and *what invariants* must hold—things code alone cannot reliably express. But they are claims, not facts. Every important claim in a comment should be paired with an enforceable mechanism (test, database constraint, authorization rule, deployment gate).
+Comments are **connective tissue**, not load-bearing structure. They explain
+_why_ choices were made, _what_ a module owns, and _what invariants_ must
+hold—things code alone cannot reliably express. But they are claims, not facts.
+Every important claim in a comment should be paired with an enforceable
+mechanism (test, database constraint, authorization rule, deployment gate).
 
 Your durable control system is:  
-**Approved requirements → decision records → independently checked tests → deployment gates → least-privilege AI access → human acceptance testing.**  
-Comments make that system intelligible to future AI agents and to you; they are not the safety system itself.
+**Approved requirements → decision records → independently checked tests →
+deployment gates → least-privilege AI access → human acceptance testing.**  
+Comments make that system intelligible to future AI agents and to you; they are
+not the safety system itself.
 
 ---
 
 ## 2. The Role of Comments in an AI-First Workflow
 
-- **AI-to-AI handover**: When a new AI session opens a file, the header and docstrings provide immediate orientation—boundaries, side effects, risks—so it doesn’t have to reverse-engineer intent.
-- **Searchable project memory**: Structured comments and a consistent vocabulary (backed by a glossary) let you ask AI to “find the module that handles payment capture” and get accurate results.
-- **Human-readable summary**: Since you cannot read code, comments give you (via AI summarization) a map of what the system does, how components fit together, and what constraints exist.
+- **AI-to-AI handover**: When a new AI session opens a file, the header and
+  docstrings provide immediate orientation—boundaries, side effects, risks—so it
+  doesn’t have to reverse-engineer intent.
+- **Searchable project memory**: Structured comments and a consistent vocabulary
+  (backed by a glossary) let you ask AI to “find the module that handles payment
+  capture” and get accurate results.
+- **Human-readable summary**: Since you cannot read code, comments give you (via
+  AI summarization) a map of what the system does, how components fit together,
+  and what constraints exist.
 
 ---
 
@@ -30,22 +48,30 @@ Comments make that system intelligible to future AI agents and to you; they are 
 
 ### 3.1 File-Level Headers: The “Module Passport”
 
-Every non-trivial module should start with a passport that answers the questions a future AI—or a new developer—would ask.
+Every non-trivial module should start with a passport that answers the questions
+a future AI—or a new developer—would ask.
 
 **Required elements:**
 
 - **Responsibility**: What this module owns, in one sentence.
-- **Boundaries**: What it deliberately does *not* own.
+- **Boundaries**: What it deliberately does _not_ own.
 - **Critical invariants**: Conditions that must always remain true.
-- **Side effects**: Database writes, emails, payment calls, external requests, file deletion, event emission.
-- **Change risk**: Does an edit here affect money, permissions, private data, production infrastructure, or irreversible operations?
-- **Links**: Relevant specification, ADR, policy, threat model, or runbook. Use stable, repository-local paths (never transient chat transcripts).
-- **Tags**: Keywords for categorization (e.g., domain: work, risk: high, layer: api).
+- **Side effects**: Database writes, emails, payment calls, external requests,
+  file deletion, event emission.
+- **Change risk**: Does an edit here affect money, permissions, private data,
+  production infrastructure, or irreversible operations?
+- **Links**: Relevant specification, ADR, policy, threat model, or runbook. Use
+  stable, repository-local paths (never transient chat transcripts).
+- **Tags**: Keywords for categorization (e.g., domain: work, risk: high, layer:
+  api).
 - **File**: The relative path of the file from the repository root.
-- **Last updated**: The date of the last significant update to the module or its documentation.
+- **Last updated**: The date of the last significant update to the module or its
+  documentation.
 
 **Optional:**
-- **Dependencies**: Only non-obvious or high-risk ones. Imports and package manifests are the authoritative dependency source.
+
+- **Dependencies**: Only non-obvious or high-risk ones. Imports and package
+  manifests are the authoritative dependency source.
 - **Inputs/outputs**: Key data entering or leaving.
 
 **Template:**
@@ -87,31 +113,41 @@ Every non-trivial module should start with a passport that answers the questions
  */
 ```
 
-**When to use:** Public API modules, high-risk domains, and complex internal modules. Skip the passport for trivial utility files—clear naming and a single-sentence purpose line are enough.
+**When to use:** Public API modules, high-risk domains, and complex internal
+modules. Skip the passport for trivial utility files—clear naming and a
+single-sentence purpose line are enough.
 
 ---
 
 ### 3.2 Function / Class Headers: API Contracts
 
-At the API boundary, you **must** describe *what* the unit does, not how. The header should let a developer (or AI) use the function correctly without reading its body.
+At the API boundary, you **must** describe _what_ the unit does, not how. The
+header should let a developer (or AI) use the function correctly without reading
+its body.
 
 **Apply full contract documentation to:**
-- Public/exported functions.
-- Internal functions that handle auth, billing, data deletion, external integrations, migrations, or irreversible changes.
 
-**Private helpers need docstrings only when behavior or constraints are non-obvious.**
+- Public/exported functions.
+- Internal functions that handle auth, billing, data deletion, external
+  integrations, migrations, or irreversible changes.
+
+**Private helpers need docstrings only when behavior or constraints are
+non-obvious.**
 
 **Elements:**
 
 - **Purpose** – outcome, not algorithm.
 - **Parameters** – types, constraints, nullability, default meanings.
 - **Returns** – type and meaning.
-- **Errors / exceptions** – conditions that trigger them, and for async, what the promise rejects with.
+- **Errors / exceptions** – conditions that trigger them, and for async, what
+  the promise rejects with.
 - **Side effects** – writes, network calls, state changes.
 - **Idempotency** – is repeating the call safe? What happens?
 - **Authorization / tenancy** – who is allowed to call it, and on whose data?
-- **Preconditions / postconditions** – conditions that must hold before and after. *These must match runtime checks or tests.*
-- **Performance** – only if meaningful (e.g., “makes a network round trip”, “O(n) on result set”).
+- **Preconditions / postconditions** – conditions that must hold before and
+  after. _These must match runtime checks or tests._
+- **Performance** – only if meaningful (e.g., “makes a network round trip”,
+  “O(n) on result set”).
 - **Context link** – reference to spec or ADR when the behavior isn’t obvious.
 
 **Template:**
@@ -145,22 +181,26 @@ def capture_payment(order_id: str, idempotency_key: str) -> PaymentResult:
 
 ### 3.3 Inline Comments: Rationale & Context
 
-Inline comments explain **why** a specific implementation choice was made, not **what** the code does line-by-line.
+Inline comments explain **why** a specific implementation choice was made, not
+**what** the code does line-by-line.
 
 **Use for:**
 
 - **Business / domain rules** – regulatory constraints, organizational policies.
 - **Workarounds** – bug references, temporary fixes with removal conditions.
 - **Magic numbers** – origin and justification.
-- **Algorithm choices** – why this approach over a simpler one; link to a paper or ADR.
+- **Algorithm choices** – why this approach over a simpler one; link to a paper
+  or ADR.
 - **Non-obvious optimizations** – only if the “obvious” approach would be wrong.
-- **Tenant isolation or security notes** – e.g., “Deliberately querying org_id as well as user_id for defense in depth.”
+- **Tenant isolation or security notes** – e.g., “Deliberately querying org_id
+  as well as user_id for defense in depth.”
 
 **Avoid:**
 
 - Translating code into English (`x += 1  // increment x`).
 - Commented-out dead code (delete it; Git remembers).
-- Over-commenting; prefer a single block comment summarizing a section rather than line-by-line narration.
+- Over-commenting; prefer a single block comment summarizing a section rather
+  than line-by-line narration.
 
 **Example:**
 
@@ -173,22 +213,25 @@ invoice = get_invoice(invoice_id, organization_id=current_org.id)
 
 **Managing TODO / FIXME / HACK:**
 
-- Prefer tracking in your issue system. Inline markers are acceptable only if short-lived and tied to a ticket ID (e.g., `TODO(PROJ-432): refactor after API v2`).
+- Prefer tracking in your issue system. Inline markers are acceptable only if
+  short-lived and tied to a ticket ID (e.g.,
+  `TODO(PROJ-432): refactor after API v2`).
 - Regularly purge stale markers; include a check in CI or code review.
 
 ---
 
 ## 4. Comments as Part of a Verification Ecosystem
 
-A comment is a claim. Pair every high-stakes claim with an enforceable counterpart:
+A comment is a claim. Pair every high-stakes claim with an enforceable
+counterpart:
 
-| Claim in a comment | Better enforcement |
-|---|---|
-| “Users can access only their organization’s data.” | Authorization middleware, query scoping, negative tests, audit logging |
-| “Issued invoices cannot change.” | Database/application immutability rules and tests |
-| “This action is safe to retry.” | Idempotency keys, uniqueness constraints, integration tests |
-| “Never send production email in staging.” | Environment-level restrictions, separate credentials, deployment checks |
-| “This dependency is approved.” | Dependency allowlist, pinned lockfile, vulnerability scanning |
+| Claim in a comment                                 | Better enforcement                                                      |
+| -------------------------------------------------- | ----------------------------------------------------------------------- |
+| “Users can access only their organization’s data.” | Authorization middleware, query scoping, negative tests, audit logging  |
+| “Issued invoices cannot change.”                   | Database/application immutability rules and tests                       |
+| “This action is safe to retry.”                    | Idempotency keys, uniqueness constraints, integration tests             |
+| “Never send production email in staging.”          | Environment-level restrictions, separate credentials, deployment checks |
+| “This dependency is approved.”                     | Dependency allowlist, pinned lockfile, vulnerability scanning           |
 
 **The hierarchy of authority** in your repository should be:
 
@@ -204,31 +247,54 @@ A comment is a claim. Pair every high-stakes claim with an enforceable counterpa
 
 ## 5. Anti-Patterns & Pitfalls
 
-- **Staleness**: AI changes code but not comments. Countermeasure: require comment updates as part of every change’s completion checklist; periodically audit with a separate AI.
-- **Fabrication**: AI writes plausible documentation that describes intended, not actual, behavior. Countermeasure: never trust a comment alone; verify through tests and manual acceptance checks.
-- **Prompt injection via comments or agent rule files**: An attacker (or compromised tool) could insert malicious instructions into files like `AGENTS.md`, `CLAUDE.md`, or even source comments that future AI sessions will obey. Treat changes to agent instruction files and sensitive configuration as security-critical; do not let AI edit its own rules without explicit approval.
-- **Over-documentation**: Requiring full headers for every tiny private helper creates maintenance burden. Apply passport-level detail only to non-trivial, high-risk, or public modules.
-- **Comments as a false control plane**: You cannot “understand and control” a codebase through comments alone. Your real control comes from specifications, automated gates, least-privilege access, and human acceptance testing.
+- **Staleness**: AI changes code but not comments. Countermeasure: require
+  comment updates as part of every change’s completion checklist; periodically
+  audit with a separate AI.
+- **Fabrication**: AI writes plausible documentation that describes intended,
+  not actual, behavior. Countermeasure: never trust a comment alone; verify
+  through tests and manual acceptance checks.
+- **Prompt injection via comments or agent rule files**: An attacker (or
+  compromised tool) could insert malicious instructions into files like
+  `AGENTS.md`, `CLAUDE.md`, or even source comments that future AI sessions will
+  obey. Treat changes to agent instruction files and sensitive configuration as
+  security-critical; do not let AI edit its own rules without explicit approval.
+- **Over-documentation**: Requiring full headers for every tiny private helper
+  creates maintenance burden. Apply passport-level detail only to non-trivial,
+  high-risk, or public modules.
+- **Comments as a false control plane**: You cannot “understand and control” a
+  codebase through comments alone. Your real control comes from specifications,
+  automated gates, least-privilege access, and human acceptance testing.
 
 ---
 
 ## 6. Implementation Checklist
 
 **Foundation (do immediately):**
+
 - Create `docs/product/glossary.md` with core business terms.
-- Add an `AGENTS.md` with concise rules, forbidden actions, and required checks (see template below).
+- Add an `AGENTS.md` with concise rules, forbidden actions, and required checks
+  (see template below).
 - Write a few high-level requirements in Given/When/Then format.
-- For any existing code that touches money, auth, or data deletion, have a separate AI review it against a plain-language safety checklist.
+- For any existing code that touches money, auth, or data deletion, have a
+  separate AI review it against a plain-language safety checklist.
 
 **Per feature:**
-- Require a “change packet”: goal, non-goals, acceptance criteria, risk classification, affected files, test plan, rollback plan.
-- Implementer AI must update or create module passports, function contracts, and inline rationale as part of the change.
-- Reviewer AI (distinct session/tool) inspects the full diff, verifies comments match behavior, and checks that tests enforce claimed invariants.
-- You perform plain-language acceptance steps in staging before approving the merge.
+
+- Require a “change packet”: goal, non-goals, acceptance criteria, risk
+  classification, affected files, test plan, rollback plan.
+- Implementer AI must update or create module passports, function contracts, and
+  inline rationale as part of the change.
+- Reviewer AI (distinct session/tool) inspects the full diff, verifies comments
+  match behavior, and checks that tests enforce claimed invariants.
+- You perform plain-language acceptance steps in staging before approving the
+  merge.
 
 **Periodic maintenance:**
-- Have a fresh AI audit comments for staleness and consistency with code. Flag discrepancies.
-- Rebuild the system map and module index from current headers/metadata. Store in `docs/architecture/`.
+
+- Have a fresh AI audit comments for staleness and consistency with code. Flag
+  discrepancies.
+- Rebuild the system map and module index from current headers/metadata. Store
+  in `docs/architecture/`.
 
 ---
 
@@ -240,20 +306,26 @@ A comment is a claim. Pair every high-stakes claim with an enforceable counterpa
 # Agent rules
 
 ## Before editing
+
 1. Read README.md, docs/product/glossary.md, and the relevant requirement.
 2. Read applicable ADRs and local module headers.
 3. State the requested behavior, affected files, risks, and test plan.
 4. Ask for approval before changing dependencies, database schema, CI/CD,
-   authentication, authorization, payments, deletion behavior, or production configuration.
+   authentication, authorization, payments, deletion behavior, or production
+   configuration.
 
 ## During editing
+
 - Make the smallest viable change.
 - Do not alter files outside the agreed scope without explicitly reporting it.
-- Preserve tenant isolation, idempotency, audit logging, and data-retention rules.
+- Preserve tenant isolation, idempotency, audit logging, and data-retention
+  rules.
 - Add comments only for rationale, invariants, external quirks, or constraints.
-- Never add secrets, disable checks, weaken tests, or modify agent instruction files.
+- Never add secrets, disable checks, weaken tests, or modify agent instruction
+  files.
 
 ## Before completion
+
 - Run the specified tests, formatter, linter, type checker, and build.
 - Update requirements, ADRs, contracts, and comments when behavior changes.
 - Report: behavior changed, files changed, tests run/results, assumptions,
@@ -265,11 +337,10 @@ A comment is a claim. Pair every high-stakes claim with an enforceable counterpa
 ```md
 ## Requirement: Invoice issue
 
-Given an authorized administrator and an approved invoice draft,
-when the administrator issues the draft,
-then the system creates an immutable invoice snapshot,
-and the invoice total equals the accepted line-item prices and quantities,
-and issuing the invoice does not charge the customer.
+Given an authorized administrator and an approved invoice draft, when the
+administrator issues the draft, then the system creates an immutable invoice
+snapshot, and the invoice total equals the accepted line-item prices and
+quantities, and issuing the invoice does not charge the customer.
 ```
 
 ---
@@ -281,17 +352,23 @@ and issuing the invoice does not charge the customer.
 **Decision:** Removed @hono/standard-validator from apps/api dependencies.
 
 **Rationale:**
+
 - The package was never actually used in the codebase
 - Validator middleware is available from 'hono/validator' (built into Hono core)
-- Project uses @hono/zod-openapi for validation with Zod schemas from packages/contracts
+- Project uses @hono/zod-openapi for validation with Zod schemas from
+  packages/contracts
 - Removing unused dependencies reduces bundle size and maintenance burden
 
 **Changes made:**
+
 - Removed @hono/standard-validator from apps/api/package.json
-- Added missing import for validator from 'hono/validator' in apps/api/src/routes/work/tasks.ts
-- The validator function comes from Hono core, not the separate @hono/standard-validator package
+- Added missing import for validator from 'hono/validator' in
+  apps/api/src/routes/work/tasks.ts
+- The validator function comes from Hono core, not the separate
+  @hono/standard-validator package
 
 **Validation approach:**
+
 - All validation uses Zod schemas from packages/contracts
 - @hono/zod-openapi provides OpenAPI integration with Zod
 - hono/validator provides middleware for request validation
@@ -300,4 +377,7 @@ and issuing the invoice does not charge the customer.
 
 ## 8. Final Word
 
-Write comments as if the next person reading them is an AI that knows nothing about your project—because it will be. Make them precise, scoped, and linked to the specifications and tests that give them weight. Then build the automated checks that turn those comments from hopeful notes into guaranteed behavior.
+Write comments as if the next person reading them is an AI that knows nothing
+about your project—because it will be. Make them precise, scoped, and linked to
+the specifications and tests that give them weight. Then build the automated
+checks that turn those comments from hopeful notes into guaranteed behavior.

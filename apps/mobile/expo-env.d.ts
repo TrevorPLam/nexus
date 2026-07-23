@@ -1,12 +1,3 @@
-/**
- * TypeScript declarations for Expo environment variables.
- * Extends the global namespace with Expo configuration types.
- */
+/// <reference types="expo/types" />
 
-declare global {
-  namespace Expo {
-    type Config = typeof import('./app.json');
-  }
-}
-
-export {};
+// NOTE: This file should not be edited and should be in your git ignore

@@ -1,12 +1,15 @@
 # @life-os/worker
 
-The background job worker for Life OS. It handles asynchronous tasks such as notification dispatch, database maintenance, and third-party integrations.
+The background job worker for Life OS. It handles asynchronous tasks such as
+notification dispatch, database maintenance, and third-party integrations.
 
 ## 🚀 Features (Planned)
 
 - **Job Processing**: Reliable background task execution using **pg-boss**.
-- **Notifications**: Automated dispatch of push, email, and system notifications.
-- **Sync Jobs**: Periodic synchronization tasks for calendar and external services.
+- **Notifications**: Automated dispatch of push, email, and system
+  notifications.
+- **Sync Jobs**: Periodic synchronization tasks for calendar and external
+  services.
 - **Data Maintenance**: Transactional cleanups and aggregation tasks.
 
 ## 🛠️ Technology Stack

@@ -1,15 +1,22 @@
 # @life-os/web
 
-The modern web application for Life OS, built with **Next.js 16** and **React 18**. It provides a rich desktop-class experience for managing work and calendar data.
+The modern web application for Life OS, built with **Next.js 16** and **React
+18**. It provides a rich desktop-class experience for managing work and calendar
+data.
 
 ## 🚀 Features
 
-- **Modern Architecture**: Built with Next.js **App Router** for optimized performance.
-- **Dynamic UI**: Responsive and accessible components using `@life-os/ui` and **Tailwind CSS 4**.
+- **Modern Architecture**: Built with Next.js **App Router** for optimized
+  performance.
+- **Dynamic UI**: Responsive and accessible components using `@life-os/ui` and
+  **Tailwind CSS 4**.
 - **State Management**: Robust server-state handling with **TanStack Query 5**.
-- **Data Visualization**: Rich views for work projects, tasks, and calendar events.
-- **Work Management**: Comprehensive interface for organizing projects and tracking tasks.
-- **Calendar**: Full-featured calendar view with drag-and-drop support (via `@dnd-kit`).
+- **Data Visualization**: Rich views for work projects, tasks, and calendar
+  events.
+- **Work Management**: Comprehensive interface for organizing projects and
+  tracking tasks.
+- **Calendar**: Full-featured calendar view with drag-and-drop support (via
+  `@dnd-kit`).
 
 ## 🛠️ Technology Stack
 

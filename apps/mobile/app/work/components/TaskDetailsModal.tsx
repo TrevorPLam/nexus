@@ -37,7 +37,14 @@
 
 import type { TaskRecord } from '@life-os/mobile-data';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 
 import { Button, Modal } from '@life-os/ui';
 import { useUpdateTaskStatus, useProjects } from '../../../src/hooks/useWork';
@@ -158,9 +165,7 @@ export function TaskDetailsModal({ isOpen, onClose, task }: TaskDetailsModalProp
           </View>
 
           {updateTaskStatus.error && (
-            <Text style={styles.errorText}>
-              Failed to update task status. Please try again.
-            </Text>
+            <Text style={styles.errorText}>Failed to update task status. Please try again.</Text>
           )}
         </View>
       </ScrollView>

@@ -1,10 +1,12 @@
 # @life-os/tsconfig
 
-Shared TypeScript configurations for the Life OS monorepo. This package centralizes TS rules to ensure consistency across all packages and applications.
+Shared TypeScript configurations for the Life OS monorepo. This package
+centralizes TS rules to ensure consistency across all packages and applications.
 
 ## 📂 Configurations
 
-- `base.json`: The foundational TypeScript configuration (Strict Mode, ESM, etc.).
+- `base.json`: The foundational TypeScript configuration (Strict Mode, ESM,
+  etc.).
 - `app-base.json`: Base configuration for applications.
 - `nextjs.json`: Specific rules for Next.js applications.
 - `expo.json`: Specific rules for Expo/React Native applications.

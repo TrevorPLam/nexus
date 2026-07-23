@@ -89,7 +89,7 @@ function getWorkspaceConfig(): WorkspaceConfig | null {
     const config: WorkspaceConfig = {
       packages: [],
       catalogMode: 'loose',
-      catalogs: {}
+      catalogs: {},
     };
 
     // Simple YAML parser for our specific needs
@@ -135,7 +135,7 @@ function getInternalPackages(packageJsons: { path: string; pkg: PackageJson }[])
 // Check 1: Workspace protocol violations
 function checkWorkspaceProtocol(
   packageJsons: { path: string; pkg: PackageJson }[],
-  internalPackages: Set<string>
+  internalPackages: Set<string>,
 ) {
   for (const { path, pkg } of packageJsons) {
     const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
@@ -146,7 +146,7 @@ function checkWorkspaceProtocol(
           type: 'workspace-protocol',
           package: pkg.name,
           message: `Internal dependency "${depName}" should use "workspace:" protocol, but uses "${depVersion}"`,
-          severity: 'error'
+          severity: 'error',
         });
       }
     }
@@ -156,7 +156,7 @@ function checkWorkspaceProtocol(
 // Check 2: Catalog mode violations
 function checkCatalogMode(
   packageJsons: { path: string; pkg: PackageJson }[],
-  workspaceConfig: WorkspaceConfig | null
+  workspaceConfig: WorkspaceConfig | null,
 ) {
   if (!workspaceConfig || workspaceConfig.catalogMode !== 'strict') {
     return;
@@ -180,7 +180,7 @@ function checkCatalogMode(
           type: 'catalog-protocol',
           package: pkg.name,
           message: `Dependency "${depName}" is in catalog but uses "${depVersion}" instead of "catalog:"`,
-          severity: 'error'
+          severity: 'error',
         });
       }
     }
@@ -212,7 +212,7 @@ function checkTypeScriptVersion(packageJsons: { path: string; pkg: PackageJson }
         type: 'typescript-drift',
         package: pkgs.join(', '),
         message: `TypeScript version drift: ${basePkgs.join(', ')} uses ${baseVersion}, but ${pkgs.join(', ')} uses ${version}`,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }
@@ -252,7 +252,7 @@ function checkReactVersions(packageJsons: { path: string; pkg: PackageJson }[]) 
         type: 'react-drift',
         package: pkgs.join(', '),
         message: `React version drift: ${basePkgs.join(', ')} uses ${baseVersion}, but ${pkgs.join(', ')} uses ${version}`,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }
@@ -266,7 +266,7 @@ function checkReactVersions(packageJsons: { path: string; pkg: PackageJson }[]) 
         type: 'react-native-drift',
         package: pkgs.join(', '),
         message: `React Native version drift: ${basePkgs.join(', ')} uses ${baseVersion}, but ${pkgs.join(', ')} uses ${version}`,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }
@@ -283,7 +283,7 @@ function checkTestScripts(packageJsons: { path: string; pkg: PackageJson }[]) {
         type: 'missing-test-script',
         package: pkg.name,
         message: `Package has vitest in dependencies but no "test" script`,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }
@@ -300,7 +300,7 @@ function checkExportsField(packageJsons: { path: string; pkg: PackageJson }[]) {
         type: 'missing-exports',
         package: pkg.name,
         message: `Package is missing "exports" field in package.json`,
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }

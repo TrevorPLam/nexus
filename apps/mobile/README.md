@@ -1,15 +1,20 @@
 # @life-os/mobile
 
-The cross-platform mobile application for Life OS, built with **Expo** and **React Native**. It is designed for high-performance offline-first productivity.
+The cross-platform mobile application for Life OS, built with **Expo** and
+**React Native**. It is designed for high-performance offline-first
+productivity.
 
 ## 🚀 Features
 
-- **Offline-First**: Real-time synchronization with the PostgreSQL backend via **PowerSync**.
+- **Offline-First**: Real-time synchronization with the PostgreSQL backend via
+  **PowerSync**.
 - **Modern Navigation**: File-based routing using **Expo Router**.
-- **Shared UI**: Consistent look and feel using components from `@life-os/ui` (Tamagui).
+- **Shared UI**: Consistent look and feel using components from `@life-os/ui`
+  (Tamagui).
 - **Work Management**: Full access to projects, tasks, and time tracking.
 - **Calendar**: Integrated calendar views with support for linked tasks.
-- **Push Notifications**: (In Development) Integration with Expo Notification Service.
+- **Push Notifications**: (In Development) Integration with Expo Notification
+  Service.
 
 ## 🛠️ Technology Stack
 

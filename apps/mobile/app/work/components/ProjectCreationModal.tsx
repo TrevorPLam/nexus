@@ -133,30 +133,16 @@ export function ProjectCreationModal({ isOpen, onClose }: ProjectCreationModalPr
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            variant="secondary"
-            onPress={handleClose}
-            disabled={createProject.isPending}
-          >
+          <Button variant="secondary" onPress={handleClose} disabled={createProject.isPending}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onPress={handleSubmit}
-            disabled={createProject.isPending}
-          >
-            {createProject.isPending ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              'Create'
-            )}
+          <Button variant="primary" onPress={handleSubmit} disabled={createProject.isPending}>
+            {createProject.isPending ? <ActivityIndicator size="small" color="white" /> : 'Create'}
           </Button>
         </View>
 
         {createProject.error && (
-          <Text style={styles.errorText}>
-            Failed to create project. Please try again.
-          </Text>
+          <Text style={styles.errorText}>Failed to create project. Please try again.</Text>
         )}
       </View>
     </Modal>

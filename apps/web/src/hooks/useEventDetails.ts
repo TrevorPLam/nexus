@@ -81,8 +81,7 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
   // Scheduling links query
   const { data: schedulingLinksData = [] } = useQuery<SchedulingLink[]>({
     queryKey: ['schedulingLinks', workspaceId],
-    queryFn: () =>
-      apiClient.getSchedulingLinks(workspaceId!) as Promise<SchedulingLink[]>,
+    queryFn: () => apiClient.getSchedulingLinks(workspaceId!) as Promise<SchedulingLink[]>,
     enabled: !!workspaceId,
   });
   const schedulingLinks = schedulingLinksData;
@@ -118,8 +117,13 @@ export function useEventDetails(selectedEvent: { id: string } | null, workspaceI
 
   // Update scheduling link mutation
   const updateSchedulingLinkMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof apiClient.updateSchedulingLink>[1] }) =>
-      apiClient.updateSchedulingLink(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Parameters<typeof apiClient.updateSchedulingLink>[1];
+    }) => apiClient.updateSchedulingLink(id, data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['schedulingLinks', workspaceId] });
     },

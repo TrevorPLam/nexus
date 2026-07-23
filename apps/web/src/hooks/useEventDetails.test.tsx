@@ -42,7 +42,13 @@ describe('useEventDetails', () => {
 
   it('fetches event attendees when event selected', async () => {
     const mockAttendees = [
-      { id: '1', email: 'test@example.com', name: 'Test User', status: 'needs_action', isOrganizer: false },
+      {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        status: 'needs_action',
+        isOrganizer: false,
+      },
     ];
     vi.mocked(apiClient.getEventAttendees).mockResolvedValue(mockAttendees);
 
@@ -59,7 +65,13 @@ describe('useEventDetails', () => {
 
   it('creates event attendee and invalidates query', async () => {
     const mockAttendees = [
-      { id: '1', email: 'test@example.com', name: 'Test User', status: 'needs_action', isOrganizer: false },
+      {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        status: 'needs_action',
+        isOrganizer: false,
+      },
     ];
     vi.mocked(apiClient.getEventAttendees).mockResolvedValue(mockAttendees);
     vi.mocked(apiClient.createEventAttendee).mockResolvedValue({
@@ -95,7 +107,13 @@ describe('useEventDetails', () => {
 
   it('deletes event attendee and invalidates query', async () => {
     const mockAttendees = [
-      { id: '1', email: 'test@example.com', name: 'Test User', status: 'needs_action', isOrganizer: false },
+      {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        status: 'needs_action',
+        isOrganizer: false,
+      },
     ];
     vi.mocked(apiClient.getEventAttendees).mockResolvedValue(mockAttendees);
     vi.mocked(apiClient.deleteEventAttendee).mockResolvedValue(undefined);

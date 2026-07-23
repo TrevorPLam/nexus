@@ -1,11 +1,21 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
 import React from 'react';
+import { vi } from 'vitest';
 
 // Mock Tamagui for testing
 vi.mock('@tamagui/core', () => ({
-  styled: (component: any) => {
-    const StyledComponent = ({ onChangeText, multiline, numberOfLines, editable, onChange, disabled, onPress, onStartShouldSetResponder, ...props }: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  styled: (component: keyof JSX.IntrinsicElements | React.ComponentType<any>) => {
+    const StyledComponent = ({
+      onChangeText,
+      numberOfLines,
+      editable,
+      onChange,
+      disabled,
+      onPress,
+      ...props
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }: any) => {
       // For textarea (TextInput), transform onChangeText to onChange
       if (component === 'textarea' && onChangeText) {
         const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -29,11 +39,15 @@ vi.mock('@tamagui/core', () => ({
         onStartShouldSetResponder: undefined,
       });
     };
-    StyledComponent.displayName = `Styled(${component.displayName || component.name || 'Component'})`;
+    const componentName =
+      typeof component === 'string'
+        ? component
+        : component.displayName || component.name || 'Component';
+    StyledComponent.displayName = `Styled(${componentName})`;
     return StyledComponent;
   },
   TextInput: 'textarea',
-  Text: ({ children }: any) => children,
+  Text: ({ children }: React.PropsWithChildren) => children,
   View: 'div',
-  TamaguiProvider: ({ children }: any) => children,
+  TamaguiProvider: ({ children }: React.PropsWithChildren) => children,
 }));

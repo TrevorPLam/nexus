@@ -3,7 +3,11 @@ import { eq, and, sql } from 'drizzle-orm';
 
 import { db } from './db.js';
 import * as schema from '@life-os/database';
-import { seedTestFixtures, cleanupTestFixtures, type TestFixtures } from '../test/fixtures/seed-data.js';
+import {
+  seedTestFixtures,
+  cleanupTestFixtures,
+  type TestFixtures,
+} from '../test/fixtures/seed-data.js';
 
 /**
  * RLS (Row-Level Security) Integration Tests
