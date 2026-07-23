@@ -1,3 +1,42 @@
+/**
+ * MODULE: Authentication Utilities
+ *
+ * Responsibility:
+ * Provides core authentication services, including Supabase client initialization
+ * and JWT verification for incoming API requests.
+ *
+ * Boundaries:
+ * - Pure auth logic; does not handle authorization (see middleware.ts).
+ * - Interfaces with Supabase Auth for token verification.
+ *
+ * Critical invariants:
+ * - All tokens must be verified using the JWT_SECRET (Supabase Anon Key by default).
+ * - getAuthUser extracts the sub (user ID) and email from valid JWT payloads.
+ *
+ * Side effects:
+ * - Initializes external Supabase clients.
+ *
+ * Change risk:
+ * - Extreme. Faulty logic here could permit unauthorized access to the entire API.
+ *
+ * Links:
+ * - apps/api/src/lib/middleware.ts (authMiddleware usage)
+ * - AGENTS.md (Security guidelines)
+ *
+ * Tags:
+ * - domain: authentication
+ * - risk: extreme
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: security, jwt, supabase-auth
+ *
+ * File:
+ * - apps/api/src/lib/auth.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { createClient } from '@supabase/supabase-js';
 import { jwtVerify } from 'jose';
 
@@ -16,7 +55,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey);
 
 // JWT verification
-const JWT_SECRET = process.env.JWT_SECRET || new TextEncoder().encode(supabaseAnonKey);
+const encoder = new TextEncoder();
+const JWT_SECRET = encoder.encode(process.env.JWT_SECRET || supabaseAnonKey);
 
 export async function verifyAuthToken(token: string) {
   try {

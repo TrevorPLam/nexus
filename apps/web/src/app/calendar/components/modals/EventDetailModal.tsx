@@ -1,3 +1,24 @@
+/**
+ * MODULE: Event Detail Modal Component
+ *
+ * Responsibility:
+ * Displays full details of a selected event, including attendees, with edit,
+ * delete, and add-attendee actions.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, event-detail, attendees
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/modals/EventDetailModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal, Badge } from '@life-os/ui';

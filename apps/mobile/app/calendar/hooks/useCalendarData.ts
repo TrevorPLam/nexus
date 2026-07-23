@@ -5,19 +5,43 @@
  * Provides workspace-scoped calendar and event data from PowerSync with date-range filtering.
  *
  * Boundaries:
- * - Uses PowerSync for local reads (offline-capable)
- * - Uses API client for mutations (typed commands)
- * - Depends on AuthContext for workspace selection
+ * - Read operations use PowerSync for offline-first data synchronization.
+ * - Mutation operations use the typed API client for immediate backend updates.
+ * - Workspace isolation is enforced via the useAuth context.
  *
  * Critical invariants:
- * - All queries are scoped to the current workspace
- * - Event queries respect date bounds to avoid unbounded results
- * - Timezone-aware date display
+ * - All queries MUST be scoped to the current workspace.
+ * - Event queries MUST respect date bounds to avoid unbounded results.
+ * - Displayed times MUST be timezone-aware.
+ *
+ * Side effects:
+ * - Fetches data from PowerSync and performs HTTP requests via the API client.
+ *
+ * Change risk:
+ * - Medium. Data consistency and timezone handling.
+ *
+ * Links:
+ * - apps/mobile/src/lib/powersync/database.ts
+ * - packages/api-client/src/index.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: hooks, powersync, calendar-data
+ *
+ * File:
+ * - apps/mobile/app/calendar/hooks/useCalendarData.ts
+ *
+ * Last updated:
+ * - July 23, 2026
  */
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../../src/contexts/AuthContext';
 import { apiClient } from '@life-os/api-client';
+import { useState, useEffect } from 'react';
+
+import { useAuth } from '../../../src/contexts/AuthContext';
 
 export interface Calendar {
   id: string;

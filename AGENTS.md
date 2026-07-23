@@ -209,6 +209,9 @@ pnpm format
 # Type check all packages
 pnpm typecheck
 
+# Run full module validation (lint, typecheck, test)
+pnpm validate
+
 # Test all packages
 pnpm test
 

@@ -1,3 +1,46 @@
+/**
+ * MODULE: Calendar Tables Creation
+ *
+ * Responsibility:
+ * Creates calendar module tables (calendars, events, event_attendees, scheduling_links)
+ * with proper constraints, indexes, and triggers for the calendar management system.
+ *
+ * Boundaries:
+ * - Table creation only; no RLS policies or data migration.
+ * - Establishes schema foundation for calendar functionality.
+ *
+ * Critical invariants:
+ * - All tables have UUID primary keys with gen_random_uuid() defaults.
+ * - Foreign key constraints enforce referential integrity.
+ * - workspace_id foreign keys enable workspace isolation.
+ * - updated_at triggers maintain timestamp on row updates.
+ * - Indexes optimize common query patterns (workspace_id, calendar_id, etc.).
+ *
+ * Side effects:
+ * - Creates new tables, affecting database schema.
+ * - Adds triggers for automatic updated_at maintenance.
+ *
+ * Change risk:
+ * - High. Table creation is foundational; changes affect all calendar features.
+ *
+ * Links:
+ * - packages/database/src/schema/calendar.ts (calendar schema definitions)
+ * - packages/contracts/src/calendar.ts (calendar domain schemas)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: high
+ * - layer: schema
+ * - stability: stable
+ * - concerns: tables, constraints, indexes, triggers
+ *
+ * File:
+ * - supabase/migrations/0007_create_calendar_tables.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Calendar Module Tables
 -- This migration creates the calendar module tables with proper constraints and indexes
 

@@ -1,3 +1,24 @@
+/**
+ * MODULE: Round-Robin Scheduling Component
+ *
+ * Responsibility:
+ * Configures round-robin scheduling rules, including team member selection,
+ * availability windows, and rotation strategy for shared booking links.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: scheduling, round-robin, team-availability
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/RoundRobinScheduling.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Select } from '@life-os/ui';

@@ -1,3 +1,41 @@
+/**
+ * MODULE: Event Form State Hook
+ *
+ * Responsibility:
+ * Manages local UI state for the event create/edit modal, including form fields
+ * (title, dates, times, recurrence), modal visibility, and submission to
+ * create/update mutations with date/time parsing.
+ *
+ * Boundaries:
+ * - UI state only; delegates persistence to mutation functions passed as props.
+ * - Does not manage query cache or data fetching.
+ *
+ * Critical invariants:
+ * - Date/time strings from the form are parsed into ISO strings before submission.
+ * - Default time is 09:00–10:00 when creating a new event.
+ *
+ * Change risk:
+ * - Medium. Date/time parsing logic can introduce off-by-one or timezone bugs.
+ *
+ * Links:
+ * - apps/web/src/app/calendar/types.ts
+ * - apps/web/src/app/calendar/components/EventModal.tsx
+ * - apps/web/src/app/calendar/components/EventsView.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: form-state, event-modal, date-parsing
+ *
+ * File:
+ * - apps/web/src/app/calendar/hooks/useEventState.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { useState, useEffect } from 'react';
 
 import type { Event, Calendar, EventForm } from '../types';

@@ -1,3 +1,24 @@
+/**
+ * MODULE: Project & Task Template Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for project templates (with pre-configured
+ * tasks) and standalone task templates.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, templates
+ *
+ * File:
+ * - apps/web/src/app/work/types-templates.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface ProjectTemplate {
   id: string;
   workspaceId: string;

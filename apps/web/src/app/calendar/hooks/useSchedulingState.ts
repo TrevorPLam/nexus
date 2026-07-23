@@ -1,3 +1,41 @@
+/**
+ * MODULE: Scheduling Link Form State Hook
+ *
+ * Responsibility:
+ * Manages local UI state for the scheduling link create/edit modal, including
+ * form fields (duration, buffers, availability windows, booking limits), modal
+ * visibility, and submission to create/update mutations.
+ *
+ * Boundaries:
+ * - UI state only; delegates persistence to mutation functions passed as props.
+ * - Does not manage query cache or data fetching.
+ *
+ * Critical invariants:
+ * - maxDailyBookings is stored as string in the form and parsed to int on submit.
+ * - Default availableDays is all 7 days (0–6).
+ *
+ * Change risk:
+ * - Low. Form state management only.
+ *
+ * Links:
+ * - apps/web/src/app/calendar/types.ts
+ * - apps/web/src/app/calendar/components/modals/SchedulingLinkModal.tsx
+ * - apps/web/src/app/calendar/components/SchedulingView.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: form-state, scheduling-links
+ *
+ * File:
+ * - apps/web/src/app/calendar/hooks/useSchedulingState.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { useState } from 'react';
 
 import type { SchedulingLink, SchedulingForm } from '../types';

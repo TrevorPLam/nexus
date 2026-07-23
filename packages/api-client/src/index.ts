@@ -1,3 +1,50 @@
+/**
+ * MODULE: Life OS API Client
+ *
+ * Responsibility:
+ * Provides a fully typed, Zod-validated TypeScript client for interacting with
+ * the Life OS REST/command API. Handles authentication headers, request formatting,
+ * and response parsing.
+ *
+ * Boundaries:
+ * - Pure client-side library; no direct database access.
+ * - Depends on @life-os/contracts for shared Zod schemas and types.
+ * - Uses the native 'fetch' API for transport.
+ *
+ * Critical invariants:
+ * - All requests are validated against Zod schemas before being sent.
+ * - Critical responses are parsed and validated against Zod schemas at runtime.
+ * - Authorization tokens are dynamically retrieved via a provided TokenProvider.
+ *
+ * Side effects:
+ * - Performs network requests to the Life OS API.
+ *
+ * Change risk:
+ * - High. This client is used by both the Web and Mobile applications.
+ *   API contract breaks will manifest as runtime errors here.
+ *
+ * Context:
+ * - API Specification: apps/api/src/routes/
+ * - Domain Schemas: packages/contracts/src/
+ *
+ * Links:
+ * - apps/api/src/index.ts (API entry point)
+ * - packages/contracts/src/ (shared schemas)
+ *
+ * Tags:
+ * - domain: api-client
+ * - risk: high
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: http, validation, zod, fetch
+ *
+ * File:
+ * - packages/api-client/src/index.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { z } from 'zod';
 import {
   CreateProjectRequest,

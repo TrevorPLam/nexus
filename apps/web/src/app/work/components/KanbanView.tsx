@@ -1,3 +1,25 @@
+/**
+ * MODULE: Kanban Board View Component
+ *
+ * Responsibility:
+ * Renders tasks in a Kanban board layout with columns for each status
+ * (todo, in_progress, done, cancelled). Supports task creation and
+ * status-based filtering.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: kanban, board, tasks
+ *
+ * File:
+ * - apps/web/src/app/work/components/KanbanView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

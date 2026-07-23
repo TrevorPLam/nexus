@@ -1,3 +1,44 @@
+/**
+ * MODULE: Idempotency Management
+ *
+ * Responsibility:
+ * Provides functions for checking and creating idempotency keys to ensure
+ * safe retry of mutation operations without duplicate side effects.
+ *
+ * Boundaries:
+ * - Low-level persistence helper for idempotency table.
+ * - Used by middleware.ts to intercept and cache responses.
+ *
+ * Critical invariants:
+ * - Idempotency keys are scoped to (key, userId, endpoint) tuples.
+ * - Keys expire after 48 hours to prevent unbounded table growth.
+ * - Duplicate requests return the cached response without re-executing.
+ *
+ * Side effects:
+ * - Inserts records into 'idempotency_keys' table.
+ *
+ * Change risk:
+ * - Medium. Faulty idempotency logic could permit duplicate mutations
+ *   or prevent legitimate retries.
+ *
+ * Links:
+ * - packages/database/src/schema/core.ts (idempotency_keys table)
+ * - apps/api/src/lib/middleware.ts (idempotencyMiddleware usage)
+ *
+ * Tags:
+ * - domain: reliability
+ * - risk: medium
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: idempotency, persistence
+ *
+ * File:
+ * - apps/api/src/lib/idempotency.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { idempotencyKeys } from '@life-os/database';
 import { eq, and, gt } from 'drizzle-orm';
 

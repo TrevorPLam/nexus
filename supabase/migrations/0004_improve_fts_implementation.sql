@@ -1,3 +1,44 @@
+/**
+ * MODULE: FTS Implementation Improvement
+ *
+ * Responsibility:
+ * Improves PostgreSQL Full-Text Search implementation by replacing
+ * trigger-based search_vector updates with GENERATED column and adding GIN index.
+ *
+ * Boundaries:
+ * - FTS optimization only; no search logic changes.
+ * - Replaces trigger with PostgreSQL 12+ GENERATED column feature.
+ *
+ * Critical invariants:
+ * - search_vector is automatically maintained by database (GENERATED).
+ * - Title weighted 'A' (higher relevance), description weighted 'B'.
+ * - GIN index enables fast full-text search queries.
+ *
+ * Side effects:
+ * - Drops existing trigger and function.
+ * - Changes column to GENERATED, requiring PostgreSQL 12+.
+ *
+ * Change risk:
+ * - Medium. Requires PostgreSQL 12+ for GENERATED columns.
+ * - Improves performance and reduces trigger overhead.
+ *
+ * Links:
+ * - packages/database/src/schema/work.ts (tasks table)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: medium
+ * - layer: performance
+ * - stability: stable
+ * - concerns: fts, generated-column, gin-index
+ *
+ * File:
+ * - supabase/migrations/0004_improve_fts_implementation.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Improve PostgreSQL Full-Text Search implementation for tasks table
 -- Based on best practices: use GENERATED column instead of trigger, add GIN index
 

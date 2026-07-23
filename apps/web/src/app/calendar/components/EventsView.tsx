@@ -1,3 +1,24 @@
+/**
+ * MODULE: Calendar Events View Component
+ *
+ * Responsibility:
+ * Renders the main calendar grid with month/week/day views, event display,
+ * and navigation controls. Supports event selection and creation triggers.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: calendar-grid, month-view, week-view, day-view
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/EventsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

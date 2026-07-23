@@ -1,3 +1,26 @@
+/**
+ * MODULE: Task Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing tasks, including title, project,
+ * parent task, description, status, priority, due date/time, estimated duration,
+ * energy level, context tags, and milestone flag. Validates against
+ * CreateTaskRequest from contracts.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, task
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal, Input, Select, TextArea } from '@life-os/ui';

@@ -36,6 +36,9 @@
       "inputs": ["$TURBO_DEFAULT$", ".env.*", "tsconfig.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
+    "validate": {
+      "dependsOn": ["lint", "typecheck", "test"]
+    },
     "clean": {
       "cache": false
     }

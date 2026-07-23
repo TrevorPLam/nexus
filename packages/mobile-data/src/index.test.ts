@@ -1,3 +1,8 @@
+/**
+ * Tests for mobile data package exports.
+ * Validates barrel exports and schema completeness for offline sync.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import { powersyncSchema } from './index';

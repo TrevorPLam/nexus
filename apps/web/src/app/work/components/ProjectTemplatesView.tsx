@@ -1,3 +1,24 @@
+/**
+ * MODULE: Project Templates List View Component
+ *
+ * Responsibility:
+ * Displays the list of project templates with create, duplicate, edit, delete,
+ * and apply actions. Shows visibility (public/private) status.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, templates
+ *
+ * File:
+ * - apps/web/src/app/work/components/ProjectTemplatesView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

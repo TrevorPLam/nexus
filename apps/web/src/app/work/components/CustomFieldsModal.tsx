@@ -1,3 +1,24 @@
+/**
+ * MODULE: Custom Field Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing custom fields, including
+ * field type, options, default value, required/visible flags, and ordering.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, custom-fields
+ *
+ * File:
+ * - apps/web/src/app/work/components/CustomFieldsModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Input } from '@life-os/ui';

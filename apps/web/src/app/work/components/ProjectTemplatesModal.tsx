@@ -1,3 +1,24 @@
+/**
+ * MODULE: Project Template Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing project templates, including
+ * project config and a list of template tasks with dependencies and subtasks.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, templates
+ *
+ * File:
+ * - apps/web/src/app/work/components/ProjectTemplatesModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Input, TextArea } from '@life-os/ui';

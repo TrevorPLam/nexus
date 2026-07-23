@@ -1,3 +1,59 @@
+/**
+ * MODULE: Scheduling Link Endpoints
+ *
+ * Responsibility:
+ * Implementation of API endpoints for scheduling links, including management
+ * (creation, updates, deletion) and public booking (availability, reserving slots).
+ *
+ * Boundaries:
+ * - Handles both authenticated management and public booking requests.
+ * - Delegates availability calculation and atomic booking to lib/calendar-operations.js.
+ * - Authorization for management endpoints is enforced via middleware.
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - Management endpoints require valid authentication (authMiddleware)
+ *   - Management endpoints require workspace access or entity access
+ *   - Public endpoints (availability, book) do not require authentication
+ *   - Input data must pass Zod validation from @life-os/contracts
+ *   - Scheduling link must be active for availability and booking
+ *   - Booking must respect min/max booking notice constraints
+ *   - Booking duration must match scheduling link event duration
+ * - Postconditions:
+ *   - All responses are validated against Zod schemas
+ *   - Workspace isolation enforced for management endpoints
+ *   - Public endpoints restricted by scheduling link configuration
+ *   - Bookings are atomic using SELECT FOR UPDATE to prevent double-booking
+ *   - Availability calculation respects buffer times and available days
+ *   - Successful operations return 200-201 status codes
+ *   - Failed operations return appropriate 4xx/5xx status codes
+ *   - Test coverage: See apps/api/src/routes/calendar/scheduling-links.test.ts (MISSING)
+ *
+ * Side effects:
+ * - Database writes via calendar-operations.js.
+ * - Emits audit logs and outbox events for bookings.
+ *
+ * Change risk:
+ * - High. Public-facing endpoints are high-traffic and critical for the business.
+ *
+ * Links:
+ * - apps/api/src/lib/calendar-operations.ts
+ * - packages/contracts/src/calendar.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: high
+ * - layer: api
+ * - stability: stable
+ * - concerns: scheduling-links, public-booking, availability
+ *
+ * File:
+ * - apps/api/src/routes/calendar/scheduling-links.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import {
   CreateSchedulingLinkRequest,
   UpdateSchedulingLinkRequest,
@@ -35,7 +91,7 @@ schedulingLinksRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
-    const user = c.get('user') as any;
+    const user = (c as any).get('user');
 
     if (!user) {
       return c.json({ error: 'Unauthorized' }, 401);
@@ -46,7 +102,7 @@ schedulingLinksRouter.post(
       const [appUser] = await db
         .select()
         .from(appUsers)
-        .where(eq(appUsers.supabaseUserId, user.id));
+        .where(eq(appUsers.supabaseUserId, (user as any).id));
 
       if (!appUser) {
         return c.json({ error: 'User not found' }, 404);
@@ -70,6 +126,9 @@ schedulingLinksRouter.get(
   requireEntityAccess('schedulingLinks'),
   async (c) => {
     const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Scheduling link ID required' }, 400);
+    }
     try {
       const schedulingLink = await calendarOps.getSchedulingLinkById(id);
       if (!schedulingLink) {
@@ -149,7 +208,7 @@ schedulingLinksRouter.put(
     const id = c.req.param('id');
     const data = c.req.valid('json');
     try {
-      const schedulingLink = await calendarOps.updateSchedulingLink(id, data);
+      const schedulingLink = await calendarOps.updateSchedulingLink(id, data as any);
       if (!schedulingLink) {
         return c.json({ error: 'Scheduling link not found' }, 404);
       }
@@ -166,6 +225,9 @@ schedulingLinksRouter.delete(
   requireEntityAccess('schedulingLinks'),
   async (c) => {
     const id = c.req.param('id');
+    if (!id) {
+      return c.json({ error: 'Scheduling link ID required' }, 400);
+    }
     try {
       const schedulingLink = await calendarOps.deleteSchedulingLink(id);
       if (!schedulingLink) {

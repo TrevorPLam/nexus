@@ -1,3 +1,25 @@
+/**
+ * MODULE: Event Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing calendar events, including
+ * title, calendar selection, date/time, all-day, focus time, description,
+ * location, and recurrence rule fields.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, event
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/EventModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal } from '@life-os/ui';

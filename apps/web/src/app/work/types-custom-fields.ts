@@ -1,3 +1,24 @@
+/**
+ * MODULE: Custom Field Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for custom fields and their values, including
+ * supported field types (text, number, date, select, etc.).
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, custom-fields
+ *
+ * File:
+ * - apps/web/src/app/work/types-custom-fields.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export type CustomFieldType =
   | 'text'
   | 'number'

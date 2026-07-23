@@ -1,3 +1,44 @@
+/**
+ * MODULE: Authentication Context
+ *
+ * Responsibility:
+ * Manages the global authentication state and workspace selection for the web app.
+ * Synchronizes with Supabase Auth and automatically resolves the active workspace.
+ *
+ * Boundaries:
+ * - Client-side context only.
+ * - Bridges identity (Supabase) with multi-tenant application state (Workspaces).
+ *
+ * Critical invariants:
+ * - AuthProvider must be wrapped around any component using useAuth.
+ * - Loading state must be handled correctly to prevent flashes of unauthenticated UI.
+ * - Workspace selection defaults to the first available workspace (simplified for MVP).
+ *
+ * Side effects:
+ * - Listens to Supabase auth state changes.
+ * - Fetches workspace memberships on login.
+ *
+ * Change risk:
+ * - High. Core state management for identity and security.
+ *
+ * Links:
+ * - apps/web/src/lib/supabase/client.ts (Supabase client)
+ * - packages/api-client/src/index.ts (API client for workspaces)
+ *
+ * Tags:
+ * - domain: authentication
+ * - risk: high
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: react-context, web, workspace-selection, supabase-auth
+ *
+ * File:
+ * - apps/web/src/contexts/AuthContext.tsx
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';

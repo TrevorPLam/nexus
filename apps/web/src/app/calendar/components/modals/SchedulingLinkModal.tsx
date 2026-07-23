@@ -1,3 +1,25 @@
+/**
+ * MODULE: Scheduling Link Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing scheduling links, including
+ * name, slug, calendar, duration, buffers, availability windows, booking
+ * notice, available days, approval, and daily booking limits.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, scheduling-links
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/modals/SchedulingLinkModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal } from '@life-os/ui';

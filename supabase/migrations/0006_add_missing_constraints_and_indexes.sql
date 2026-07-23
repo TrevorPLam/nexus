@@ -1,3 +1,44 @@
+/**
+ * MODULE: Work Constraints and Indexes
+ *
+ * Responsibility:
+ * Adds missing database constraints and performance indexes for Work module
+ * based on best practices for project management systems.
+ *
+ * Boundaries:
+ * - Constraint and index creation only; no schema changes.
+ * - Focuses on data integrity and query performance.
+ *
+ * Critical invariants:
+ * - Unique constraint prevents duplicate task dependencies.
+ * - Composite indexes optimize RLS and common query patterns.
+ * - Partial indexes reduce storage for filtered queries.
+ *
+ * Side effects:
+ * - Adds constraints that may fail on existing duplicate data.
+ * - Adds indexes, increasing storage and write overhead.
+ *
+ * Change risk:
+ * - Medium. Constraints may block invalid data writes.
+ * - Indexes improve read performance at cost of write performance.
+ *
+ * Links:
+ * - packages/database/src/schema/work.ts (Work tables)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: medium
+ * - layer: performance
+ * - stability: stable
+ * - concerns: constraints, indexes, performance
+ *
+ * File:
+ * - supabase/migrations/0006_add_missing_constraints_and_indexes.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Add missing database constraints and indexes for Work module
 -- Based on best practices for project management systems
 

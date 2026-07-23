@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+
+import { describe, it, expect } from 'vitest';
 
 describe('Mobile Calendar Page', () => {
   describe('File structure', () => {

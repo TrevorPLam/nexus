@@ -1,3 +1,24 @@
+/**
+ * MODULE: Dashboards & Reports View Component
+ *
+ * Responsibility:
+ * Displays dashboards with configurable widgets and saved reports, including
+ * create, edit, delete, and schedule actions.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: dashboards, reports, widgets
+ *
+ * File:
+ * - apps/web/src/app/work/components/DashboardsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

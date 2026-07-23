@@ -1,3 +1,39 @@
+/**
+ * MODULE: Select Component
+ *
+ * Responsibility:
+ * A form component for single-option selection from a list, styled with Tamagui.
+ * Supports placeholder and disabled states.
+ *
+ * Boundaries:
+ * - Shared component used across web and mobile.
+ * - Bridges native HTML select (web) and styled view (mobile).
+ *
+ * Critical invariants:
+ * - Must reflect the 'value' prop accurately.
+ * - Must trigger 'onChange' with the selected value.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - Medium. Form data selection depends on reliable behavior.
+ *
+ * Links:
+ * - packages/ui/src/index.ts
+ *
+ * Tags:
+ * - domain: ui
+ * - risk: medium
+ * - layer: presentation
+ *
+ * File:
+ * - packages/ui/src/components/Select.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { styled } from '@tamagui/core';
 import { View, ViewStyle } from '@tamagui/core';
 import React from 'react';

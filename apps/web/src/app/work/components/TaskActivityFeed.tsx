@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Activity Feed Component
+ *
+ * Responsibility:
+ * Displays a unified timeline of task activity, merging comments, attachments,
+ * time entries, and status changes into a chronological feed.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: activity-feed, timeline, comments, attachments
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskActivityFeed.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Clock, MessageSquare, Paperclip, User, CheckCircle2, Edit, Calendar } from 'lucide-react';

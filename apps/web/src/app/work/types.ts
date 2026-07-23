@@ -1,3 +1,37 @@
+/**
+ * MODULE: Work Domain Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for work management entities used in the web app:
+ * Project, Task, TaskDependency, TaskNote, TaskAssignee, TaskComment,
+ * TaskAttachment, TimeEntry, and their form counterparts.
+ *
+ * Boundaries:
+ * - Web-local types; not shared with packages/contracts.
+ * - Form types (ProjectForm, TaskForm) represent UI form state, not API shapes.
+ *
+ * Change risk:
+ * - Low. Type definitions only.
+ *
+ * Links:
+ * - apps/web/src/app/work/hooks/useWorkState.ts
+ * - apps/web/src/hooks/useWorkTasks.ts
+ * - apps/web/src/hooks/useTaskDetails.ts
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, interfaces
+ *
+ * File:
+ * - apps/web/src/app/work/types.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface Project {
   id: string;
   workspaceId: string;

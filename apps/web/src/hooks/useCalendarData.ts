@@ -1,3 +1,43 @@
+/**
+ * MODULE: Calendar Data TanStack Query Hook
+ *
+ * Responsibility:
+ * Provides TanStack Query hooks for workspace-scoped calendars and events,
+ * including calendar CRUD, event CRUD, and date-range-based event listing.
+ *
+ * Boundaries:
+ * - UI-facing data layer. Calls apiClient methods and manages query invalidation.
+ * - No direct database or PowerSync access.
+ *
+ * Critical invariants:
+ * - Queries are disabled when workspaceId is null.
+ * - Mutations invalidate the ['calendars', workspaceId] and ['events', workspaceId] query keys.
+ *
+ * Side effects:
+ * - Performs HTTP requests to the API and updates TanStack Query cache.
+ *
+ * Change risk:
+ * - Medium. Response formats must match the API client expectations.
+ *
+ * Links:
+ * - packages/api-client/src/index.ts
+ * - apps/web/src/app/calendar/page.tsx
+ * - apps/web/src/contexts/AuthContext.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: react-query, calendars, events, hooks
+ *
+ * File:
+ * - apps/web/src/hooks/useCalendarData.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Calendar, Event } from '../app/calendar/types';

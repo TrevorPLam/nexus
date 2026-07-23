@@ -1,3 +1,57 @@
+/**
+ * MODULE: Project and Workspace Endpoints
+ *
+ * Responsibility:
+ * Implements API endpoints for workspace membership lookup, project CRUD, and
+ * paginated project listing scoped to a workspace.
+ *
+ * Boundaries:
+ * - Handles HTTP request/response cycle and input validation for projects.
+ * - Delegates persistence and business logic to lib/work-operations.js.
+ * - Authorization is enforced via middleware.
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - All requests require valid authentication (authMiddleware)
+ *   - Create/update/delete operations require workspace access (requireWorkspaceAccess)
+ *   - Create/update/delete operations require idempotency middleware
+ *   - Get by ID operations require entity access (requireEntityAccess)
+ *   - Input data must pass Zod validation from @life-os/contracts
+ *   - Workspace membership is resolved from authenticated app_user record
+ * - Postconditions:
+ *   - All responses are validated against Zod schemas
+ *   - Workspace isolation is enforced by middleware
+ *   - Project mutations are idempotent when idempotency key provided
+ *   - Project deletion soft-deletes (sets status to 'deleted')
+ *   - Successful operations return 200-201 status codes
+ *   - Failed operations return appropriate 4xx/5xx status codes
+ *   - Test coverage: See apps/api/src/routes/work/projects.test.ts (EXISTS)
+ *
+ * Side effects:
+ * - Database writes via work-operations.js.
+ *
+ * Change risk:
+ * - High. Core project management functionality; changes affect all work views.
+ *
+ * Links:
+ * - apps/api/src/lib/work-operations.ts
+ * - packages/contracts/src/work.ts
+ * - apps/api/src/lib/middleware.ts
+ *
+ * Tags:
+ * - domain: work
+ * - risk: high
+ * - layer: api
+ * - stability: stable
+ * - concerns: projects, workspaces, crud
+ *
+ * File:
+ * - apps/api/src/routes/work/projects.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { CreateProjectRequest, UpdateProjectRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';

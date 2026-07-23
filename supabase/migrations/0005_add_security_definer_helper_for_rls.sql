@@ -1,3 +1,46 @@
+/**
+ * MODULE: RLS Security Definer Helper
+ *
+ * Responsibility:
+ * Adds SECURITY DEFINER helper function for RLS policies to bypass
+ * RLS for membership lookup, avoiding infinite recursion and improving performance.
+ *
+ * Boundaries:
+ * - Security helper function creation and RLS policy updates only.
+ * - Function bypasses RLS for workspace_memberships table lookup.
+ *
+ * Critical invariants:
+ * - get_user_workspace_ids() runs with SECURITY DEFINER (bypasses RLS).
+ * - Function is STABLE (results can be cached).
+ * - All Work RLS policies updated to use the helper function.
+ * - Prevents infinite recursion in RLS policy evaluation.
+ *
+ * Side effects:
+ * - Creates SECURITY DEFINER function with elevated privileges.
+ * - Updates all Work module RLS policies to use the helper.
+ *
+ * Change risk:
+ * - High. SECURITY DEFINER functions require careful privilege management.
+ * - Changes all Work RLS policies, affecting data access.
+ *
+ * Links:
+ * - AGENTS.md (Row-Level Security guidelines)
+ * - supabase/migrations/0001_work_rls_policies.sql (base RLS policies)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: high
+ * - layer: security
+ * - stability: stable
+ * - concerns: rls, security-definer, performance
+ *
+ * File:
+ * - supabase/migrations/0005_add_security_definer_helper_for_rls.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Add SECURITY DEFINER helper function for RLS policies
 -- This function bypasses RLS for the membership lookup to avoid infinite recursion
 -- and improves performance by caching results

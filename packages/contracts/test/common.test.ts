@@ -1,3 +1,8 @@
+/**
+ * Tests for common contract schemas.
+ * Validates UUID parsing, pagination limits, date range ordering, and error response structure.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import {

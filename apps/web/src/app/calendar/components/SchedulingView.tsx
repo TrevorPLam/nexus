@@ -1,3 +1,23 @@
+/**
+ * MODULE: Scheduling Links List View Component
+ *
+ * Responsibility:
+ * Displays the list of scheduling links with create, edit, and delete actions.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, scheduling-links
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/SchedulingView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Badge } from '@life-os/ui';

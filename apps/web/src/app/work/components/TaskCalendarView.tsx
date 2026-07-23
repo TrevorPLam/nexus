@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Calendar View Component
+ *
+ * Responsibility:
+ * Renders tasks on a calendar grid, showing tasks by due date with navigation
+ * controls and completion indicators.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: calendar-view, tasks, due-dates
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskCalendarView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

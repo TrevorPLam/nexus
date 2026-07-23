@@ -1,3 +1,44 @@
+/**
+ * MODULE: Work Tasks TanStack Query Hook
+ *
+ * Responsibility:
+ * Provides TanStack Query hooks for workspace- and project-scoped task data,
+ * including filtering, creation, update, and deletion of tasks.
+ *
+ * Boundaries:
+ * - UI-facing data layer. Calls apiClient methods and manages query invalidation.
+ * - Filtering parameters are passed to the API as query strings.
+ *
+ * Critical invariants:
+ * - Queries are disabled when workspaceId is null.
+ * - Mutations invalidate the ['tasks', workspaceId] query cache on success.
+ * - Null values in update payloads are converted to undefined to satisfy API contracts.
+ *
+ * Side effects:
+ * - Performs HTTP requests to the API and updates TanStack Query cache.
+ *
+ * Change risk:
+ * - Medium. Response format assumptions must match apps/api route return shapes.
+ *
+ * Links:
+ * - packages/api-client/src/index.ts
+ * - apps/web/src/app/work/page.tsx
+ * - apps/api/src/routes/work/tasks.ts
+ *
+ * Tags:
+ * - domain: work
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: react-query, tasks, hooks
+ *
+ * File:
+ * - apps/web/src/hooks/useWorkTasks.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

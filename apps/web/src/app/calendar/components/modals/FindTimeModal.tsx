@@ -1,3 +1,24 @@
+/**
+ * MODULE: Find Time Modal Component
+ *
+ * Responsibility:
+ * Displays available time slots for a given date and duration, using the
+ * findAvailableSlots utility to exclude conflicting events.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, scheduling, time-slots
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/modals/FindTimeModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Modal } from '@life-os/ui';

@@ -1,3 +1,38 @@
+/**
+ * MODULE: Badge Component
+ *
+ * Responsibility:
+ * A small UI component for displaying tags, statuses, or categories.
+ * Supports multiple variants (default, success, warning, danger, info).
+ *
+ * Boundaries:
+ * - Shared component used across web and mobile.
+ * - Purely presentational.
+ *
+ * Critical invariants:
+ * - Style consistency across web and mobile platforms.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - Low. Visual element with minimal behavioral impact.
+ *
+ * Links:
+ * - packages/ui/src/index.ts
+ *
+ * Tags:
+ * - domain: ui
+ * - risk: low
+ * - layer: presentation
+ *
+ * File:
+ * - packages/ui/src/components/Badge.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { styled } from '@tamagui/core';
 import { Text } from '@tamagui/core';
 import React from 'react';

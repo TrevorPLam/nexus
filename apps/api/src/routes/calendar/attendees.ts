@@ -1,3 +1,54 @@
+/**
+ * MODULE: Event Attendee Endpoints
+ *
+ * Responsibility:
+ * Implements API endpoints for adding, listing, updating status, and removing
+ * calendar event attendees.
+ *
+ * Boundaries:
+ * - Delegates persistence to lib/calendar-operations.js.
+ * - Relies on middleware for workspace membership checks.
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - All requests require valid authentication (authMiddleware)
+ *   - All operations require workspace membership (requireWorkspaceMembership)
+ *   - Input data must pass Zod validation from @life-os/contracts
+ *   - Event IDs must reference existing events in the same workspace
+ *   - Status updates require valid status query parameter
+ * - Postconditions:
+ *   - All responses are validated against Zod schemas
+ *   - Workspace isolation is enforced by middleware
+ *   - Default status on creation is 'needs_action'
+ *   - Default isOrganizer on creation is false
+ *   - Successful operations return 200-201 status codes
+ *   - Failed operations return appropriate 4xx/5xx status codes
+ *   - Test coverage: See apps/api/src/routes/calendar/attendees.test.ts (EXISTS)
+ *
+ * Side effects:
+ * - Writes event_attendees records.
+ *
+ * Change risk:
+ * - Medium. Attendee status affects scheduling and invitations.
+ *
+ * Links:
+ * - apps/api/src/lib/calendar-operations.ts
+ * - packages/contracts/src/calendar.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: api
+ * - stability: stable
+ * - concerns: attendees, events
+ *
+ * File:
+ * - apps/api/src/routes/calendar/attendees.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { CreateEventAttendeeRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';

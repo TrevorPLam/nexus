@@ -1,3 +1,24 @@
+/**
+ * MODULE: Time Tracking Timer Component
+ *
+ * Responsibility:
+ * Renders a standalone timer widget with start, pause, and stop controls.
+ * Displays live elapsed time using a ref-based interval.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: timer, time-tracking
+ *
+ * File:
+ * - apps/web/src/app/work/components/TimeTrackingTimer.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

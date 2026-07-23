@@ -1,3 +1,24 @@
+/**
+ * MODULE: Automation Rule Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing automation rules, including
+ * trigger selection, action configuration, and condition matching.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, automation, rules
+ *
+ * File:
+ * - apps/web/src/app/work/components/AutomationModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal, Select, TextArea } from '@life-os/ui';

@@ -1,3 +1,25 @@
+/**
+ * MODULE: Event Reminders Component
+ *
+ * Responsibility:
+ * Manages the list of event reminders, allowing users to add, view, and delete
+ * reminders with configurable timing (minutes before) and delivery method
+ * (email, push, sms).
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: reminders, notifications
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/EventReminders.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Select } from '@life-os/ui';

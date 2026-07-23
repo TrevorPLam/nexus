@@ -1,3 +1,54 @@
+/**
+ * MODULE: Work Management Contracts
+ *
+ * Responsibility:
+ * Defines the domain model and Zod schemas for work management entities, including
+ * projects, tasks, dependencies, notes, assignees, comments, attachments, and time entries.
+ *
+ * Boundaries:
+ * - Pure schema definitions; no database access or business logic.
+ * - Does not include calendar-specific schemas (see calendar.ts).
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - Caller must provide valid workspaceId for all workspace-scoped operations
+ *   - Task IDs must reference existing tasks in the same workspace when creating dependencies
+ *   - Project IDs must reference existing projects in the same workspace when creating tasks
+ *   - Parent task IDs must reference existing tasks in the same workspace for subtasks
+ *   - Calendar event IDs must reference existing events in the same workspace for task linking
+ * - Postconditions:
+ *   - All request schemas validate UUID format and workspace association
+ *   - Response schemas guarantee workspace isolation is preserved
+ *   - Task status transitions are constrained to valid enum values
+ *   - Dependency types are constrained to valid enum values
+ *   - Test coverage: See packages/contracts/test/ (no tests found - MISSING COVERAGE)
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - High. These schemas are the source of truth for both backend validation (Hono)
+ *   and frontend types (Next.js/Expo). Any change may require a database migration
+ *   and updates across the monorepo.
+ *
+ * Links:
+ * - packages/database/src/schema/work.ts (persistence layer)
+ * - apps/api/src/lib/work-operations.ts (business logic)
+ *
+ * Tags:
+ * - domain: work-management
+ * - risk: high
+ * - layer: contracts
+ * - stability: stable
+ * - concerns: validation, types, zod
+ *
+ * File:
+ * - packages/contracts/src/work.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { z } from 'zod';
 
 export const ProjectStatus = z.enum(['active', 'archived', 'deleted']);
@@ -11,7 +62,12 @@ export const DependencyType = z.enum([
   'start_to_finish',
 ]);
 
-// Request schemas (input DTOs)
+/**
+ * REQUEST SCHEMAS (Input DTOs)
+ * These schemas validate data coming into the API from clients.
+ */
+
+// Project Schemas
 export const CreateProjectRequest = z.object({
   workspaceId: z.string().uuid(),
   name: z.string().min(1).max(200),
@@ -36,6 +92,10 @@ export const UpdateProjectRequest = z
   })
   .strict();
 
+/**
+ * Creates a new task within a workspace.
+ * Tasks are the core unit of work in Life OS.
+ */
 export const CreateTaskRequest = z.object({
   workspaceId: z.string().uuid(),
   projectId: z.string().uuid().optional(),
@@ -99,7 +159,13 @@ export const UpdateTaskNoteRequest = z.object({
   content: z.string().min(1).max(10000),
 });
 
-// Response schemas (output DTOs)
+/**
+ * RESPONSE SCHEMAS (Output DTOs)
+ * These schemas define the structure of data returned by the API.
+ * They are used for client-side type safety and runtime validation.
+ */
+
+// Project Response
 export const ProjectResponse = z.object({
   id: z.string().uuid(),
   workspaceId: z.string().uuid(),
@@ -263,7 +329,10 @@ export const TimeEntryResponse = z.object({
   updatedAt: z.date(),
 });
 
-// Integration command schemas
+/**
+ * INTEGRATION COMMAND SCHEMAS
+ * Specialized schemas for operations that span multiple domains (e.g., Task + Calendar).
+ */
 export const CreateTaskWithEventRequest = z.object({
   workspaceId: z.string().uuid(),
   projectId: z.string().uuid().optional(),

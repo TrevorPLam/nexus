@@ -1,3 +1,24 @@
+/**
+ * MODULE: Calendar Settings Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for editing calendar preferences: working hours and
+ * default location.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, settings, preferences
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/modals/SettingsModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal } from '@life-os/ui';

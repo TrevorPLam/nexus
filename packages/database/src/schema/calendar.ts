@@ -1,3 +1,55 @@
+/**
+ * MODULE: Calendar Database Schema
+ *
+ * Responsibility:
+ * Defines the persistence layer for calendar entities, including calendars,
+ * events, attendees, and scheduling links.
+ *
+ * Boundaries:
+ * - Depends on core.ts for user and workspace foundations.
+ * - Does not include task entities (see work.ts).
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - Every calendar, event, and scheduling link must belong to a valid workspaceId for RLS
+ *   - Event start times must precede end times (validated at application layer)
+ *   - Scheduling link slugs must be globally unique and URL-safe
+ *   - Calendar IDs must exist before creating events (foreign key constraint)
+ *   - Event IDs must exist before creating attendees (foreign key constraint)
+ *   - Calendar IDs must exist before creating scheduling links (foreign key constraint)
+ * - Postconditions:
+ *   - Workspace deletion cascades to all associated calendars, events, and scheduling links
+ *   - Calendar deletion cascades to all associated events and scheduling links
+ *   - Event deletion cascades to all associated attendees
+ *   - Scheduling link slug uniqueness is enforced by database unique constraint
+ *   - All foreign key constraints are enforced at database level
+ *   - Test coverage: See packages/database/test/ (no tests found - MISSING COVERAGE)
+ *
+ * Side effects:
+ * - Authoritative source for database migrations via drizzle-kit.
+ *
+ * Change risk:
+ * - High. Structural changes may affect external provider synchronization
+ *   and public-facing booking reliability.
+ *
+ * Links:
+ * - packages/contracts/src/calendar.ts (domain schemas)
+ * - supabase/migrations/ (RLS policies for calendar tables)
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: high
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: rls, scheduling, external-sync
+ *
+ * File:
+ * - packages/database/src/schema/calendar.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import {
   pgTable,
   uuid,
@@ -11,6 +63,10 @@ import {
 
 import { workspaces, appUsers } from './core.js';
 
+/**
+ * CALENDARS
+ * Collections of events, possibly synced from external providers.
+ */
 export const calendars = pgTable(
   'calendars',
   {
@@ -34,6 +90,10 @@ export const calendars = pgTable(
   }),
 );
 
+/**
+ * EVENTS & ATTENDEES
+ * Specific time-bound entries within a calendar and their participants.
+ */
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
   workspaceId: uuid('workspace_id')
@@ -70,6 +130,10 @@ export const eventAttendees = pgTable('event_attendees', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+/**
+ * SCHEDULING LINKS
+ * Public booking pages that allow external users to book time on a calendar.
+ */
 export const schedulingLinks = pgTable(
   'scheduling_links',
   {

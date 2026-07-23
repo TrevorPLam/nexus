@@ -1,3 +1,24 @@
+/**
+ * MODULE: Automation Rules List View Component
+ *
+ * Responsibility:
+ * Displays the list of automation rules with toggle, edit, delete, and
+ * execution log viewing actions.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, automation, rules
+ *
+ * File:
+ * - apps/web/src/app/work/components/AutomationView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

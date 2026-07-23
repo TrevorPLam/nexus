@@ -1,3 +1,38 @@
+/**
+ * MODULE: Calendar Domain Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for calendar-related data used in the web app:
+ * Calendar, Event, SchedulingLink, Attendee, and their form counterparts.
+ *
+ * Boundaries:
+ * - Web-local types; not shared with packages/contracts.
+ * - Form types (CalendarForm, EventForm, SchedulingForm) represent UI form state,
+ *   not API request/response shapes.
+ *
+ * Change risk:
+ * - Low. Type definitions only.
+ *
+ * Links:
+ * - apps/web/src/app/calendar/hooks/useCalendarState.ts
+ * - apps/web/src/app/calendar/hooks/useEventState.ts
+ * - apps/web/src/app/calendar/hooks/useSchedulingState.ts
+ * - apps/web/src/hooks/useEventDetails.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, interfaces
+ *
+ * File:
+ * - apps/web/src/app/calendar/types.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface Calendar {
   id: string;
   name: string;

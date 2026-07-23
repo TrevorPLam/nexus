@@ -1,3 +1,23 @@
+/**
+ * MODULE: Add Attendee Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for adding a new attendee to an event by email.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, attendee, form
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/modals/AttendeeModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal } from '@life-os/ui';

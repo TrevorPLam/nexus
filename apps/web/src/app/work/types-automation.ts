@@ -1,3 +1,24 @@
+/**
+ * MODULE: Automation Rule Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for automation rules, triggers, actions,
+ * conditions, task templates, and execution logs.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, automation, rules
+ *
+ * File:
+ * - apps/web/src/app/work/types-automation.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface AutomationRule {
   id: string;
   workspaceId: string;

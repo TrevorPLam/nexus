@@ -1,3 +1,8 @@
+/**
+ * Tests for work schema table definitions.
+ * Validates table names, column presence, and foreign key references for work management tables.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import { projects, tasks, taskDependencies, taskNotes } from './work';

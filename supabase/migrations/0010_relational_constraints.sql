@@ -1,3 +1,48 @@
+/**
+ * MODULE: Relational and Workspace Constraints
+ *
+ * Responsibility:
+ * Adds relational and workspace consistency constraints including missing foreign keys,
+ * explicit delete actions, and composite foreign keys to prevent cross-workspace references.
+ *
+ * Boundaries:
+ * - Constraint and index creation only; no schema changes.
+ * - Uses NOT VALID + VALIDATE pattern for minimal downtime.
+ *
+ * Critical invariants:
+ * - Composite foreign keys prevent cross-workspace references (e.g., tasks.projectId).
+ * - Unique constraints on (id, workspace_id) enable composite FKs.
+ * - Explicit delete actions (CASCADE, SET NULL) defined for all FKs.
+ * - Self-reference FKs for tasks.parentId and taskComments.parentId.
+ * - Cross-domain FKs for task-event linking (tasks.calendarEventId, events.taskId).
+ *
+ * Side effects:
+ * - Adds constraints that may fail on existing invalid data.
+ * - Uses NOT VALID + VALIDATE to minimize lock time.
+ * - Adds indexes for composite FK performance.
+ *
+ * Change risk:
+ * - High. Composite FKs enforce strict workspace isolation.
+ * - May block cross-workspace data that previously existed.
+ *
+ * Links:
+ * - packages/database/src/schema/work.ts (Work tables)
+ * - packages/database/src/schema/calendar.ts (Calendar tables)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: high
+ * - layer: integrity
+ * - stability: stable
+ * - concerns: constraints, foreign-keys, workspace-isolation
+ *
+ * File:
+ * - supabase/migrations/0010_relational_constraints.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Add relational and workspace consistency constraints
 -- This migration adds missing foreign keys, explicit delete actions, and composite foreign keys
 -- to prevent cross-workspace references. Uses NOT VALID + VALIDATE pattern for minimal downtime.

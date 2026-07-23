@@ -1,3 +1,41 @@
+/**
+ * MODULE: Find Available Time Slots Utility
+ *
+ * Responsibility:
+ * Calculates available time slots on a given day by iterating at a fixed
+ * interval and excluding slots that conflict with existing events.
+ *
+ * Boundaries:
+ * - Pure function; no side effects or API calls.
+ * - Operates on already-fetched event arrays.
+ *
+ * Critical invariants:
+ * - Slots are generated between startHour and endHour (default 9–17).
+ * - Slot interval defaults to 30 minutes.
+ * - A slot is excluded if it overlaps any existing event on the same day.
+ * - Slots extending past endHour are excluded.
+ *
+ * Change risk:
+ * - Low. Scheduling display logic only.
+ *
+ * Links:
+ * - apps/web/src/app/calendar/types.ts
+ * - apps/web/src/app/calendar/components/modals/FindTimeModal.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: scheduling, time-slots, availability
+ *
+ * File:
+ * - apps/web/src/app/calendar/utils/findAvailableSlots.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import type { Event } from '../types';
 
 export interface AvailableSlot {

@@ -1,3 +1,8 @@
+/**
+ * Tests for work contract schemas.
+ * Validates project, task, dependency, and note schema parsing and enum constraints.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import {

@@ -1,3 +1,36 @@
+/**
+ * MODULE: Calendar Form State Hook
+ *
+ * Responsibility:
+ * Manages local UI state for the calendar create/edit modal, including form
+ * fields, modal visibility, and submission to create/update mutations.
+ *
+ * Boundaries:
+ * - UI state only; delegates persistence to mutation functions passed as props.
+ * - Does not manage query cache or data fetching.
+ *
+ * Change risk:
+ * - Low. Form state management only.
+ *
+ * Links:
+ * - apps/web/src/app/calendar/types.ts
+ * - apps/web/src/app/calendar/components/CalendarModal.tsx
+ * - apps/web/src/app/calendar/components/CalendarsView.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: form-state, calendar-modal
+ *
+ * File:
+ * - apps/web/src/app/calendar/hooks/useCalendarState.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { useState, useEffect } from 'react';
 
 import type { Calendar, CalendarForm } from '../types';

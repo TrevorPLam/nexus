@@ -1,3 +1,24 @@
+/**
+ * MODULE: Approval Workflows View Component
+ *
+ * Responsibility:
+ * Displays approval workflows with their stages, approvers, and pending
+ * requests. Supports creating, editing, and deleting workflows.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: approvals, workflows
+ *
+ * File:
+ * - apps/web/src/app/work/components/ApprovalWorkflowsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

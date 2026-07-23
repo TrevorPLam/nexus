@@ -1,3 +1,24 @@
+/**
+ * MODULE: Custom Fields List View Component
+ *
+ * Responsibility:
+ * Displays the list of custom fields with create, edit, delete, visibility
+ * toggle, and reordering actions.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, custom-fields
+ *
+ * File:
+ * - apps/web/src/app/work/components/CustomFieldsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

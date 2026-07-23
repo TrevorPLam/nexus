@@ -1,3 +1,47 @@
+/**
+ * MODULE: RLS Policy Test Harness
+ *
+ * Responsibility:
+ * Provides integration test harness for membership-based RLS policies
+ * across Work and Calendar modules to verify policy correctness.
+ *
+ * Boundaries:
+ * - Test script only; no production schema changes.
+ * - Creates temporary test data and cleans up after execution.
+ *
+ * Critical invariants:
+ * - Tests verify workspace isolation (users cannot see other workspaces).
+ * - Tests verify membership-based access (users see their own workspaces).
+ * - Tests cover both Work (projects, tasks) and Calendar (calendars, events) modules.
+ * - All test data is cleaned up after test execution.
+ *
+ * Side effects:
+ * - Creates and deletes test data (users, workspaces, projects, tasks, calendars, events).
+ * - Uses RAISE NOTICE for test result reporting.
+ *
+ * Change risk:
+ * - Low. Test script only affects test data, not production schema.
+ * - Should only be run against clean local Supabase database.
+ *
+ * Links:
+ * - AGENTS.md (Row-Level Security guidelines)
+ * - supabase/migrations/0005_add_security_definer_helper_for_rls.sql (membership helper)
+ * - supabase/migrations/0009_membership_rls_work_calendar.sql (Calendar policies)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: low
+ * - layer: testing
+ * - stability: stable
+ * - concerns: rls, testing, integration-test
+ *
+ * File:
+ * - supabase/migrations/test_rls_policies.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- RLS Policy Integration Test Harness
 -- This script tests membership-based RLS policies for Work and Calendar modules
 -- Run this against a clean local Supabase database to verify policy correctness

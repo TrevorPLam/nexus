@@ -1,3 +1,25 @@
+/**
+ * MODULE: Reporting & Dashboard Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for dashboards, dashboard widgets (task
+ * completion, project progress, workload, time tracking, etc.), reports,
+ * and report schedules.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, reporting, dashboards, widgets
+ *
+ * File:
+ * - apps/web/src/app/work/types-reporting.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface Dashboard {
   id: string;
   workspaceId: string;

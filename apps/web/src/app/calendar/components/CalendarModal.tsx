@@ -1,3 +1,24 @@
+/**
+ * MODULE: Calendar Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing calendars, including name,
+ * description, and color fields.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, calendar
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/CalendarModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal } from '@life-os/ui';

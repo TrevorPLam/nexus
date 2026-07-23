@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Comments Component
+ *
+ * Responsibility:
+ * Displays the list of comments on a task with add and delete actions.
+ * Supports threaded replies via parentId.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: comments, threads
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskComments.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, TextArea } from '@life-os/ui';

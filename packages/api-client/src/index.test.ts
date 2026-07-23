@@ -1,3 +1,8 @@
+/**
+ * Tests for API client.
+ * Validates HTTP request formatting, authentication headers, error handling, and response validation.
+ */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { ApiClient, apiClient } from './index';

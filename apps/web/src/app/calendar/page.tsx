@@ -1,5 +1,50 @@
 'use client';
 
+/**
+ * MODULE: Calendar Page
+ *
+ * Responsibility:
+ * Top-level Next.js client page for calendar management. Coordinates calendar and
+ * event data fetching, view state (calendars, events, scheduling), and modals for
+ * calendar, event, attendee, scheduling link, and find-time interactions.
+ *
+ * Boundaries:
+ * - Composition layer that delegates rendering to calendar-specific components and hooks.
+ * - Business logic and API calls are handled by useCalendarData, useEventDetails, and related state hooks.
+ *
+ * Critical invariants:
+ * - Data fetching is disabled until a workspace is selected.
+ * - View navigation (calendars, events, scheduling) must not lose current workspace context.
+ *
+ * Side effects:
+ * - Triggers API requests via TanStack Query hooks.
+ * - Opens/closes modals for calendar, event, attendee, and scheduling link forms.
+ *
+ * Change risk:
+ * - High. Central UI entry point for the Calendar module and scheduling features.
+ *
+ * Links:
+ * - apps/web/src/hooks/useCalendarData.ts
+ * - apps/web/src/hooks/useEventDetails.ts
+ * - apps/web/src/app/calendar/hooks/useCalendarState.ts
+ * - apps/web/src/app/calendar/hooks/useEventState.ts
+ * - apps/web/src/app/calendar/hooks/useSchedulingState.ts
+ * - apps/web/src/contexts/AuthContext.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: high
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: nextjs, react-query, calendar, events, scheduling
+ *
+ * File:
+ * - apps/web/src/app/calendar/page.tsx
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { Button } from '@life-os/ui';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';

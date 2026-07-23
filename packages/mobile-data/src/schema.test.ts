@@ -1,3 +1,8 @@
+/**
+ * Tests for PowerSync schema definition.
+ * Validates table presence and required field names for offline sync.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import { powersyncSchema } from './schema';

@@ -1,14 +1,52 @@
+/**
+ * MODULE: Command Execution Context
+ *
+ * Responsibility:
+ * Provides a unified interface for executing commands within transactions
+ * with automatic audit logging, outbox event emission, and idempotency control.
+ *
+ * Boundaries:
+ * - Sits between route handlers and business logic operations.
+ * - Wraps transaction complexity behind a simple executeCommand interface.
+ *
+ * Critical invariants:
+ * - All mutations wrapped in executeCommand are atomic (all-or-nothing).
+ * - Audit logs and outbox events are created within the same transaction.
+ * - Idempotency keys prevent duplicate processing of the same request.
+ *
+ * Side effects:
+ * - Performs database writes within transactions.
+ * - Creates audit logs and outbox events.
+ * - Stores idempotency key records.
+ *
+ * Change risk:
+ * - High. This module is the foundation of reliable mutation handling.
+ *
+ * Links:
+ * - packages/database/src/schema/core.ts (audit_logs, outbox_events tables)
+ * - apps/api/src/lib/audit.ts (audit and outbox functions)
+ * - apps/api/src/lib/idempotency.ts (idempotency functions)
+ *
+ * Tags:
+ * - domain: transactions
+ * - risk: high
+ * - layer: business-logic
+ * - stability: stable
+ * - concerns: audit, outbox, idempotency, reliability
+ *
+ * File:
+ * - apps/api/src/lib/command-context.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { db } from './db.js';
 import { createAuditLog, createOutboxEvent } from './audit.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 import { Context } from 'hono';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
-
-/**
- * Command context that provides transaction, audit, outbox, and idempotency
- * This is a deep module that hides the complexity of atomic writes behind a simple interface
- */
 
 export interface CommandContext {
   userId?: string;

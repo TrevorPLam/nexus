@@ -1,4 +1,50 @@
+/**
+ * MODULE: Core Database Schema
+ *
+ * Responsibility:
+ * Defines the foundational database schema for Life OS, including users,
+ * workspaces, memberships, and infrastructure tables for reliability and auditing.
+ *
+ * Boundaries:
+ * - Foundational entities only; feature-specific tables live in separate files.
+ * - Drizzle ORM definitions; no application logic or RLS policies (see migrations/policy).
+ *
+ * Critical invariants:
+ * - app_users.supabaseUserId is the immutable link to Supabase Auth.
+ * - All workspace-scoped data must refer to the workspaces table.
+ * - outbox_events must be used for all asynchronous side effects (e.g., sync, emails).
+ *
+ * Side effects:
+ * - Authoritative source for database migrations via drizzle-kit.
+ *
+ * Change risk:
+ * - Extreme. Changes to these tables affect the entire system's stability,
+ *   security isolation, and data integrity.
+ *
+ * Links:
+ * - supabase/migrations/ (RLS policies for these tables)
+ * - AGENTS.md (Row-Level Security guidelines)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: extreme
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: authentication, authorization, rls, audit, outbox
+ *
+ * File:
+ * - packages/database/src/schema/core.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { pgTable, uuid, timestamp, text, jsonb } from 'drizzle-orm/pg-core';
+
+/**
+ * USER & WORKSPACE MANAGEMENT
+ * Fundamental entities for identity and tenant isolation.
+ */
 
 export const appUsers = pgTable('app_users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -30,6 +76,11 @@ export const workspaceMemberships = pgTable('workspace_memberships', {
   role: text('role').notNull(), // 'owner', 'admin', 'member'
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+/**
+ * INFRASTRUCTURE & RELIABILITY
+ * Tables supporting the outbox pattern, audit trails, and idempotency.
+ */
 
 // Outbox table for transactional event handoff
 export const outboxEvents = pgTable('outbox_events', {

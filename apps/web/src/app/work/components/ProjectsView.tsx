@@ -1,3 +1,24 @@
+/**
+ * MODULE: Projects List View Component
+ *
+ * Responsibility:
+ * Displays the list of projects with create, edit, delete, and navigation
+ * actions. Shows project status badges.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, projects
+ *
+ * File:
+ * - apps/web/src/app/work/components/ProjectsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Badge } from '@life-os/ui';

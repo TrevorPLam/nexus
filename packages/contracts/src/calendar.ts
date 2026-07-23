@@ -1,9 +1,66 @@
+/**
+ * MODULE: Calendar & Scheduling Contracts
+ *
+ * Responsibility:
+ * Defines the domain model and Zod schemas for calendar management, including
+ * calendars, events, attendees, scheduling links, and availability booking.
+ *
+ * Boundaries:
+ * - Pure schema definitions; no external provider (Google/Outlook) integration logic.
+ * - Does not include task-specific schemas (see work.ts).
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - Caller must provide valid workspaceId for all workspace-scoped operations
+ *   - Calendar IDs must reference existing calendars in the same workspace when creating events
+ *   - Event start dates must precede end dates (validated by Zod refine)
+ *   - Scheduling link slugs must be URL-safe and unique per workspace
+ *   - Availability query start dates must precede end dates
+ *   - Booking request start times must precede end times
+ * - Postconditions:
+ *   - All request schemas validate UUID format and workspace association
+ *   - Event date ordering is enforced by Zod refinement
+ *   - Scheduling link slugs are constrained to URL-safe characters
+ *   - Event duration is constrained to maximum 8 hours (480 minutes)
+ *   - Response schemas guarantee workspace isolation is preserved
+ *   - Test coverage: See packages/contracts/test/ (no tests found - MISSING COVERAGE)
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - High. These schemas govern data exchanged with external calendar providers
+ *   and the structure of public booking pages.
+ *
+ * Links:
+ * - packages/database/src/schema/calendar.ts (persistence layer)
+ * - apps/api/src/lib/calendar-operations.ts (business logic)
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: high
+ * - layer: contracts
+ * - stability: stable
+ * - concerns: validation, types, zod, scheduling
+ *
+ * File:
+ * - packages/contracts/src/calendar.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { z } from 'zod';
 
 export const CalendarProvider = z.enum(['local', 'google', 'outlook']);
 export const AttendeeStatus = z.enum(['needs_action', 'accepted', 'declined', 'tentative']);
 
-// Request schemas (input DTOs)
+/**
+ * REQUEST SCHEMAS (Input DTOs)
+ * These schemas validate incoming data for calendar operations.
+ */
+
+// Calendar Schemas
 export const CreateCalendarRequest = z.object({
   workspaceId: z.string().uuid(),
   name: z.string().min(1).max(200),
@@ -95,7 +152,12 @@ export const UpdateEventAttendeeRequest = z
   })
   .strict();
 
-// Response schemas (output DTOs)
+/**
+ * RESPONSE SCHEMAS (Output DTOs)
+ * These schemas define the structure of data returned by calendar endpoints.
+ */
+
+// Calendar Response
 export const CalendarResponse = z.object({
   id: z.string().uuid(),
   workspaceId: z.string().uuid(),
@@ -139,6 +201,11 @@ export const EventAttendeeResponse = z.object({
   isOrganizer: z.boolean(),
   createdAt: z.date(),
 });
+
+/**
+ * SCHEDULING & AVAILABILITY
+ * Schemas for public booking pages and availability calculation.
+ */
 
 export const CreateSchedulingLinkRequest = z.object({
   workspaceId: z.string().uuid(),
@@ -222,7 +289,11 @@ export const SchedulingLinkResponse = z.object({
   updatedAt: z.date(),
 });
 
-// Availability query and booking schemas
+/**
+ * AVAILABILITY QUERY AND BOOKING
+ * Used by the public booking interface to find and reserve time slots.
+ */
+
 export const AvailabilityQueryRequest = z
   .object({
     schedulingLinkId: z.string().uuid(),

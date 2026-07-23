@@ -1,3 +1,54 @@
+/**
+ * MODULE: Task Note Endpoints
+ *
+ * Responsibility:
+ * Implements API endpoints for creating, retrieving, updating, and deleting
+ * task notes.
+ *
+ * Boundaries:
+ * - Delegates persistence to lib/work-operations.js.
+ * - Input validation uses Zod schemas from @life-os/contracts.
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - All requests require valid authentication (authMiddleware)
+ *   - All operations require workspace membership (requireWorkspaceMembership)
+ *   - Input data must pass Zod validation from @life-os/contracts
+ *   - Task IDs must reference existing tasks in the same workspace
+ * - Note content must be non-empty string
+ * - Postconditions:
+ *   - All responses are validated against Zod schemas
+ *   - Workspace isolation is enforced by middleware
+ *   - Notes are scoped to workspace through task ownership
+ *   - Updates only allow modifying note content
+ *   - Successful operations return 200-201 status codes
+ *   - Failed operations return appropriate 4xx/5xx status codes
+ *   - Test coverage: See apps/api/src/routes/work/task-notes.test.ts (EXISTS)
+ *
+ * Side effects:
+ * - Writes task_notes records.
+ *
+ * Change risk:
+ * - Medium. Notes are user-facing task context.
+ *
+ * Links:
+ * - apps/api/src/lib/work-operations.ts
+ * - packages/contracts/src/work.ts
+ *
+ * Tags:
+ * - domain: work
+ * - risk: medium
+ * - layer: api
+ * - stability: stable
+ * - concerns: notes, tasks
+ *
+ * File:
+ * - apps/api/src/routes/work/task-notes.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { CreateTaskNoteRequest, UpdateTaskNoteRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';

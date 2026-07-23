@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task List View Component
+ *
+ * Responsibility:
+ * Renders tasks in a searchable, filterable list layout with status indicators
+ * and inline actions. Supports search, priority filtering, and task creation.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, tasks, filtering
+ *
+ * File:
+ * - apps/web/src/app/work/components/ListView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

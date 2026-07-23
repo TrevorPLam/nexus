@@ -1,3 +1,44 @@
+/**
+ * MODULE: Event Details TanStack Query Hook
+ *
+ * Responsibility:
+ * Provides TanStack Query hooks for event-scoped sub-resources: attendees and
+ * scheduling links, including CRUD mutations with cache invalidation.
+ *
+ * Boundaries:
+ * - UI-facing data layer. Calls apiClient methods and manages query invalidation.
+ * - Does not own event CRUD itself (handled by useCalendarData).
+ *
+ * Critical invariants:
+ * - Attendee queries are disabled when no selectedEvent is provided.
+ * - Scheduling link queries are disabled when workspaceId is null.
+ * - Mutations invalidate the corresponding query cache on success.
+ *
+ * Side effects:
+ * - Performs HTTP requests to the API and updates TanStack Query cache.
+ *
+ * Change risk:
+ * - Medium. Response format assumptions must match API route return shapes.
+ *
+ * Links:
+ * - packages/api-client/src/index.ts
+ * - apps/web/src/app/calendar/types.ts
+ * - apps/web/src/app/calendar/components/modals/EventDetailModal.tsx
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: react-query, attendees, scheduling-links
+ *
+ * File:
+ * - apps/web/src/hooks/useEventDetails.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Attendee, SchedulingLink } from '../app/calendar/types';

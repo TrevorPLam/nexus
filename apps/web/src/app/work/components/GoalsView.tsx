@@ -1,3 +1,24 @@
+/**
+ * MODULE: Goals & Key Results View Component
+ *
+ * Responsibility:
+ * Displays goals with their key results, progress tracking, and status.
+ * Supports creating, editing, and deleting goals and key results.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: goals, key-results, progress
+ *
+ * File:
+ * - apps/web/src/app/work/components/GoalsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

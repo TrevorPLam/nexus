@@ -1,3 +1,47 @@
+/**
+ * MODULE: Calendar RLS Policies
+ *
+ * Responsibility:
+ * Establishes Row Level Security (RLS) policies for all Calendar module tables
+ * to enforce workspace-level data isolation and prevent cross-workspace access.
+ *
+ * Boundaries:
+ * - RLS policy definitions only; no table creation or data migration.
+ * - Policies rely on workspace_id or cascade through parent tables.
+ *
+ * Critical invariants:
+ * - All Calendar tables have RLS enabled and forced.
+ * - Default-deny: no access unless explicitly permitted by policy.
+ * - Workspace isolation enforced via workspace_id or parent table cascade.
+ * - Event attendees cascade through events table for workspace isolation.
+ * - Scheduling links have additional user-scoped policies for owner access.
+ *
+ * Side effects:
+ * - Enables RLS on all Calendar tables, affecting all database queries.
+ * - Alters database security model from open to closed (default-deny).
+ *
+ * Change risk:
+ * - Extreme. RLS changes affect data access across the entire application.
+ * - Incorrect policies can cause data leaks or complete access denial.
+ *
+ * Links:
+ * - AGENTS.md (Row-Level Security guidelines)
+ * - supabase/migrations/0007_create_calendar_tables.sql (calendar tables)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: extreme
+ * - layer: security
+ * - stability: stable
+ * - concerns: rls, security, workspace-isolation
+ *
+ * File:
+ * - supabase/migrations/0008_calendar_rls_policies.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Row Level Security Policies for Calendar Module
 -- These policies enforce workspace-level isolation for all Calendar tables
 -- Pattern: workspace_id = current_setting('app.workspace_id')::uuid

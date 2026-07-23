@@ -1,3 +1,23 @@
+/**
+ * MODULE: Calendars List View Component
+ *
+ * Responsibility:
+ * Displays the list of calendars with create, edit, and delete actions.
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: list-view, calendar-management
+ *
+ * File:
+ * - apps/web/src/app/calendar/components/CalendarsView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Badge } from '@life-os/ui';

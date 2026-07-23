@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Attachments Component
+ *
+ * Responsibility:
+ * Displays the list of file attachments for a task, with upload, download,
+ * and delete actions. Shows file type icons based on MIME type.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: attachments, file-upload
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskAttachments.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

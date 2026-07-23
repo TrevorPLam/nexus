@@ -1,3 +1,8 @@
+/**
+ * Tests for core schema table definitions.
+ * Validates table names, column presence, and foreign key references for identity/tenant tables.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import {

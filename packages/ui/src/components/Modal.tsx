@@ -1,3 +1,39 @@
+/**
+ * MODULE: Modal Component
+ *
+ * Responsibility:
+ * A foundational UI component for displaying content in an overlay, styled with Tamagui.
+ * Supports opening/closing and handles clicks outside the modal content.
+ *
+ * Boundaries:
+ * - Shared component used across web and mobile.
+ * - Presentation logic for the overlay and content container.
+ *
+ * Critical invariants:
+ * - Must handle the 'isOpen' state correctly.
+ * - Must trigger 'onClose' when the overlay is pressed.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - Medium. UI flow depends on correct modal behavior.
+ *
+ * Links:
+ * - packages/ui/src/index.ts
+ *
+ * Tags:
+ * - domain: ui
+ * - risk: medium
+ * - layer: presentation
+ *
+ * File:
+ * - packages/ui/src/components/Modal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { styled } from '@tamagui/core';
 import { View, ViewStyle } from '@tamagui/core';
 import React from 'react';

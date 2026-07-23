@@ -1,3 +1,47 @@
+/**
+ * MODULE: API Middleware
+ *
+ * Responsibility:
+ * Provides reusable Hono middleware for authentication, authorization (workspace/entity access),
+ * and idempotency control.
+ *
+ * Boundaries:
+ * - Sits between the router and the route handler.
+ * - Enforces security and tenant isolation policies.
+ * - Sets request context (user, workspaceMembership) for downstream handlers.
+ *
+ * Critical invariants:
+ * - Every protected route must use authMiddleware to establish user identity.
+ * - Workspace isolation is enforced by setting 'app.workspace_id' in the database
+ *   session for Row-Level Security (RLS).
+ * - idempotencyMiddleware ensures mutation requests with the same key are not processed twice.
+ *
+ * Side effects:
+ * - Modifies database session configuration (set_config).
+ * - Intercepts and caches JSON responses in idempotencyMiddleware.
+ *
+ * Change risk:
+ * - Extreme. Middleware is the primary security gate for the API.
+ *
+ * Links:
+ * - apps/api/src/lib/auth.ts (authentication functions)
+ * - packages/database/src/schema/core.ts (workspace_memberships table)
+ * - AGENTS.md (Row-Level Security guidelines)
+ *
+ * Tags:
+ * - domain: authorization
+ * - risk: extreme
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: security, rls, middleware, workspace-isolation
+ *
+ * File:
+ * - apps/api/src/lib/middleware.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import {
   workspaceMemberships,
   appUsers,

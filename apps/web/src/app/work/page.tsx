@@ -1,5 +1,48 @@
 'use client';
 
+/**
+ * MODULE: Work Management Page
+ *
+ * Responsibility:
+ * Top-level Next.js client page for work management. Coordinates project and task
+ * data fetching, view state (projects, kanban, timeline, list), and modal-based
+ * creation/editing of projects and tasks.
+ *
+ * Boundaries:
+ * - Composition layer that delegates rendering to work-specific components and hooks.
+ * - Business logic and API calls are handled by useWorkProjects, useWorkTasks, and useWorkState.
+ *
+ * Critical invariants:
+ * - Data fetching is disabled until a workspace is selected.
+ * - All mutations must invalidate the corresponding TanStack Query cache keys.
+ *
+ * Side effects:
+ * - Triggers API requests via TanStack Query hooks.
+ * - Opens/closes modals for project and task forms.
+ *
+ * Change risk:
+ * - High. Central UI entry point for the entire Work module.
+ *
+ * Links:
+ * - apps/web/src/hooks/useWorkProjects.ts
+ * - apps/web/src/hooks/useWorkTasks.ts
+ * - apps/web/src/app/work/hooks/useWorkState.ts
+ * - apps/web/src/contexts/AuthContext.tsx
+ *
+ * Tags:
+ * - domain: work
+ * - risk: high
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: nextjs, react-query, work, tasks, projects
+ *
+ * File:
+ * - apps/web/src/app/work/page.tsx
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { Button } from '@life-os/ui';
 import { useState } from 'react';
 

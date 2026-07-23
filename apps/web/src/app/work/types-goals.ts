@@ -1,3 +1,24 @@
+/**
+ * MODULE: Goals & Key Results Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for goals, goal periods, key results, and
+ * goal progress updates.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, goals, key-results
+ *
+ * File:
+ * - apps/web/src/app/work/types-goals.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface Goal {
   id: string;
   workspaceId: string;

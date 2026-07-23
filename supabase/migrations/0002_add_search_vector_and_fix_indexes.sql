@@ -1,3 +1,44 @@
+/**
+ * MODULE: Search Vector and Index Improvements
+ *
+ * Responsibility:
+ * Adds full-text search capability to tasks table via search_vector column
+ * and creates performance-optimizing indexes for RLS and common query patterns.
+ *
+ * Boundaries:
+ * - Schema changes and index creation only; no data migration logic.
+ * - Trigger-based search_vector updates (later replaced by GENERATED column).
+ *
+ * Critical invariants:
+ * - search_vector automatically updates on title/description changes.
+ * - Composite indexes start with workspace_id to optimize RLS queries.
+ * - Foreign key constraint for parentId prevents orphaned subtasks.
+ *
+ * Side effects:
+ * - Adds column and indexes to tasks table, affecting write performance.
+ * - Creates trigger for automatic search_vector updates.
+ *
+ * Change risk:
+ * - Medium. Index additions improve performance but increase storage.
+ * - Trigger adds overhead to task updates.
+ *
+ * Links:
+ * - packages/database/src/schema/work.ts (tasks table definition)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: medium
+ * - layer: performance
+ * - stability: stable
+ * - concerns: search, indexes, fts
+ *
+ * File:
+ * - supabase/migrations/0002_add_search_vector_and_fix_indexes.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Add search_vector column to tasks for full-text search
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS search_vector tsvector;
 

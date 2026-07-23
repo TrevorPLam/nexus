@@ -1,3 +1,47 @@
+/**
+ * MODULE: Calendar Membership-Based RLS
+ *
+ * Responsibility:
+ * Updates Calendar RLS policies to use membership-based resolution via
+ * get_user_workspace_ids() helper function, replacing current_setting pattern.
+ *
+ * Boundaries:
+ * - RLS policy updates only; no table or function creation.
+ * - Aligns Calendar policies with Work module membership-based approach.
+ *
+ * Critical invariants:
+ * - get_app_user_id() maps auth.uid() to app_users.id for identity resolution.
+ * - All Calendar RLS policies use get_user_workspace_ids(auth.uid()).
+ * - Scheduling links identity mapping fixed to use app_users.id (not supabase_user_id).
+ * - Prevents infinite recursion via SECURITY DEFINER helper functions.
+ *
+ * Side effects:
+ * - Updates all Calendar RLS policies, affecting data access patterns.
+ * - Changes identity mapping for scheduling links from direct to indirect.
+ *
+ * Change risk:
+ * - High. RLS policy changes affect data access across calendar features.
+ * - Identity mapping changes can break scheduling link access.
+ *
+ * Links:
+ * - AGENTS.md (Row-Level Security guidelines)
+ * - supabase/migrations/0005_add_security_definer_helper_for_rls.sql (helper function)
+ * - supabase/migrations/0008_calendar_rls_policies.sql (base Calendar RLS)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: high
+ * - layer: security
+ * - stability: stable
+ * - concerns: rls, membership, identity-mapping
+ *
+ * File:
+ * - supabase/migrations/0009_membership_rls_work_calendar.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Update Calendar RLS Policies to use membership-based resolution
 -- This replaces the current_setting('app.workspace_id') pattern with get_user_workspace_ids(auth.uid())
 -- which properly resolves access from authenticated identity and workspace membership

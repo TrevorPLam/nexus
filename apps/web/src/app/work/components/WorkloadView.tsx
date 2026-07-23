@@ -1,3 +1,24 @@
+/**
+ * MODULE: Workload View Component
+ *
+ * Responsibility:
+ * Displays per-user workload distribution across tasks, showing capacity,
+ * assigned tasks, and overload warnings with navigation controls.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: workload, capacity, team
+ *
+ * File:
+ * - apps/web/src/app/work/components/WorkloadView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

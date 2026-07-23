@@ -1,3 +1,39 @@
+/**
+ * MODULE: Button Component
+ *
+ * Responsibility:
+ * A foundational UI component for triggers and actions, styled with Tamagui.
+ * Supports multiple variants (primary, secondary, danger) and sizes.
+ *
+ * Boundaries:
+ * - Shared component used across web and mobile.
+ * - Presentation logic only; behavior is controlled via onPress.
+ *
+ * Critical invariants:
+ * - Must support accessibility via onPress and disabled props.
+ * - Style consistency across web and mobile platforms.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - High. Widely used across the entire application.
+ *
+ * Links:
+ * - packages/ui/src/index.ts
+ *
+ * Tags:
+ * - domain: ui
+ * - risk: high
+ * - layer: presentation
+ *
+ * File:
+ * - packages/ui/src/components/Button.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { styled } from '@tamagui/core';
 import { Text } from '@tamagui/core';
 import React from 'react';

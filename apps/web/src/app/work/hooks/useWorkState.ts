@@ -1,3 +1,42 @@
+/**
+ * MODULE: Work Form State Hook
+ *
+ * Responsibility:
+ * Manages local UI state for project and task create/edit modals, including form
+ * fields, modal visibility, and submission to create/update mutations with
+ * date/duration parsing.
+ *
+ * Boundaries:
+ * - UI state only; delegates persistence to mutation functions passed as props.
+ * - Does not manage query cache or data fetching.
+ *
+ * Critical invariants:
+ * - estimatedDuration is stored as string in the form and parsed to int on submit.
+ * - dueDate is stored as a date string and converted to ISO on submit.
+ * - New tasks default to the first project in the list when no projectId is given.
+ *
+ * Change risk:
+ * - Medium. Form parsing logic can introduce type coercion bugs.
+ *
+ * Links:
+ * - apps/web/src/app/work/types.ts
+ * - apps/web/src/app/work/components/ProjectModal.tsx
+ * - apps/web/src/app/work/components/TaskModal.tsx
+ *
+ * Tags:
+ * - domain: work
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: form-state, project-modal, task-modal
+ *
+ * File:
+ * - apps/web/src/app/work/hooks/useWorkState.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { useState, useEffect } from 'react';
 import type { UseMutationResult } from '@tanstack/react-query';
 

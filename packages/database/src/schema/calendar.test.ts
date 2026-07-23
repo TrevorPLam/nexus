@@ -1,3 +1,8 @@
+/**
+ * Tests for calendar schema table definitions.
+ * Validates table names, column presence, and foreign key references.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import { calendars, events, eventAttendees } from './calendar';

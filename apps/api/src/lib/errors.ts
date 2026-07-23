@@ -1,3 +1,42 @@
+/**
+ * MODULE: API Error Handling
+ *
+ * Responsibility:
+ * Provides structured error types and a unified error handler for the API,
+ * ensuring consistent error responses across all endpoints.
+ *
+ * Boundaries:
+ * - Pure error definitions; no external service calls.
+ * - Used by route handlers and middleware for error normalization.
+ *
+ * Critical invariants:
+ * - All errors include a status code, error code, and message.
+ * - Sensitive details are only exposed in development mode.
+ * - handleApiError converts any error to a consistent response format.
+ *
+ * Side effects:
+ * - Logs unexpected errors to console.
+ *
+ * Change risk:
+ * - Low. Changes affect error message format but not system behavior.
+ *
+ * Links:
+ * - apps/api/src/lib/middleware.ts (error handling in routes)
+ *
+ * Tags:
+ * - domain: error-handling
+ * - risk: low
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: validation, http
+ *
+ * File:
+ * - apps/api/src/lib/errors.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 export class ApiError extends Error {
   constructor(
     public statusCode: number,

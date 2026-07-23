@@ -1,3 +1,8 @@
+/**
+ * Tests for background job worker.
+ * Validates job processing logic for pg-boss queues, audit logs, and outbox events.
+ */
+
 import { describe, it } from 'vitest';
 
 describe('Worker Package', () => {

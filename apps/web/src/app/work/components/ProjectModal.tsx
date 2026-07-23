@@ -1,3 +1,25 @@
+/**
+ * MODULE: Project Create/Edit Modal Component
+ *
+ * Responsibility:
+ * Renders a modal form for creating and editing projects, including name,
+ * description, color, and icon fields. Validates against CreateProjectRequest
+ * from contracts.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: modal, form, project
+ *
+ * File:
+ * - apps/web/src/app/work/components/ProjectModal.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Modal, Input } from '@life-os/ui';

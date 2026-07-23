@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Time Tracking Component
+ *
+ * Responsibility:
+ * Displays time entries for a task with start/stop timer, manual entry, and
+ * delete actions. Shows elapsed time and billable status.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: time-tracking, timer
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskTimeTracking.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

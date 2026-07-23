@@ -1,3 +1,54 @@
+/**
+ * MODULE: Calendar Endpoints
+ *
+ * Responsibility:
+ * Implementation of API endpoints for calendar management, including creation,
+ * retrieval, updates, and deletion.
+ *
+ * Boundaries:
+ * - Handles HTTP request/response cycle and input validation for calendars.
+ * - Delegates business logic and persistence to lib/calendar-operations.js.
+ * - Authorization is enforced via middleware (requireWorkspaceAccess, requireEntityAccess).
+ *
+ * Critical invariants:
+ * - Preconditions:
+ *   - All requests require valid authentication (authMiddleware)
+ *   - Create/update operations require workspace access (requireWorkspaceAccess)
+ *   - Delete operations require workspace membership (requireWorkspaceMembership)
+ *   - Get by ID operations require entity access (requireEntityAccess)
+ *   - Input data must pass Zod validation from @life-os/contracts
+ * - Postconditions:
+ *   - All responses are validated against Zod schemas
+ *   - Workspace isolation is enforced by middleware
+ *   - Calendar workspaceId cannot be changed after creation
+ *   - Successful operations return 200-201 status codes
+ *   - Failed operations return appropriate 4xx/5xx status codes
+ *   - Test coverage: See apps/api/src/routes/calendar/calendars.test.ts (EXISTS)
+ *
+ * Side effects:
+ * - Database writes via calendar-operations.js.
+ *
+ * Change risk:
+ * - High. Core application functionality for calendar organization.
+ *
+ * Links:
+ * - apps/api/src/lib/calendar-operations.ts
+ * - packages/contracts/src/calendar.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: high
+ * - layer: api
+ * - stability: stable
+ * - concerns: calendars, crud
+ *
+ * File:
+ * - apps/api/src/routes/calendar/calendars.ts
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 import { CreateCalendarRequest, UpdateCalendarRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
@@ -61,6 +112,9 @@ calendarsRouter.get('/calendars/:id', requireEntityAccess('calendars'), async (c
 
 calendarsRouter.get('/workspaces/:workspaceId/calendars', requireWorkspaceMembership, async (c) => {
   const workspaceId = c.req.param('workspaceId');
+  if (!workspaceId) {
+    return c.json({ error: 'Workspace ID required' }, 400);
+  }
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const cursor = c.req.query('cursor');
 
@@ -89,10 +143,8 @@ calendarsRouter.put(
       return c.json({ error: 'Calendar ID required' }, 400);
     }
     const data = c.req.valid('json');
-    // Remove workspaceId from update data as it should not be changed
-    const { workspaceId: _, ...updateData } = data;
     try {
-      const calendar = await calendarOps.updateCalendar(id, updateData);
+      const calendar = await calendarOps.updateCalendar(id, data as any);
       if (!calendar) {
         return c.json({ error: 'Calendar not found' }, 404);
       }

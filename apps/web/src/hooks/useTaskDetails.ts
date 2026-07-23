@@ -1,3 +1,46 @@
+/**
+ * MODULE: Task Details TanStack Query Hook
+ *
+ * Responsibility:
+ * Provides TanStack Query hooks for task-scoped sub-resources: dependencies,
+ * assignees, comments, time entries, and attachments — including CRUD mutations
+ * with cache invalidation.
+ *
+ * Boundaries:
+ * - UI-facing data layer. Calls apiClient methods and manages query invalidation.
+ * - Does not own task CRUD itself (handled by useWorkTasks).
+ *
+ * Critical invariants:
+ * - All queries are disabled when no selectedTask is provided.
+ * - Mutations invalidate the corresponding query cache on success.
+ * - Local interfaces mirror API response shapes; changes to API contracts
+ *   require updating these interfaces.
+ *
+ * Side effects:
+ * - Performs HTTP requests to the API and updates TanStack Query cache.
+ *
+ * Change risk:
+ * - Medium. Response format assumptions must match API route return shapes.
+ *
+ * Links:
+ * - packages/api-client/src/index.ts
+ * - apps/web/src/hooks/useWorkTasks.ts
+ * - apps/web/src/app/work/components/TaskActivityFeed.tsx
+ *
+ * Tags:
+ * - domain: work
+ * - risk: medium
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: react-query, dependencies, assignees, comments, time-entries, attachments
+ *
+ * File:
+ * - apps/web/src/hooks/useTaskDetails.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

@@ -1,3 +1,40 @@
+/**
+ * MODULE: Mobile Calendar Domain Screen
+ *
+ * Responsibility:
+ * Displays and manages calendar-related data (calendars and events) for the mobile
+ * application. Interfaces with the useCalendarData hook for data fetching and mutations.
+ *
+ * Boundaries:
+ * - Presentation of calendars and events in a mobile-optimized view.
+ * - Triggers event mutations for data updates.
+ * - Scheduling links are explicitly out of scope for mobile MVP.
+ *
+ * Critical invariants:
+ * - Must handle loading and error states for calendars and events.
+ * - Must maintain separate views for calendars, events, and scheduling.
+ *
+ * Side effects:
+ * - Fetches data from PowerSync via useCalendarData hook.
+ *
+ * Change risk:
+ * - Medium. UI consistency and data synchronization feedback.
+ *
+ * Links:
+ * - apps/mobile/app/calendar/hooks/useCalendarData.ts
+ *
+ * Tags:
+ * - domain: calendar
+ * - risk: medium
+ * - layer: presentation
+ *
+ * File:
+ * - apps/mobile/app/calendar/index.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import React, { useState } from 'react';
 import {
   View,
@@ -9,6 +46,7 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
+
 import { useCalendarData, useEventMutations, Calendar, Event } from './hooks/useCalendarData';
 
 export default function CalendarScreen() {

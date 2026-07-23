@@ -1,3 +1,39 @@
+/**
+ * MODULE: Checkbox Component
+ *
+ * Responsibility:
+ * A form input component for boolean selection, styled with Tamagui.
+ * Includes a label and handles change events.
+ *
+ * Boundaries:
+ * - Shared component used across web and mobile.
+ * - Bridges native HTML checkbox (web) and styled view (mobile).
+ *
+ * Critical invariants:
+ * - Must reflect the 'checked' state accurately.
+ * - Must trigger 'onChange' with the new state.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - Medium. Form data integrity depends on correct selection handling.
+ *
+ * Links:
+ * - packages/ui/src/index.ts
+ *
+ * Tags:
+ * - domain: ui
+ * - risk: medium
+ * - layer: presentation
+ *
+ * File:
+ * - packages/ui/src/components/Checkbox.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { styled } from '@tamagui/core';
 import { View, Text, ViewStyle } from '@tamagui/core';
 import React from 'react';

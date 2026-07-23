@@ -1,3 +1,8 @@
+/**
+ * Tests for calendar contract schemas.
+ * Validates Zod schema parsing, enum constraints, and date ordering rules.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import {

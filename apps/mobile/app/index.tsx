@@ -1,3 +1,39 @@
+/**
+ * MODULE: Mobile Home Screen
+ *
+ * Responsibility:
+ * Main landing screen for the mobile application. Provides navigation to the
+ * Work and Calendar domains.
+ *
+ * Boundaries:
+ * - High-level navigation only.
+ * - No data fetching or business logic.
+ *
+ * Critical invariants:
+ * - Must be accessible to authenticated users.
+ *
+ * Side effects:
+ * - None.
+ *
+ * Change risk:
+ * - Low. UI/Navigation only.
+ *
+ * Links:
+ * - apps/mobile/app/work/index.tsx
+ * - apps/mobile/app/calendar/index.tsx
+ *
+ * Tags:
+ * - domain: mobile
+ * - risk: low
+ * - layer: presentation
+ *
+ * File:
+ * - apps/mobile/app/index.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 

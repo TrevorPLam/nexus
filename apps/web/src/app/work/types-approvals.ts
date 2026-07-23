@@ -1,3 +1,24 @@
+/**
+ * MODULE: Approval Workflow Types (Web)
+ *
+ * Responsibility:
+ * Defines TypeScript interfaces for approval workflows, stages, approvers,
+ * requests, and responses.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: types, approvals
+ *
+ * File:
+ * - apps/web/src/app/work/types-approvals.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 export interface ApprovalWorkflow {
   id: string;
   workspaceId: string;

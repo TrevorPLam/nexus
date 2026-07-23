@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Subtasks Component
+ *
+ * Responsibility:
+ * Displays the list of subtasks for a task, with add, complete, and delete
+ * actions. Subtasks are linked via parentId.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: subtasks, hierarchy
+ *
+ * File:
+ * - apps/web/src/app/work/components/TaskSubtasks.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button, Input } from '@life-os/ui';

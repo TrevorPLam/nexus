@@ -1,3 +1,24 @@
+/**
+ * MODULE: Task Timeline View Component
+ *
+ * Responsibility:
+ * Renders tasks on a horizontal timeline/Gantt-style layout, showing tasks and
+ * milestones by date range with navigation controls.
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: timeline, gantt, tasks
+ *
+ * File:
+ * - apps/web/src/app/work/components/TimelineView.tsx
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 'use client';
 
 import { Button } from '@life-os/ui';

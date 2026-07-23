@@ -1,3 +1,46 @@
+/**
+ * MODULE: Work RLS Policies
+ *
+ * Responsibility:
+ * Establishes Row Level Security (RLS) policies for all Work module tables
+ * to enforce workspace-level data isolation and prevent cross-workspace access.
+ *
+ * Boundaries:
+ * - RLS policy definitions only; no table creation or data migration.
+ * - Policies rely on workspace membership for access control.
+ *
+ * Critical invariants:
+ * - All Work tables have RLS enabled and forced.
+ * - Default-deny: no access unless explicitly permitted by policy.
+ * - Workspace isolation enforced via workspace_id or membership lookup.
+ * - Cascade policies for child tables (tasks, notes, etc.) reference parent workspace.
+ *
+ * Side effects:
+ * - Enables RLS on all Work tables, affecting all database queries.
+ * - Alters database security model from open to closed (default-deny).
+ *
+ * Change risk:
+ * - Extreme. RLS changes affect data access across the entire application.
+ * - Incorrect policies can cause data leaks or complete access denial.
+ *
+ * Links:
+ * - AGENTS.md (Row-Level Security guidelines)
+ * - apps/api/src/lib/middleware.ts (workspace context setting)
+ *
+ * Tags:
+ * - domain: database
+ * - risk: extreme
+ * - layer: security
+ * - stability: stable
+ * - concerns: rls, security, workspace-isolation
+ *
+ * File:
+ * - supabase/migrations/0001_work_rls_policies.sql
+ *
+ * Last updated:
+ * - July 22, 2026
+ */
+
 -- Row Level Security Policies for Work Module
 -- These policies enforce workspace-level isolation for all Work tables
 -- Pattern: workspace_id = current_setting('app.workspace_id')::uuid

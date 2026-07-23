@@ -18,6 +18,9 @@ catalogs:
     '@eslint/js':
       specifier: ^10.0.1
       version: 10.0.1
+    '@hono/swagger-ui':
+      specifier: ^0.6.1
+      version: 0.6.1
     '@vitest/coverage-v8':
       specifier: 2.1.9
       version: 2.1.9
@@ -98,6 +101,9 @@ importers:
       '@hono/standard-validator':
         specifier: ^0.3.0
         version: 0.3.0(@standard-schema/spec@1.1.0)(hono@4.12.31)
+      '@hono/swagger-ui':
+        specifier: 'catalog:'
+        version: 0.6.1(hono@4.12.31)
       '@hono/zod-openapi':
         specifier: ^0.18.0
         version: 0.18.4(hono@4.12.31)(zod@4.4.3)
@@ -159,9 +165,12 @@ importers:
       '@life-os/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@powersync/common':
+        specifier: ^1.57.2
+        version: 1.57.2
       '@powersync/react-native':
-        specifier: ^1.0.0
-        version: 1.35.9(@powersync/common@2.0.0)(react-native@0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)
+        specifier: ^1.35.9
+        version: 1.35.9(@powersync/common@1.57.2)(react-native@0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)
       '@supabase/supabase-js':
         specifier: ^2.45.0
         version: 2.110.7
@@ -312,6 +321,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.101.3(react@18.3.1)
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
     devDependencies:
       '@life-os/tsconfig':
         specifier: workspace:*
@@ -372,9 +384,15 @@ importers:
       '@life-os/contracts':
         specifier: workspace:*
         version: link:../contracts
+      '@life-os/database':
+        specifier: workspace:*
+        version: link:../database
       '@powersync/drizzle-driver':
         specifier: ^0.8.0
-        version: 0.8.0(@powersync/common@2.0.0)(drizzle-orm@0.45.2(pg@8.22.0)(postgres@3.4.9))
+        version: 0.8.0(drizzle-orm@0.45.2(pg@8.22.0)(postgres@3.4.9))
+      '@powersync/react-native':
+        specifier: ^1.0.0
+        version: 1.35.9(@powersync/common@1.57.2)(react-native@0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)
       drizzle-orm:
         specifier: ^0.45.0
         version: 0.45.2(pg@8.22.0)(postgres@3.4.9)
@@ -2017,6 +2035,11 @@ packages:
       '@standard-schema/spec': ^1.0.0
       hono: '>=4.11.2'
 
+  '@hono/swagger-ui@0.6.1':
+    resolution: {integrity: sha512-sJTvldu1GPeEPfyeLG7gRj+W4vEuD+JDi+JjJ3TJs/DvMUtBLs0KJO5yokGegWWdy5qrbdnQGekbhgNRmPmYKQ==}
+    peerDependencies:
+      hono: '>=4.0.0'
+
   '@hono/zod-openapi@0.18.4':
     resolution: {integrity: sha512-6NHMHU96Hh32B1yDhb94Z4Z5/POsmEu2AXpWLWcBq9arskRnOMt2752yEoXoADV8WUAc7H1IkNaQHGj1ytXbYw==}
     engines: {node: '>=16.0.0'}
@@ -2355,8 +2378,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@powersync/common@2.0.0':
-    resolution: {integrity: sha512-GuWmk0w0Y6I1HDwX4uGFzzw1e4E4bkvDSSCpVikdTEIk1xcW5NNnqTX8xfDheZdoQZunm/XushrR/LsIp1Yc/g==}
+  '@powersync/common@1.57.2':
+    resolution: {integrity: sha512-cOsmvBFBK0yvpwjaI46Lm3xCMRaTaydQQ4RolED3Upj6/kawGZHhkh4Guve3nmOSQ/0sGCuiFOcl4Gv9Mp6dOA==}
 
   '@powersync/drizzle-driver@0.8.0':
     resolution: {integrity: sha512-nT234jOnD/rbjtNTySeupWNWLBvEcvuHxEPdbYvJWgzgMZLG/h/522floJ6t75aF4FzFzt98WV9jnw0AMr4wGA==}
@@ -5210,6 +5233,9 @@ packages:
 
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
+
+  js-logger@1.6.1:
+    resolution: {integrity: sha512-yTgMCPXVjhmg28CuUH8CKjU+cIKL/G+zTu4Fn4lQxs8mRFH/03QTNvEFngcxfg/gRDiQAOoyCKmMTOm9ayOzXA==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -8856,6 +8882,10 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       hono: 4.12.31
 
+  '@hono/swagger-ui@0.6.1(hono@4.12.31)':
+    dependencies:
+      hono: 4.12.31
+
   '@hono/zod-openapi@0.18.4(hono@4.12.31)(zod@4.4.3)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.3.4(zod@4.4.3)
@@ -9139,24 +9169,25 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@powersync/common@2.0.0': {}
-
-  '@powersync/drizzle-driver@0.8.0(@powersync/common@2.0.0)(drizzle-orm@0.45.2(pg@8.22.0)(postgres@3.4.9))':
+  '@powersync/common@1.57.2':
     dependencies:
-      '@powersync/common': 2.0.0
+      js-logger: 1.6.1
+
+  '@powersync/drizzle-driver@0.8.0(drizzle-orm@0.45.2(pg@8.22.0)(postgres@3.4.9))':
+    dependencies:
       drizzle-orm: 0.45.2(pg@8.22.0)(postgres@3.4.9)
       tslib: 2.8.1
 
-  '@powersync/react-native@1.35.9(@powersync/common@2.0.0)(react-native@0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)':
+  '@powersync/react-native@1.35.9(@powersync/common@1.57.2)(react-native@0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@powersync/common': 2.0.0
-      '@powersync/react': 1.10.0(@powersync/common@2.0.0)(react@18.3.1)
+      '@powersync/common': 1.57.2
+      '@powersync/react': 1.10.0(@powersync/common@1.57.2)(react@18.3.1)
       react: 18.3.1
       react-native: 0.76.9(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(@types/react@18.3.31)(react@18.3.1)
 
-  '@powersync/react@1.10.0(@powersync/common@2.0.0)(react@18.3.1)':
+  '@powersync/react@1.10.0(@powersync/common@1.57.2)(react@18.3.1)':
     dependencies:
-      '@powersync/common': 2.0.0
+      '@powersync/common': 1.57.2
       react: 18.3.1
 
   '@radix-ui/react-compose-refs@1.0.0(react@18.3.1)':
@@ -12659,6 +12690,8 @@ snapshots:
   jose@5.10.0: {}
 
   jose@6.2.3: {}
+
+  js-logger@1.6.1: {}
 
   js-tokens@4.0.0: {}
 

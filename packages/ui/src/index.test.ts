@@ -1,3 +1,8 @@
+/**
+ * Tests for UI package barrel exports.
+ * Validates that all shared components are properly exported.
+ */
+
 import { describe, it, expect } from 'vitest';
 
 import { Button, Card, Input, Badge, Modal, Select, Checkbox, TextArea } from './index';

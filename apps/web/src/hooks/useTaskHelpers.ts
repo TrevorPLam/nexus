@@ -1,3 +1,34 @@
+/**
+ * MODULE: Task UI Helper Utilities
+ *
+ * Responsibility:
+ * Provides pure utility functions for task UI rendering: priority color mapping,
+ * timeline day generation, and task position calculation for timeline layout.
+ *
+ * Boundaries:
+ * - Pure functions only; no API calls, state, or side effects.
+ *
+ * Change risk:
+ * - Low. Display logic only.
+ *
+ * Links:
+ * - apps/web/src/app/work/components/TimelineView.tsx
+ * - apps/web/src/app/work/components/KanbanView.tsx
+ *
+ * Tags:
+ * - domain: work
+ * - risk: low
+ * - layer: presentation
+ * - stability: stable
+ * - concerns: ui-helpers, timeline, priority-colors
+ *
+ * File:
+ * - apps/web/src/hooks/useTaskHelpers.ts
+ *
+ * Last updated:
+ * - July 23, 2026
+ */
+
 interface Task {
   id: string;
   title: string;
