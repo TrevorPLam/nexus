@@ -29,6 +29,7 @@
  */
 
 import { apiClient } from '@life-os/api-client';
+import type { PowerSyncDatabase } from '@powersync/react-native';
 
 export type CommandType = 'create_project' | 'create_task' | 'update_task' | 'delete_task';
 
@@ -50,14 +51,13 @@ const RETRY_DELAY_MS = 1000; // Base delay for exponential backoff
  * Enqueue a command for offline processing
  */
 export async function enqueueCommand(
-  db: any,
+  db: PowerSyncDatabase,
   type: CommandType,
   payload: Record<string, unknown>,
 ): Promise<string> {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  // @ts-ignore - PowerSync execute method exists but type definitions are incomplete
   await db.execute(
     `INSERT INTO command_queue (id, type, payload, status, retry_count, error_message, created_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -70,8 +70,7 @@ export async function enqueueCommand(
 /**
  * Process pending commands from the queue
  */
-export async function processCommands(db: any): Promise<void> {
-  // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+export async function processCommands(db: PowerSyncDatabase): Promise<void> {
   const pendingCommands = await db.getAll(
     `SELECT * FROM command_queue WHERE status = 'pending' OR status = 'failed' ORDER BY created_at ASC`,
   );
@@ -85,7 +84,6 @@ export async function processCommands(db: any): Promise<void> {
     try {
       // Mark as processing
       const now = new Date().toISOString();
-      // @ts-ignore
       await db.execute(
         `UPDATE command_queue SET status = 'processing', updated_at = ? WHERE id = ?`,
         [now, command.id],
@@ -113,7 +111,6 @@ export async function processCommands(db: any): Promise<void> {
 
       // Mark as completed
       const completedAt = new Date().toISOString();
-      // @ts-ignore
       await db.execute(
         `UPDATE command_queue SET status = 'completed', updated_at = ? WHERE id = ?`,
         [completedAt, command.id],
@@ -122,7 +119,6 @@ export async function processCommands(db: any): Promise<void> {
       // Mark as failed with retry count increment
       const failedAt = new Date().toISOString();
       const newRetryCount = command.retry_count + 1;
-      // @ts-ignore
       await db.execute(
         `UPDATE command_queue SET status = 'failed', retry_count = ?, error_message = ?, updated_at = ? WHERE id = ?`,
         [newRetryCount, (error as Error).message, failedAt, command.id],
@@ -140,8 +136,7 @@ export async function processCommands(db: any): Promise<void> {
 /**
  * Get count of pending commands
  */
-export async function getPendingCommandCount(db: any): Promise<number> {
-  // @ts-ignore
+export async function getPendingCommandCount(db: PowerSyncDatabase): Promise<number> {
   const result = await db.get(
     `SELECT COUNT(*) as count FROM command_queue WHERE status = 'pending' OR status = 'failed'`,
   );

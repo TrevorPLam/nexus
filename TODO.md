@@ -508,7 +508,7 @@ Generated from code health audit on July 23, 2026.
 
 ## TASK-007: Replace TypeScript `any` Types in Mobile Package
 
-- [ ] STATUS: ready
+- [x] STATUS: done
 - PRIORITY: HIGH
 
 ### Related File Paths
