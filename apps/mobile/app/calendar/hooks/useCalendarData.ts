@@ -42,6 +42,7 @@ import { apiClient } from '@life-os/api-client';
 import { useState, useEffect } from 'react';
 
 import { useAuth } from '../../../src/contexts/AuthContext';
+import { usePowerSync } from '../../../src/lib/powersync/provider';
 
 export interface Calendar {
   id: string;
@@ -63,6 +64,7 @@ export interface Event {
 
 export function useCalendarData() {
   const { selectedWorkspace } = useAuth();
+  const { db } = usePowerSync();
   const [calendars, setCalendars] = useState<Calendar[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,12 +79,20 @@ export function useCalendarData() {
     }
 
     async function loadCalendars() {
+      if (!selectedWorkspace) {
+        return;
+      }
+
       try {
         setLoading(true);
-        // TODO: Implement PowerSync query for workspace-scoped calendars
-        // This will use PowerSync queries when sync is fully implemented
-        // For now, return empty array as placeholder
-        setCalendars([]);
+        // Query calendars filtered by workspace_id using PowerSync getAll
+        // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+        const result = await db.getAll(
+          'SELECT * FROM calendars WHERE workspace_id = ? ORDER BY created_at DESC',
+          [selectedWorkspace.id],
+        );
+
+        setCalendars(result as Calendar[]);
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -91,7 +101,7 @@ export function useCalendarData() {
     }
 
     loadCalendars();
-  }, [selectedWorkspace]);
+  }, [selectedWorkspace, db]);
 
   const loadEvents = async (_calendarId?: string, _startDate?: Date, _endDate?: Date) => {
     if (!selectedWorkspace) {

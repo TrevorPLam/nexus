@@ -242,5 +242,6 @@ export const powersyncSchema = new Schema({
 export type Database = (typeof powersyncSchema)['types'];
 export type ProjectRecord = Database['projects'];
 export type TaskRecord = Database['tasks'];
+export type CalendarRecord = Database['calendars'];
 
 export default powersyncSchema;
