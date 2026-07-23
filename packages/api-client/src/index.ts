@@ -1,19 +1,3 @@
-import {
-  CreateProjectRequest,
-  UpdateProjectRequest,
-  CreateTaskRequest,
-  UpdateTaskRequest,
-  CreateTaskDependencyRequest,
-  CreateTaskAssigneeRequest,
-  CreateTaskCommentRequest,
-  UpdateTaskCommentRequest,
-  CreateTaskAttachmentRequest,
-  CreateTimeEntryRequest,
-  UpdateTimeEntryRequest,
-  CreateTaskNoteRequest,
-  UpdateTaskNoteRequest,
-} from '@life-os/contracts';
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 interface ApiError {
@@ -21,19 +5,32 @@ interface ApiError {
   details?: unknown;
 }
 
+export interface TokenProvider {
+  getAccessToken(): Promise<string | null>;
+}
+
 class ApiClient {
   private baseUrl: string;
+  private tokenProvider: TokenProvider | undefined;
 
-  constructor(baseUrl: string = API_BASE_URL) {
+  constructor(baseUrl: string = API_BASE_URL, tokenProvider?: TokenProvider) {
     this.baseUrl = baseUrl;
+    this.tokenProvider = tokenProvider;
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    const headers = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     };
+
+    if (this.tokenProvider) {
+      const token = await this.tokenProvider.getAccessToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
 
     const response = await fetch(url, {
       ...options,
@@ -198,14 +195,14 @@ class ApiClient {
     return this.request(`/v1/work/tasks/${taskId}/notes`);
   }
 
-  async createTaskNote(data: CreateTaskNoteRequest) {
+  async createTaskNote(data: unknown) {
     return this.request('/v1/work/task-notes', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async updateTaskNote(id: string, data: UpdateTaskNoteRequest) {
+  async updateTaskNote(id: string, data: unknown) {
     return this.request(`/v1/work/task-notes/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),

@@ -147,6 +147,102 @@ describe('API Client Package', () => {
     });
   });
 
+  describe('Token Provider', () => {
+    it('adds Authorization header when token is available', async () => {
+      const mockTokenProvider = {
+        getAccessToken: vi.fn().mockResolvedValue('test-token-123'),
+      };
+      const clientWithToken = new ApiClient('http://test-api.com', mockTokenProvider);
+
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'project-123' }),
+      } as Response);
+
+      await clientWithToken.getProject('project-123');
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test-api.com/v1/work/projects/project-123',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer test-token-123',
+          },
+        }),
+      );
+    });
+
+    it('does not add Authorization header when token is null', async () => {
+      const mockTokenProvider = {
+        getAccessToken: vi.fn().mockResolvedValue(null),
+      };
+      const clientWithToken = new ApiClient('http://test-api.com', mockTokenProvider);
+
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'project-123' }),
+      } as Response);
+
+      await clientWithToken.getProject('project-123');
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test-api.com/v1/work/projects/project-123',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+      );
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test-api.com/v1/work/projects/project-123',
+        expect.not.objectContaining({
+          headers: expect.objectContaining({
+            'Authorization': expect.any(String),
+          }),
+        }),
+      );
+    });
+
+    it('preserves caller headers alongside Authorization header', async () => {
+      const mockTokenProvider = {
+        getAccessToken: vi.fn().mockResolvedValue('test-token-123'),
+      };
+      const clientWithToken = new ApiClient('http://test-api.com', mockTokenProvider);
+
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'project-123' }),
+      } as Response);
+
+      await clientWithToken.createProject({ name: 'New Project' });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test-api.com/v1/work/projects',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer test-token-123',
+          },
+        }),
+      );
+    });
+
+    it('throws typed authentication error when token is missing for protected endpoint', async () => {
+      const mockTokenProvider = {
+        getAccessToken: vi.fn().mockResolvedValue(null),
+      };
+      const clientWithToken = new ApiClient('http://test-api.com', mockTokenProvider);
+
+      vi.mocked(global.fetch).mockResolvedValue({
+        ok: false,
+        status: 401,
+        json: async () => ({ error: 'Unauthorized' }),
+      } as Response);
+
+      await expect(clientWithToken.getProject('project-123')).rejects.toThrow('Unauthorized');
+    });
+  });
+
   describe('Error Handling', () => {
     it('throws error on failed request', async () => {
       vi.mocked(global.fetch).mockResolvedValue({
