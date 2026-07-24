@@ -69,7 +69,6 @@ import {
 } from '../../lib/middleware.js';
 import * as workOps from '../../lib/work-operations.js';
 
-
 const projectsRouter = new Hono();
 
 // Apply authentication middleware to all routes
@@ -215,7 +214,7 @@ projectsRouter.put(
       const context = await extractCommandContext(c);
       // Filter out undefined values to avoid type errors
       const updateData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined),
+        Object.entries(data).filter(([, v]) => v !== undefined),
       );
       const project = await workOps.updateProject(id, updateData, context);
       if (!project) {

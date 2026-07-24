@@ -49,7 +49,6 @@ import { createAuditLog, createOutboxEvent } from './audit.js';
 import { db } from './db.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
-
 export interface CommandContext {
   userId?: string;
   workspaceId?: string;
@@ -123,6 +122,7 @@ export async function extractCommandContext(c: Context): Promise<CommandContext>
  */
 export async function executeCommand<T>(
   context: CommandContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   command: (tx: any) => Promise<T>,
   auditConfig?: AuditConfig,
   outboxConfig?: OutboxConfig,
@@ -189,6 +189,7 @@ export async function executeCommand<T>(
  */
 export async function executeCommandWithoutIdempotency<T>(
   context: Omit<CommandContext, 'idempotencyKey' | 'endpoint'>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   command: (tx: any) => Promise<T>,
   auditConfig?: AuditConfig,
   outboxConfig?: OutboxConfig,

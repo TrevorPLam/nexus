@@ -62,7 +62,7 @@ vi.mock('./db.js', () => ({
         returning: vi.fn(() => Promise.resolve([{ id: '123' }])),
       })),
     })),
-    transaction: vi.fn(async (callback: any) => {
+    transaction: vi.fn(async (callback: unknown) => {
       return callback({
         insert: vi.fn(() => ({
           values: vi.fn(() => ({
@@ -348,6 +348,7 @@ describe('Calendar Operations', () => {
       const { db } = await import('./db.js');
       const transactionSpy = vi
         .spyOn(db, 'transaction')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .mockImplementation(async (callback: any) => {
           return callback(db);
         });
@@ -424,6 +425,7 @@ describe('Calendar Operations', () => {
       const { db } = await import('./db.js');
       const transactionSpy = vi
         .spyOn(db, 'transaction')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .mockImplementation(async (callback: any) => {
           return callback(db);
         });

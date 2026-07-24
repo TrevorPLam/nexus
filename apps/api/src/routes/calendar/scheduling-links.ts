@@ -54,6 +54,10 @@
  * - July 22, 2026
  */
 
+import { Hono } from 'hono';
+import { validator } from 'hono/validator';
+import type { z } from 'zod';
+
 import {
   CreateSchedulingLinkRequest,
   UpdateSchedulingLinkRequest,
@@ -62,10 +66,6 @@ import {
 } from '@life-os/contracts';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
-import { Hono } from 'hono';
-import { validator } from 'hono/validator';
-
-import * as calendarOps from '../../lib/calendar-operations.js';
 import { db } from '../../lib/db.js';
 import {
   authMiddleware,
@@ -74,6 +74,13 @@ import {
   requireWorkspaceAccess,
 } from '../../lib/middleware.js';
 
+// Type for authenticated user from context
+type AuthUser = {
+  id: string;
+  email: string;
+};
+
+import * as calendarOps from '../../lib/calendar-operations.js';
 
 const schedulingLinksRouter = new Hono();
 
@@ -92,7 +99,7 @@ schedulingLinksRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
-    const user = (c as any).get('user');
+    const user = c.get('user') as AuthUser | undefined;
 
     if (!user) {
       return c.json({ error: 'Unauthorized' }, 401);
@@ -103,7 +110,7 @@ schedulingLinksRouter.post(
       const [appUser] = await db
         .select()
         .from(appUsers)
-        .where(eq(appUsers.supabaseUserId, (user as any).id));
+        .where(eq(appUsers.supabaseUserId, user.id));
 
       if (!appUser) {
         return c.json({ error: 'User not found' }, 404);
@@ -209,7 +216,10 @@ schedulingLinksRouter.put(
     const id = c.req.param('id');
     const data = c.req.valid('json');
     try {
-      const schedulingLink = await calendarOps.updateSchedulingLink(id, data as any);
+      const schedulingLink = await calendarOps.updateSchedulingLink(
+        id,
+        data as z.infer<typeof UpdateSchedulingLinkRequest>,
+      );
       if (!schedulingLink) {
         return c.json({ error: 'Scheduling link not found' }, 404);
       }
