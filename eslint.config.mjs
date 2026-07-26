@@ -3,6 +3,15 @@ import tseslint from 'typescript-eslint';
 import importX from 'eslint-plugin-import-x';
 import prettier from 'eslint-config-prettier/flat';
 import globals from 'globals';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import { createNodeResolver } from 'eslint-plugin-import-x';
+
+const tsResolver = createTypeScriptImportResolver({
+  alwaysTryTypes: true,
+  project: './tsconfig.json',
+});
+
+const nodeResolver = createNodeResolver();
 
 export default [
   // Global ignores
@@ -58,10 +67,7 @@ export default [
       ],
     },
     settings: {
-      'import-x/resolver': {
-        node: true,
-        typescript: true,
-      },
+      'import-x/resolver-next': [nodeResolver, tsResolver],
     },
   },
   // TypeScript files
@@ -154,10 +160,7 @@ export default [
       ],
     },
     settings: {
-      'import-x/resolver': {
-        node: true,
-        typescript: true,
-      },
+      'import-x/resolver-next': [nodeResolver, tsResolver],
     },
   },
   // Mobile-specific config (React Native)

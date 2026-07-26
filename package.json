@@ -35,9 +35,7 @@
     "validate-deps": "tsx scripts/validate-deps.ts"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "catalog:",
     "@eslint/js": "catalog:",
-    "@op-engineering/op-sqlite": "catalog:",
     "@types/node": "^24",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
@@ -49,7 +47,7 @@
     "prettier": "catalog:",
     "supabase": "^2.109.1",
     "tsx": "^4.0.0",
-    "turbo": "^2.9.0",
+    "turbo": "^2.10.7",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.0.0",
     "vite": "catalog:",
