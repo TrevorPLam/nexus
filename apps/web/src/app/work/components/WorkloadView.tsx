@@ -131,6 +131,62 @@ export function WorkloadView({
   const weekDates = getWeekDates(currentDate, viewWeeks);
   const filteredTasks = getFilteredTasks();
 
+  interface TeamMemberRowProps {
+    member: TeamMember;
+    weekDates: Date[];
+    calculateWorkload: (memberId: string, date: Date) => number;
+    getWorkloadColor: (hours: number, capacity: number) => string;
+  }
+
+  function TeamMemberRow({
+    member,
+    weekDates,
+    calculateWorkload,
+    getWorkloadColor,
+  }: TeamMemberRowProps) {
+    return (
+      <div key={member.id} className="hover:bg-gray-50">
+        <div
+          className="grid"
+          style={{ gridTemplateColumns: '200px repeat(auto-fit, minmax(80px, 1fr))' }}
+        >
+          <div className="p-3 border-r border-gray-200">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-gray-400" />
+              <span className="font-medium text-sm">{member.name}</span>
+            </div>
+            <div className="text-xs text-gray-500 mt-1">{member.capacity}h/day capacity</div>
+          </div>
+          {weekDates.map((date) => {
+            const hours = calculateWorkload(member.id, date);
+            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+            return (
+              <div
+                key={date.toISOString()}
+                className={`p-2 text-center border-r border-gray-200 last:border-r-0 ${
+                  isWeekend ? 'bg-gray-50' : ''
+                }`}
+              >
+                {isWeekend ? (
+                  <span className="text-gray-300">—</span>
+                ) : (
+                  <div
+                    className={`inline-block px-2 py-1 rounded text-xs font-medium ${getWorkloadColor(
+                      hours,
+                      member.capacity,
+                    )}`}
+                  >
+                    {hours.toFixed(1)}h
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -197,45 +253,13 @@ export function WorkloadView({
         {/* Team Rows */}
         <div className="divide-y divide-gray-100">
           {mockTeamMembers.map((member) => (
-            <div key={member.id} className="hover:bg-gray-50">
-              <div
-                className="grid"
-                style={{ gridTemplateColumns: '200px repeat(auto-fit, minmax(80px, 1fr))' }}
-              >
-                <div className="p-3 border-r border-gray-200">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-gray-400" />
-                    <span className="font-medium text-sm">{member.name}</span>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">{member.capacity}h/day capacity</div>
-                </div>
-                {weekDates.map((date) => {
-                  const hours = calculateWorkload(member.id, date);
-                  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                  return (
-                    <div
-                      key={date.toISOString()}
-                      className={`p-2 text-center border-r border-gray-200 last:border-r-0 ${
-                        isWeekend ? 'bg-gray-50' : ''
-                      }`}
-                    >
-                      {isWeekend ? (
-                        <span className="text-gray-300">—</span>
-                      ) : (
-                        <div
-                          className={`inline-block px-2 py-1 rounded text-xs font-medium ${getWorkloadColor(
-                            hours,
-                            member.capacity,
-                          )}`}
-                        >
-                          {hours.toFixed(1)}h
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <TeamMemberRow
+              key={member.id}
+              member={member}
+              weekDates={weekDates}
+              calculateWorkload={calculateWorkload}
+              getWorkloadColor={getWorkloadColor}
+            />
           ))}
         </div>
       </div>

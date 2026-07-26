@@ -34,6 +34,47 @@ interface TaskSubtasksProps {
   onDeleteSubtask: (subtaskId: string) => void;
 }
 
+interface SubtaskItemProps {
+  subtask: Task;
+  onToggleComplete: (subtask: Task) => void;
+  onDeleteSubtask: (subtaskId: string) => void;
+}
+
+function SubtaskItem({ subtask, onToggleComplete, onDeleteSubtask }: SubtaskItemProps) {
+  return (
+    <div
+      key={subtask.id}
+      className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors group"
+    >
+      <button
+        onClick={() => onToggleComplete(subtask)}
+        className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+          subtask.status === 'done'
+            ? 'bg-blue-500 border-blue-500 text-white'
+            : 'border-gray-300 hover:border-blue-400'
+        }`}
+      >
+        {subtask.status === 'done' && <Check className="w-3 h-3" />}
+      </button>
+      <div className="flex-1 min-w-0">
+        <p
+          className={`text-sm ${
+            subtask.status === 'done' ? 'text-gray-400 line-through' : 'text-gray-900'
+          }`}
+        >
+          {subtask.title}
+        </p>
+        {subtask.description && (
+          <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{subtask.description}</p>
+        )}
+      </div>
+      <Button variant="secondary" size="small" onPress={() => onDeleteSubtask(subtask.id)}>
+        <X className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+}
+
 export function TaskSubtasks({
   subtasks,
   onAddSubtask,
@@ -115,36 +156,12 @@ export function TaskSubtasks({
           <div className="text-center py-4 text-gray-500 text-sm">No subtasks yet</div>
         ) : (
           subtasks.map((subtask) => (
-            <div
+            <SubtaskItem
               key={subtask.id}
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors group"
-            >
-              <button
-                onClick={() => handleToggleComplete(subtask)}
-                className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                  subtask.status === 'done'
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'border-gray-300 hover:border-blue-400'
-                }`}
-              >
-                {subtask.status === 'done' && <Check className="w-3 h-3" />}
-              </button>
-              <div className="flex-1 min-w-0">
-                <p
-                  className={`text-sm ${
-                    subtask.status === 'done' ? 'text-gray-400 line-through' : 'text-gray-900'
-                  }`}
-                >
-                  {subtask.title}
-                </p>
-                {subtask.description && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{subtask.description}</p>
-                )}
-              </div>
-              <Button variant="secondary" size="small" onPress={() => onDeleteSubtask(subtask.id)}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+              subtask={subtask}
+              onToggleComplete={handleToggleComplete}
+              onDeleteSubtask={onDeleteSubtask}
+            />
           ))
         )}
       </div>

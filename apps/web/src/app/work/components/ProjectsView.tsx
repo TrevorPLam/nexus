@@ -35,6 +35,62 @@ interface ProjectsViewProps {
   onProjectSelect: (projectId: string) => void;
 }
 
+interface ProjectCardProps {
+  project: Project;
+  onEditProject: (project: Project) => void;
+  onDeleteProject: (id: string) => void;
+  onProjectSelect: (projectId: string) => void;
+}
+
+function ProjectCard({
+  project,
+  onEditProject,
+  onDeleteProject,
+  onProjectSelect,
+}: ProjectCardProps) {
+  return (
+    <div
+      key={project.id}
+      className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow group cursor-pointer"
+      onClick={() => onProjectSelect(project.id)}
+    >
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-3">
+          {project.color && (
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: project.color }}
+            />
+          )}
+          <h3 className="text-lg font-semibold">{project.name}</h3>
+        </div>
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="secondary" size="small" onPress={() => onEditProject(project)}>
+            <Edit2 className="w-3 h-3" />
+          </Button>
+          <Button
+            variant="secondary"
+            size="small"
+            onPress={() => onDeleteProject(project.id)}
+          >
+            <Trash2 className="w-3 h-3" />
+          </Button>
+        </div>
+      </div>
+      {project.description && (
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
+      )}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          {project.status === 'active' && <Badge variant="success">Active</Badge>}
+          {project.status === 'archived' && <Badge variant="default">Archived</Badge>}
+        </div>
+        <ChevronRight className="w-4 h-4 text-gray-400" />
+      </div>
+    </div>
+  );
+}
+
 export function ProjectsView({
   projects,
   projectsLoading,
@@ -66,45 +122,13 @@ export function ProjectsView({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((project) => (
-            <div
+            <ProjectCard
               key={project.id}
-              className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow group cursor-pointer"
-              onClick={() => onProjectSelect(project.id)}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  {project.color && (
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: project.color }}
-                    />
-                  )}
-                  <h3 className="text-lg font-semibold">{project.name}</h3>
-                </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="secondary" size="small" onPress={() => onEditProject(project)}>
-                    <Edit2 className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onPress={() => onDeleteProject(project.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-              {project.description && (
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
-              )}
-              <div className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  {project.status === 'active' && <Badge variant="success">Active</Badge>}
-                  {project.status === 'archived' && <Badge variant="default">Archived</Badge>}
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </div>
-            </div>
+              project={project}
+              onEditProject={onEditProject}
+              onDeleteProject={onDeleteProject}
+              onProjectSelect={onProjectSelect}
+            />
           ))}
         </div>
       )}
