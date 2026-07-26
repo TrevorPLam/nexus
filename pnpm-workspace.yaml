@@ -31,6 +31,7 @@ catalogs:
     drizzle-orm: ^0.45.0
     eslint: ^10.8.0
     eslint-import-resolver-typescript: ^4.4.5
+    globals: ^17.8.0
     hono: ^4.12.0
     lucide-react: ^1.25.0
     postcss: ^8.5.21
