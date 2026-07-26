@@ -1,9 +1,78 @@
+# /**
+#  * MODULE: EditorConfig – Coding Style Configuration
+#  *
+#  * Responsibility:
+#  * Defines consistent, editor‑agnostic coding style rules for the entire
+#  * Life OS monorepo. This file acts as a baseline so that every editor,
+#  * IDE, and AI‑generated code contribution follows the same formatting
+#  * conventions, even when Prettier is not running.
+#  *
+#  * Boundaries:
+#  * - Editor‑level formatting only (indentation, line endings, charset, etc.).
+#  * - Does NOT replace Prettier; Prettier is the authoritative formatter.
+#  * - Does NOT enforce linting rules (those belong to ESLint).
+#  *
+#  * Critical invariants:
+#  * - All files must use UTF‑8 encoding.
+#  * - Unix‑style LF line endings, even on Windows (Git manages checkout).
+#  * - Spaces for indentation, not tabs; width fixed at 2 spaces.
+#  * - Every file ends with exactly one newline.
+#  * - Trailing whitespace is automatically removed.
+#  * - Recommended line length limit of 100 characters.
+#  *
+#  * Side effects:
+#  * - Editors that understand EditorConfig will adjust user preferences on open.
+#  * - Changing these rules can produce large formatting‑only diffs – coordinate
+#  *   changes with a reformat commit across the whole repository.
+#  *
+#  * Change risk:
+#  * - Low. Core formatting (spaces, LF, UTF‑8) is stable and unlikely to change.
+#  * - Medium if `max_line_length` or `indent_size` are modified, because they
+#  *   may cause widespread visual differences.
+#  *
+#  * Links:
+#  * - .prettierrc             (Prettier configuration – must align with this file)
+#  * - eslint.config.mjs       (ESLint configuration – formatting rules disabled)
+#  * - pnpm-workspace.yaml     (monorepo workspace definition)
+#  *
+#  * Tags:
+#  * - domain: configuration
+#  * - risk: low
+#  * - layer: infrastructure
+#  * - stability: stable
+#  * - concerns: formatting, consistency
+#  *
+#  * File:
+#  * - .editorconfig
+#  *
+#  * Last updated:
+#  * - July 26, 2026
+#  */
+
+# Top-most EditorConfig file; editors stop searching in parent directories.
 root = true
 
+# Universal defaults for every file in the repository.
 [*]
+
+# Use UTF-8 character encoding (modern standard, supports all languages).
 charset = utf-8
+
+# Ensure the file always ends with exactly one newline (clean diffs, POSIX compliance).
 insert_final_newline = true
+
+# Use Unix line endings (LF). On Windows, Git's core.autocrlf can handle local checkout.
 end_of_line = lf
+
+# Indent with spaces (consistent with Prettier and the Life OS codebase).
 indent_style = space
+
+# Two spaces per indentation level (aligned with Prettier defaults).
 indent_size = 2
+
+# Remove any trailing spaces or tabs on save (keeps files tidy, reduces noise in diffs).
+trim_trailing_whitespace = true
+
+# Visual guideline: editors should try to keep lines at or under 100 characters.
+# Prettier's printWidth (if configured) should match this value.
 max_line_length = 100

@@ -32,8 +32,13 @@ import {
 // Helper to create chainable query builder mock that resolves to array
 const createQueryBuilder = () => {
   const mockData = [{ id: '123', createdAt: new Date() }];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const queryBuilder = Promise.resolve(mockData) as any;
+  const queryBuilder = Promise.resolve(mockData) as unknown as {
+    from: ReturnType<typeof vi.fn>;
+    where: ReturnType<typeof vi.fn>;
+    orderBy: ReturnType<typeof vi.fn>;
+    limit: ReturnType<typeof vi.fn>;
+    returning: ReturnType<typeof vi.fn>;
+  };
 
   // Add chainable methods that return the same promise
   queryBuilder.from = vi.fn(() => queryBuilder);
@@ -66,6 +71,7 @@ vi.mock('./db.js', () => ({
         returning: vi.fn(() => Promise.resolve([{ id: '123' }])),
       })),
     })),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transaction: vi.fn(async (callback: any) => {
       return callback({
         insert: vi.fn(() => ({
@@ -507,7 +513,7 @@ describe('Work Operations', () => {
       const { db } = await import('./db.js');
       const transactionSpy = vi
         .spyOn(db, 'transaction')
-        .mockImplementation(async (callback: any) => {
+        .mockImplementation(async (callback: unknown) => {
           return callback(db);
         });
 
@@ -603,7 +609,7 @@ describe('Work Operations', () => {
       const { db } = await import('./db.js');
       const transactionSpy = vi
         .spyOn(db, 'transaction')
-        .mockImplementation(async (callback: any) => {
+        .mockImplementation(async (callback: unknown) => {
           return callback(db);
         });
       const auditSpy = vi.spyOn(await import('./audit.js'), 'createAuditLog');

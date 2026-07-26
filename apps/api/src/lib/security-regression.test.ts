@@ -94,7 +94,7 @@ describe('Security and Transaction Regression Tests', () => {
     it('rejects invalid task status values', async () => {
       // This test ensures that invalid enum values are rejected
       // In a real scenario, this would test the API validation layer
-      const invalidStatus = 'invalid_status' as any;
+      const invalidStatus = 'invalid_status' as unknown;
 
       // Attempt to insert with invalid status should fail
       await expect(
@@ -109,7 +109,7 @@ describe('Security and Transaction Regression Tests', () => {
     });
 
     it('rejects invalid priority values', async () => {
-      const invalidPriority = 'invalid_priority' as any;
+      const invalidPriority = 'invalid_priority' as unknown;
 
       await expect(
         db.insert(schema.tasks).values({
@@ -130,7 +130,7 @@ describe('Security and Transaction Regression Tests', () => {
           // Missing required title field
           status: 'todo',
           priority: 'medium',
-        } as any),
+        } as unknown),
       ).rejects.toThrow();
     });
 
@@ -140,7 +140,7 @@ describe('Security and Transaction Regression Tests', () => {
           // Missing required workspaceId
           name: 'Invalid Project',
           status: 'active',
-        } as any),
+        } as unknown),
       ).rejects.toThrow();
     });
   });

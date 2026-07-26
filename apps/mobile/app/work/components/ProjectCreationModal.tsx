@@ -36,10 +36,10 @@
  * - July 23, 2026
  */
 
+import { Button, Input, Modal, TextArea } from '@life-os/ui';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-import { Button, Input, Modal, TextArea } from '@life-os/ui';
 import { useCreateProject } from '../../../src/hooks/useWork';
 
 interface ProjectCreationModalProps {
@@ -136,7 +136,13 @@ export function ProjectCreationModal({ isOpen, onClose }: ProjectCreationModalPr
           <Button variant="secondary" onPress={handleClose} disabled={createProject.isPending}>
             Cancel
           </Button>
-          <Button variant="primary" onPress={handleSubmit} disabled={createProject.isPending}>
+          <Button
+            variant="primary"
+            onPress={() => {
+              void handleSubmit();
+            }}
+            disabled={createProject.isPending}
+          >
             {createProject.isPending ? <ActivityIndicator size="small" color="white" /> : 'Create'}
           </Button>
         </View>

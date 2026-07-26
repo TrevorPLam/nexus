@@ -1,4 +1,4 @@
-# Life OS - Technology Decisions
+# PROJECT.md: Life OS - Technology Decisions
 
 ## Locked Technology Stack
 

@@ -57,10 +57,15 @@
  * - July 22, 2026
  */
 
-import { CreateTaskWithEventRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 import { z } from 'zod';
+
+// Type for authenticated user from context
+type AuthUser = {
+  id: string;
+  email: string;
+};
 
 import {
   authMiddleware,
@@ -110,7 +115,7 @@ integrationRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
-    const user = (c as any).get('user');
+    const user = c.get('user') as AuthUser | undefined;
     const userId = user?.id;
 
     try {
@@ -118,7 +123,7 @@ integrationRouter.post(
 
       // Handle idempotent response
       if ('isIdempotent' in result && result.isIdempotent) {
-        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200'));
       }
 
       return c.json(result, 201);
@@ -148,7 +153,7 @@ integrationRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
-    const user = (c as any).get('user');
+    const user = c.get('user') as AuthUser | undefined;
     const userId = user?.id;
 
     try {
@@ -156,7 +161,7 @@ integrationRouter.post(
 
       // Handle idempotent response
       if ('isIdempotent' in result && result.isIdempotent) {
-        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200'));
       }
 
       return c.json(result);
@@ -185,7 +190,7 @@ integrationRouter.post(
   }),
   async (c) => {
     const data = c.req.valid('json');
-    const user = (c as any).get('user');
+    const user = c.get('user') as AuthUser | undefined;
     const userId = user?.id;
 
     try {
@@ -193,7 +198,7 @@ integrationRouter.post(
 
       // Handle idempotent response
       if ('isIdempotent' in result && result.isIdempotent) {
-        return c.json(result.responseBody, parseInt(result.responseStatus || '200') as any);
+        return c.json(result.responseBody, parseInt(result.responseStatus || '200'));
       }
 
       return c.json(result);

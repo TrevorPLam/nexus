@@ -200,20 +200,20 @@ tasksRouter.get('/workspaces/:workspaceId/tasks', requireWorkspaceMembership, as
   try {
     // If any filter parameters are provided, use filtered query with pagination
     if (projectId || status || priority || search || dueBefore || dueAfter) {
-      const filterParams: Record<string, unknown> = {
+      const filterParams = {
         workspaceId,
         limit,
         includeCancelled,
+        projectId: projectId || undefined,
+        status: status || undefined,
+        priority: priority || undefined,
+        searchQuery: search || undefined,
+        dueBefore: dueBefore ? new Date(dueBefore) : undefined,
+        dueAfter: dueAfter ? new Date(dueAfter) : undefined,
+        cursor: parsedCursor || undefined,
       };
-      if (projectId) filterParams.projectId = projectId;
-      if (status) filterParams.status = status;
-      if (priority) filterParams.priority = priority;
-      if (search) filterParams.searchQuery = search;
-      if (dueBefore) filterParams.dueBefore = new Date(dueBefore);
-      if (dueAfter) filterParams.dueAfter = new Date(dueAfter);
-      if (parsedCursor) filterParams.cursor = parsedCursor;
 
-      const result = await workOps.getFilteredTasks(filterParams as any);
+      const result = await workOps.getFilteredTasks(filterParams);
       return c.json({
         tasks: result.items,
         nextCursor: result.nextCursor,

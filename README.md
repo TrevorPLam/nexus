@@ -1,4 +1,4 @@
-# Life OS
+# README.md: Life OS
 
 Life OS is a comprehensive personal productivity system designed to integrate
 work management and calendar functionality into a unified experience. Built as a

@@ -49,7 +49,6 @@
  * - July 22, 2026
  */
 
-import { CreateCalendarRequest, UpdateCalendarRequest } from '@life-os/contracts';
 import { Hono } from 'hono';
 import { validator } from 'hono/validator';
 
@@ -144,7 +143,7 @@ calendarsRouter.put(
     }
     const data = c.req.valid('json');
     try {
-      const calendar = await calendarOps.updateCalendar(id, data as any);
+      const calendar = await calendarOps.updateCalendar(id, data);
       if (!calendar) {
         return c.json({ error: 'Calendar not found' }, 404);
       }

@@ -36,6 +36,7 @@
  * - July 23, 2026
  */
 
+import { Button, Input, Modal, TextArea } from '@life-os/ui';
 import React, { useState } from 'react';
 import {
   View,
@@ -46,7 +47,6 @@ import {
   ScrollView,
 } from 'react-native';
 
-import { Button, Input, Modal, TextArea } from '@life-os/ui';
 import { useCreateTask, useProjects } from '../../../src/hooks/useWork';
 
 interface TaskCreationModalProps {
@@ -226,7 +226,13 @@ export function TaskCreationModal({ isOpen, onClose }: TaskCreationModalProps) {
             <Button variant="secondary" onPress={handleClose} disabled={createTask.isPending}>
               Cancel
             </Button>
-            <Button variant="primary" onPress={handleSubmit} disabled={createTask.isPending}>
+            <Button
+              variant="primary"
+              onPress={() => {
+                void handleSubmit();
+              }}
+              disabled={createTask.isPending}
+            >
               {createTask.isPending ? <ActivityIndicator size="small" color="white" /> : 'Create'}
             </Button>
           </View>

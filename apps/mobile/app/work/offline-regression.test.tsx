@@ -9,7 +9,7 @@ vi.mock('../../src/lib/powersync/provider', () => ({
   PowerSyncProvider: ({ children }: { children: React.ReactNode }) => children,
   usePowerSync: () => ({
     db: {
-      getAll: vi.fn().mockImplementation((query: string, _params: string[]) => {
+      getAll: vi.fn().mockImplementation((query: string) => {
         if (query.includes('projects')) {
           return Promise.resolve([
             { id: 'project-1', name: 'Test Project', workspace_id: 'test-workspace-id' },

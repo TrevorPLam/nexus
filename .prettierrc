@@ -1,26 +1,100 @@
-{
-  "semi": true,
-  "trailingComma": "all",
-  "singleQuote": true,
-  "printWidth": 100,
-  "tabWidth": 2,
-  "useTabs": false,
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "bracketSpacing": true,
-  "overrides": [
+/**
+ * MODULE: Prettier – Opinionated Code Formatter Configuration
+ *
+ * Responsibility:
+ * Defines the authoritative formatting rules for all code files in the
+ * Life OS monorepo. Prettier is the single source of truth for code
+ * aesthetics; it runs on save, in pre‑commit hooks, and in CI.
+ *
+ * Boundaries:
+ * - Formatting only. Prettier does NOT lint (that’s ESLint’s job).
+ * - Settings that Prettier reads from .editorconfig are kept in sync
+ *   (indentation, line endings, max line length).
+ * - Does NOT control editor preferences like charset or final newline
+ *   insertion (those remain in .editorconfig).
+ *
+ * Critical invariants:
+ * - Semicolons are always added.
+ * - Single quotes are used for strings.
+ * - Trailing commas are added wherever possible ("all").
+ * - Line width is 100 characters, except where overridden.
+ * - Indentation is 2 spaces, no tabs.
+ * - Line endings are Unix LF (cross‑platform consistency).
+ * - Arrow function parameters are always wrapped in parentheses.
+ *
+ * Side effects:
+ * - Running Prettier rewrites files in place; always commit these changes
+ *   separately to avoid mixed formatting/functional diffs.
+ *
+ * Change risk:
+ * - Low. The core style (semi, singleQuote, tabs, etc.) is stable.
+ * - Medium if `printWidth` is reduced significantly, causing widespread
+ *   reformatting.
+ *
+ * Links:
+ * - .editorconfig            (baseline editor settings)
+ * - eslint.config.mjs        (ESLint – formatting rules disabled)
+ * - .prettierignore          (files excluded from formatting)
+ *
+ * Tags:
+ * - domain: configuration
+ * - risk: low
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: formatting, style
+ *
+ * File:
+ * - prettier.config.mjs
+ *
+ * Last updated:
+ * - July 26, 2026
+ */
+
+export default {
+  // Add a semicolon at the end of every statement (TypeScript/JS).
+  semi: true,
+
+  // Use single quotes instead of double quotes for strings.
+  singleQuote: true,
+
+  // Add trailing commas wherever valid (arrays, objects, function params).
+  trailingComma: 'all',
+
+  // Maximum line width before Prettier will attempt to wrap.
+  printWidth: 100,
+
+  // Number of spaces per indentation level (matches .editorconfig indent_size).
+  tabWidth: 2,
+
+  // Use spaces instead of tabs (consistent with indent_style = space).
+  useTabs: false,
+
+  // Always include parentheses around a sole arrow function parameter.
+  arrowParens: 'always',
+
+  // Line endings: Unix LF (matches .editorconfig end_of_line).
+  endOfLine: 'lf',
+
+  // Print spaces between brackets in object literals.
+  bracketSpacing: true,
+
+  // File‑specific overrides:
+  overrides: [
     {
-      "files": "*.md",
-      "options": {
-        "printWidth": 80,
-        "proseWrap": "always"
-      }
+      // For Markdown, wrap prose at 80 characters to improve readability.
+      files: '*.md',
+      options: {
+        printWidth: 80,
+        proseWrap: 'always',
+      },
     },
     {
-      "files": "*.json",
-      "options": {
-        "printWidth": 200
-      }
-    }
-  ]
-}
+      // For JSON files, allow longer lines (no wrapping) for readability
+      // of deeply nested config/translation files.
+      files: '*.json',
+      options: {
+        printWidth: 200,
+      },
+    },
+  ],
+};

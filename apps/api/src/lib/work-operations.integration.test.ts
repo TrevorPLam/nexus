@@ -8,7 +8,6 @@ import * as workOps from './work-operations.js';
 describe('Work Operations - Integration Tests', () => {
   let testWorkspaceId: string;
   let testProjectId: string;
-  let testTaskId: string;
 
   beforeAll(async () => {
     // Create a test workspace

@@ -118,14 +118,6 @@ function parseTimeToMinutes(timeStr: string): number {
  * Authorization:
  * Not applicable (utility function).
  */
-/**
- * Convert minutes since midnight to HH:MM string
- */
-function minutesToTimeString(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
-}
 
 /**
  * Extracts the date portion (midnight) of a Date object.
@@ -351,7 +343,6 @@ export function calculateAvailableSlots(
   existingEvents: TimeSlot[],
   startDate: Date,
   endDate: Date,
-  timezone: string = 'UTC',
 ): TimeSlot[] {
   const allSlots: TimeSlot[] = [];
 
@@ -458,7 +449,6 @@ export function findNextAvailableSlot(
   schedulingLink: AvailabilityConfig,
   existingEvents: TimeSlot[],
   afterDate: Date,
-  timezone: string = 'UTC',
 ): TimeSlot | null {
   const searchStartDate = new Date(afterDate);
   const searchEndDate = new Date(afterDate);
@@ -471,7 +461,6 @@ export function findNextAvailableSlot(
     existingEvents,
     searchStartDate,
     searchEndDate,
-    timezone,
   );
 
   return slots.length > 0 ? slots[0] : null;

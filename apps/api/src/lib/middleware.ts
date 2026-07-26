@@ -150,7 +150,7 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
     if (result.isDuplicate) {
       // Return the cached response
       const status = parseInt(result.responseStatus || '200') as number;
-      c.status(status as any);
+      c.status(status);
       return c.json(result.responseBody);
     }
 
@@ -172,11 +172,11 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
 
       // Call original with correct signature
       if (typeof init === 'number') {
-        c.status(init as any);
+        c.status(init);
         return originalJson(data);
       }
       if (init?.status) {
-        c.status(init.status as any);
+        c.status(init.status);
       }
       return originalJson(data);
     };
@@ -190,7 +190,7 @@ export async function idempotencyMiddleware(c: Context, next: Next) {
 }
 
 // Entity table mapping for workspace lookup
-const entityWorkspaceMap: Record<string, any> = {
+const entityWorkspaceMap: Record<string, unknown> = {
   tasks,
   projects,
   events,

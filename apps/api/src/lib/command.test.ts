@@ -1,11 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { createAuditLog, createOutboxEvent } from './audit.js';
-import {
-  executeCommand,
-  executeCommandWithoutIdempotency,
-  CommandContext,
-} from './command-context.js';
+import { executeCommand, CommandContext } from './command-context.js';
 import { checkIdempotencyKey, createIdempotencyKey } from './idempotency.js';
 
 // Mock the dependencies
@@ -26,7 +22,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should wrap task creation in a transaction', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({}); // Mock transaction object
       });
 
@@ -44,12 +40,8 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should rollback transaction on error', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockRejectedValue(new Error('Domain write failed'));
-      (db.transaction as any).mockImplementation(async (callback) => {
-        try {
-          return callback({});
-        } catch (error) {
-          throw error; // Transaction should rollback on error
-        }
+      (db.transaction as unknown).mockImplementation(async (callback) => {
+        return callback({});
       });
 
       const context: CommandContext = {
@@ -65,7 +57,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create audit log on task creation', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -93,7 +85,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create audit log on task update', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -122,7 +114,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create audit log on task deletion', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -152,7 +144,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create outbox event on task creation', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -179,7 +171,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create outbox event on task update', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -206,7 +198,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create outbox event on task deletion', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -235,7 +227,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should check idempotency key before executing command', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -256,7 +248,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should return cached response on duplicate idempotency key', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -285,7 +277,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should store idempotency key after successful command', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -314,7 +306,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should commit audit and outbox together with domain write', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'task-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -347,12 +339,8 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should rollback audit and outbox on domain write failure', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockRejectedValue(new Error('Domain write failed'));
-      (db.transaction as any).mockImplementation(async (callback) => {
-        try {
-          return callback({});
-        } catch (error) {
-          throw error;
-        }
+      (db.transaction as unknown).mockImplementation(async (callback) => {
+        return callback({});
       });
 
       const context: CommandContext = {
@@ -388,7 +376,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should wrap event creation in a transaction', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -405,7 +393,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create audit log on event creation', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 
@@ -433,7 +421,7 @@ describe('Command Pattern - Implementation Verification', () => {
     it('should create outbox event on event creation', async () => {
       const { db } = await import('./db.js');
       const mockCommand = vi.fn().mockResolvedValue({ id: 'event-1' });
-      (db.transaction as any).mockImplementation(async (callback) => {
+      (db.transaction as unknown).mockImplementation(async (callback) => {
         return callback({});
       });
 

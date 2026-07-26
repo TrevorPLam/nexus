@@ -59,7 +59,7 @@ export default function CalendarScreen() {
   const handleCalendarPress = (calendar: Calendar) => {
     setSelectedCalendar(calendar);
     setView('events');
-    loadEvents(calendar.id);
+    void loadEvents(calendar.id);
   };
 
   const handleCreateCalendar = () => {

@@ -54,10 +54,6 @@
  * - July 22, 2026
  */
 
-import { Hono } from 'hono';
-import { validator } from 'hono/validator';
-import type { z } from 'zod';
-
 import {
   CreateSchedulingLinkRequest,
   UpdateSchedulingLinkRequest,
@@ -66,12 +62,17 @@ import {
 } from '@life-os/contracts';
 import { appUsers } from '@life-os/database';
 import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
+import { validator } from 'hono/validator';
+import type { z } from 'zod';
+
+import * as calendarOps from '../../lib/calendar-operations.js';
 import { db } from '../../lib/db.js';
 import {
   authMiddleware,
-  requireWorkspaceMembership,
   requireEntityAccess,
   requireWorkspaceAccess,
+  requireWorkspaceMembership,
 } from '../../lib/middleware.js';
 
 // Type for authenticated user from context
@@ -79,8 +80,6 @@ type AuthUser = {
   id: string;
   email: string;
 };
-
-import * as calendarOps from '../../lib/calendar-operations.js';
 
 const schedulingLinksRouter = new Hono();
 

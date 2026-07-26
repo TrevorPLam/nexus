@@ -41,8 +41,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { createClient } from '../lib/supabase/client';
 import { db } from '../lib/powersync/database';
+import { createClient } from '../lib/supabase/client';
 
 interface User {
   id: string;
@@ -57,7 +57,7 @@ interface Workspace {
 
 interface AuthContextValue {
   user: User | null;
-  session: any | null;
+  session: unknown | null;
   selectedWorkspace: Workspace | null;
   isLoading: boolean;
   isSigningIn: boolean;
@@ -70,7 +70,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<any | null>(null);
+  const [session, setSession] = useState<unknown | null>(null);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -99,14 +99,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
           setIsLoading(false);
         }
-      } catch (err) {
+      } catch {
         if (mounted) {
           setIsLoading(false);
         }
       }
     }
 
-    loadSession();
+    void loadSession();
 
     const {
       data: { subscription },
@@ -137,59 +137,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     setIsSigningIn(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) {
-        throw error;
-      }
-      // Auth state change listener will update user and session automatically
-    } catch (error) {
-      // Re-throw error for caller to handle
+    if (error) {
       throw error;
-    } finally {
-      setIsSigningIn(false);
     }
+    // Auth state change listener will update user and session automatically
+    setIsSigningIn(false);
   };
 
   const signOut = async () => {
     try {
       // Clear PowerSync replica data before signing out
       // Delete all data from sync tables
-      // @ts-ignore - PowerSync execute method exists but type definitions are incomplete
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM app_users');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM workspaces');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM workspace_memberships');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM projects');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM tasks');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM task_dependencies');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM task_notes');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM task_assignees');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM task_comments');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM task_attachments');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM time_entries');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM calendars');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM events');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM event_attendees');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM scheduling_links');
-      // @ts-ignore
+      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
       await db.execute('DELETE FROM command_queue');
     } catch (error) {
       // Log error but continue with sign-out

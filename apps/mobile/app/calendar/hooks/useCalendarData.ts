@@ -86,7 +86,7 @@ export function useCalendarData() {
       try {
         setLoading(true);
         // Query calendars filtered by workspace_id using PowerSync getAll
-        // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+        // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
         const result = await db.getAll(
           'SELECT * FROM calendars WHERE workspace_id = ? ORDER BY created_at DESC',
           [selectedWorkspace.id],
@@ -100,7 +100,7 @@ export function useCalendarData() {
       }
     }
 
-    loadCalendars();
+    void loadCalendars();
   }, [selectedWorkspace, db]);
 
   const loadEvents = async (calendarId?: string, startDate?: Date, endDate?: Date) => {
@@ -132,7 +132,7 @@ export function useCalendarData() {
 
       query += ' ORDER BY start ASC';
 
-      // @ts-ignore - PowerSync getAll method exists but type definitions are incomplete
+      // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
       const result = await db.getAll(query, params);
 
       setEvents(result as Event[]);

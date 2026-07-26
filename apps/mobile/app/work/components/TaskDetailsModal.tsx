@@ -36,6 +36,7 @@
  */
 
 import type { TaskRecord } from '@life-os/mobile-data';
+import { Button, Modal } from '@life-os/ui';
 import React, { useState } from 'react';
 import {
   View,
@@ -46,7 +47,6 @@ import {
   ScrollView,
 } from 'react-native';
 
-import { Button, Modal } from '@life-os/ui';
 import { useUpdateTaskStatus, useProjects } from '../../../src/hooks/useWork';
 
 interface TaskDetailsModalProps {
@@ -128,7 +128,9 @@ export function TaskDetailsModal({ isOpen, onClose, task }: TaskDetailsModalProp
                   <TouchableOpacity
                     key={option.value}
                     style={styles.dropdownItem}
-                    onPress={() => handleStatusChange(option.value)}
+                    onPress={() => {
+                      void handleStatusChange(option.value);
+                    }}
                   >
                     <Text style={styles.dropdownItemText}>{option.label}</Text>
                   </TouchableOpacity>
