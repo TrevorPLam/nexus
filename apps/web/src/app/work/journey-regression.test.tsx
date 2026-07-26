@@ -1,10 +1,11 @@
+import { QueryClient, QueryClientProvider, type UseMutationResult } from '@tanstack/react-query';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+import { AuthProvider } from '../../contexts/AuthContext';
 
 import WorkPage from './page';
-import { AuthProvider } from '../../contexts/AuthContext';
 
 // Mock the custom hooks
 vi.mock('../../hooks/useWorkProjects', () => ({
@@ -179,8 +180,11 @@ describe('Work Journey Regression Tests', () => {
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: mockProjects,
         projectsLoading: false,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         createProjectMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         updateProjectMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         deleteProjectMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
@@ -247,8 +251,11 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
@@ -298,8 +305,11 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         updateTaskMutation: { mutate: updateMock, isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
@@ -322,9 +332,9 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: true,
         error: new Error('Failed to load tasks'),
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
@@ -346,9 +356,9 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
@@ -404,8 +414,11 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         updateTaskMutation: { mutate: updateMock, isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
@@ -442,9 +455,9 @@ describe('Work Journey Regression Tests', () => {
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: [],
         projectsLoading: false,
-        createProjectMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateProjectMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as any,
+        createProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
@@ -464,9 +477,9 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
@@ -488,9 +501,9 @@ describe('Work Journey Regression Tests', () => {
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: [],
         projectsLoading: true,
-        createProjectMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateProjectMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as any,
+        createProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
