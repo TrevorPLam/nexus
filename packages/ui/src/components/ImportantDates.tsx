@@ -133,26 +133,53 @@ interface ImportantDatesProps {
   style?: ViewStyle;
 }
 
-export function ImportantDates({ dates, onDatePress, style, ...props }: ImportantDatesProps) {
-  const formatDisplayDate = (date: string) => {
-    const [month, day] = date.split('-');
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return `${monthNames[parseInt(month) - 1]} ${day}`;
-  };
+function formatDisplayDate(date: string): string {
+  const [month, day] = date.split('-');
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return `${monthNames[parseInt(month) - 1]} ${day}`;
+}
 
+interface DateItemProps {
+  date: ImportantDate;
+  onPress?: () => void;
+}
+
+function DateItem({ date, onPress }: DateItemProps) {
+  return (
+    <StyledDateItem onPress={onPress}>
+      <StyledDateIcon>
+        <StyledDateText>{formatDisplayDate(date.date)}</StyledDateText>
+      </StyledDateIcon>
+      <StyledDateInfo>
+        <StyledLabel>{date.label}</StyledLabel>
+        <StyledType>{date.type}</StyledType>
+        {date.reminderEnabled && date.reminderDaysBefore > 0 && (
+          <StyledReminder>
+            <StyledReminderText>
+              Reminder: {date.reminderDaysBefore} day
+              {date.reminderDaysBefore !== 1 ? 's' : ''} before
+            </StyledReminderText>
+          </StyledReminder>
+        )}
+      </StyledDateInfo>
+    </StyledDateItem>
+  );
+}
+
+export function ImportantDates({ dates, onDatePress, style, ...props }: ImportantDatesProps) {
   return (
     <StyledContainer style={style} {...props}>
       <ScrollView>
@@ -161,25 +188,7 @@ export function ImportantDates({ dates, onDatePress, style, ...props }: Importan
             <StyledEmptyText>No important dates yet</StyledEmptyText>
           </StyledEmptyState>
         ) : (
-          dates.map((date) => (
-            <StyledDateItem key={date.id} onPress={() => onDatePress?.(date)}>
-              <StyledDateIcon>
-                <StyledDateText>{formatDisplayDate(date.date)}</StyledDateText>
-              </StyledDateIcon>
-              <StyledDateInfo>
-                <StyledLabel>{date.label}</StyledLabel>
-                <StyledType>{date.type}</StyledType>
-                {date.reminderEnabled && date.reminderDaysBefore > 0 && (
-                  <StyledReminder>
-                    <StyledReminderText>
-                      Reminder: {date.reminderDaysBefore} day
-                      {date.reminderDaysBefore !== 1 ? 's' : ''} before
-                    </StyledReminderText>
-                  </StyledReminder>
-                )}
-              </StyledDateInfo>
-            </StyledDateItem>
-          ))
+          dates.map((date) => <DateItem key={date.id} date={date} onPress={() => onDatePress?.(date)} />)
         )}
       </ScrollView>
     </StyledContainer>

@@ -147,6 +147,47 @@ interface GiftIdeasProps {
   style?: ViewStyle;
 }
 
+interface GiftItemProps {
+  gift: GiftIdea;
+  onPress?: () => void;
+  onTogglePurchased?: (gift: GiftIdea) => void;
+}
+
+function GiftItem({ gift, onPress, onTogglePurchased }: GiftItemProps) {
+  return (
+    <StyledGiftItem onPress={onPress}>
+      {onTogglePurchased && (
+        <StyledCheckboxContainer>
+          <Checkbox checked={gift.isPurchased} onChange={() => onTogglePurchased(gift)} />
+        </StyledCheckboxContainer>
+      )}
+      <StyledGiftInfo>
+        <StyledIdea
+          style={{
+            textDecoration: gift.isPurchased ? 'line-through' : 'none',
+            opacity: gift.isPurchased ? 0.6 : 1,
+          }}
+        >
+          {gift.idea}
+        </StyledIdea>
+        {gift.description && <StyledDescription>{gift.description}</StyledDescription>}
+        <StyledDetails>
+          {gift.budget && <StyledDetail>Budget: {gift.budget}</StyledDetail>}
+          {gift.size && <StyledDetail>Size: {gift.size}</StyledDetail>}
+          {gift.preferences && <StyledDetail>{gift.preferences}</StyledDetail>}
+        </StyledDetails>
+        {gift.holiday && <StyledHoliday>{gift.holiday}</StyledHoliday>}
+        {gift.isPurchased && (
+          <StyledPurchasedBadge>
+            Purchased{' '}
+            {gift.purchasedAt && `on ${new Date(gift.purchasedAt).toLocaleDateString()}`}
+          </StyledPurchasedBadge>
+        )}
+      </StyledGiftInfo>
+    </StyledGiftItem>
+  );
+}
+
 export function GiftIdeas({
   gifts,
   onGiftPress,
@@ -163,36 +204,12 @@ export function GiftIdeas({
           </StyledEmptyState>
         ) : (
           gifts.map((gift) => (
-            <StyledGiftItem key={gift.id} onPress={() => onGiftPress?.(gift)}>
-              {onTogglePurchased && (
-                <StyledCheckboxContainer>
-                  <Checkbox checked={gift.isPurchased} onChange={() => onTogglePurchased(gift)} />
-                </StyledCheckboxContainer>
-              )}
-              <StyledGiftInfo>
-                <StyledIdea
-                  style={{
-                    textDecoration: gift.isPurchased ? 'line-through' : 'none',
-                    opacity: gift.isPurchased ? 0.6 : 1,
-                  }}
-                >
-                  {gift.idea}
-                </StyledIdea>
-                {gift.description && <StyledDescription>{gift.description}</StyledDescription>}
-                <StyledDetails>
-                  {gift.budget && <StyledDetail>Budget: {gift.budget}</StyledDetail>}
-                  {gift.size && <StyledDetail>Size: {gift.size}</StyledDetail>}
-                  {gift.preferences && <StyledDetail>{gift.preferences}</StyledDetail>}
-                </StyledDetails>
-                {gift.holiday && <StyledHoliday>{gift.holiday}</StyledHoliday>}
-                {gift.isPurchased && (
-                  <StyledPurchasedBadge>
-                    Purchased{' '}
-                    {gift.purchasedAt && `on ${new Date(gift.purchasedAt).toLocaleDateString()}`}
-                  </StyledPurchasedBadge>
-                )}
-              </StyledGiftInfo>
-            </StyledGiftItem>
+            <GiftItem
+              key={gift.id}
+              gift={gift}
+              onPress={() => onGiftPress?.(gift)}
+              onTogglePurchased={onTogglePurchased}
+            />
           ))
         )}
       </ScrollView>

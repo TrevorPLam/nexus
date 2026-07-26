@@ -155,6 +155,72 @@ interface ContactDetailProps {
   style?: ViewStyle;
 }
 
+interface ContactInfoSectionProps {
+  contact: Contact;
+}
+
+function ContactInfoSection({ contact }: ContactInfoSectionProps) {
+  return (
+    <StyledSection>
+      <StyledSectionTitle>Contact Information</StyledSectionTitle>
+
+      {contact.address && (
+        <StyledField>
+          <StyledLabel>Address</StyledLabel>
+          <StyledValue>{contact.address}</StyledValue>
+        </StyledField>
+      )}
+
+      {contact.relationshipStrength && (
+        <StyledField>
+          <StyledLabel>Relationship</StyledLabel>
+          <StyledValue>
+            {contact.relationshipStrength.charAt(0).toUpperCase() +
+              contact.relationshipStrength.slice(1)}
+          </StyledValue>
+        </StyledField>
+      )}
+
+      {contact.tags && contact.tags.length > 0 && (
+        <StyledField>
+          <StyledLabel>Tags</StyledLabel>
+          <StyledTags>
+            {contact.tags.map((tag, index) => (
+              <StyledTag key={index}>{tag}</StyledTag>
+            ))}
+          </StyledTags>
+        </StyledField>
+      )}
+    </StyledSection>
+  );
+}
+
+interface ActionButtonsProps {
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
+
+function ActionButtons({ onEdit, onDelete }: ActionButtonsProps) {
+  if (!onEdit && !onDelete) {
+    return null;
+  }
+
+  return (
+    <StyledButtonContainer>
+      {onEdit && (
+        <Button onPress={onEdit} variant="secondary">
+          Edit
+        </Button>
+      )}
+      {onDelete && (
+        <Button onPress={onDelete} variant="danger">
+          Delete
+        </Button>
+      )}
+    </StyledButtonContainer>
+  );
+}
+
 export function ContactDetail({ contact, onEdit, onDelete, style, ...props }: ContactDetailProps) {
   return (
     <StyledContainer style={style} {...props}>
@@ -166,37 +232,7 @@ export function ContactDetail({ contact, onEdit, onDelete, style, ...props }: Co
         </StyledHeader>
 
         <Card>
-          <StyledSection>
-            <StyledSectionTitle>Contact Information</StyledSectionTitle>
-
-            {contact.address && (
-              <StyledField>
-                <StyledLabel>Address</StyledLabel>
-                <StyledValue>{contact.address}</StyledValue>
-              </StyledField>
-            )}
-
-            {contact.relationshipStrength && (
-              <StyledField>
-                <StyledLabel>Relationship</StyledLabel>
-                <StyledValue>
-                  {contact.relationshipStrength.charAt(0).toUpperCase() +
-                    contact.relationshipStrength.slice(1)}
-                </StyledValue>
-              </StyledField>
-            )}
-
-            {contact.tags && contact.tags.length > 0 && (
-              <StyledField>
-                <StyledLabel>Tags</StyledLabel>
-                <StyledTags>
-                  {contact.tags.map((tag, index) => (
-                    <StyledTag key={index}>{tag}</StyledTag>
-                  ))}
-                </StyledTags>
-              </StyledField>
-            )}
-          </StyledSection>
+          <ContactInfoSection contact={contact} />
 
           {contact.notes && (
             <StyledSection>
@@ -206,20 +242,7 @@ export function ContactDetail({ contact, onEdit, onDelete, style, ...props }: Co
           )}
         </Card>
 
-        {(onEdit || onDelete) && (
-          <StyledButtonContainer>
-            {onEdit && (
-              <Button onPress={onEdit} variant="secondary">
-                Edit
-              </Button>
-            )}
-            {onDelete && (
-              <Button onPress={onDelete} variant="danger">
-                Delete
-              </Button>
-            )}
-          </StyledButtonContainer>
-        )}
+        <ActionButtons onEdit={onEdit} onDelete={onDelete} />
       </ScrollView>
     </StyledContainer>
   );
