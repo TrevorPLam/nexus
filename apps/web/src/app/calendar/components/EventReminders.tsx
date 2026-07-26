@@ -56,6 +56,85 @@ const methodOptions = [
   { value: 'sms', label: 'SMS' },
 ];
 
+interface ReminderFormProps {
+  selectedMinutes: number;
+  selectedMethod: Reminder['method'];
+  onMinutesChange: (value: number) => void;
+  onMethodChange: (value: Reminder['method']) => void;
+  onAdd: () => void;
+  onCancel: () => void;
+}
+
+function ReminderForm({
+  selectedMinutes,
+  selectedMethod,
+  onMinutesChange,
+  onMethodChange,
+  onAdd,
+  onCancel,
+}: ReminderFormProps) {
+  return (
+    <div className="space-y-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-sm font-medium mb-1">When</label>
+          <Select
+            value={selectedMinutes.toString()}
+            onChange={(value) => onMinutesChange(parseInt(value, 10))}
+            options={reminderOptions.map((opt) => ({
+              value: opt.value.toString(),
+              label: opt.label,
+            }))}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Method</label>
+          <Select
+            value={selectedMethod}
+            onChange={(value) => onMethodChange(value as Reminder['method'])}
+            options={methodOptions}
+          />
+        </div>
+      </div>
+      <div className="flex gap-2">
+        <Button onPress={onAdd}>Add</Button>
+        <Button variant="secondary" onPress={onCancel}>
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+interface ReminderItemProps {
+  reminder: Reminder;
+  onDelete: (id: string) => void;
+}
+
+function ReminderItem({ reminder, onDelete }: ReminderItemProps) {
+  const formatReminderTime = (minutes: number) => {
+    const option = reminderOptions.find((opt) => opt.value === minutes);
+    return option?.label || `${minutes} minutes before`;
+  };
+
+  return (
+    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center gap-3">
+        <Clock className="w-4 h-4 text-gray-500" />
+        <div>
+          <p className="text-sm font-medium text-gray-900">
+            {formatReminderTime(reminder.minutesBefore)}
+          </p>
+          <p className="text-xs text-gray-500 capitalize">via {reminder.method}</p>
+        </div>
+      </div>
+      <Button variant="secondary" size="small" onPress={() => onDelete(reminder.id)}>
+        <Trash2 className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+}
+
 export function EventReminders({
   reminders,
   onAddReminder,
@@ -72,10 +151,6 @@ export function EventReminders({
     setSelectedMethod('push');
   };
 
-  const formatReminderTime = (minutes: number) => {
-    const option = reminderOptions.find((opt) => opt.value === minutes);
-    return option?.label || `${minutes} minutes before`;
-  };
 
   return (
     <div className="space-y-4">
@@ -92,42 +167,18 @@ export function EventReminders({
           Add Reminder
         </Button>
       ) : (
-        <div className="space-y-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="block text-sm font-medium mb-1">When</label>
-              <Select
-                value={selectedMinutes.toString()}
-                onChange={(value) => setSelectedMinutes(parseInt(value, 10))}
-                options={reminderOptions.map((opt) => ({
-                  value: opt.value.toString(),
-                  label: opt.label,
-                }))}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Method</label>
-              <Select
-                value={selectedMethod}
-                onChange={(value) => setSelectedMethod(value as Reminder['method'])}
-                options={methodOptions}
-              />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button onPress={handleAddReminder}>Add</Button>
-            <Button
-              variant="secondary"
-              onPress={() => {
-                setIsAdding(false);
-                setSelectedMinutes(15);
-                setSelectedMethod('push');
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
+        <ReminderForm
+          selectedMinutes={selectedMinutes}
+          selectedMethod={selectedMethod}
+          onMinutesChange={setSelectedMinutes}
+          onMethodChange={setSelectedMethod}
+          onAdd={handleAddReminder}
+          onCancel={() => {
+            setIsAdding(false);
+            setSelectedMinutes(15);
+            setSelectedMethod('push');
+          }}
+        />
       )}
 
       {/* Reminders List */}
@@ -136,27 +187,11 @@ export function EventReminders({
           <div className="text-center py-4 text-gray-500 text-sm">No reminders set</div>
         ) : (
           reminders.map((reminder) => (
-            <div
+            <ReminderItem
               key={reminder.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
-            >
-              <div className="flex items-center gap-3">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {formatReminderTime(reminder.minutesBefore)}
-                  </p>
-                  <p className="text-xs text-gray-500 capitalize">via {reminder.method}</p>
-                </div>
-              </div>
-              <Button
-                variant="secondary"
-                size="small"
-                onPress={() => onDeleteReminder(reminder.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
+              reminder={reminder}
+              onDelete={onDeleteReminder}
+            />
           ))
         )}
       </div>

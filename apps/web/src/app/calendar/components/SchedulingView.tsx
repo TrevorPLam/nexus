@@ -33,6 +33,49 @@ interface SchedulingViewProps {
   onDeleteSchedulingLink: (id: string) => void;
 }
 
+interface SchedulingLinkCardProps {
+  link: SchedulingLink;
+  calendars: Calendar[];
+  onEdit: (link: SchedulingLink) => void;
+  onDelete: (id: string) => void;
+}
+
+function SchedulingLinkCard({ link, calendars, onEdit, onDelete }: SchedulingLinkCardProps) {
+  return (
+    <div className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow group">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <h3 className="text-lg font-semibold">{link.name}</h3>
+          <p className="text-sm text-gray-500">/{link.slug}</p>
+        </div>
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="secondary" size="small" onPress={() => onEdit(link)}>
+            <Edit2 className="w-3 h-3" />
+          </Button>
+          <Button variant="secondary" size="small" onPress={() => onDelete(link.id)}>
+            <Trash2 className="w-3 h-3" />
+          </Button>
+        </div>
+      </div>
+      {link.description && <p className="text-gray-600 text-sm mb-4">{link.description}</p>}
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-gray-500">Duration:</span>
+          <span>{link.eventDuration} min</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">Calendar:</span>
+          <span>{calendars.find((c) => c.id === link.calendarId)?.name || 'Unknown'}</span>
+        </div>
+        <div className="flex gap-2 mt-3">
+          {link.isActive && <Badge variant="success">Active</Badge>}
+          {link.requiresApproval && <Badge variant="warning">Requires Approval</Badge>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function SchedulingView({
   schedulingLinks,
   calendars,
@@ -57,48 +100,13 @@ export function SchedulingView({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {schedulingLinks.map((link) => (
-            <div
+            <SchedulingLinkCard
               key={link.id}
-              className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow group"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="text-lg font-semibold">{link.name}</h3>
-                  <p className="text-sm text-gray-500">/{link.slug}</p>
-                </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onPress={() => onEditSchedulingLink(link)}
-                  >
-                    <Edit2 className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onPress={() => onDeleteSchedulingLink(link.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-              {link.description && <p className="text-gray-600 text-sm mb-4">{link.description}</p>}
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Duration:</span>
-                  <span>{link.eventDuration} min</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Calendar:</span>
-                  <span>{calendars.find((c) => c.id === link.calendarId)?.name || 'Unknown'}</span>
-                </div>
-                <div className="flex gap-2 mt-3">
-                  {link.isActive && <Badge variant="success">Active</Badge>}
-                  {link.requiresApproval && <Badge variant="warning">Requires Approval</Badge>}
-                </div>
-              </div>
-            </div>
+              link={link}
+              calendars={calendars}
+              onEdit={onEditSchedulingLink}
+              onDelete={onDeleteSchedulingLink}
+            />
           ))}
         </div>
       )}
