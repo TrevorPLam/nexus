@@ -270,7 +270,7 @@ export default function WorkPage() {
         projects={projects}
         setTaskForm={workState.setTaskForm}
         onClose={workState.handleTaskModalClose}
-        onSubmit={workState.handleTaskSubmit}
+        onSubmit={() => void workState.handleTaskSubmit()}
         isPending={createTaskMutation.isPending || updateTaskMutation.isPending}
       />
     </main>
