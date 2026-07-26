@@ -137,8 +137,8 @@ export async function processCommands(db: PowerSyncDatabase): Promise<void> {
  * Get count of pending commands
  */
 export async function getPendingCommandCount(db: PowerSyncDatabase): Promise<number> {
-  const result = await db.get(
+  const result = (await db.get(
     `SELECT COUNT(*) as count FROM command_queue WHERE status = 'pending' OR status = 'failed'`,
-  );
+  )) as { count: number } | null;
   return result?.count || 0;
 }

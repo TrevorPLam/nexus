@@ -68,6 +68,49 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function transformUser(sessionUser: unknown): User | null {
+  if (!sessionUser || typeof sessionUser !== 'object') {
+    return null;
+  }
+
+  const user = sessionUser as { id: string; email: string | null; user_metadata?: { full_name?: string } };
+
+  return {
+    id: user.id,
+    email: user.email || '',
+    fullName: user.user_metadata?.full_name,
+  };
+}
+
+async function clearPowerSyncDatabase(): Promise<void> {
+  const tables = [
+    'app_users',
+    'workspaces',
+    'workspace_memberships',
+    'projects',
+    'tasks',
+    'task_dependencies',
+    'task_notes',
+    'task_assignees',
+    'task_comments',
+    'task_attachments',
+    'time_entries',
+    'calendars',
+    'events',
+    'event_attendees',
+    'scheduling_links',
+    'command_queue',
+  ];
+
+  for (const table of tables) {
+    try {
+      await db.execute(`DELETE FROM ${table}`);
+    } catch (error) {
+      console.error(`Failed to clear table ${table}:`, error);
+    }
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<unknown | null>(null);
@@ -81,51 +124,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let mounted = true;
 
     async function loadSession() {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-        if (mounted) {
-          setSession(session);
-          setUser(
-            session?.user
-              ? {
-                  id: session.user.id,
-                  email: session.user.email || '',
-                  fullName: session.user.user_metadata?.full_name,
-                }
-              : null,
-          );
-          setIsLoading(false);
-        }
-      } catch {
-        if (mounted) {
-          setIsLoading(false);
-        }
+      if (!mounted) {
+        return;
       }
+
+      setSession(session);
+      setUser(transformUser(session?.user));
+      setIsLoading(false);
     }
 
-    void loadSession();
+    void loadSession().catch(() => {
+      if (mounted) {
+        setIsLoading(false);
+      }
+    });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) {
-        setSession(session);
-        setUser(
-          session?.user
-            ? {
-                id: session.user.id,
-                email: session.user.email || '',
-                fullName: session.user.user_metadata?.full_name,
-              }
-            : null,
-        );
-        // Clear workspace selection on sign-out
-        if (!session) {
-          setSelectedWorkspace(null);
-        }
+      if (!mounted) {
+        return;
+      }
+
+      setSession(session);
+      setUser(transformUser(session?.user));
+
+      // Clear workspace selection on sign-out
+      if (!session) {
+        setSelectedWorkspace(null);
       }
     });
 
@@ -151,42 +181,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      // Clear PowerSync replica data before signing out
-      // Delete all data from sync tables
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM app_users');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM workspaces');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM workspace_memberships');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM projects');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM tasks');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM task_dependencies');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM task_notes');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM task_assignees');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM task_comments');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM task_attachments');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM time_entries');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM calendars');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM events');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM event_attendees');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM scheduling_links');
-      // @ts-expect-error - PowerSync execute method exists but type definitions are incomplete
-      await db.execute('DELETE FROM command_queue');
+      await clearPowerSyncDatabase();
     } catch (error) {
-      // Log error but continue with sign-out
       console.error('Failed to clear PowerSync database:', error);
     }
 

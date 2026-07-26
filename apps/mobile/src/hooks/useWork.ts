@@ -59,7 +59,6 @@ export function useProjects() {
       }
 
       // Query projects filtered by workspace_id using PowerSync getAll
-      // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
       const result = await db.getAll(
         'SELECT * FROM projects WHERE workspace_id = ? ORDER BY created_at DESC',
         [selectedWorkspace.id],
@@ -86,7 +85,6 @@ export function useTasks(projectId?: string) {
       }
 
       // Query tasks filtered by workspace_id and optionally by project_id
-      // @ts-expect-error - PowerSync getAll method exists but type definitions are incomplete
       const result = await db.getAll(
         projectId
           ? 'SELECT * FROM tasks WHERE workspace_id = ? AND project_id = ? ORDER BY created_at DESC'

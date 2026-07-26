@@ -46,11 +46,13 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>Personal productivity system</Text>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/work')}>
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/work' as any)}>
           <Text style={styles.buttonText}>Work</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/calendar')}>
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/calendar' as any)}>
           <Text style={styles.buttonText}>Calendar</Text>
         </TouchableOpacity>
       </View>
