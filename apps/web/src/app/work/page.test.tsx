@@ -1,10 +1,11 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { AuthProvider } from '../../contexts/AuthContext';
 
 import WorkPage from './page';
-import { AuthProvider } from '../../contexts/AuthContext';
 
 // Mock the custom hooks
 vi.mock('../../hooks/useWorkProjects', () => ({
@@ -226,6 +227,7 @@ describe('Work Page', () => {
         },
       ];
       const { useWorkProjects } = await import('../../hooks/useWorkProjects');
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: mockProjects,
         projectsLoading: false,
@@ -233,6 +235,7 @@ describe('Work Page', () => {
         updateProjectMutation: { mutate: vi.fn(), isPending: false } as any,
         deleteProjectMutation: { mutate: vi.fn(), isPending: false } as any,
       });
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       render(<WorkPage />, { wrapper });
 
@@ -292,6 +295,7 @@ describe('Work Page', () => {
         },
       ];
       const { useWorkTasks } = await import('../../hooks/useWorkTasks');
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       vi.mocked(useWorkTasks).mockReturnValue({
         tasks: mockTasks,
         isLoading: false,
@@ -301,6 +305,7 @@ describe('Work Page', () => {
         updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       render(<WorkPage />, { wrapper });
 
@@ -343,6 +348,7 @@ describe('Work Page', () => {
       ];
       const { useWorkTasks } = await import('../../hooks/useWorkTasks');
       const updateMock = vi.fn();
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       vi.mocked(useWorkTasks).mockReturnValue({
         tasks: mockTasks,
         isLoading: false,
@@ -352,6 +358,7 @@ describe('Work Page', () => {
         updateTaskMutation: { mutate: updateMock, isPending: false } as any,
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       render(<WorkPage />, { wrapper });
 
@@ -372,9 +379,9 @@ describe('Work Page', () => {
         isLoading: false,
         isError: true,
         error: new Error('Failed to load tasks'),
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
       });
 
       render(<WorkPage />, { wrapper });
@@ -397,9 +404,9 @@ describe('Work Page', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown,
       });
 
       render(<WorkPage />, { wrapper });
@@ -450,6 +457,7 @@ describe('Work Page', () => {
       ];
       const { useWorkTasks } = await import('../../hooks/useWorkTasks');
       const updateMock = vi.fn();
+      /* eslint-disable @typescript-eslint/no-explicit-any */
       vi.mocked(useWorkTasks).mockReturnValue({
         tasks: mockTasks,
         isLoading: false,
@@ -459,6 +467,7 @@ describe('Work Page', () => {
         updateTaskMutation: { mutate: updateMock, isPending: false } as any,
         deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
+      /* eslint-enable @typescript-eslint/no-explicit-any */
 
       render(<WorkPage />, { wrapper });
 
