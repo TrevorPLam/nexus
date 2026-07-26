@@ -1,10 +1,3 @@
-Here’s a synthesized **Code Commentary Guidelines** document, built from the
-full discussion. It merges the refined commenting practices with the critical
-safety and verification layers you need as a solo founder relying entirely on
-AI.
-
----
-
 # Code Commentary Guidelines for AI-Assisted Development
 
 _For solo developers and small teams who rely on AI agents to build, maintain,
@@ -38,9 +31,9 @@ not the safety system itself.
 - **Searchable project memory**: Structured comments and a consistent vocabulary
   (backed by a glossary) let you ask AI to “find the module that handles payment
   capture” and get accurate results.
-- **Human-readable summary**: Since you cannot read code, comments give you (via
-  AI summarization) a map of what the system does, how components fit together,
-  and what constraints exist.
+- **Human-readable summary**: When you or a collaborator cannot (or prefer not
+  to) read raw code, comments—via AI summarization—provide a navigable map of
+  what the system does, how components fit together, and what constraints exist.
 
 ---
 
@@ -62,9 +55,8 @@ a future AI—or a new developer—would ask.
   production infrastructure, or irreversible operations?
 - **Links**: Relevant specification, ADR, policy, threat model, or runbook. Use
   stable, repository-local paths (never transient chat transcripts).
-- **Tags**: Keywords for categorization (e.g., domain: work, risk: high, layer:
-  api).
-- **File**: The relative path of the file from the repository root.
+- **Tags**: Keywords for categorization (e.g., `domain: billing`, `risk: high`,
+  `layer: api`).
 - **Last updated**: The date of the last significant update to the module or its
   documentation.
 
@@ -73,6 +65,8 @@ a future AI—or a new developer—would ask.
 - **Dependencies**: Only non-obvious or high-risk ones. Imports and package
   manifests are the authoritative dependency source.
 - **Inputs/outputs**: Key data entering or leaving.
+- **File path**: Relative path from repository root (useful when generating
+  external documentation indices, but often redundant in-file).
 
 **Template:**
 
@@ -104,9 +98,6 @@ a future AI—or a new developer—would ask.
  * - domain: billing
  * - risk: high
  * - layer: business-logic
- *
- * File:
- * - apps/api/src/lib/invoice-ops.ts
  *
  * Last updated:
  * - July 22, 2026
@@ -248,8 +239,9 @@ counterpart:
 ## 5. Anti-Patterns & Pitfalls
 
 - **Staleness**: AI changes code but not comments. Countermeasure: require
-  comment updates as part of every change’s completion checklist; periodically
-  audit with a separate AI.
+  comment updates as part of every change’s completion checklist; make the
+  reviewing AI explicitly verify that comments match the implemented behavior;
+  periodically audit with a separate AI.
 - **Fabrication**: AI writes plausible documentation that describes intended,
   not actual, behavior. Countermeasure: never trust a comment alone; verify
   through tests and manual acceptance checks.
@@ -273,8 +265,13 @@ counterpart:
 
 - Create `docs/product/glossary.md` with core business terms.
 - Add an `AGENTS.md` with concise rules, forbidden actions, and required checks
-  (see template below).
-- Write a few high-level requirements in Given/When/Then format.
+  (see template below). **Protect agent instruction files (AGENTS.md,
+  CLAUDE.md, cursor rules, etc.) from unauthorized modification—e.g., require
+  separate manual approval for changes, or keep them in a restricted directory
+  with branch protection rules.**
+- Write a few high-level requirements in Given/When/Then format. For lightweight
+  specs, even a one‑paragraph `docs/specs/feature-name.md` stating goals and
+  invariants is enough; comments can then link to it.
 - For any existing code that touches money, auth, or data deletion, have a
   separate AI review it against a plain-language safety checklist.
 
@@ -284,8 +281,9 @@ counterpart:
   classification, affected files, test plan, rollback plan.
 - Implementer AI must update or create module passports, function contracts, and
   inline rationale as part of the change.
-- Reviewer AI (distinct session/tool) inspects the full diff, verifies comments
-  match behavior, and checks that tests enforce claimed invariants.
+- Reviewer AI (distinct session/tool) inspects the full diff, **verifies that
+  comments accurately describe the implemented behavior**, and checks that tests
+  enforce claimed invariants.
 - You perform plain-language acceptance steps in staging before approving the
   merge.
 
@@ -334,6 +332,9 @@ counterpart:
 
 ### Requirement snippet (Given/When/Then)
 
+Such requirements live in `docs/specs/` and are referenced by module passports
+and function headers. This keeps comments lightweight while still traceable.
+
 ```md
 ## Requirement: Invoice issue
 
@@ -345,39 +346,44 @@ quantities, and issuing the invoice does not charge the customer.
 
 ---
 
-## 9. Dependency Decisions
-
-### @hono/standard-validator (Removed July 23, 2026)
-
-**Decision:** Removed @hono/standard-validator from apps/api dependencies.
-
-**Rationale:**
-
-- The package was never actually used in the codebase
-- Validator middleware is available from 'hono/validator' (built into Hono core)
-- Project uses @hono/zod-openapi for validation with Zod schemas from
-  packages/contracts
-- Removing unused dependencies reduces bundle size and maintenance burden
-
-**Changes made:**
-
-- Removed @hono/standard-validator from apps/api/package.json
-- Added missing import for validator from 'hono/validator' in
-  apps/api/src/routes/work/tasks.ts
-- The validator function comes from Hono core, not the separate
-  @hono/standard-validator package
-
-**Validation approach:**
-
-- All validation uses Zod schemas from packages/contracts
-- @hono/zod-openapi provides OpenAPI integration with Zod
-- hono/validator provides middleware for request validation
-
----
-
 ## 8. Final Word
 
 Write comments as if the next person reading them is an AI that knows nothing
 about your project—because it will be. Make them precise, scoped, and linked to
 the specifications and tests that give them weight. Then build the automated
 checks that turn those comments from hopeful notes into guaranteed behavior.
+
+---
+
+## Appendix A: Example Decision Record
+
+_Comments often reference decision records. Below is a concrete example
+of a lightweight ADR for a dependency change. Adapt the format to your
+project’s needs._
+
+### Dependency Decision: @hono/standard-validator (Removed July 23, 2026)
+
+**Decision:** Removed `@hono/standard-validator` from apps/api dependencies.
+
+**Rationale:**
+
+- The package was never actually used in the codebase.
+- Validator middleware is available from `hono/validator` (built into Hono
+  core).
+- Project uses `@hono/zod-openapi` for validation with Zod schemas from
+  `packages/contracts`.
+- Removing unused dependencies reduces bundle size and maintenance burden.
+
+**Changes made:**
+
+- Removed `@hono/standard-validator` from `apps/api/package.json`.
+- Added missing import for `validator` from `hono/validator` in
+  `apps/api/src/routes/work/tasks.ts`.
+- The `validator` function comes from Hono core, not the separate
+  `@hono/standard-validator` package.
+
+**Validation approach:**
+
+- All validation uses Zod schemas from `packages/contracts`.
+- `@hono/zod-openapi` provides OpenAPI integration with Zod.
+- `hono/validator` provides middleware for request validation.

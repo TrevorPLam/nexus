@@ -35,8 +35,8 @@
  */
 
 import { styled } from '@tamagui/core';
-import { View, ViewStyle } from '@tamagui/core';
-import React from 'react';
+import { View } from '@tamagui/core';
+import type { ViewStyle } from '@tamagui/core';
 
 const StyledOverlay = styled(View, {
   name: 'ModalOverlay',

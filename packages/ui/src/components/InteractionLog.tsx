@@ -34,9 +34,9 @@
  * - July 23, 2026
  */
 
-import { styled, View, Text, ScrollView } from '@tamagui/core';
+import { styled, View, Text } from '@tamagui/core';
+import { ScrollView } from 'react-native';
 import type { ViewStyle } from '@tamagui/core';
-import React from 'react';
 
 const StyledContainer = styled(View, {
   name: 'InteractionLogContainer',

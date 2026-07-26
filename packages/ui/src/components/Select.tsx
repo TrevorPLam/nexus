@@ -35,7 +35,8 @@
  */
 
 import { styled } from '@tamagui/core';
-import { View, ViewStyle } from '@tamagui/core';
+import { View } from '@tamagui/core';
+import type { ViewStyle } from '@tamagui/core';
 import React from 'react';
 
 const StyledSelectWrapper = styled(View, {
