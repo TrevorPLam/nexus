@@ -49,3 +49,6 @@ coverage
 # Misc
 *.tgz
 *.tar.gz
+
+# Vitest temp files
+*.timestamp-*.mjs
