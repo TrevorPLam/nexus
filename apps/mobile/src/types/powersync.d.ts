@@ -32,12 +32,5 @@ declare module '@powersync/react-native' {
      */
     get(sql: string, params?: unknown[]): Promise<unknown | null>;
 
-    /**
-     * Execute a query and return a single value
-     * @param sql - SQL query to execute
-     * @param params - Optional parameters for the SQL query
-     * @returns Single value result
-     */
-    get(sql: string, params?: unknown[]): Promise<unknown>;
   }
 }
