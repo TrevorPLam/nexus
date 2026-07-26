@@ -39,8 +39,6 @@
     "@eslint/js": "catalog:",
     "@op-engineering/op-sqlite": "catalog:",
     "@types/node": "^24",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "^10.0.0",
