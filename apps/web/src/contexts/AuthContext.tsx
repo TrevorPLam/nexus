@@ -41,14 +41,16 @@
 
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { createClient } from '../lib/supabase/client';
 import { apiClient } from '@life-os/api-client';
+import type { User } from '@supabase/supabase-js';
+import { createContext, useContext, useEffect, useState } from 'react';
+
+import { createClient } from '../lib/supabase/client';
 
 type WorkspaceState = 'loading' | 'no-membership' | 'selected';
 
 interface AuthContextType {
-  user: any | null;
+  user: User | null;
   loading: boolean;
   workspaceId: string | null;
   workspaceState: WorkspaceState;
@@ -57,7 +59,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [workspaceState, setWorkspaceState] = useState<WorkspaceState>('loading');
@@ -102,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     };
 
-    getUser();
+    void getUser();
 
     const {
       data: { subscription },
