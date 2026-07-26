@@ -45,6 +45,12 @@ catalogs:
     vitest: 4.1.10
     zod: ^4.0.0
 
+# Supply chain security settings
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - conventional-commits-parser@7.1.1
+  - globals@17.8.0
+
 # Workspace settings
 # linkWorkspacePackages: false enforces workspace: protocol usage
 linkWorkspacePackages: false
