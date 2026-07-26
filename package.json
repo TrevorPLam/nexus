@@ -35,7 +35,7 @@
     "validate-deps": "tsx scripts/validate-deps.ts"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.0.0",
+    "@commitlint/config-conventional": "catalog:",
     "@eslint/js": "catalog:",
     "@op-engineering/op-sqlite": "catalog:",
     "@types/node": "^22.0.0",
