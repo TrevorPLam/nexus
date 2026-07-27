@@ -1,3 +1,8 @@
+# Lefthook configuration for git hooks
+# This file configures lefthook (v2.1.0) to manage git hooks for the Life OS monorepo
+# Hooks are automatically installed via pnpm install (lefthook is in devDependencies)
+# See README.md "Git Hooks" section for detailed documentation
+
 pre-commit:
   parallel: false
   skip:
