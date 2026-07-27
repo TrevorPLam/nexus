@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useWorkProjects } from './useWorkProjects';
 import { apiClient } from '@life-os/api-client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { useWorkProjects } from './useWorkProjects';
 
 // Mock the apiClient
 vi.mock('@life-os/api-client', () => ({

@@ -35,8 +35,8 @@
  */
 
 import { styled } from '@tamagui/core';
-import { TextInput } from 'react-native';
 import type { TextStyle } from '@tamagui/core';
+import { TextInput } from 'react-native';
 
 const StyledInput = styled(TextInput, {
   name: 'Input',

@@ -332,9 +332,21 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: true,
         error: new Error('Failed to load tasks'),
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
       });
 
       render(<WorkPage />, { wrapper });
@@ -356,9 +368,21 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
       });
 
       render(<WorkPage />, { wrapper });
@@ -455,9 +479,18 @@ describe('Work Journey Regression Tests', () => {
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: [],
         projectsLoading: false,
-        createProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        createProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });
@@ -477,9 +510,21 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
+          unknown,
+          Error,
+          unknown
+        >,
       });
 
       render(<WorkPage />, { wrapper });
@@ -501,9 +546,18 @@ describe('Work Journey Regression Tests', () => {
       vi.mocked(useWorkProjects).mockReturnValue({
         projects: [],
         projectsLoading: true,
-        createProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteProjectMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<unknown, Error, unknown>,
+        createProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
+        updateProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
+        deleteProjectMutation: {
+          mutate: vi.fn(),
+          isPending: false,
+        } as unknown as UseMutationResult<unknown, Error, unknown>,
       });
 
       render(<WorkPage />, { wrapper });

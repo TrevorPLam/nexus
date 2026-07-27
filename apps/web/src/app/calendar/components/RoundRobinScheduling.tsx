@@ -161,9 +161,7 @@ function RoundRobinEditForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">
-          Buffer Between Meetings (minutes)
-        </label>
+        <label className="block text-sm font-medium mb-1">Buffer Between Meetings (minutes)</label>
         <input
           type="number"
           value={bufferMinutes}

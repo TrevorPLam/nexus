@@ -125,15 +125,11 @@ function CustomFieldRow({
           </div>
           <div>
             <div className="font-medium text-gray-900">{field.name}</div>
-            {field.isRequired && (
-              <span className="text-xs text-red-600">Required</span>
-            )}
+            {field.isRequired && <span className="text-xs text-red-600">Required</span>}
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 text-sm text-gray-600">
-        {getFieldTypeLabel(field.type)}
-      </td>
+      <td className="px-6 py-4 text-sm text-gray-600">{getFieldTypeLabel(field.type)}</td>
       <td className="px-6 py-4 text-sm text-gray-600">
         <div className="space-y-1">
           {field.options && field.options.length > 0 && (
@@ -143,13 +139,9 @@ function CustomFieldRow({
             </div>
           )}
           {field.defaultValue !== undefined && field.defaultValue !== null && (
-            <div className="text-xs text-gray-500">
-              Default: {String(field.defaultValue)}
-            </div>
+            <div className="text-xs text-gray-500">Default: {String(field.defaultValue)}</div>
           )}
-          {!field.options && !field.defaultValue && (
-            <span className="text-gray-400">—</span>
-          )}
+          {!field.options && !field.defaultValue && <span className="text-gray-400">—</span>}
         </div>
       </td>
       <td className="px-6 py-4">
@@ -170,11 +162,7 @@ function CustomFieldRow({
           <Button variant="secondary" size="small" onPress={() => onEditField(field)}>
             <Edit className="w-4 h-4" />
           </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onPress={() => onDeleteField(field.id)}
-          >
+          <Button variant="secondary" size="small" onPress={() => onDeleteField(field.id)}>
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -191,7 +179,6 @@ export function CustomFieldsView({
   onDeleteField,
   onToggleVisibility,
 }: CustomFieldsViewProps) {
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">

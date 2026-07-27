@@ -7,7 +7,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useWorkTasks } from './useWorkTasks';
 
-
 // Mock the API client
 vi.mock('@life-os/api-client', () => ({
   apiClient: {

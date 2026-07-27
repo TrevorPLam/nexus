@@ -188,7 +188,9 @@ export function ImportantDates({ dates, onDatePress, style, ...props }: Importan
             <StyledEmptyText>No important dates yet</StyledEmptyText>
           </StyledEmptyState>
         ) : (
-          dates.map((date) => <DateItem key={date.id} date={date} onPress={() => onDatePress?.(date)} />)
+          dates.map((date) => (
+            <DateItem key={date.id} date={date} onPress={() => onDatePress?.(date)} />
+          ))
         )}
       </ScrollView>
     </StyledContainer>

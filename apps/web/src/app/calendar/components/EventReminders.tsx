@@ -151,7 +151,6 @@ export function EventReminders({
     setSelectedMethod('push');
   };
 
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -187,11 +186,7 @@ export function EventReminders({
           <div className="text-center py-4 text-gray-500 text-sm">No reminders set</div>
         ) : (
           reminders.map((reminder) => (
-            <ReminderItem
-              key={reminder.id}
-              reminder={reminder}
-              onDelete={onDeleteReminder}
-            />
+            <ReminderItem key={reminder.id} reminder={reminder} onDelete={onDeleteReminder} />
           ))
         )}
       </div>

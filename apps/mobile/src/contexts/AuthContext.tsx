@@ -73,7 +73,11 @@ function transformUser(sessionUser: unknown): User | null {
     return null;
   }
 
-  const user = sessionUser as { id: string; email: string | null; user_metadata?: { full_name?: string } };
+  const user = sessionUser as {
+    id: string;
+    email: string | null;
+    user_metadata?: { full_name?: string };
+  };
 
   return {
     id: user.id,

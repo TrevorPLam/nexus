@@ -22,9 +22,9 @@
 
 'use client';
 
+import { CreateProjectRequest } from '@life-os/contracts';
 import { Button, Modal, Input } from '@life-os/ui';
 import { Loader2 } from 'lucide-react';
-import { CreateProjectRequest } from '@life-os/contracts';
 import { useState } from 'react';
 
 import type { Project } from '../types';

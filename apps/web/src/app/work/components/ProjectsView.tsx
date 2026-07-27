@@ -57,10 +57,7 @@ function ProjectCard({
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
           {project.color && (
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: project.color }}
-            />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: project.color }} />
           )}
           <h3 className="text-lg font-semibold">{project.name}</h3>
         </div>
@@ -68,11 +65,7 @@ function ProjectCard({
           <Button variant="secondary" size="small" onPress={() => onEditProject(project)}>
             <Edit2 className="w-3 h-3" />
           </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onPress={() => onDeleteProject(project.id)}
-          >
+          <Button variant="secondary" size="small" onPress={() => onDeleteProject(project.id)}>
             <Trash2 className="w-3 h-3" />
           </Button>
         </div>

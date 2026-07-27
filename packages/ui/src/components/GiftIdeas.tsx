@@ -179,8 +179,7 @@ function GiftItem({ gift, onPress, onTogglePurchased }: GiftItemProps) {
         {gift.holiday && <StyledHoliday>{gift.holiday}</StyledHoliday>}
         {gift.isPurchased && (
           <StyledPurchasedBadge>
-            Purchased{' '}
-            {gift.purchasedAt && `on ${new Date(gift.purchasedAt).toLocaleDateString()}`}
+            Purchased {gift.purchasedAt && `on ${new Date(gift.purchasedAt).toLocaleDateString()}`}
           </StyledPurchasedBadge>
         )}
       </StyledGiftInfo>

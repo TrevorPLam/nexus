@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { apiClient } from '@life-os/api-client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { useCalendarData } from './useCalendarData';
-import { apiClient } from '@life-os/api-client';
 
 // Mock the apiClient
 vi.mock('@life-os/api-client', () => ({

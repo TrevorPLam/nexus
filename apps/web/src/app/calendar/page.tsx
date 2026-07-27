@@ -47,8 +47,8 @@
 
 import { Button } from '@life-os/ui';
 import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 
+import { useAuth } from '../../contexts/AuthContext';
 import { useCalendarData } from '../../hooks/useCalendarData';
 import { useEventDetails } from '../../hooks/useEventDetails';
 
@@ -56,13 +56,13 @@ import { CalendarModal } from './components/CalendarModal';
 import { CalendarsView } from './components/CalendarsView';
 import { EventModal } from './components/EventModal';
 import { EventsView } from './components/EventsView';
-import { SchedulingView } from './components/SchedulingView';
 import {
   AttendeeModal,
   EventDetailModal,
   FindTimeModal,
   SchedulingLinkModal,
 } from './components/modals';
+import { SchedulingView } from './components/SchedulingView';
 import { useCalendarState } from './hooks/useCalendarState';
 import { useEventState } from './hooks/useEventState';
 import { useSchedulingState } from './hooks/useSchedulingState';

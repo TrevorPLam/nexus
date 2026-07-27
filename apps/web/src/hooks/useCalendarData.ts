@@ -40,6 +40,7 @@
 
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import type { Calendar, Event } from '../app/calendar/types';
 
 export function useCalendarData(

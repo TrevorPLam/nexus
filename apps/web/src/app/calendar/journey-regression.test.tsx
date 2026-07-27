@@ -1,10 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+import { AuthProvider } from '../../contexts/AuthContext';
 
 import CalendarPage from './page';
-import { AuthProvider } from '../../contexts/AuthContext';
 
 // Mock the custom hooks
 vi.mock('../../hooks/useCalendarData', () => ({

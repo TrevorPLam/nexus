@@ -31,6 +31,5 @@ declare module '@powersync/react-native' {
      * @returns First result row or null
      */
     get(sql: string, params?: unknown[]): Promise<unknown | null>;
-
   }
 }

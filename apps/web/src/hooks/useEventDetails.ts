@@ -41,6 +41,7 @@
 
 import { apiClient } from '@life-os/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import type { Attendee, SchedulingLink } from '../app/calendar/types';
 
 export function useEventDetails(selectedEvent: { id: string } | null, workspaceId: string | null) {

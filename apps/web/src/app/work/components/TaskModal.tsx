@@ -23,9 +23,9 @@
 
 'use client';
 
+import { CreateTaskRequest } from '@life-os/contracts';
 import { Button, Modal, Input, Select, TextArea } from '@life-os/ui';
 import { Loader2 } from 'lucide-react';
-import { CreateTaskRequest } from '@life-os/contracts';
 import { useState } from 'react';
 
 import type { Task, Project } from '../types';

@@ -35,8 +35,8 @@
  */
 
 import { styled, View, Text } from '@tamagui/core';
-import { ScrollView } from 'react-native';
 import type { ViewStyle } from '@tamagui/core';
+import { ScrollView } from 'react-native';
 
 const StyledContainer = styled(View, {
   name: 'InteractionLogContainer',

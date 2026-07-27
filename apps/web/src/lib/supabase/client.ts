@@ -38,8 +38,8 @@
  * - July 22, 2026
  */
 
-import { createBrowserClient } from '@supabase/ssr';
 import type { TokenProvider } from '@life-os/api-client';
+import { createBrowserClient } from '@supabase/ssr';
 
 export function createClient() {
   return createBrowserClient(

@@ -265,10 +265,10 @@ counterpart:
 
 - Create `docs/product/glossary.md` with core business terms.
 - Add an `AGENTS.md` with concise rules, forbidden actions, and required checks
-  (see template below). **Protect agent instruction files (AGENTS.md,
-  CLAUDE.md, cursor rules, etc.) from unauthorized modification—e.g., require
-  separate manual approval for changes, or keep them in a restricted directory
-  with branch protection rules.**
+  (see template below). **Protect agent instruction files (AGENTS.md, CLAUDE.md,
+  cursor rules, etc.) from unauthorized modification—e.g., require separate
+  manual approval for changes, or keep them in a restricted directory with
+  branch protection rules.**
 - Write a few high-level requirements in Given/When/Then format. For lightweight
   specs, even a one‑paragraph `docs/specs/feature-name.md` stating goals and
   invariants is enough; comments can then link to it.
@@ -357,9 +357,9 @@ checks that turn those comments from hopeful notes into guaranteed behavior.
 
 ## Appendix A: Example Decision Record
 
-_Comments often reference decision records. Below is a concrete example
-of a lightweight ADR for a dependency change. Adapt the format to your
-project’s needs._
+_Comments often reference decision records. Below is a concrete example of a
+lightweight ADR for a dependency change. Adapt the format to your project’s
+needs._
 
 ### Dependency Decision: @hono/standard-validator (Removed July 23, 2026)
 
