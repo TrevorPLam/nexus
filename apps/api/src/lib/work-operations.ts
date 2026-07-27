@@ -42,7 +42,10 @@
  * - apps/api/src/lib/task-attachment-operations.ts (attachment operations)
  * - apps/api/src/lib/time-entry-operations.ts (time entry operations)
  * - apps/api/src/lib/batch-task-operations.ts (batch operations)
- * - apps/api/src/lib/complex-task-operations.ts (complex operations)
+ * - apps/api/src/lib/task-creation-operations.ts (task creation operations)
+ * - apps/api/src/lib/task-modification-operations.ts (task modification operations)
+ * - apps/api/src/lib/task-deletion-operations.ts (task deletion operations)
+ * - apps/api/src/lib/task-cloning-operations.ts (task cloning operations)
  * - apps/api/src/lib/integration-commands.ts (integration commands)
  *
  * Tags:
@@ -73,7 +76,10 @@ export * from './task-comment-operations.js';
 export * from './task-attachment-operations.js';
 export * from './time-entry-operations.js';
 export * from './batch-task-operations.js';
-export * from './complex-task-operations.js';
+export * from './task-creation-operations.js';
+export * from './task-modification-operations.js';
+export * from './task-deletion-operations.js';
+export * from './task-cloning-operations.js';
 export * from './integration-commands.js';
 
 /**
