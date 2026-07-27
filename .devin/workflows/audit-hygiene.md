@@ -4,7 +4,7 @@ description:
   Perform a project‑agnostic repository hygiene audit. Reads AGENTS.md for
   repo‑level policies, then checks for large files, missing .gitignore entries,
   missing license, and other common housekeeping gaps. Outputs a structured
-  report ready for /create-todo.
+  report ready for /create-todo
 ---
 
 ## 1. Read project rules

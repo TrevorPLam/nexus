@@ -816,13 +816,3 @@ Tracking**. <span style="display:none">[^13][^14][^15][^16]</span>
 
 [^16]:
     https://www.meilisearch.com/docs/reference/api/settings/update-typotolerance
-
-[^17]: https://www.postgresql.org/about/news/pg_textsearch-v10-3264/
-
-[^18]: https://github.com/pgvector/pgvector
-
-[^19]: https://pgxn.org/dist/vector/
-
-[^20]: https://github.com/typesense/typesense/releases/tag/v30.0
-
-[^21]: https://www.meilisearch.com/blog/March-2026-updates

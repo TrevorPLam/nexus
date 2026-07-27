@@ -4,7 +4,7 @@ description:
   Perform a project‑agnostic dependency audit. Reads AGENTS.md for approved
   packages and license policies, then checks for outdated, unused, and insecure
   dependencies, as well as license compliance. Outputs a structured report ready
-  for /create-todo.
+  for /create-todo
 ---
 
 ## 1. Read project rules

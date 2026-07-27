@@ -604,20 +604,8 @@ Navigation**.
 [^7]:
     https://dev.to/lettstartdesign-official/nextjs-16-every-change-that-actually-matters-for-developers-14n1
 
-[^8]: https://gigsdock.com/next-js-16-vs-react-router-7-technical-deep-dive/
-
-[^9]: https://cadence.withremote.ai/blog/nextjs-vs-remix
-
 [^10]:
     https://clerk.com/articles/complete-authentication-guide-for-nextjs-app-router
 
-[^11]: https://starterpick.com/guides/nextjs-vs-sveltekit-vs-nuxt-saas-2026
-
-[^12]: https://tanstack.com/start/latest
-
 [^13]:
     https://uguraslim.com/blog/react-server-components-vs-astro-islands-when-to-use-each-pa/
-
-[^14]: https://codebrewtools.com/blogs/sveltekit-vs-next-js
-
-[^15]: https://clerk.com/articles/authentication-for-remix-applications

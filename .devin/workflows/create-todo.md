@@ -3,7 +3,7 @@ name: create-todo
 description:
   Generate a structured, machine‑ and human‑readable TODO.md from audit findings
   or manual issues. Applies TDD/BDD/DDD/deep‑module principles, assigns AGENT vs
-  HUMAN, and enforces your strict task template.
+  HUMAN, and enforces your strict task template
 ---
 
 ## 1. Read project rules

@@ -4,7 +4,7 @@ description:
   Perform a project‑agnostic code health audit. Reads AGENTS.md for custom
   quality rules, then checks for overly long files, deep nesting, dead code,
   duplicated code, and missing linting/formatting. Outputs a structured report
-  ready for /create-todo.
+  ready for /create-todo
 ---
 
 ## 1. Read project rules

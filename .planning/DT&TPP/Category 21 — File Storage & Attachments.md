@@ -719,33 +719,17 @@ The next category in dependency order is **Search \& Indexing**.
 [^16]:
     https://adamarant.com/en/blog/cloudflare-r2-vs-s3-vs-supabase-storage-in-2026-which-to-pick
 
-[^17]: https://agentdeals.dev/storage-comparison-2026
-
-[^18]: https://eastondev.com/blog/en/posts/dev/supabase-storage-guide/
-
-[^19]: https://blog.vibecoder.me/file-upload-storage-s3-r2-supabase
-
 [^20]:
     https://github.com/supabase/supabase/blob/master/apps/www/_blog/2026-03-05-supabase-storage-performance-security-reliability-updates.mdx
 
 [^21]:
     https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-annotations-business-context/
 
-[^22]: https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-s3-files/
-
 [^23]:
     https://aws.amazon.com/about-aws/whats-new/2026/07/s3-removes-30-day-transitions-standard-ia-one-zone-ia/
 
 [^24]:
     https://aws.amazon.com/about-aws/whats-new/2026/06/s3-vectors-reduces-query-charges-80-percent-large-indexes/
-
-[^25]: https://fly.io/docs/tigris/
-
-[^26]: https://www.tigrisdata.com/docs/overview/
-
-[^27]: https://wasabi.com/pricing
-
-[^28]: https://docs.wasabi.com/docs/may-2026-wasabi-pricing
 
 [^29]:
     https://akave.com/blog/the-storage-squeeze-why-wasabi-backblaze-and-everpure-are-all-raising-prices-in-2026

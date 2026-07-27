@@ -653,13 +653,7 @@ Security**.
 
 [^8]: https://better-auth.com/docs/integrations/next
 
-[^9]: https://clerk.com/docs
-
 [^10]: https://clerk.com/docs/guides/development/integrations/databases/supabase
-
-[^11]: 10-Risks-Gaps-and-Unresolved-Questions.md
-
-[^12]: 07-Technical-Architecture-Fundamentals.md
 
 [^13]:
     https://support.auth0.com/center/s/article/Implementing-Native-Login-with-React-Native-and-Expo

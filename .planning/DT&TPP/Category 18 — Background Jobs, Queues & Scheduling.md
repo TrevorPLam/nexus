@@ -823,14 +823,6 @@ The next category in dependency order is **Realtime \& Event Delivery**.
 
 [^4]: 06-Data-Model-Life-Graph.md
 
-[^5]: https://trigger.dev/docs/introduction
-
-[^6]: https://github.com/triggerdotdev/trigger.dev/blob/main/README.md
-
-[^7]: https://www.inngest.com/docs/learn/inngest-functions
-
-[^8]: https://www.inngest.com/docs
-
 [^9]: https://app.unpkg.com/pg-boss@3.1.1/files/README.md
 
 [^10]: https://trigger.dev/docs/management/errors-and-retries

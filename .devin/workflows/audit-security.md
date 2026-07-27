@@ -4,7 +4,7 @@ description:
   Perform a project‑agnostic security audit. Reads AGENTS.md for custom security
   rules, then checks for hardcoded secrets, dependency vulnerabilities, weak
   cryptography, and exposed sensitive files. Outputs a structured report ready
-  for /create-todo.
+  for /create-todo
 ---
 
 ## 1. Read project rules

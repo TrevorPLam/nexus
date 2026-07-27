@@ -4,7 +4,7 @@ description:
   Execute the first ready AGENT task in TODO.md. Reads AGENTS.md for rules,
   performs initial analysis, asks for confirmation, runs subtasks sequentially
   with validation, commits and pushes to main, then marks the task done. Safe
-  for solo‑dev, push‑to‑main workflows.
+  for solo‑dev, push‑to‑main workflows
 ---
 
 ## 1. Read context

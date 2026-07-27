@@ -4,7 +4,7 @@ description:
   Perform a project‑agnostic architecture audit. Reads AGENTS.md for layering
   rules and module conventions, then checks for circular dependencies, import
   bloat, layer violations, and deep module design issues. Outputs a structured
-  report ready for /create-todo.
+  report ready for /create-todo
 ---
 
 ## 1. Read project rules

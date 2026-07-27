@@ -487,8 +487,6 @@ The next category in the dependency order is **ORM \& Database Tooling**.
 
 [^5]: https://www.postgresql.org/docs/current/functions-json.html
 
-[^6]: https://neon.com/docs/guides/row-level-security
-
 [^7]: https://www.postgresql.org/docs/current/ddl-rowsecurity.html
 
 [^8]: https://supabase.com/docs/guides/database/postgres/row-level-security

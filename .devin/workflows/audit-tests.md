@@ -3,7 +3,7 @@ name: audit-tests
 description:
   Perform a project‑agnostic testing audit. Reads AGENTS.md for testing
   standards, then evaluates test presence, coverage, and quality. Outputs a
-  structured report ready for /create-todo.
+  structured report ready for /create-todo
 ---
 
 ## 1. Read project rules
