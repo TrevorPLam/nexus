@@ -15,6 +15,16 @@ pre-commit:
       run: pnpm lint {staged_files}
       timeout: 45s
 
+    lint:md:
+      glob: '*.md'
+      run: pnpm lint:md {staged_files}
+      timeout: 20s
+
+    spellcheck:
+      glob: '*.{md,mdx}'
+      run: pnpm spellcheck {staged_files}
+      timeout: 20s
+
 commit-msg:
   commands:
     lint-commit:
