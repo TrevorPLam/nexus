@@ -21,8 +21,8 @@
 
 'use client';
 
-import { Button, Modal, TextArea } from '@life-os/ui';
-import { Plus, Trash2, Loader2 } from 'lucide-react';
+import { Button, Modal } from '@life-os/ui';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 import type {
@@ -31,6 +31,11 @@ import type {
   AutomationAction,
   AutomationCondition,
 } from '../types-automation';
+
+import { ActionsSection } from './ActionsSection';
+import { AutomationFormFields } from './AutomationFormFields';
+import { ConditionsSection } from './ConditionsSection';
+import { TriggerSection } from './TriggerSection';
 
 interface AutomationModalProps {
   isOpen: boolean;
@@ -51,47 +56,6 @@ interface AutomationModalProps {
   isPending: boolean;
 }
 
-const triggerTypes = [
-  { value: 'task_status_changed', label: 'Task Status Changed' },
-  { value: 'task_created', label: 'Task Created' },
-  { value: 'task_assigned', label: 'Task Assigned' },
-  { value: 'task_due_date_approaching', label: 'Due Date Approaching' },
-  { value: 'task_overdue', label: 'Task Overdue' },
-  { value: 'comment_added', label: 'Comment Added' },
-  { value: 'subtask_completed', label: 'Subtask Completed' },
-  { value: 'time_logged', label: 'Time Logged' },
-];
-
-const actionTypes = [
-  { value: 'set_status', label: 'Set Status' },
-  { value: 'set_priority', label: 'Set Priority' },
-  { value: 'assign_to', label: 'Assign To' },
-  { value: 'add_comment', label: 'Add Comment' },
-  { value: 'add_subtask', label: 'Add Subtask' },
-  { value: 'set_due_date', label: 'Set Due Date' },
-  { value: 'send_notification', label: 'Send Notification' },
-  { value: 'create_task', label: 'Create Task' },
-  { value: 'move_to_project', label: 'Move to Project' },
-  { value: 'add_tag', label: 'Add Tag' },
-  { value: 'remove_tag', label: 'Remove Tag' },
-];
-
-const conditionTypes = [
-  { value: 'priority', label: 'Priority' },
-  { value: 'assignee', label: 'Assignee' },
-  { value: 'project', label: 'Project' },
-  { value: 'due_date', label: 'Due Date' },
-  { value: 'custom_field', label: 'Custom Field' },
-];
-
-const operators = [
-  { value: 'equals', label: 'Equals' },
-  { value: 'not_equals', label: 'Not Equals' },
-  { value: 'contains', label: 'Contains' },
-  { value: 'not_contains', label: 'Not Contains' },
-  { value: 'greater_than', label: 'Greater Than' },
-  { value: 'less_than', label: 'Less Than' },
-];
 
 export function AutomationModal({
   isOpen,
@@ -159,317 +123,32 @@ export function AutomationModal({
         </h2>
         <form onSubmit={onSubmit}>
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Rule Name</label>
-              <input
-                type="text"
-                placeholder="e.g., Auto-assign high priority tasks"
-                value={ruleForm.name}
-                onChange={(e) => setRuleForm({ ...ruleForm, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                required
-              />
-            </div>
+            <AutomationFormFields
+              ruleForm={ruleForm}
+              projects={projects}
+              setRuleForm={setRuleForm}
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Description (optional)</label>
-              <TextArea
-                placeholder="Describe what this automation does"
-                value={ruleForm.description}
-                onChangeText={(value) => setRuleForm({ ...ruleForm, description: value })}
-                rows={2}
-              />
-            </div>
+            <TriggerSection
+              selectedTriggerType={selectedTriggerType}
+              trigger={ruleForm.trigger}
+              setSelectedTriggerType={(type) => setSelectedTriggerType(type as any)}
+              updateTrigger={updateTrigger}
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Project (optional)</label>
-              <select
-                value={ruleForm.projectId}
-                onChange={(e) => setRuleForm({ ...ruleForm, projectId: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              >
-                <option value="">All Projects</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <ConditionsSection
+              conditions={ruleForm.conditions}
+              addCondition={addCondition}
+              updateCondition={updateCondition}
+              removeCondition={removeCondition}
+            />
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isActive"
-                checked={ruleForm.isActive}
-                onChange={(e) => setRuleForm({ ...ruleForm, isActive: e.target.checked })}
-                className="rounded"
-              />
-              <label htmlFor="isActive" className="text-sm">
-                Active
-              </label>
-            </div>
-
-            {/* Trigger Section */}
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <h3 className="font-medium text-sm mb-3">Trigger</h3>
-              <div className="space-y-3">
-                <select
-                  value={selectedTriggerType}
-                  onChange={(e) => {
-                    setSelectedTriggerType(e.target.value as any);
-                    // Reset trigger based on type
-                    const baseTrigger: AutomationTrigger = { type: e.target.value as any };
-                    if (e.target.value === 'task_status_changed') {
-                      updateTrigger({
-                        ...baseTrigger,
-                        type: 'task_status_changed',
-                        toStatus: 'done',
-                      });
-                    } else if (e.target.value === 'task_due_date_approaching') {
-                      updateTrigger({
-                        ...baseTrigger,
-                        type: 'task_due_date_approaching',
-                        daysBefore: 1,
-                      });
-                    } else {
-                      updateTrigger(baseTrigger);
-                    }
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                >
-                  {triggerTypes.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
-
-                {selectedTriggerType === 'task_status_changed' && (
-                  <div>
-                    <label className="block text-xs font-medium mb-1">When status changes to</label>
-                    <select
-                      value={(ruleForm.trigger as any).toStatus || ''}
-                      onChange={(e) =>
-                        updateTrigger({
-                          ...ruleForm.trigger,
-                          type: 'task_status_changed',
-                          toStatus: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                      <option value="todo">To Do</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="done">Done</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  </div>
-                )}
-
-                {selectedTriggerType === 'task_due_date_approaching' && (
-                  <div>
-                    <label className="block text-xs font-medium mb-1">Days before due date</label>
-                    <input
-                      type="number"
-                      value={(ruleForm.trigger as any).daysBefore || 1}
-                      onChange={(e) =>
-                        updateTrigger({
-                          ...ruleForm.trigger,
-                          type: 'task_due_date_approaching',
-                          daysBefore: parseInt(e.target.value, 10),
-                        })
-                      }
-                      min={1}
-                      max={30}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Conditions Section */}
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium text-sm">Conditions (optional)</h3>
-                <Button variant="secondary" size="small" onPress={addCondition}>
-                  <Plus className="w-3 h-3 mr-1" />
-                  Add Condition
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {ruleForm.conditions.length === 0 ? (
-                  <p className="text-xs text-gray-500">
-                    No conditions - rule applies to all matching triggers
-                  </p>
-                ) : (
-                  ruleForm.conditions.map((condition, index) => (
-                    <div key={index} className="flex gap-2 items-center">
-                      <select
-                        value={condition.type}
-                        onChange={(e) =>
-                          updateCondition(index, { ...condition, type: e.target.value as any })
-                        }
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                      >
-                        {conditionTypes.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        value={condition.operator}
-                        onChange={(e) =>
-                          updateCondition(index, { ...condition, operator: e.target.value as any })
-                        }
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                      >
-                        {operators.map((op) => (
-                          <option key={op.value} value={op.value}>
-                            {op.label}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="text"
-                        value={condition.value as string}
-                        onChange={(e) =>
-                          updateCondition(index, { ...condition, value: e.target.value })
-                        }
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                        placeholder="Value"
-                      />
-                      <Button
-                        variant="secondary"
-                        size="small"
-                        onPress={() => removeCondition(index)}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Actions Section */}
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium text-sm">Actions</h3>
-                <Button variant="secondary" size="small" onPress={addAction}>
-                  <Plus className="w-3 h-3 mr-1" />
-                  Add Action
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {ruleForm.actions.length === 0 ? (
-                  <p className="text-xs text-gray-500">No actions defined</p>
-                ) : (
-                  ruleForm.actions.map((action, index) => (
-                    <div key={index} className="flex gap-2 items-center">
-                      <select
-                        value={action.type}
-                        onChange={(e) => {
-                          const newAction: any = { type: e.target.value as any };
-                          if (e.target.value === 'set_status') {
-                            newAction.status = 'todo';
-                          } else if (e.target.value === 'set_priority') {
-                            newAction.priority = 'medium';
-                          }
-                          updateAction(index, newAction as AutomationAction);
-                        }}
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                      >
-                        {actionTypes.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-
-                      {action.type === 'set_status' && (
-                        <select
-                          value={(action as any).status}
-                          onChange={(e) =>
-                            updateAction(index, { ...action, status: e.target.value as any })
-                          }
-                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                        >
-                          <option value="todo">To Do</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="done">Done</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                      )}
-
-                      {action.type === 'set_priority' && (
-                        <select
-                          value={(action as any).priority}
-                          onChange={(e) =>
-                            updateAction(index, { ...action, priority: e.target.value as any })
-                          }
-                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                        >
-                          <option value="low">Low</option>
-                          <option value="medium">Medium</option>
-                          <option value="high">High</option>
-                          <option value="urgent">Urgent</option>
-                        </select>
-                      )}
-
-                      {(action.type === 'assign_to' ||
-                        action.type === 'add_comment' ||
-                        action.type === 'add_tag' ||
-                        action.type === 'remove_tag') && (
-                        <input
-                          type="text"
-                          value={
-                            (action as any).userId ||
-                            (action as any).template ||
-                            (action as any).tag ||
-                            ''
-                          }
-                          onChange={(e) => {
-                            if (action.type === 'assign_to') {
-                              updateAction(index, { ...action, userId: e.target.value } as any);
-                            } else if (
-                              action.type === 'add_comment' ||
-                              action.type === 'add_tag' ||
-                              action.type === 'remove_tag'
-                            ) {
-                              updateAction(index, { ...action, template: e.target.value } as any);
-                            }
-                          }}
-                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                          placeholder={action.type === 'assign_to' ? 'User ID' : 'Value'}
-                        />
-                      )}
-
-                      {action.type === 'set_due_date' && (
-                        <input
-                          type="number"
-                          value={(action as any).offsetDays || 0}
-                          onChange={(e) =>
-                            updateAction(index, {
-                              ...action,
-                              offsetDays: parseInt(e.target.value, 10),
-                            } as any)
-                          }
-                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
-                          placeholder="Days offset"
-                        />
-                      )}
-
-                      <Button variant="secondary" size="small" onPress={() => removeAction(index)}>
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <ActionsSection
+              actions={ruleForm.actions}
+              addAction={addAction}
+              updateAction={updateAction}
+              removeAction={removeAction}
+            />
           </div>
 
           <div className="flex gap-2 justify-end mt-6">
