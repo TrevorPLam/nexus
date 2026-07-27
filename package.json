@@ -55,7 +55,7 @@
     "eslint-plugin-import-x": "^4.0.0",
     "globals": "catalog:",
     "lefthook": "^2.1.0",
-    "markdownlint": "^0.40.0",
+    "markdownlint": "catalog:",
     "markdownlint-cli2": "^0.15.0",
     "prettier": "catalog:",
     "supabase": "^2.109.1",
