@@ -20,6 +20,8 @@ pre-commit:
       run: pnpm lint:md {staged_files}
       timeout: 20s
 
+    # Spell check markdown files using cspell
+    # Uses cspell from devDependencies with custom dictionaries in .cspell/
     spellcheck:
       glob: '*.{md,mdx}'
       run: pnpm spellcheck {staged_files}
