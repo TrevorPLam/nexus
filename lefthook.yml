@@ -28,8 +28,8 @@ pre-commit:
 commit-msg:
   commands:
     lint-commit:
-      run: commitlint --edit {1}
+      run: pnpm dlx commitlint --edit {1}
 
     spellcheck-commit:
-      run: cspell --no-progress --no-summary --language-id commit-msg {1}
+      run: pnpm dlx cspell --no-progress --no-summary --language-id commit-msg {1}
       timeout: 30s
