@@ -27,7 +27,13 @@ integration. This is a monorepo built with pnpm workspaces and Turborepo.
 ### Foundational
 
 - **Language & Runtime**: TypeScript 5.9+ (strict mode), Node.js 24.x LTS
-- **TypeScript Version Lock**: Currently locked at 5.9.x due to typescript-eslint incompatibility with TypeScript 7.x. typescript-eslint@8.x has peer dependency range `typescript >=4.8.4 <6.1.0`, which excludes TypeScript 7.x. The typescript-eslint team closed TypeScript 7 support as "not planned" and is waiting for TypeScript 7.1 to ship a stable programmatic API (expected October 2026). Revisit upgrade after typescript-eslint adds TypeScript 7 support.
+- **TypeScript Version Lock**: Currently locked at 5.9.x due to
+  typescript-eslint incompatibility with TypeScript 7.x. typescript-eslint@8.x
+  has peer dependency range `typescript >=4.8.4 <6.1.0`, which excludes
+  TypeScript 7.x. The typescript-eslint team closed TypeScript 7 support as "not
+  planned" and is waiting for TypeScript 7.1 to ship a stable programmatic API
+  (expected October 2026). Revisit upgrade after typescript-eslint adds
+  TypeScript 7 support.
 - **Module System**: ESM with nodenext/bundler resolution
 - **Monorepo**: pnpm 11 + Turborepo 2.9.x
 - **Package Manager**: pnpm 11 (pinned in package.json)
@@ -248,6 +254,17 @@ supabase db push
 - RLS policies on all user/workspace-scoped tables
 - Workspace membership verification for all data access
 - No direct Supabase CRUD for product writes
+
+## License Policy
+
+- **Project License**: Private/proprietary (all rights reserved)
+- **Allowed Dependencies**:
+  - MPL-2.0: File-level weak copyleft, compatible with private projects. No source
+    disclosure required for internal/private use. Copyleft obligations only trigger
+    on external distribution.
+  - Additional licenses to be evaluated as needed
+- **Evaluation Process**: Before adding new dependencies, review license
+  compatibility with private project status. Document decision in AGENTS.md.
 
 ## File Naming Conventions
 

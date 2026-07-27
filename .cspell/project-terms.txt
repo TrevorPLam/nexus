@@ -254,6 +254,7 @@ override
 
 # External Services
 Google Calendar
+Schlueter
 OAuth
 PKCE
 read only
