@@ -1,20 +1,19 @@
-# Hooks disabled - too slow for monorepo
-# Quality checks run in CI instead
-# pre-commit:
-#   parallel: true
-#   commands:
-#     format:
-#       glob: '*.{js,jsx,ts,tsx,json,md,yaml,yml}'
-#       run: pnpm format
-#       stage_fixed: true
-#     lint:
-#       glob: '*.{js,jsx,ts,tsx}'
-#       run: pnpm lint
+pre-commit:
+  parallel: true
+  skip:
+    - merge
+    - rebase
+  commands:
+    format:
+      glob: '*.{js,jsx,ts,tsx,json,md,yaml,yml}'
+      run: pnpm format {staged_files}
+      stage_fixed: true
+      timeout: 30s
 
-# pre-push:
-#   commands:
-#     test:
-#       run: pnpm test
+    lint:
+      glob: '*.{js,jsx,ts,tsx}'
+      run: pnpm lint {staged_files}
+      timeout: 45s
 
 commit-msg:
   commands:
