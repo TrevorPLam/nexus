@@ -81,22 +81,7 @@
     "MD040": {
       // Fenced code blocks should have a language specified
       // Critical for syntax highlighting and tooling
-      "allowed_languages": [
-        "bash",
-        "cjs",
-        "css",
-        "html",
-        "javascript",
-        "js",
-        "json",
-        "jsonc",
-        "mjs",
-        "sql",
-        "ts",
-        "tsx",
-        "yaml",
-        "yml",
-      ],
+      // Allow any language to be specified (no restriction)
       "language_only": false,
     },
 

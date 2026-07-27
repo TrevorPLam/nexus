@@ -56,7 +56,7 @@
     "globals": "catalog:",
     "lefthook": "^2.1.0",
     "markdownlint": "catalog:",
-    "markdownlint-cli2": "^0.15.0",
+    "markdownlint-cli2": "^0.23.0",
     "prettier": "catalog:",
     "supabase": "^2.109.1",
     "tsx": "^4.0.0",
