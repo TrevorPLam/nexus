@@ -47,7 +47,7 @@
     "@eslint/js": "catalog:",
     "@types/node": "^24",
     "@vitest/coverage-v8": "catalog:",
-    "cspell": "^8.0.0",
+    "cspell": "catalog:",
     "dependency-cruiser": "^18.1.0",
     "eslint": "catalog:",
     "eslint-config-prettier": "^10.0.0",

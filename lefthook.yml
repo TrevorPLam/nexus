@@ -23,7 +23,7 @@ pre-commit:
     spellcheck:
       glob: '*.{md,mdx}'
       run: pnpm spellcheck {staged_files}
-      timeout: 20s
+      timeout: 60s
 
 commit-msg:
   commands:

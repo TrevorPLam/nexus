@@ -28,6 +28,7 @@ catalogs:
     '@vitejs/plugin-react': ^6.0.0
     '@vitest/coverage-v8': 4.1.10
     autoprefixer: ^10.5.4
+    cspell: ^10.0.1
     drizzle-orm: ^0.45.0
     eslint: ^10.8.0
     eslint-import-resolver-typescript: ^4.4.5
