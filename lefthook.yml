@@ -27,6 +27,8 @@ pre-commit:
 
 commit-msg:
   commands:
+    # Validate commit messages follow conventional commit format
+    # Uses @commitlint/cli and @commitlint/config-conventional from devDependencies
     lint-commit:
       run: pnpm dlx commitlint --edit {1}
 

@@ -161,3 +161,39 @@ pnpm validate:web        # Validate web Work/Calendar modules
 pnpm validate:mobile     # Validate mobile Work/Calendar modules
 pnpm validate:all        # Run all targeted validations
 ```
+
+## 🔗 Git Hooks
+
+This project uses **Lefthook** for git hook management to enforce code quality
+standards automatically.
+
+### Pre-commit Hooks
+
+- **format**: Runs Prettier on staged files and auto-fixes formatting issues
+- **lint**: Runs ESLint on TypeScript/JavaScript files
+- **lint:md**: Runs markdownlint on Markdown files
+- **spellcheck**: Runs cspell on Markdown files for spelling errors
+
+### Commit-msg Hooks
+
+- **lint-commit**: Validates commit messages follow the
+  [Conventional Commits](https://www.conventionalcommits.org/) format using
+  @commitlint/cli
+- **spellcheck-commit**: Checks commit messages for spelling errors using cspell
+
+### Hook Installation
+
+Hooks are automatically installed when you run `pnpm install`. To manually
+install or reinstall hooks:
+
+```bash
+lefthook install
+```
+
+### Skipping Hooks
+
+To skip hooks for a single commit (use sparingly):
+
+```bash
+git commit --no-verify -m "your message"
+```
