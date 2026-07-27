@@ -1,0 +1,222 @@
+/**
+ * MODULE: markdownlint-cli2 – Markdown Linting Configuration
+ *
+ * Responsibility:
+ * Defines the authoritative linting rules for all Markdown files in the
+ * Life OS monorepo. markdownlint enforces structural and semantic quality
+ * standards, while Prettier handles formatting.
+ *
+ * Boundaries:
+ * - Structural/semantic linting only. Prettier handles formatting (line length,
+ *   spacing, etc.).
+ * - Applies to all .md files across the monorepo (docs, .planning, READMEs).
+ * - Does NOT lint generated files or dependencies.
+ *
+ * Critical invariants:
+ * - Extends markdownlint/style/prettier to disable formatting rules handled by
+ *   Prettier.
+ * - Enables critical structural rules (code language, duplicate headings, etc.).
+ * - Configured for monorepo with gitignore integration.
+ * - Auto-fix enabled for applicable rules.
+ *
+ * Side effects:
+ * - Running markdownlint-cli2 will report violations and optionally fix them.
+ * - Fixed files should be committed separately to avoid mixed diffs.
+ *
+ * Change risk:
+ * - Low. The configuration extends a stable upstream preset.
+ * - Medium if adding custom rules or disabling many rules.
+ *
+ * Links:
+ * - .prettierrc.mjs            (Prettier formatting config)
+ * - lefthook.yml              (pre-commit hooks)
+ * - package.json              (npm scripts)
+ *
+ * Tags:
+ * - domain: configuration
+ * - risk: low
+ * - layer: infrastructure
+ * - stability: stable
+ * - concerns: documentation, linting
+ *
+ * File:
+ * - .markdownlint-cli2.jsonc
+ *
+ * Last updated:
+ * - July 26, 2026
+ */
+
+{
+  // Enable auto-fix for rules that support it
+  "fix": true,
+
+  // Use .gitignore to exclude files (faster for large monorepos)
+  "gitignore": true,
+
+  // markdownlint configuration extends the Prettier preset to avoid conflicts
+  "config": {
+    // Extend the Prettier preset which disables 23 formatting rules
+    "extends": "markdownlint/style/prettier",
+
+    // Override specific rules for this project's needs
+    "MD003": {
+      // Heading style: Setext (underlined) or ATX (hashed)
+      // We prefer ATX (###) for consistency
+      "style": "atx",
+    },
+
+    "MD013": {
+      // Line length: disabled (handled by Prettier with printWidth: 80 for .md)
+      // Prettier already wraps prose at 80 characters
+      "line_length": false,
+    },
+
+    "MD024": {
+      // No duplicate headings
+      // Allow duplicates under different parent sections (siblings_only: true)
+      // This is useful for repeated section structures in documentation
+      "siblings_only": true,
+    },
+
+    "MD040": {
+      // Fenced code blocks should have a language specified
+      // Critical for syntax highlighting and tooling
+      "allowed_languages": [
+        "bash",
+        "cjs",
+        "css",
+        "html",
+        "javascript",
+        "js",
+        "json",
+        "jsonc",
+        "mjs",
+        "sql",
+        "ts",
+        "tsx",
+        "yaml",
+        "yml",
+      ],
+      "language_only": false,
+    },
+
+    "MD041": {
+      // First line in file should be a top-level heading
+      // Disabled because many files have front matter (YAML) before the heading
+      "level": 1,
+      "front_matter_title": "",
+    },
+
+    "MD046": {
+      // Code block style: fenced (```) or indented
+      // We prefer fenced for consistency and language specification
+      "style": "fenced",
+    },
+
+    "MD048": {
+      // Code fence style: backtick (```) or tilde (~~~)
+      // We prefer backtick for consistency
+      "style": "backtick",
+    },
+
+    "MD049": {
+      // Emphasis style: asterisk (*) or underscore (_)
+      // Match Prettier's default (underscore) to avoid conflicts
+      "style": "underscore",
+    },
+
+    "MD050": {
+      // Strong style: asterisk (**) or underscore (__)
+      // Match Prettier's default (asterisk) to avoid conflicts
+      "style": "asterisk",
+    },
+
+    "MD033": {
+      // Inline HTML: allow specific tags for documentation
+      // Allow <details>, <summary>, and other common documentation tags
+      "allowed_elements": [
+        "a",
+        "br",
+        "details",
+        "div",
+        "em",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "hr",
+        "img",
+        "li",
+        "ol",
+        "p",
+        "pre",
+        "span",
+        "strong",
+        "summary",
+        "sup",
+        "table",
+        "tbody",
+        "td",
+        "th",
+        "thead",
+        "tr",
+        "ul",
+      ],
+    },
+
+    "MD034": false,
+    // Bare URL used: allow bare URLs in some contexts
+    // Disabled because bare URLs are common in documentation
+
+    "MD036": false,
+    // Emphasis used instead of heading: allow emphasis in some contexts
+    // Disabled because emphasis is often used for emphasis, not headings
+
+    "MD043": false,
+    // Required heading structure: disabled (too restrictive)
+    // We don't enforce a specific heading structure
+
+    "MD044": false,
+    // Proper names should have correct capitalization
+    // Disabled because proper name checking is too strict for general docs
+  },
+
+  // Glob patterns to lint (in addition to command-line arguments)
+  "globs": ["**/*.md"],
+
+  // Ignore patterns (in addition to .gitignore)
+  "ignores": [
+    // Dependencies
+    "node_modules/**",
+
+    // Build outputs
+    "dist/**",
+    "build/**",
+    ".next/**",
+    "out/**",
+
+    // Generated files
+    ".turbo/**",
+    "coverage/**",
+
+    // Lock files and dependency files
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "yarn.lock",
+
+    // Config files that don't need linting
+    "syncpack.config.js",
+  ],
+
+  // Front matter pattern (YAML, TOML, JSON)
+  "frontMatter": "(^---\\s*$[\\s\\S]+?^---\\s*)|(^(\\+\\+\\+\\s*$[\\s\\S]+?^(\\+\\+\\+|\\.\\.\\.)\\s*))|^(\\{\\s*$[\\s\\S]+?^\\}\\s*)",
+
+  // Disable inline configuration (HTML comments) for consistency
+  // This prevents developers from disabling rules inline
+  "noInlineConfig": false,
+
+  // Disable banner output for cleaner CI logs
+  "noBanner": true,
+}

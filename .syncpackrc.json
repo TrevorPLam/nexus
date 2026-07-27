@@ -1,0 +1,126 @@
+{
+  "$schema": "./node_modules/syncpack/schema.json",
+  "versionGroups": [
+    {
+      "label": "Enforce workspace:* protocol for local packages",
+      "dependencies": ["$LOCAL"],
+      "dependencyTypes": ["dev", "prod"],
+      "pinVersion": "workspace:*"
+    },
+    {
+      "label": "Production dependencies must use catalog protocol",
+      "dependencyTypes": ["prod"],
+      "policy": "catalog",
+      "severity": {
+        "NotUsingCatalog": "error",
+        "MissingFromCatalog": "warn"
+      }
+    },
+    {
+      "label": "Development dependencies should use catalog where available",
+      "dependencyTypes": ["dev"],
+      "policy": "catalog",
+      "severity": {
+        "NotUsingCatalog": "warn",
+        "MissingFromCatalog": "ignore"
+      }
+    },
+    {
+      "label": "Ignore peer dependencies from catalog enforcement",
+      "dependencyTypes": ["peer"],
+      "isIgnored": true
+    },
+    {
+      "label": "Platform-specific dependencies exempt from catalog",
+      "dependencies": ["react-native", "@op-engineering/op-sqlite", "@powersync/*", "expo*", "expo-status-bar", "react-native-safe-area-context"],
+      "isIgnored": true
+    },
+    {
+      "label": "Tamagui dependencies exempt from catalog (UI framework)",
+      "dependencies": ["tamagui", "@tamagui/*"],
+      "isIgnored": true
+    },
+    {
+      "label": "Testing libraries exempt from catalog",
+      "dependencies": ["@testing-library/*", "react-test-renderer"],
+      "isIgnored": true
+    },
+    {
+      "label": "Supabase client libraries exempt from catalog",
+      "dependencies": ["@supabase/supabase-js", "@supabase/ssr"],
+      "isIgnored": true
+    },
+    {
+      "label": "Build tooling exempt from catalog",
+      "dependencies": ["drizzle-kit", "tsx", "jsdom"],
+      "isIgnored": true
+    },
+    {
+      "label": "Type definitions exempt from catalog",
+      "dependencies": ["@types/*"],
+      "isIgnored": true
+    }
+  ],
+  "semverGroups": [
+    {
+      "label": "Catalog entries should use exact versions",
+      "dependencyTypes": ["pnpmCatalog"],
+      "range": ""
+    },
+    {
+      "label": "Production dependencies use caret ranges",
+      "dependencyTypes": ["prod"],
+      "range": "^"
+    },
+    {
+      "label": "Development dependencies use caret ranges",
+      "dependencyTypes": ["dev"],
+      "range": "^"
+    },
+    {
+      "label": "Peer dependencies use broad ranges",
+      "dependencyTypes": ["peer"],
+      "range": "^"
+    }
+  ],
+  "updateGroups": [
+    {
+      "label": "Production dependencies - patch only for stability",
+      "dependencyTypes": ["prod"],
+      "target": "patch"
+    },
+    {
+      "label": "Development dependencies - minor updates acceptable",
+      "dependencyTypes": ["dev"],
+      "target": "minor"
+    },
+    {
+      "label": "Catalog entries - patch only",
+      "dependencyTypes": ["pnpmCatalog"],
+      "target": "patch"
+    },
+    {
+      "label": "Peer dependencies - never auto-update",
+      "dependencyTypes": ["peer"],
+      "isIgnored": true
+    },
+    {
+      "label": "Platform-specific deps - minor updates",
+      "dependencies": ["react-native", "@op-engineering/op-sqlite", "@powersync/*", "expo*", "expo-status-bar", "react-native-safe-area-context"],
+      "target": "minor"
+    },
+    {
+      "label": "Tamagui - minor updates",
+      "dependencies": ["tamagui", "@tamagui/*"],
+      "target": "minor"
+    }
+  ],
+  "customTypes": {
+    "optional": {
+      "strategy": "versionsByName",
+      "path": "optionalDependencies"
+    }
+  },
+  "dependencyTypes": ["prod", "dev", "peer", "optional", "pnpmCatalog"],
+  "minimumReleaseAge": 1440
+}

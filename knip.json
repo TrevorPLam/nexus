@@ -1,0 +1,91 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "exclude": ["classMembers", "enumMembers"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreWorkspaces": [],
+
+  "ignoreDependencies": ["@types/*", "typescript", "eslint", "prettier", "lefthook", "turbo", "supabase", "tsx", "@vitest/*", "vitest", "@testing-library/*", "jsdom", "react-test-renderer"],
+
+  "ignoreBinaries": ["next", "expo", "turbo", "supabase", "lefthook", "tsx"],
+
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.ts"],
+      "project": ["scripts/**/*.ts"],
+      "ignoreDependencies": ["eslint", "prettier", "lefthook", "turbo", "typescript", "supabase"]
+    },
+
+    "apps/web": {
+      "entry": [
+        "src/app/**/{layout,page,route,template,loading,error,not-found}.{js,jsx,ts,tsx}",
+        "src/app/{instrumentation,middleware}.{js,jsx,ts,tsx}",
+        "src/contexts/**/*.{js,jsx,ts,tsx}",
+        "src/hooks/**/*.{js,jsx,ts,tsx}",
+        "src/lib/**/*.{js,jsx,ts,tsx}"
+      ],
+      "project": ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.test.{js,jsx,ts,tsx}", "!src/**/*.spec.{js,jsx,ts,tsx}"],
+      "ignore": ["src/test/setup.ts"]
+    },
+
+    "apps/mobile": {
+      "entry": ["app/**/*.{js,jsx,ts,tsx}", "src/**/*.{js,jsx,ts,tsx}"],
+      "project": [
+        "app/**/*.{js,jsx,ts,tsx}",
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!app/**/*.test.{js,jsx,ts,tsx}",
+        "!app/**/*.spec.{js,jsx,ts,tsx}",
+        "!src/**/*.test.{js,jsx,ts,tsx}",
+        "!src/**/*.spec.{js,jsx,ts,tsx}"
+      ]
+    },
+
+    "apps/api": {
+      "entry": ["src/index.ts", "src/server.ts", "src/lib/**/*.ts"],
+      "project": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"]
+    },
+
+    "apps/worker": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"]
+    },
+
+    "packages/ui": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.test.{js,jsx,ts,tsx}", "!src/**/*.spec.{js,jsx,ts,tsx}"]
+    },
+
+    "packages/contracts": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"],
+      "ignoreDependencies": ["rrule"]
+    },
+
+    "packages/api-client": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"]
+    },
+
+    "packages/mobile-data": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"]
+    },
+
+    "packages/database": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "drizzle/**/*.ts", "!src/**/*.test.ts", "!src/**/*.spec.ts"],
+      "ignoreDependencies": ["drizzle-kit"]
+    },
+
+    "packages/tsconfig": {
+      "entry": ["index.ts"],
+      "project": ["**/*.ts"]
+    },
+
+    "packages/vitest-config": {
+      "entry": ["index.ts"],
+      "project": ["**/*.ts"]
+    }
+  },
+
+  "plugins": ["next", "expo", "hono", "vitest", "typescript"]
+}

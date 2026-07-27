@@ -19,7 +19,7 @@
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "inputs": ["$TURBO_DEFAULT$", ".env.*", "eslint.config.mjs", ".prettierrc"]
+      "inputs": ["$TURBO_DEFAULT$", ".env.*", "eslint.config.mjs", ".prettierrc", ".dependency-cruiser.js"]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"],

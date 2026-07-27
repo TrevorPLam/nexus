@@ -1,0 +1,503 @@
+# Technical and Architecture Terminology
+# General technical terms and architecture concepts
+
+# Architecture Patterns
+modular monolith
+microservices
+domain driven design
+DDD
+bounded contexts
+event sourcing
+CQRS
+command query responsibility segregation
+eventual consistency
+transactional outbox
+idempotency
+command pattern
+repository pattern
+factory pattern
+strategy pattern
+observer pattern
+singleton
+dependency injection
+inversion of control
+solid principles
+dry
+kiss
+yagni
+separation of concerns
+single responsibility
+open closed
+liskov substitution
+interface segregation
+dependency inversion
+
+# Database & Data
+PostgreSQL
+relational database
+ACID
+transactions
+migrations
+schema
+ORM
+object relational mapping
+Drizzle
+Prisma
+TypeORM
+Sequelize
+Knex
+query builder
+raw SQL
+prepared statements
+connection pooling
+indexing
+foreign keys
+constraints
+unique constraints
+check constraints
+triggers
+stored procedures
+views
+materialized views
+cursors
+joins
+inner join
+left join
+right join
+full outer join
+cross join
+subqueries
+CTE
+common table expression
+window functions
+aggregations
+group by
+order by
+having
+union
+intersect
+except
+partitioning
+sharding
+replication
+failover
+backup
+restore
+dump
+seed
+fixtures
+normalization
+denormalization
+first normal form
+second normal form
+third normal form
+BCNF
+Boyce Codd normal form
+cascading updates
+cascading deletes
+referential integrity
+data integrity
+concurrency control
+optimistic locking
+pessimistic locking
+deadlocks
+race conditions
+isolation levels
+read committed
+repeatable read
+serializable
+snapshot isolation
+
+# API & HTTP
+REST
+RESTful
+JSON
+XML
+YAML
+TOML
+GraphQL
+gRPC
+WebSocket
+SSE
+server sent events
+HTTP
+HTTPS
+HTTP/2
+HTTP/3
+TCP
+UDP
+IP
+DNS
+TLS
+SSL
+certificates
+authentication
+authorization
+OAuth 2.0
+OpenID Connect
+JWT
+JSON web token
+bearer token
+refresh token
+access token
+API key
+webhook
+callback
+payload
+headers
+cookies
+sessions
+CORS
+cross origin resource sharing
+CSRF
+cross site request forgery
+XSS
+cross site scripting
+SQL injection
+parameterized queries
+sanitization
+validation
+rate limiting
+throttling
+circuit breaker
+retry
+backoff
+exponential backoff
+timeout
+deadline
+context
+middleware
+request
+response
+status codes
+200
+201
+204
+301
+302
+304
+400
+401
+403
+404
+409
+422
+429
+500
+502
+503
+504
+endpoint
+route
+path
+query string
+body
+content type
+accept
+user agent
+cache
+ETag
+last modified
+if modified since
+if none match
+content encoding
+transfer encoding
+chunked
+gzip
+brotli
+deflate
+compression
+minification
+bundling
+tree shaking
+code splitting
+lazy loading
+dynamic import
+
+# Frontend & UI
+React
+Vue
+Angular
+Svelte
+Solid
+Qwik
+Alpine
+Preact
+Inferno
+hyperapp
+mithril
+riot
+ember
+backbone
+knockout
+jQuery
+DOM
+virtual DOM
+shadow DOM
+web components
+custom elements
+templates
+JSX
+TSX
+components
+props
+state
+hooks
+effects
+context
+reducer
+memo
+callback
+ref
+forward ref
+lazy
+suspense
+concurrent rendering
+server components
+client components
+SSR
+server side rendering
+SSG
+static site generation
+ISR
+incremental static regeneration
+CSR
+client side rendering
+hydration
+rehydration
+SPA
+single page application
+MPA
+multi page application
+PWA
+progressive web application
+responsive design
+mobile first
+desktop first
+accessibility
+a11y
+WCAG
+ARIA
+semantic HTML
+SEO
+search engine optimization
+performance
+optimization
+LCP
+largest contentful paint
+FID
+first input delay
+CLS
+cumulative layout shift
+TTFB
+time to first byte
+FCP
+first contentful paint
+TTI
+time to interactive
+TBT
+total blocking time
+Core Web Vitals
+lighthouse
+web vitals
+performance budget
+bundle size
+code coverage
+testing
+unit tests
+integration tests
+e2e tests
+end to end tests
+snapshot tests
+visual regression tests
+component tests
+mutation testing
+TDD
+test driven development
+BDD
+behavior driven development
+CI
+continuous integration
+CD
+continuous deployment
+CDN
+content delivery network
+edge computing
+serverless
+functions
+lambda
+cloudflare workers
+deno
+bun
+node
+runtime
+V8
+spidermonkey
+javascriptcore
+chakra
+v8 engine
+just in time
+JIT
+AOT
+ahead of time
+transpilation
+compilation
+bundlers
+webpack
+rollup
+esbuild
+parcel
+vite
+snowpack
+rome
+swc
+babel
+turbopack
+rspack
+loaders
+plugins
+presets
+polyfills
+core-js
+regenerator runtime
+shims
+ponyfills
+feature detection
+caniuse
+browser support
+evergreen browsers
+legacy browsers
+IE11
+internet explorer
+edge
+chrome
+firefox
+safari
+opera
+brave
+vivaldi
+electron
+tauri
+capacitor
+cordova
+ionic
+react native
+expo
+flutter
+dart
+kotlin
+swift
+objective c
+java
+c#
+c++
+c
+rust
+go
+python
+ruby
+php
+perl
+lua
+elixir
+erlang
+haskell
+scala
+clojure
+f#
+groovy
+julia
+r
+matlab
+assembly
+machine code
+bytecode
+interpreter
+compiler
+linker
+loader
+debugger
+profiler
+tracer
+monitoring
+logging
+observability
+metrics
+tracing
+APM
+application performance monitoring
+distributed tracing
+open telemetry
+OTel
+prometheus
+grafana
+elastic
+ELK
+elasticsearch
+logstash
+kibana
+fluentd
+fluent bit
+vector
+loki
+tempo
+jaeger
+zipkin
+honeycomb
+datadog
+new relic
+splunk
+appdynamics
+dynatrace
+sentry
+rollbar
+bugsnag
+airbrake
+raygun
+trackjs
+logrocket
+fullstory
+hotjar
+mixpanel
+amplitude
+segment
+heap
+pardo
+google analytics
+GA4
+UA
+universal analytics
+matomo
+plausible
+fathom
+posthog
+analytics
+product analytics
+user analytics
+event tracking
+funnel analysis
+cohort analysis
+retention
+churn
+activation
+engagement
+monetization
+conversion
+A/B testing
+multivariate testing
+feature flags
+remote config
+experimentation
+hypothesis
+metrics
+KPI
+key performance indicator
+OKR
+objectives and key results
+north star metric
+leading indicator
+lagging indicator
+vanity metric
+actionable metric
+counter metric
+guardrail metric

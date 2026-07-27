@@ -1,0 +1,364 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+
+  // ============================================================================
+  // BASE CONFIGURATION
+  // ============================================================================
+  extends: [
+    'config:recommended',
+    'docker:pinDigests',
+    'helpers:pinGitHubActionDigests',
+    ':configMigration',
+    ':pinDevDependencies',
+    'abandonments:recommended',
+    'security:minimumReleaseAgeNpm',
+    ':maintainLockFilesWeekly',
+    'group:monorepos',
+    'group:recommended',
+  ],
+
+  // ============================================================================
+  // GLOBAL SETTINGS
+  // ============================================================================
+  timezone: 'America/Chicago',
+
+  // Schedule updates during off-hours to avoid disrupting development
+  schedule: ['after 9pm and before 6am every weekday', 'every weekend'],
+
+  // Rate limiting to prevent PR flood
+  prConcurrentLimit: 8,
+  prHourlyLimit: 2,
+
+  // Semantic commit messages matching project conventions
+  commitMessagePrefix: 'chore(deps):',
+  commitMessageAction: 'update',
+  semanticCommits: 'enabled',
+
+  // Labels for PR organization
+  labels: ['dependencies', 'automated'],
+
+  // Dependency Dashboard for centralized view
+  dependencyDashboard: true,
+  dependencyDashboardOSVVulnerabilitySummary: 'unresolved',
+
+  // Version pinning for security (prevents supply chain attacks)
+  rangeStrategy: 'pin',
+
+  // Require internal checks to pass before creating PRs
+  internalChecksFilter: 'strict',
+
+  // Respect pnpm's minimumReleaseAge setting (1440 minutes = 24 hours)
+  minimumReleaseAge: '1 day',
+
+  // ============================================================================
+  // CONSTRAINTS
+  // ============================================================================
+  constraints: {
+    node: '24',
+    pnpm: '11',
+  },
+
+  // ============================================================================
+  // LOCKFILE MAINTENANCE
+  // ============================================================================
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ['before 5am on monday'],
+    automerge: true,
+    automergeType: 'branch',
+    platformAutomerge: false,
+  },
+
+  // ============================================================================
+  // PACKAGE RULES - CATALOG & WORKSPACE SPECIFIC
+  // ============================================================================
+  packageRules: [
+    // --------------------------------------------------------------------------
+    // pnpm Catalog Dependencies
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group pnpm catalog updates together',
+      matchDepTypes: ['pnpm.catalog'],
+      groupName: 'pnpm catalog dependencies',
+      groupSlug: 'pnpm-catalog',
+      // Catalog updates affect entire monorepo - require review
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'catalog', 'monorepo'],
+    },
+
+    // --------------------------------------------------------------------------
+    // Workspace Protocol Dependencies
+    // --------------------------------------------------------------------------
+    {
+      description: 'Ignore internal workspace packages',
+      matchDepTypes: ['dependencies'],
+      matchPackageNames: ['@life-os/*'],
+      enabled: false,
+    },
+
+    // --------------------------------------------------------------------------
+    // DEV DEPENDENCIES - AUTOMERGE
+    // --------------------------------------------------------------------------
+    {
+      description: 'Automerge non-major devDependencies',
+      matchDepTypes: ['devDependencies'],
+      matchUpdateTypes: ['patch', 'minor'],
+      groupName: 'dev dependencies (non-major)',
+      groupSlug: 'dev-deps-non-major',
+      automerge: true,
+      automergeType: 'branch',
+      platformAutomerge: false,
+      // Longer age for dev deps to catch malicious packages
+      minimumReleaseAge: '14 days',
+      reviewers: [],
+      labels: ['dependencies', 'dev', 'automerge'],
+    },
+
+    // --------------------------------------------------------------------------
+    // TYPESCRIPT ECOSYSTEM
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group TypeScript ecosystem updates',
+      matchPackageNames: [
+        'typescript',
+        '/^@types//',
+        '/^typescript-eslint//',
+        'eslint',
+        '/^@eslint//',
+        'eslint-config-prettier',
+        'eslint-plugin-import-x',
+        'typescript-eslint',
+      ],
+      groupName: 'typescript ecosystem',
+      groupSlug: 'typescript-ecosystem',
+      // TypeScript updates can be breaking - require review
+      automerge: false,
+      reviewers: ['team:platform'],
+      separateMinorPatch: false,
+      labels: ['dependencies', 'typescript'],
+    },
+
+    // --------------------------------------------------------------------------
+    // TESTING FRAMEWORKS
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group testing framework updates',
+      matchPackageNames: ['vitest', '/^@vitest//', '/^@testing-library//'],
+      groupName: 'testing frameworks',
+      groupSlug: 'testing-frameworks',
+      // Test framework updates can be sensitive
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'testing'],
+    },
+
+    // --------------------------------------------------------------------------
+    // REACT ECOSYSTEM
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group React ecosystem updates',
+      matchPackageNames: ['react', 'react-dom', '/^@dnd-kit//'],
+      groupName: 'react ecosystem',
+      groupSlug: 'react-ecosystem',
+      // React updates require careful review
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'react', 'ui'],
+    },
+
+    // --------------------------------------------------------------------------
+    // BUILD TOOLS
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group build tool updates',
+      matchPackageNames: ['turbo', 'vite', '/^@vitejs//', 'tsx', 'esbuild'],
+      groupName: 'build tools',
+      groupSlug: 'build-tools',
+      // Build tools can affect build pipeline
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'build'],
+    },
+
+    // --------------------------------------------------------------------------
+    // DATABASE & ORM
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group database/ORM updates',
+      matchPackageNames: ['drizzle-orm', '/^@drizzle//'],
+      groupName: 'database/orm',
+      groupSlug: 'database-orm',
+      // Database updates require migration planning
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'database'],
+    },
+
+    // --------------------------------------------------------------------------
+    // API & BACKEND
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group API/backend framework updates',
+      matchPackageNames: ['hono', '/^@hono//', 'zod', '/^@zod//'],
+      groupName: 'api/backend frameworks',
+      groupSlug: 'api-backend',
+      // API framework updates can be breaking
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'api'],
+    },
+
+    // --------------------------------------------------------------------------
+    // SUPABASE
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group Supabase tooling updates',
+      matchPackageNames: ['supabase', '/^@supabase//'],
+      groupName: 'supabase tooling',
+      groupSlug: 'supabase',
+      // Supabase updates may require migration
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'supabase'],
+    },
+
+    // --------------------------------------------------------------------------
+    // TAILWIND CSS
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group Tailwind CSS ecosystem updates',
+      matchPackageNames: ['tailwindcss', '/^@tailwindcss//', 'autoprefixer', 'postcss'],
+      groupName: 'tailwind css ecosystem',
+      groupSlug: 'tailwind-css',
+      // CSS framework updates can affect styling
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'css'],
+    },
+
+    // --------------------------------------------------------------------------
+    // LINTING & FORMATTING
+    // --------------------------------------------------------------------------
+    {
+      description: 'Automerge linting/formatting tool updates',
+      matchPackageNames: ['prettier', 'lefthook'],
+      matchUpdateTypes: ['patch', 'minor'],
+      groupName: 'linting/formatting tools',
+      groupSlug: 'linting-tools',
+      automerge: true,
+      automergeType: 'branch',
+      platformAutomerge: false,
+      minimumReleaseAge: '7 days',
+      labels: ['dependencies', 'lint', 'automerge'],
+    },
+
+    // --------------------------------------------------------------------------
+    // MAJOR VERSION UPDATES - REQUIRE APPROVAL
+    // --------------------------------------------------------------------------
+    {
+      description: 'Require dashboard approval for major updates',
+      matchUpdateTypes: ['major'],
+      dependencyDashboardApproval: true,
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'major-version', 'review-required'],
+    },
+
+    // --------------------------------------------------------------------------
+    // PATCH UPDATES - CONSIDER AUTOMERGE
+    // --------------------------------------------------------------------------
+    {
+      description: 'Automerge patch updates for stable packages',
+      matchUpdateTypes: ['patch'],
+      matchCurrentVersion: '!/^0/', // Exclude pre-1.0.0 packages
+      automerge: true,
+      automergeType: 'branch',
+      platformAutomerge: false,
+      minimumReleaseAge: '7 days',
+      labels: ['dependencies', 'patch', 'automerge'],
+    },
+
+    // --------------------------------------------------------------------------
+    // SECURITY VULNERABILITY ALERTS
+    // --------------------------------------------------------------------------
+    {
+      description: 'Security updates bypass schedule and age requirements',
+      matchUpdateTypes: ['patch', 'minor'],
+      vulnerabilityAlerts: {
+        enabled: true,
+        automerge: true,
+        automergeType: 'pr',
+        platformAutomerge: true,
+        labels: ['security', 'vulnerability', 'automerge'],
+        commitMessageSuffix: '[SECURITY]',
+        minimumReleaseAge: '0 days',
+        schedule: ['at any time'],
+      },
+    },
+
+    // --------------------------------------------------------------------------
+    // GITHUB ACTIONS
+    // --------------------------------------------------------------------------
+    {
+      description: 'Group GitHub Actions updates',
+      matchManagers: ['github-actions'],
+      groupName: 'github actions',
+      groupSlug: 'github-actions',
+      // Actions updates require security review
+      automerge: false,
+      reviewers: ['team:platform'],
+      labels: ['dependencies', 'github-actions', 'ci'],
+    },
+
+    // --------------------------------------------------------------------------
+    // DOCKERFILE UPDATES
+    // --------------------------------------------------------------------------
+    {
+      description: 'Automerge Docker digest updates',
+      matchManagers: ['dockerfile'],
+      matchUpdateTypes: ['digest'],
+      automerge: true,
+      automergeType: 'branch',
+      platformAutomerge: false,
+      minimumReleaseAge: '0 days', // Digest updates are safe
+      labels: ['dependencies', 'docker', 'automerge'],
+    },
+
+    // --------------------------------------------------------------------------
+    // IGNORE SPECIFIC DEPENDENCIES
+    // --------------------------------------------------------------------------
+    {
+      description: 'Ignore TypeScript major updates (handle manually)',
+      matchPackageNames: ['typescript'],
+      matchUpdateTypes: ['major'],
+      enabled: false,
+    },
+  ],
+
+  // ============================================================================
+  // VULNERABILITY ALERTS CONFIGURATION
+  // ============================================================================
+  vulnerabilityAlerts: {
+    enabled: true,
+    labels: ['security', 'vulnerability'],
+    commitMessageSuffix: '[SECURITY]',
+    schedule: ['at any time'], // Bypass normal schedule for security
+  },
+
+  // ============================================================================
+  // OSV VULNERABILITY ALERTS
+  // ============================================================================
+  osvVulnerabilityAlerts: true,
+
+  // ============================================================================
+  // REGISTRY CONFIGURATION
+  // ============================================================================
+  // Add private registry URLs if using internal packages
+  // hostRules: [
+  //   {
+  //     matchHost: "npm.example.com",
+  //     token: "{{ secrets.NPM_TOKEN }}"
+  //   }
+  // ]
+}

@@ -1,0 +1,299 @@
+# Life OS Domain-Specific Terminology
+# Product and domain terms specific to the Life OS personal productivity system
+
+# Core Product Concepts
+Life OS
+Life Graph
+daily plan
+planning engine
+capacity aware
+workspaces
+areas
+goals
+projects
+tasks
+events
+notes
+contacts
+reminders
+notifications
+attachments
+integration accounts
+audit logs
+outbox events
+idempotency keys
+
+# Task Management
+task occurrences
+commitment level
+must do
+should do
+nice to do
+splittable
+energy levels
+milestone tracking
+subtasks
+priorities
+time entries
+billable rates
+assignees
+
+# Calendar Integration
+calendar connections
+calendar sources
+calendar events
+native time blocks
+scheduling links
+availability engine
+booking pages
+availability windows
+sync token
+refresh tokens
+webhook
+
+# Data Architecture
+entity links
+polymorphic junction
+source type
+source id
+target type
+target id
+link type
+open zone
+vault zone
+dual zone
+client side encrypted
+local only
+plaintext
+ciphertext
+planning projections
+materialized
+transactional outbox
+daily plan events
+
+# Privacy & Security
+row level security
+RLS
+workspace membership
+workspace scoped
+default deny
+encryption in transit
+encryption at rest
+OAuth tokens
+secure enclave
+SecureStore
+anonymized metadata
+dual table pattern
+
+# Planning & Scheduling
+focused
+balanced
+stretch
+plan profiles
+replanning
+capacity calculation
+commitment
+clarify
+reflect
+re plan
+capture
+inbox
+shutdown
+weekly review
+
+# Technical Implementation
+PowerSync
+Drizzle
+Supabase
+Hono
+Expo
+Tamagui
+Turborepo
+pnpm
+Vitest
+ESLint
+Prettier
+Lefthook
+Inngest
+Meilisearch
+PostgreSQL
+TypeScript
+React
+Next.js
+Expo Router
+React Native
+pg boss
+pg trgm
+tsvector
+full text search
+PgBouncer
+JWT
+workspace id
+user id
+offline first
+sync
+command
+CompleteTaskCommand
+RescheduleTaskCommand
+LinkEntityCommand
+CreateNoteCommand
+optimistic
+last write wins
+command log
+operation log
+
+# UI/UX Concepts
+Infinite Timeline
+command bar
+calm
+low stimulus
+intent
+context
+super app
+daily decision
+capture
+execution
+plan checking
+gesture driven
+react native gesture handler
+reanimated
+design tokens
+typography scales
+spacing scales
+radii
+
+# Development Workflow
+monorepo
+workspaces
+catalog mode
+strict
+workspace protocol
+build permissions
+pipeline
+orchestration
+parallel execution
+task caching
+modular monolith
+domain modules
+type safety
+Zod
+schemas
+contracts
+API client
+typed fetch
+tRPC
+REST
+OpenAPI
+Swagger
+migration
+seed
+ephemeral
+playwright
+detox
+maestro
+chromatic
+visual regression
+device screenshots
+sentry
+posthog
+pino
+axiom
+logtail
+grafana loki
+uptime robot
+health endpoint
+source maps
+preview deployments
+EAS
+TestFlight
+Play Store
+VPS
+platform as a service
+railway
+fly.io
+render
+containerized
+CI/CD
+GitHub Actions
+
+# Planning & Organization
+areas
+goals
+projects
+tasks
+events
+notes
+contacts
+health
+finances
+home
+learning
+relationships
+resources
+commitments
+obligations
+aspirations
+objectives
+key results
+outcomes
+weekly effort
+status
+active
+archived
+completed
+deferred
+dropped
+recurrence rule
+RRULE
+due date
+deadline
+context tags
+minimum chunk minutes
+escalate
+override
+
+# External Services
+Google Calendar
+OAuth
+PKCE
+read only
+scope
+incremental sync
+polling fallback
+hourly
+cron job
+sync reliability
+unique constraint
+event id
+sync races
+webhook subscriptions
+expire
+status visibility
+last synced
+credentials
+permissions
+revoked
+Plaid
+HealthKit
+bridge
+Cloudflare R2
+object storage
+private buckets
+Clerk
+organization
+workspace primitives
+abstraction layer
+proof of concept
+token exchange
+Vercel
+serverless
+timeout constraints
+development builds
+native modules
+optimizing compiler
+StyleSheet
+web parity
+cross platform
+primitives
+hooks
+state machines

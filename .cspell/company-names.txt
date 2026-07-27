@@ -1,0 +1,374 @@
+# Company and Product Names
+# Technology companies, frameworks, and product names
+
+# Major Tech Companies
+Google
+Microsoft
+Apple
+Amazon
+Meta
+Facebook
+Instagram
+WhatsApp
+Twitter
+X
+LinkedIn
+GitHub
+GitLab
+Bitbucket
+Atlassian
+Jira
+Confluence
+Trello
+Slack
+Discord
+Zoom
+Teams
+Skype
+Salesforce
+HubSpot
+Stripe
+PayPal
+Square
+Shopify
+WooCommerce
+Magento
+BigCommerce
+Squarespace
+Wix
+WordPress
+Drupal
+Joomla
+Ghost
+Medium
+Substack
+Notion
+Roam Research
+Obsidian
+Logseq
+Evernote
+OneNote
+Bear
+Ulysses
+Scrivener
+Todoist
+Things
+OmniFocus
+Microsoft To Do
+Any.do
+TickTick
+Habitica
+Streak
+Asana
+Basecamp
+Monday.com
+ClickUp
+Smartsheet
+Airtable
+Coda
+Notion
+Slab
+Confluence
+XWiki
+DokuWiki
+MediaWiki
+Fandom
+Reddit
+Hacker News
+Product Hunt
+Indie Hackers
+Dev.to
+Hashnode
+Medium
+Ghost
+WordPress
+Substack
+Ghost
+
+# Cloud & Infrastructure
+AWS
+Amazon Web Services
+Azure
+Google Cloud
+GCP
+DigitalOcean
+Linode
+Vultr
+Heroku
+Render
+Railway
+Fly.io
+Northflank
+Zeet
+Pulumi
+Terraform
+Ansible
+Chef
+Puppet
+SaltStack
+Kubernetes
+K8s
+Docker
+containerd
+runc
+Podman
+LXC
+LXD
+VMware
+VirtualBox
+Parallels
+Hyper-V
+KVM
+Xen
+QEMU
+Proxmox
+OpenStack
+CloudStack
+Eucalyptus
+OpenNebula
+
+# Databases
+PostgreSQL
+MySQL
+MariaDB
+SQLite
+Oracle
+SQL Server
+MongoDB
+Cassandra
+DynamoDB
+Cosmos DB
+Firestore
+Firebase
+Realtime Database
+Supabase
+PlanetScale
+Neon
+CockroachDB
+TiDB
+YugabyteDB
+ScyllaDB
+InfluxDB
+TimescaleDB
+Prometheus
+Grafana Loki
+Elasticsearch
+OpenSearch
+Solr
+Lucene
+Meilisearch
+Algolia
+Typesense
+RediSearch
+Redis
+Memcached
+RabbitMQ
+Kafka
+Pulsar
+NATS
+ZeroMQ
+ActiveMQ
+Amazon SQS
+Amazon SNS
+Google Pub/Sub
+Azure Service Bus
+Event Hubs
+
+# Development Tools
+VS Code
+Visual Studio Code
+IntelliJ IDEA
+WebStorm
+PyCharm
+PHPStorm
+RubyMine
+GoLand
+CLion
+Rider
+DataGrip
+AppCode
+Android Studio
+Xcode
+Eclipse
+NetBeans
+Sublime Text
+Atom
+Brackets
+Vim
+Neovim
+Emacs
+Nano
+Notepad++
+TextEdit
+BBEdit
+TextMate
+CotEditor
+VS Code
+Cursor
+Windsurf
+Zed
+Nova
+Fleet
+Tabby
+iTerm2
+Terminal
+Hyper
+Alacritty
+Kitty
+WezTerm
+Windows Terminal
+PuTTY
+MobaXterm
+Termius
+FileZilla
+Cyberduck
+Transmit
+WinSCP
+Fetch
+
+# Frameworks & Libraries
+React
+Vue
+Angular
+Svelte
+Solid
+Qwik
+Alpine
+Preact
+Inferno
+hyperapp
+mithril
+riot
+ember
+backbone
+knockout
+jQuery
+lodash
+underscore
+ramda
+immutable
+mobx
+RxJS
+Redux
+Zustand
+Jotai
+Recoil
+XState
+Effector
+overmind
+flux
+relay
+Apollo
+urql
+graphql-request
+graphql-tools
+graphql-yoga
+apollo-server
+graphql-js
+graphql-shield
+graphql-modules
+graphql-scalars
+graphql-type-json
+dataloader
+axios
+fetch
+got
+node-fetch
+ky
+superagent
+request
+needle
+http
+https
+undici
+ws
+socket.io
+socketcluster
+mqtt
+amqp
+stomp
+grpc
+protobuf
+thrift
+avro
+msgpack
+cbor
+json
+xml
+yaml
+toml
+ini
+csv
+tsv
+xlsx
+xls
+docx
+doc
+pdf
+html
+css
+scss
+sass
+less
+stylus
+postcss
+tailwind
+bootstrap
+bulma
+foundation
+materialize
+semantic ui
+ant design
+chakra ui
+mantine
+next ui
+shadcn
+radix
+headless ui
+daisyui
+arwes
+tweakpane
+lemonade
+geist
+geist ui
+nextui
+react components
+vue components
+angular components
+svelte components
+solid components
+qwik components
+alpine components
+web components
+custom elements
+shadow dom
+virtual dom
+concurrent mode
+suspense
+error boundaries
+portals
+fragments
+context
+hooks
+effects
+memo
+callback
+ref
+forward ref
+lazy
+use
+useEffect
+useState
+useContext
+useReducer
+useMemo
+useCallback
+useRef
+useImperativeHandle
+useLayoutEffect
+useDebugValue
+useId
+useTransition
+useDeferredValue
+useSyncExternalStore
+useInsertionEffect

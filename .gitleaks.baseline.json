@@ -1,0 +1,6 @@
+{
+  "description": "Gitleaks baseline for Life OS monorepo. This file tracks known false positives and historical findings that have been triaged. Run `gitleaks git --baseline-path .gitleaks.baseline.json` to use this baseline. Review and update quarterly.",
+  "version": "1.0.0",
+  "generated": "2026-07-26",
+  "findings": []
+}

@@ -1,5 +1,5 @@
 pre-commit:
-  parallel: true
+  parallel: false
   skip:
     - merge
     - rebase
@@ -18,4 +18,8 @@ pre-commit:
 commit-msg:
   commands:
     lint-commit:
-      run: pnpm dlx commitlint --edit {1}
+      run: commitlint --edit {1}
+
+    spellcheck-commit:
+      run: cspell --no-progress --no-summary --language-id commit-msg {1}
+      timeout: 30s

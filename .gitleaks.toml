@@ -1,0 +1,148 @@
+# Gitleaks configuration — Life OS monorepo secret scanning
+#
+# Secret scanning runs in two deterministic, tool-only places:
+# - lefthook pre-commit → `gitleaks git --staged` (blocks secrets before commit)
+# - CI (on-pull-request) → `gitleaks git --log-opts=origin/main..` (scans PR diff)
+#
+# Both invoke gitleaks with `--redact` so any matched secret is never printed to logs.
+#
+# We extend gitleaks' built-in rule set and add repo-specific allowlisting for
+# known, justified false positives. Keep this file the single source of truth —
+# expand the allowlist (with a justification comment) as new patterns appear.
+
+title = "Life OS gitleaks config"
+
+# Start from gitleaks' maintained default rules, then layer the allowlist below.
+# The latest default config is at: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+[extend]
+useDefault = true
+
+# Custom rules for Life OS stack-specific secrets
+[[rules]]
+id = "life-os-supabase-service-role"
+description = "Supabase service role key (high-privilege credential)"
+regex = '''ey[a-zA-Z0-9_-]{50,}\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]{50,}'''
+entropy = "4.5"
+keywords = ["service_role", "supabase"]
+
+[[rules]]
+id = "life-os-supabase-jwt-secret"
+description = "Supabase JWT secret used for token signing"
+regex = '''[a-zA-Z0-9_-]{32,}'''
+entropy = "4.0"
+keywords = ["jwt_secret", "JWT_SECRET"]
+
+[[rules]]
+id = "life-os-database-url"
+description = "PostgreSQL database connection string with credentials"
+regex = '''postgresql://[a-zA-Z0-9_\-\.]+:[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-\.]+:[0-9]+/[a-zA-Z0-9_\-\.]+'''
+keywords = ["DATABASE_URL", "postgresql://"]
+
+[[rules]]
+id = "life-os-nextjs-public-env"
+description = "Next.js public environment variable with sensitive value"
+regex = '''NEXT_PUBLIC_[A-Z_]+=[a-zA-Z0-9_\-\.]{20,}'''
+keywords = ["NEXT_PUBLIC_"]
+
+[[rules]]
+id = "life-os-expo-public-env"
+description = "Expo public environment variable with sensitive value"
+regex = '''EXPO_PUBLIC_[A-Z_]+=[a-zA-Z0-9_\-\.]{20,}'''
+keywords = ["EXPO_PUBLIC_"]
+
+[[rules]]
+id = "life-os-power-sync-key"
+description = "PowerSync database sync key"
+regex = '''powersync_[a-zA-Z0-9_\-\.]{32,}'''
+entropy = "4.0"
+keywords = ["powersync", "sync_key"]
+
+[[rules]]
+id = "life-os-api-key"
+description = "Generic Life OS API key pattern"
+regex = '''lifeos_[a-zA-Z0-9_\-\.]{32,}'''
+entropy = "4.0"
+keywords = ["lifeos", "api_key"]
+
+# Global allowlist for known false positives across the monorepo
+[allowlist]
+description = "Life OS repo-specific false-positive exclusions"
+
+# Treat allowlist regexes as a global OR: a finding is ignored if its file path
+# (paths) or owning commit (commits) matches any entry.
+paths = [
+  # Build artifacts are generated, never hand-authored. Example/placeholder keys
+  # baked into bundles are not real credentials, and dist is not committed in the
+  # live tree anyway.
+  '''(^|/)dist/''',
+  '''(^|/)\.next/''',
+  '''(^|/)build/''',
+  '''(^|/)out/''',
+
+  # Lockfile entries are integrity hashes that can trip entropy heuristics.
+  '''(^|/)pnpm-lock\.yaml$''',
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)yarn\.lock$''',
+
+  # Test & spec fixtures intentionally embed FAKE api keys / tokens to exercise
+  # sanitizers and auth flows. Real secrets must never live in tests, so excluding
+  # fixtures keeps the gate signal-rich without flagging deliberate dummies.
+  '''\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$''',
+  '''(^|/)test/(fixtures|fixtures|__fixtures__)/''',
+  '''(^|/)__tests__/fixtures/''',
+
+  # This config documents example patterns; don't scan it.
+  '''(^|/)\.gitleaks\.toml$''',
+
+  # Supabase local development temp files contain non-sensitive metadata
+  '''(^|/)supabase/\.temp/''',
+
+  # Drizzle snapshot files contain schema metadata, not secrets
+  '''(^|/)drizzle/meta/.*\.json$''',
+
+  # TypeScript build info files
+  '''\.tsbuildinfo$''',
+
+  # Coverage reports can contain high-entropy strings
+  '''(^|/)coverage/''',
+
+  # Turbo cache
+  '''(^|/)\.turbo/''',
+
+  # Expo temp files
+  '''(^|/)\.expo/''',
+  '''(^|/)\.expo-shared/''',
+
+  # Supabase local config
+  '''(^|/)\.supabase/''',
+]
+
+# Regex allowlist for patterns that are known false positives
+regexes = [
+  # Common placeholder values in documentation and examples
+  '''(?i)your-[a-z_-]+-key''',
+  '''(?i)your-[a-z_-]+-secret''',
+  '''(?i)your-[a-z_-]+-token''',
+  '''(?i)placeholder_[a-z_]+''',
+  '''(?i)example_[a-z_]+''',
+  '''(?i)test_[a-z_]+''',
+
+  # Environment variable references in code (not actual values)
+  '''\$\{[A-Z_]+\}''',
+  '''process\.env\.[A-Z_]+''',
+
+  # UUIDs in test fixtures (not secrets)
+  '''[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}''',
+
+  # Common test database strings
+  '''postgresql://test_user:test_password@localhost''',
+  '''postgresql://[a-z]+:[a-z]+@localhost:[0-9]+/[a-z_]+''',
+]
+
+# Commit-specific allowlist for historical findings that have been triaged
+# and documented. Add commit SHAs here with justification in comments.
+commits = [
+  # Initial monorepo import (NEXUS-000: Establish the execution baseline).
+  # No secrets were committed in the initial setup - this is a placeholder
+  # for any historical findings that may be discovered during initial scan.
+]
