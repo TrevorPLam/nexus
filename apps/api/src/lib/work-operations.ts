@@ -63,7 +63,9 @@ import { db } from './db.js';
 
 // Re-export from specialized modules for backward compatibility
 export * from './project-operations.js';
-export * from './task-operations.js';
+export * from './task-crud.js';
+export * from './task-queries.js';
+export * from './task-subtasks.js';
 export * from './task-dependency-operations.js';
 export * from './task-note-operations.js';
 export * from './task-assignee-operations.js';
