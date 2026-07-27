@@ -1,10 +1,12 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { apiClient } from '@life-os/api-client';
+import type { TaskResponse } from '@life-os/contracts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useWorkTasks } from './useWorkTasks';
-import { apiClient } from '@life-os/api-client';
+
 
 // Mock the API client
 vi.mock('@life-os/api-client', () => ({
@@ -47,7 +49,7 @@ describe('useWorkTasks', () => {
       { id: '1', title: 'Task 1', projectId: 'project-1' },
       { id: '2', title: 'Task 2', projectId: 'project-1' },
     ];
-    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as TaskResponse[]);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', 'project-1', null), {
       wrapper,
@@ -67,7 +69,7 @@ describe('useWorkTasks', () => {
       { id: '1', title: 'Task 1', priority: 'high' },
       { id: '2', title: 'Task 2', priority: 'high' },
     ];
-    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as TaskResponse[]);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, 'high'), { wrapper });
 
@@ -82,7 +84,7 @@ describe('useWorkTasks', () => {
 
   it('fetches tasks for workspace with both project and priority filters', async () => {
     const mockTasks = [{ id: '1', title: 'Task 1', projectId: 'project-1', priority: 'high' }];
-    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue(mockTasks as TaskResponse[]);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', 'project-1', 'high'), {
       wrapper,
@@ -99,7 +101,7 @@ describe('useWorkTasks', () => {
   });
 
   it('updates query key when filters change', async () => {
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
 
     const { rerender } = renderHook(
       ({ projectId, priority }) => useWorkTasks('workspace-1', projectId, priority),
@@ -146,8 +148,8 @@ describe('useWorkTasks', () => {
 
   it('creates task and invalidates query', async () => {
     const mockTask = { id: '1', title: 'New Task' };
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
-    vi.mocked(apiClient.createTask).mockResolvedValue(mockTask as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
+    vi.mocked(apiClient.createTask).mockResolvedValue(mockTask as TaskResponse);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
@@ -171,8 +173,8 @@ describe('useWorkTasks', () => {
 
   it('updates task and invalidates query', async () => {
     const mockTask = { id: '1', title: 'Updated Task' };
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
-    vi.mocked(apiClient.updateTask).mockResolvedValue(mockTask as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
+    vi.mocked(apiClient.updateTask).mockResolvedValue(mockTask as TaskResponse);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
 
@@ -187,7 +189,7 @@ describe('useWorkTasks', () => {
   });
 
   it('deletes task and invalidates query', async () => {
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
     vi.mocked(apiClient.deleteTask).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
@@ -207,7 +209,7 @@ describe('useWorkTasks', () => {
   });
 
   it('exposes error state on create task failure', async () => {
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
     vi.mocked(apiClient.createTask).mockRejectedValue(new Error('Failed to create task'));
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
@@ -222,7 +224,7 @@ describe('useWorkTasks', () => {
   });
 
   it('exposes error state on update task failure', async () => {
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
     vi.mocked(apiClient.updateTask).mockRejectedValue(new Error('Failed to update task'));
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
@@ -238,7 +240,7 @@ describe('useWorkTasks', () => {
   });
 
   it('exposes error state on delete task failure', async () => {
-    vi.mocked(apiClient.getTasks).mockResolvedValue([] as any);
+    vi.mocked(apiClient.getTasks).mockResolvedValue([] as TaskResponse[]);
     vi.mocked(apiClient.deleteTask).mockRejectedValue(new Error('Failed to delete task'));
 
     const { result } = renderHook(() => useWorkTasks('workspace-1', null, null), { wrapper });
