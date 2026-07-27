@@ -1,161 +1,21 @@
-import { QueryClient, QueryClientProvider, type UseMutationResult } from '@tanstack/react-query';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { AuthProvider } from '../../contexts/AuthContext';
+import { createTestWrapper, render, screen, fireEvent, waitFor } from './test-helpers';
 
 import WorkPage from './page';
 
-// Mock the custom hooks
-vi.mock('../../hooks/useWorkProjects', () => ({
-  useWorkProjects: vi.fn(() => ({
-    projects: [],
-    projectsLoading: false,
-    createProjectMutation: { mutate: vi.fn(), isPending: false },
-    updateProjectMutation: { mutate: vi.fn(), isPending: false },
-    deleteProjectMutation: { mutate: vi.fn(), isPending: false },
-  })),
-}));
-
-vi.mock('../../hooks/useWorkTasks', () => ({
-  useWorkTasks: vi.fn(() => ({
-    tasks: [],
-    isLoading: false,
-    isError: false,
-    error: null,
-    createTaskMutation: { mutate: vi.fn(), isPending: false },
-    updateTaskMutation: { mutate: vi.fn(), isPending: false },
-    deleteTaskMutation: { mutate: vi.fn(), isPending: false },
-  })),
-}));
-
-vi.mock('../../hooks/useTaskDetails', () => ({
-  useTaskDetails: vi.fn(() => ({
-    dependencies: [],
-    createDependencyMutation: { mutate: vi.fn() },
-    deleteDependencyMutation: { mutate: vi.fn() },
-    assignees: [],
-    createAssigneeMutation: { mutate: vi.fn() },
-    deleteAssigneeMutation: { mutate: vi.fn() },
-    comments: [],
-    createCommentMutation: { mutate: vi.fn() },
-    subtasks: [],
-    createSubtaskMutation: { mutate: vi.fn() },
-    updateSubtaskMutation: { mutate: vi.fn() },
-    deleteSubtaskMutation: { mutate: vi.fn() },
-  })),
-}));
-
-vi.mock('../../hooks/useTaskHelpers', () => ({
-  getPriorityColor: vi.fn(() => '#3b82f6'),
-  getTimelineDays: vi.fn(() => []),
-  getTaskPosition: vi.fn(() => ({ left: 0, width: 100 })),
-}));
-
-// Mock the UI components
-vi.mock('@life-os/ui', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Button: ({ children, onPress, variant }: any) => (
-    <button onClick={onPress} data-variant={variant}>
-      {children}
-    </button>
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Modal: ({ isOpen, onClose, children }: any) =>
-    isOpen ? (
-      <div role="dialog">
-        <button onClick={onClose}>Close</button>
-        {children}
-      </div>
-    ) : null,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Badge: ({ children, variant }: any) => <span data-variant={variant}>{children}</span>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Input: ({ placeholder, value, onChange }: any) => (
-    <input placeholder={placeholder} value={value} onChange={onChange} />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TextArea: ({ placeholder, value, onChange }: any) => (
-    <textarea placeholder={placeholder} value={value} onChange={onChange} />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Select: ({ value, onChange, children }: any) => (
-    <select value={value} onChange={(e) => onChange(e.target.value)}>
-      {children}
-    </select>
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  SelectItem: ({ children, value }: any) => <option value={value}>{children}</option>,
-}));
-
-// Mock dnd-kit
-vi.mock('@dnd-kit/core', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  DndContext: ({ children }: any) => <div>{children}</div>,
-  closestCenter: vi.fn(),
-  KeyboardSensor: vi.fn(),
-  PointerSensor: vi.fn(),
-  useSensor: vi.fn(),
-  useSensors: vi.fn(),
-  DragEndEvent: vi.fn(),
-}));
-
-vi.mock('@dnd-kit/sortable', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  SortableContext: ({ children }: any) => <div>{children}</div>,
-  sortableKeyboardCoordinates: vi.fn(),
-  useSortable: vi.fn(() => ({
-    attributes: {},
-    listeners: {},
-    setNodeRef: vi.fn(),
-    transform: null,
-    transition: null,
-    isDragging: false,
-  })),
-  verticalListSortingStrategy: vi.fn(),
-}));
-
-vi.mock('@dnd-kit/utilities', () => ({
-  CSS: {
-    Transform: {
-      toString: vi.fn(() => ''),
-    },
-  },
-}));
-
-vi.mock('../../contexts/AuthContext', () => ({
-  useAuth: vi.fn(() => ({
-    workspaceId: 'default-workspace',
-    workspaceState: 'selected',
-  })),
-  AuthProvider: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-}));
-
 /**
- * BDD Journey Regression Tests for Work Module
+ * BDD Journey Regression Tests for Work Module - Core User Journey
  * Tests the complete user journey for Work management
  * Validates that all completed features work end-to-end
  */
 
-describe('Work Journey Regression Tests', () => {
-  let queryClient: QueryClient;
-
+describe('Work Journey Regression Tests - Core User Journey', () => {
   beforeEach(() => {
-    queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-        mutations: { retry: false },
-      },
-    });
     vi.clearAllMocks();
   });
 
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>{children}</AuthProvider>
-    </QueryClientProvider>
-  );
+  const { wrapper } = createTestWrapper();
 
   describe('BDD: Core Work User Journey', () => {
     // Given: User is on the Work page with a selected workspace
@@ -332,21 +192,12 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: true,
         error: new Error('Failed to load tasks'),
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
       render(<WorkPage />, { wrapper });
@@ -368,21 +219,12 @@ describe('Work Journey Regression Tests', () => {
         isLoading: false,
         isError: false,
         error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        createTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        updateTaskMutation: { mutate: vi.fn(), isPending: false } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as any,
       });
 
       render(<WorkPage />, { wrapper });
@@ -467,103 +309,6 @@ describe('Work Journey Regression Tests', () => {
       await waitFor(() => {
         expect(screen.queryByText('List view coming soon')).not.toBeInTheDocument();
       });
-    });
-  });
-
-  describe('Error Recovery and Edge Cases', () => {
-    // Given: User has no projects
-    // When: User navigates to Work page
-    // Then: Empty state is displayed with clear call-to-action
-    it('Given a user with no projects, when they navigate to Work page, then empty state is shown with CTA', async () => {
-      const { useWorkProjects } = await import('../../hooks/useWorkProjects');
-      vi.mocked(useWorkProjects).mockReturnValue({
-        projects: [],
-        projectsLoading: false,
-        createProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-      });
-
-      render(<WorkPage />, { wrapper });
-
-      expect(
-        screen.getByText('No projects yet. Create your first project to get started.'),
-      ).toBeInTheDocument();
-    });
-
-    // Given: User has no tasks
-    // When: User switches to Tasks view
-    // Then: Empty state is displayed with clear call-to-action
-    it('Given a user with no tasks, when they switch to Tasks view, then empty state is shown with CTA', async () => {
-      const { useWorkTasks } = await import('../../hooks/useWorkTasks');
-      vi.mocked(useWorkTasks).mockReturnValue({
-        tasks: [],
-        isLoading: false,
-        isError: false,
-        error: null,
-        createTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        updateTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-        deleteTaskMutation: { mutate: vi.fn(), isPending: false } as unknown as UseMutationResult<
-          unknown,
-          Error,
-          unknown
-        >,
-      });
-
-      render(<WorkPage />, { wrapper });
-
-      fireEvent.click(screen.getByText('Tasks'));
-
-      await waitFor(() => {
-        expect(
-          screen.getByText('No tasks yet. Create your first task to get started.'),
-        ).toBeInTheDocument();
-      });
-    });
-
-    // Given: User is loading data
-    // When: Data is being fetched
-    // Then: Loading state is displayed
-    it('Given a user loading data, when data is being fetched, then loading state is shown', async () => {
-      const { useWorkProjects } = await import('../../hooks/useWorkProjects');
-      vi.mocked(useWorkProjects).mockReturnValue({
-        projects: [],
-        projectsLoading: true,
-        createProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-        updateProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-        deleteProjectMutation: {
-          mutate: vi.fn(),
-          isPending: false,
-        } as unknown as UseMutationResult<unknown, Error, unknown>,
-      });
-
-      render(<WorkPage />, { wrapper });
-
-      // Loading state should be shown
-      // This test documents the expected loading behavior
     });
   });
 });
