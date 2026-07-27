@@ -2,13 +2,17 @@
 
 ## Overview
 
-Expo SDK is a framework for building native iOS and Android applications using React Native. It provides a set of tools, services, and APIs that simplify the development process, allowing developers to build, deploy, and iterate on mobile apps quickly.
+Expo SDK is a framework for building native iOS and Android applications using
+React Native. It provides a set of tools, services, and APIs that simplify the
+development process, allowing developers to build, deploy, and iterate on mobile
+apps quickly.
 
 ## Latest Stable Version
 
 **Version**: `52.0.0` (July 2026)
 
 **Compatibility**:
+
 - React Native: 0.76.0
 - iOS: 13.0+
 - Android: API 21+ (Android 5.0+)
@@ -16,6 +20,7 @@ Expo SDK is a framework for building native iOS and Android applications using R
 - Package Managers: npm, pnpm, yarn
 
 **Key Features**:
+
 - Expo Router for file-based routing
 - Expo Modules for native functionality
 - Over-the-air (OTA) updates
@@ -142,23 +147,23 @@ export default {
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
   },
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.myapp'
+    bundleIdentifier: 'com.myapp',
   },
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
     },
-    package: 'com.myapp'
+    package: 'com.myapp',
   },
   web: {
-    favicon: './assets/favicon.png'
-  }
-}
+    favicon: './assets/favicon.png',
+  },
+};
 ```
 
 ## Expo Router
@@ -264,16 +269,16 @@ npx expo install expo-location
 ```
 
 ```typescript
-import * as Location from 'expo-location'
+import * as Location from 'expo-location';
 
 async function getCurrentLocation() {
-  const { status } = await Location.requestForegroundPermissionsAsync()
+  const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== 'granted') {
-    return
+    return;
   }
 
-  const location = await Location.getCurrentPositionAsync({})
-  return location
+  const location = await Location.getCurrentPositionAsync({});
+  return location;
 }
 ```
 
@@ -284,16 +289,16 @@ npx expo install expo-notifications
 ```
 
 ```typescript
-import * as Notifications from 'expo-notifications'
+import * as Notifications from 'expo-notifications';
 
 async function scheduleNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Hello',
-      body: 'This is a notification'
+      body: 'This is a notification',
     },
-    trigger: { seconds: 5 }
-  })
+    trigger: { seconds: 5 },
+  });
 }
 ```
 
@@ -304,14 +309,14 @@ npx expo install expo-secure-store
 ```
 
 ```typescript
-import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store';
 
 async function saveToken(token: string) {
-  await SecureStore.setItemAsync('authToken', token)
+  await SecureStore.setItemAsync('authToken', token);
 }
 
 async function getToken() {
-  return await SecureStore.getItemAsync('authToken')
+  return await SecureStore.getItemAsync('authToken');
 }
 ```
 
@@ -408,36 +413,37 @@ eas update --branch production --message "Fix login bug"
 ### Custom Hooks
 
 ```typescript
-import { useState, useEffect } from 'react'
-import * as Location from 'expo-location'
+import { useState, useEffect } from 'react';
+import * as Location from 'expo-location';
 
 function useLocation() {
-  const [location, setLocation] = useState(null)
-  const [error, setError] = useState(null)
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setError('Permission denied')
-        return
+        setError('Permission denied');
+        return;
       }
 
-      const currentLocation = await Location.getCurrentPositionAsync({})
-      setLocation(currentLocation)
-    })()
-  }, [])
+      const currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+    })();
+  }, []);
 
-  return { location, error }
+  return { location, error };
 }
 ```
 
 ### Environment Variables
 
 ```typescript
-import Constants from 'expo-constants'
+import Constants from 'expo-constants';
 
-const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com'
+const API_URL =
+  Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com';
 ```
 
 ### Platform-Specific Code
@@ -458,31 +464,36 @@ function PlatformSpecificComponent() {
 ### 1. Not Using Expo Router
 
 **BAD**:
+
 ```typescript
 // Using React Navigation manually
 ```
 
 **GOOD**:
+
 ```typescript
 // Using Expo Router for file-based routing
 ```
 
-**Why**: Expo Router provides better TypeScript support and simpler configuration.
+**Why**: Expo Router provides better TypeScript support and simpler
+configuration.
 
 ### 2. Not Handling Permissions
 
 **BAD**:
+
 ```typescript
-const location = await Location.getCurrentPositionAsync({})
+const location = await Location.getCurrentPositionAsync({});
 ```
 
 **GOOD**:
+
 ```typescript
-const { status } = await Location.requestForegroundPermissionsAsync()
+const { status } = await Location.requestForegroundPermissionsAsync();
 if (status !== 'granted') {
-  return
+  return;
 }
-const location = await Location.getCurrentPositionAsync({})
+const location = await Location.getCurrentPositionAsync({});
 ```
 
 **Why**: Permissions are required for sensitive features.
@@ -490,13 +501,16 @@ const location = await Location.getCurrentPositionAsync({})
 ### 3. Hardcoding Values
 
 **BAD**:
+
 ```typescript
-const API_URL = 'https://api.example.com'
+const API_URL = 'https://api.example.com';
 ```
 
 **GOOD**:
+
 ```typescript
-const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com'
+const API_URL =
+  Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com';
 ```
 
 **Why**: Environment variables allow different configurations per environment.
@@ -504,11 +518,13 @@ const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com'
 ### 4. Not Using Development Builds
 
 **BAD**:
+
 ```typescript
 // Using Expo Go for everything
 ```
 
 **GOOD**:
+
 ```typescript
 // Use development builds for native modules
 ```
@@ -520,11 +536,11 @@ const API_URL = Constants.expoConfig?.extra?.apiUrl || 'https://api.example.com'
 ### 1. Use Memoization
 
 ```typescript
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
 const expensiveValue = useMemo(() => {
-  return computeExpensiveValue(data)
-}, [data])
+  return computeExpensiveValue(data);
+}, [data]);
 ```
 
 ### 2. Optimize Images
@@ -596,16 +612,19 @@ npx expo install expo-camera
 ### Common Issues
 
 **Metro bundler errors**:
+
 - Clear cache: `npx expo start -c`
 - Restart development server
 - Check for TypeScript errors
 
 **Build failures**:
+
 - Check EAS configuration
 - Verify environment variables
 - Review build logs
 
 **Module not found**:
+
 - Install missing modules
 - Check package.json
 - Clear node_modules and reinstall

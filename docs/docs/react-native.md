@@ -2,19 +2,24 @@
 
 ## Overview
 
-React Native is a framework for building native mobile applications using React. It allows developers to use React along with native platform capabilities to build iOS and Android apps from a single codebase while delivering truly native performance and feel.
+React Native is a framework for building native mobile applications using React.
+It allows developers to use React along with native platform capabilities to
+build iOS and Android apps from a single codebase while delivering truly native
+performance and feel.
 
 ## Latest Stable Version
 
 **Version**: `0.76.0` (July 2026)
 
 **Compatibility**:
+
 - iOS: 13.0+ (iOS 13+)
 - Android: API 21+ (Android 5.0+)
 - Node.js: 18.0.0+, 20.0.0+
 - Package Managers: npm, pnpm, yarn
 
 **Key Features**:
+
 - Cross-platform development
 - Native performance
 - Hot reloading
@@ -210,20 +215,20 @@ function InlineStyledComponent() {
 ### Platform-Specific Styles
 
 ```typescript
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     ...Platform.select({
       ios: {
-        backgroundColor: '#f0f0f0'
+        backgroundColor: '#f0f0f0',
       },
       android: {
-        backgroundColor: '#e0e0e0'
-      }
-    })
-  }
-})
+        backgroundColor: '#e0e0e0',
+      },
+    }),
+  },
+});
 ```
 
 ## Navigation
@@ -355,11 +360,11 @@ Component.android.tsx
 
 ```typescript
 // NativeModule.ts
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules, Platform } from 'react-native';
 
-const { NativeModule } = NativeModules
+const { NativeModule } = NativeModules;
 
-export default NativeModule
+export default NativeModule;
 ```
 
 ### Using Native Module
@@ -382,24 +387,24 @@ function Component() {
 ### Custom Hooks
 
 ```typescript
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 function useLocation() {
-  const [location, setLocation] = useState(null)
-  const [error, setError] = useState(null)
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const position = await Geolocation.getCurrentPosition()
-        setLocation(position)
+        const position = await Geolocation.getCurrentPosition();
+        setLocation(position);
       } catch (err) {
-        setError(err)
+        setError(err);
       }
-    })()
-  }, [])
+    })();
+  }, []);
 
-  return { location, error }
+  return { location, error };
 }
 ```
 
@@ -451,11 +456,13 @@ class ErrorBoundary extends Component {
 ### 1. Not Using FlatList for Long Lists
 
 **BAD**:
+
 ```typescript
 {longArray.map(item => <Item key={item.id} item={item} />)}
 ```
 
 **GOOD**:
+
 ```typescript
 <FlatList
   data={longArray}
@@ -469,11 +476,13 @@ class ErrorBoundary extends Component {
 ### 2. Inline Functions in Render
 
 **BAD**:
+
 ```typescript
 <Button onPress={() => console.log('pressed')} />
 ```
 
 **GOOD**:
+
 ```typescript
 const handlePress = useCallback(() => {
   console.log('pressed')
@@ -487,11 +496,13 @@ const handlePress = useCallback(() => {
 ### 3. Not Using Platform-Specific Code
 
 **BAD**:
+
 ```typescript
 // Same code for both platforms
 ```
 
 **GOOD**:
+
 ```typescript
 // Platform-specific implementations
 ```
@@ -501,6 +512,7 @@ const handlePress = useCallback(() => {
 ### 4. Ignoring Safe Areas
 
 **BAD**:
+
 ```typescript
 <View style={{ flex: 1 }}>
   {/* Content */}
@@ -508,6 +520,7 @@ const handlePress = useCallback(() => {
 ```
 
 **GOOD**:
+
 ```typescript
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -560,7 +573,7 @@ module.exports = {
   resolver: {
     sourceExts: ['jsx', 'js', 'ts', 'tsx'],
   },
-}
+};
 ```
 
 ### 4. Enable Fast Refresh
@@ -597,16 +610,19 @@ cd ios && pod install
 ### Common Issues
 
 **Metro bundler errors**:
+
 - Clear cache: `npx react-native start --reset-cache`
 - Restart Metro bundler
 - Check for TypeScript errors
 
 **Build failures**:
+
 - Clean build folder
 - Reinstall dependencies
 - Check native module compatibility
 
 **Navigation issues**:
+
 - Verify navigation structure
 - Check screen names
 - Ensure proper navigation setup

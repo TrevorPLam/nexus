@@ -20,7 +20,9 @@ describe('useTaskDetails - Dependencies', () => {
     const mockDependencies = [
       { id: '1', taskId: 'task-1', dependsOnTaskId: 'task-2', type: 'finish_to_start' },
     ];
-    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({ dependencies: mockDependencies } as never);
+    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({
+      dependencies: mockDependencies,
+    } as never);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {
       wrapper,
@@ -37,7 +39,9 @@ describe('useTaskDetails - Dependencies', () => {
     const mockDependencies = [
       { id: '1', taskId: 'task-1', dependsOnTaskId: 'task-2', type: 'finish_to_start' },
     ];
-    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({ dependencies: mockDependencies } as never);
+    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({
+      dependencies: mockDependencies,
+    } as never);
     vi.mocked(apiClient.createTaskDependency).mockResolvedValue({
       id: '2',
       taskId: 'task-1',
@@ -70,7 +74,9 @@ describe('useTaskDetails - Dependencies', () => {
     const mockDependencies = [
       { id: '1', taskId: 'task-1', dependsOnTaskId: 'task-2', type: 'finish_to_start' },
     ];
-    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({ dependencies: mockDependencies } as never);
+    vi.mocked(apiClient.getTaskDependencies).mockResolvedValue({
+      dependencies: mockDependencies,
+    } as never);
     vi.mocked(apiClient.deleteTaskDependency).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {

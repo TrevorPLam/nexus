@@ -181,9 +181,7 @@ describe('recurrence - Timezone operations', () => {
 
     it('throws error on invalid timezone', () => {
       const utcDate = new Date('2026-01-15T10:00:00Z');
-      expect(() => convertToTimezone(utcDate, 'Invalid/Timezone')).toThrow(
-        RangeError,
-      );
+      expect(() => convertToTimezone(utcDate, 'Invalid/Timezone')).toThrow(RangeError);
     });
   });
 
@@ -202,9 +200,7 @@ describe('recurrence - Timezone operations', () => {
 
     it('throws error on invalid timezone', () => {
       const date = new Date('2026-01-15T10:00:00Z');
-      expect(() => convertFromTimezone(date, 'Invalid/Timezone')).toThrow(
-        RangeError,
-      );
+      expect(() => convertFromTimezone(date, 'Invalid/Timezone')).toThrow(RangeError);
     });
   });
 
@@ -291,9 +287,7 @@ describe('recurrence - Timezone operations', () => {
       const start2 = new Date('2026-01-15T11:00:00Z');
       const end2 = new Date('2026-01-15T13:00:00Z');
 
-      expect(rangesOverlap(start1, end1, start2, end2, 'America/New_York')).toBe(
-        true,
-      );
+      expect(rangesOverlap(start1, end1, start2, end2, 'America/New_York')).toBe(true);
     });
 
     it('detects one range containing another', () => {

@@ -2,18 +2,22 @@
 
 ## Overview
 
-Next.js is a React framework for building full-stack web applications. It provides features like server-side rendering, static site generation, file-based routing, API routes, and optimized performance out of the box.
+Next.js is a React framework for building full-stack web applications. It
+provides features like server-side rendering, static site generation, file-based
+routing, API routes, and optimized performance out of the box.
 
 ## Latest Stable Version
 
 **Version**: `16.0.0` (July 2026)
 
 **Compatibility**:
+
 - Node.js: 18.18.0+, 20.0.0+, 22.0.0+
 - Browsers: Modern browsers (Chrome, Firefox, Safari, Edge)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - App Router (React Server Components)
 - Server-Side Rendering (SSR)
 - Static Site Generation (SSG)
@@ -272,15 +276,15 @@ export default function Page() {
 
 ```typescript
 // app/api/hello/route.ts
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 
 export async function GET() {
-  return NextResponse.json({ message: 'Hello' })
+  return NextResponse.json({ message: 'Hello' });
 }
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  return NextResponse.json({ received: body })
+  const body = await request.json();
+  return NextResponse.json({ received: body });
 }
 ```
 
@@ -288,17 +292,17 @@ export async function POST(request: Request) {
 
 ```typescript
 // middleware.ts
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Modify request/response
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/api/:path*'
-}
+  matcher: '/api/:path*',
+};
 ```
 
 ## Advanced Patterns
@@ -367,6 +371,7 @@ app/
 ### 1. Using Client Components Unnecessarily
 
 **BAD**:
+
 ```typescript
 'use client'
 
@@ -376,6 +381,7 @@ export default function StaticContent() {
 ```
 
 **GOOD**:
+
 ```typescript
 export default function StaticContent() {
   return <div>Static content</div>
@@ -387,6 +393,7 @@ export default function StaticContent() {
 ### 2. Fetching Data in Client Components
 
 **BAD**:
+
 ```typescript
 'use client'
 
@@ -400,6 +407,7 @@ export default function DataComponent() {
 ```
 
 **GOOD**:
+
 ```typescript
 async function getData() {
   const res = await fetch('/api/data')
@@ -417,6 +425,7 @@ export default async function DataComponent() {
 ### 3. Not Using Loading States
 
 **BAD**:
+
 ```typescript
 export default async function Page() {
   const data = await getData()
@@ -425,6 +434,7 @@ export default async function Page() {
 ```
 
 **GOOD**:
+
 ```typescript
 // app/loading.tsx
 export default function Loading() {
@@ -443,11 +453,13 @@ export default async function Page() {
 ### 4. Not Optimizing Images
 
 **BAD**:
+
 ```typescript
 <img src="/image.jpg" alt="Image" />
 ```
 
 **GOOD**:
+
 ```typescript
 import Image from 'next/image'
 
@@ -459,6 +471,7 @@ import Image from 'next/image'
 ### 5. Using useEffect for Initialization
 
 **BAD**:
+
 ```typescript
 'use client'
 
@@ -471,6 +484,7 @@ export default function Component() {
 ```
 
 **GOOD**:
+
 ```typescript
 'use client'
 
@@ -508,14 +522,14 @@ import Image from 'next/image'
 
 ```typescript
 const res = await fetch('https://api.example.com/data', {
-  next: { revalidate: 3600 } // Cache for 1 hour
-})
+  next: { revalidate: 3600 }, // Cache for 1 hour
+});
 ```
 
 ### 5. Use Static Generation
 
 ```typescript
-export const dynamic = 'force-static'
+export const dynamic = 'force-static';
 ```
 
 ## Configuration
@@ -526,14 +540,14 @@ export const dynamic = 'force-static'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['example.com']
+    domains: ['example.com'],
   },
   experimental: {
-    serverActions: true
-  }
-}
+    serverActions: true,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 ```
 
 ### TypeScript Configuration
@@ -595,16 +609,19 @@ npx create-next-app@latest my-app
 ### Common Issues
 
 **Build errors**:
+
 - Check for circular dependencies
 - Verify TypeScript configuration
 - Ensure all imports are correct
 
 **Routing issues**:
+
 - Check file structure
 - Verify dynamic route syntax
 - Ensure layouts are correct
 
 **Performance issues**:
+
 - Use server components
 - Optimize images
 - Cache data appropriately

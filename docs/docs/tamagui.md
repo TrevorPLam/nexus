@@ -2,13 +2,16 @@
 
 ## Overview
 
-Tamagui is a universal UI kit for React that works across web, React Native, and Expo. It provides a set of styled components that are optimized for performance and can be used across platforms with minimal configuration.
+Tamagui is a universal UI kit for React that works across web, React Native, and
+Expo. It provides a set of styled components that are optimized for performance
+and can be used across platforms with minimal configuration.
 
 ## Latest Stable Version
 
 **Version**: `1.100.0` (July 2026)
 
 **Compatibility**:
+
 - React: 17.x, 18.x
 - React Native: 0.70+
 - Expo: 47+
@@ -17,6 +20,7 @@ Tamagui is a universal UI kit for React that works across web, React Native, and
 - Package Managers: npm, pnpm, yarn
 
 **Key Features**:
+
 - Cross-platform components
 - Performance-optimized
 - TypeScript support
@@ -85,7 +89,7 @@ npx expo install tamagui @tamagui/config @tamagui/core react-native-svg
 ### tamagui.config.ts
 
 ```typescript
-import { config } from '@tamagui/config/v3'
+import { config } from '@tamagui/config/v3';
 
 export default config({
   tokens: {
@@ -93,38 +97,38 @@ export default config({
       primary: '#007AFF',
       secondary: '#5856D6',
       background: '#FFFFFF',
-      foreground: '#000000'
+      foreground: '#000000',
     },
     space: {
       1: 4,
       2: 8,
       3: 12,
-      4: 16
+      4: 16,
     },
     fontSize: {
       1: 12,
       2: 14,
       3: 16,
-      4: 18
-    }
+      4: 18,
+    },
   },
   fonts: {
     heading: 'Inter',
-    body: 'Inter'
-  }
-})
+    body: 'Inter',
+  },
+});
 ```
 
 ### Next.js Setup
 
 ```typescript
 // next.config.js
-const { withTamagui } = require('@tamagui/next-plugin')
+const { withTamagui } = require('@tamagui/next-plugin');
 
 module.exports = withTamagui({
   config: './tamagui.config.ts',
-  components: ['tamagui']
-})
+  components: ['tamagui'],
+});
 ```
 
 ## Components
@@ -208,7 +212,7 @@ function MyComponent() {
 ### Theme Configuration
 
 ```typescript
-import { config } from '@tamagui/config/v3'
+import { config } from '@tamagui/config/v3';
 
 export default config({
   themes: {
@@ -216,18 +220,18 @@ export default config({
       color: {
         background: '#FFFFFF',
         foreground: '#000000',
-        primary: '#007AFF'
-      }
+        primary: '#007AFF',
+      },
     },
     dark: {
       color: {
         background: '#000000',
         foreground: '#FFFFFF',
-        primary: '#0A84FF'
-      }
-    }
-  }
-})
+        primary: '#0A84FF',
+      },
+    },
+  },
+});
 ```
 
 ### Theme Switching
@@ -273,19 +277,19 @@ function AnimatedComponent({ show }: { show: boolean }) {
 ### Custom Animation
 
 ```typescript
-import { styled } from 'tamagui'
+import { styled } from 'tamagui';
 
 const AnimatedView = styled(View, {
   animation: 'quick',
   variants: {
     active: {
-      scale: 1.1
+      scale: 1.1,
     },
     inactive: {
-      scale: 1
-    }
-  }
-})
+      scale: 1,
+    },
+  },
+});
 ```
 
 ## Responsive Design
@@ -370,11 +374,13 @@ function PlatformComponent() {
 ### 1. Not Using Tamagui's Tokens
 
 **BAD**:
+
 ```typescript
 <View style={{ padding: 16, backgroundColor: '#FFFFFF' }}>
 ```
 
 **GOOD**:
+
 ```typescript
 <View padding="$4" backgroundColor="$background">
 ```
@@ -384,26 +390,28 @@ function PlatformComponent() {
 ### 2. Not Using Variants
 
 **BAD**:
+
 ```typescript
 const PrimaryButton = styled(Button, {
-  backgroundColor: '$primary'
-})
+  backgroundColor: '$primary',
+});
 
 const SecondaryButton = styled(Button, {
-  backgroundColor: '$secondary'
-})
+  backgroundColor: '$secondary',
+});
 ```
 
 **GOOD**:
+
 ```typescript
 const Button = createTamagui(Button)({
   variants: {
     variant: {
       primary: { backgroundColor: '$primary' },
-      secondary: { backgroundColor: '$secondary' }
-    }
-  }
-})
+      secondary: { backgroundColor: '$secondary' },
+    },
+  },
+});
 ```
 
 **Why**: Variants reduce code duplication and improve maintainability.
@@ -411,11 +419,13 @@ const Button = createTamagui(Button)({
 ### 3. Not Optimizing for Performance
 
 **BAD**:
+
 ```typescript
 // Using inline styles extensively
 ```
 
 **GOOD**:
+
 ```typescript
 // Using styled components and variants
 ```
@@ -425,11 +435,13 @@ const Button = createTamagui(Button)({
 ### 4. Not Using TypeScript
 
 **BAD**:
+
 ```typescript
 // JavaScript components
 ```
 
 **GOOD**:
+
 ```typescript
 // TypeScript components with proper types
 ```
@@ -444,9 +456,9 @@ const Button = createTamagui(Button)({
 const styles = StyleSheet.create({
   container: {
     padding: '$4',
-    backgroundColor: '$background'
-  }
-})
+    backgroundColor: '$background',
+  },
+});
 ```
 
 ### 2. Optimize Re-renders
@@ -509,16 +521,19 @@ npx expo install tamagui @tamagui/config @tamagui/core react-native-svg
 ### Common Issues
 
 **Styling not working**:
+
 - Check tamagui.config.ts configuration
 - Verify theme is applied
 - Check for conflicting styles
 
 **Platform-specific issues**:
+
 - Ensure platform-specific dependencies are installed
 - Check for platform-specific code
 - Verify configuration for each platform
 
 **Performance issues**:
+
 - Optimize component re-renders
 - Use memoization
 - Check for unnecessary prop drilling
@@ -528,8 +543,8 @@ npx expo install tamagui @tamagui/config @tamagui/core react-native-svg
 ```typescript
 // Enable debug mode
 const config = {
-  debug: true
-}
+  debug: true,
+};
 ```
 
 ## Best Practices

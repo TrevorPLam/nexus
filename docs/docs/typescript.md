@@ -1,28 +1,39 @@
 # TypeScript
 
 ## Overview
-TypeScript is a strongly typed programming language that builds on JavaScript, providing static type checking, enhanced IDE support, and improved code maintainability while remaining fully compatible with JavaScript.
+
+TypeScript is a strongly typed programming language that builds on JavaScript,
+providing static type checking, enhanced IDE support, and improved code
+maintainability while remaining fully compatible with JavaScript.
 
 ## Latest Versions (2026)
 
 **Current:** TypeScript 7.0.x (GA July 8, 2026)
+
 - **7.0**: Native Go port, 8-12x faster, no stable API (deferred to 7.1)
 - **6.0**: Bridge release (March 2026), last JavaScript-based version
 - **5.9**: Stable release (August 2025)
 
 ### Version Highlights
 
-**7.0**: Native Go compiler, hardened defaults (`strict: true`, `module: esnext`, `types: []`), removed options (`target: es5`, `moduleResolution: node/node10`, `baseUrl`)
+**7.0**: Native Go compiler, hardened defaults (`strict: true`,
+`module: esnext`, `types: []`), removed options (`target: es5`,
+`moduleResolution: node/node10`, `baseUrl`)
 
-**5.9**: Minimal `tsc --init`, `import defer`, `--module node20`, DOM API summaries, expandable hovers, cached type instantiations
+**5.9**: Minimal `tsc --init`, `import defer`, `--module node20`, DOM API
+summaries, expandable hovers, cached type instantiations
 
-**5.8**: Return expression branch checks, `require()` of ESM (nodenext), `--module node18`, `--erasableSyntaxOnly`, computed property names preservation
+**5.8**: Return expression branch checks, `require()` of ESM (nodenext),
+`--module node18`, `--erasableSyntaxOnly`, computed property names preservation
 
-**6.0**: `--stableTypeOrdering` (25% slower, aids 7.0 migration), es2025 target/lib (RegExp.escape, Promise.try), Temporal API types, DOM lib consolidation, breaking defaults (`strict: true`, `target: es2025`, `types: []`)
+**6.0**: `--stableTypeOrdering` (25% slower, aids 7.0 migration), es2025
+target/lib (RegExp.escape, Promise.try), Temporal API types, DOM lib
+consolidation, breaking defaults (`strict: true`, `target: es2025`, `types: []`)
 
 ## Compatibility
 
 ### Node.js Integration
+
 - `--module nodenext`: Latest Node.js (22+), floating target
 - `--module node20`: Stable Node.js 20 (implies `--target es2023`)
 - `--module node18`: Stable Node.js 18
@@ -32,12 +43,14 @@ TypeScript is a strongly typed programming language that builds on JavaScript, p
 - `--erasableSyntaxOnly`: Ensure Node.js type stripping compatibility
 
 ### Target Environments
+
 - ES2025: Latest features (default in TS 6.0/7.0)
 - ES2022: Modern JS (Life OS default)
 - ES2020/ES2015: Older environments
 - ES5/ES3: Legacy (removed in TS 7.0)
 
 ### Build Tools
+
 - esbuild: Fastest transpilation (Go, 10-100x faster than tsc)
 - swc: Rust-based, fast transpilation
 - Vite: Native TS with esbuild
@@ -50,16 +63,20 @@ TypeScript is a strongly typed programming language that builds on JavaScript, p
 ## Basics
 
 ### Type System
-Structural (duck typing): types compared by shape, enabling flexible reuse with type safety.
+
+Structural (duck typing): types compared by shape, enabling flexible reuse with
+type safety.
 
 ### Type Inference
+
 ```typescript
-let count = 42;              // number
+let count = 42; // number
 const names = ['Alice', 'Bob']; // string[]
 const add = (x: number) => x + 1; // (x: number) => number
 ```
 
 ### Configuration
+
 ```json
 {
   "compilerOptions": {
@@ -74,17 +91,21 @@ const add = (x: number) => x + 1; // (x: number) => number
 ```
 
 ### Strict Mode
-Enables: `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `noImplicitAny`, `noImplicitThis`, `strictPropertyInitialization`.
+
+Enables: `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`,
+`noImplicitAny`, `noImplicitThis`, `strictPropertyInitialization`.
 
 ## Implementation
 
 ### Setup
+
 ```bash
 tsc --init
 npm install -D typescript @types/node @types/react
 ```
 
 ### Recommended tsconfig.json
+
 ```json
 {
   "compilerOptions": {
@@ -109,27 +130,43 @@ npm install -D typescript @types/node @types/react
 ```
 
 ### Type Guards & Assertions
+
 ```typescript
 function isUser(value: unknown): value is User {
-  return typeof value === 'object' && value !== null && 'name' in value && typeof value.name === 'string';
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'name' in value &&
+    typeof value.name === 'string'
+  );
 }
 
 function assertIsUser(value: unknown): asserts value is User {
-  if (typeof value !== 'object' || value === null || !('name' in value)) throw new Error('Not User');
+  if (typeof value !== 'object' || value === null || !('name' in value))
+    throw new Error('Not User');
 }
 ```
 
 ### Runtime Validation (Zod)
+
 ```typescript
 import { z } from 'zod';
-const UserSchema = z.object({ id: z.number(), name: z.string().min(1), email: z.string().email(), role: z.enum(['admin', 'user', 'guest']) });
+const UserSchema = z.object({
+  id: z.number(),
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(['admin', 'user', 'guest']),
+});
 type User = z.infer<typeof UserSchema>;
-function validateUser(data: unknown): User { return UserSchema.parse(data); }
+function validateUser(data: unknown): User {
+  return UserSchema.parse(data);
+}
 ```
 
 ## Advanced Patterns
 
 ### Discriminated Unions
+
 ```typescript
 type State<T> = { status: 'loading' } | { status: 'success'; data: T } | { status: 'error'; error: Error };
 function handleState<T>(state: State<T>) {
@@ -142,61 +179,90 @@ function handleState<T>(state: State<T>) {
 ```
 
 ### Branded Types
+
 ```typescript
 type UserId = string & { readonly __brand: unique symbol };
-function createUserId(id: string): UserId { return id as UserId; }
-function getUser(id: UserId) { /* ... */ }
+function createUserId(id: string): UserId {
+  return id as UserId;
+}
+function getUser(id: UserId) {
+  /* ... */
+}
 getUser(createUserId('123')); // OK
 getUser(createOrderId('456')); // Error
 ```
 
 ### Conditional Types
+
 ```typescript
 type Awaited<T> = T extends Promise<infer U> ? U : T;
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
 ```
 
 ### Mapped Types
+
 ```typescript
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-type Getters<T> = { [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K] };
+type Getters<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+};
 ```
 
 ### Template Literal Types
+
 ```typescript
 type APIRoute = `${'GET' | 'POST' | 'PUT'} ${'/users' | '/posts'}`;
 ```
 
 ### Generic Constraints
+
 ```typescript
-function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] { return obj[key]; }
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
 ```
 
 ### Utility Types
-`Partial<T>`, `Required<T>`, `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`, `Record<K, T>`
+
+`Partial<T>`, `Required<T>`, `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`,
+`Record<K, T>`
 
 ### Result Pattern
+
 ```typescript
-type Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };
-function ok<T>(data: T): Result<T, never> { return { success: true, data }; }
-function fail<E>(error: E): Result<never, E> { return { success: false, error }; }
+type Result<T, E = Error> =
+  { success: true; data: T } | { success: false; error: E };
+function ok<T>(data: T): Result<T, never> {
+  return { success: true, data };
+}
+function fail<E>(error: E): Result<never, E> {
+  return { success: false, error };
+}
 ```
 
 ### Exhaustive Checks
+
 ```typescript
-function assertNever(x: never): never { throw new Error('Unexpected: ' + x); }
+function assertNever(x: never): never {
+  throw new Error('Unexpected: ' + x);
+}
 function handlePayment(status: 'pending' | 'completed' | 'failed') {
   switch (status) {
-    case 'pending': return 'pending';
-    case 'completed': return 'completed';
-    case 'failed': return 'failed';
-    default: return assertNever(status);
+    case 'pending':
+      return 'pending';
+    case 'completed':
+      return 'completed';
+    case 'failed':
+      return 'failed';
+    default:
+      return assertNever(status);
   }
 }
 ```
 
 ### Type-Safe Event Emitter
-```typescript
+
+````typescript
 class TypedEmitter<T extends Record<string, any>> {
   on<K extends keyof T>(event: K, handler: (e: T[K]) => void): void {}
   emit<K extends keyof T>(event: K, data: T[K]): void {}
@@ -227,9 +293,10 @@ class TypedEmitter<T extends Record<string, any>> {
     "moduleDetection": "force"
   }
 }
-```
+````
 
 ### Optimization Strategies
+
 - **skipLibCheck**: 20-50% build time improvement
 - **incremental**: Cache compilation state
 - **Project references**: Split large codebases (5-20 projects optimal)
@@ -240,11 +307,13 @@ class TypedEmitter<T extends Record<string, any>> {
 - **Explicit return types**: Reduce inference work
 
 ### Runtime
+
 - Types erased at compile time (zero runtime cost)
 - Avoid enums (use `as const` objects)
 - Avoid namespaces (use ES modules)
 
 ### Profiling
+
 ```bash
 tsc --extendedDiagnostics
 tsc --generateTrace ./trace
@@ -254,33 +323,58 @@ hyperfine 'tsc --noEmit' 'tsc --build'
 ## Security
 
 ### Runtime Validation (Zod)
+
 ```typescript
-const ApiSchema = z.object({ userId: z.string().uuid(), action: z.enum(['create', 'update', 'delete']) });
+const ApiSchema = z.object({
+  userId: z.string().uuid(),
+  action: z.enum(['create', 'update', 'delete']),
+});
 async function handleRequest(request: Request) {
   const data = ApiSchema.parse(await request.json()); // Throws if invalid
 }
 ```
 
 ### Environment Variables
+
 ```typescript
-const EnvSchema = z.object({ DATABASE_URL: z.string().url(), API_KEY: z.string().min(32), NODE_ENV: z.enum(['development', 'production', 'test']) });
-function validateEnv() { return EnvSchema.parse(process.env); }
+const EnvSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  API_KEY: z.string().min(32),
+  NODE_ENV: z.enum(['development', 'production', 'test']),
+});
+function validateEnv() {
+  return EnvSchema.parse(process.env);
+}
 ```
 
 ### Type-Safe Config
+
 ```typescript
-const config = { apiUrl: 'https://api.example.com', timeout: 5000, retries: 3 } as const satisfies { apiUrl: string; timeout: number; retries: number };
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000,
+  retries: 3,
+} as const satisfies { apiUrl: string; timeout: number; retries: number };
 ```
 
 ## Monorepo Best Practices
 
 ### Project References
+
 ```json
 // Root tsconfig.json
-{ "files": [], "references": [{ "path": "./packages/ui" }, { "path": "./packages/utils" }, { "path": "./apps/web" }] }
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/ui" },
+    { "path": "./packages/utils" },
+    { "path": "./apps/web" }
+  ]
+}
 ```
 
 ### Shared Config
+
 ```json
 // tsconfig.base.json
 { "compilerOptions": { "strict": true, "moduleResolution": "bundler", "target": "ES2022", "skipLibCheck": true } }
@@ -290,6 +384,7 @@ const config = { apiUrl: 'https://api.example.com', timeout: 5000, retries: 3 } 
 ```
 
 ### Build Mode
+
 ```bash
 tsc --build           # Build in dependency order
 tsc --build --clean   # Clean outputs
@@ -298,12 +393,14 @@ tsc --build --force   # Force rebuild
 ```
 
 ### Type-Only Imports
+
 ```typescript
 import type { User } from './types';
 import { getUser, type User } from './api';
 ```
 
 ### Best Practices
+
 - 5-20 projects optimal
 - Split at API boundaries
 - Match TypeScript projects to npm packages
@@ -313,6 +410,7 @@ import { getUser, type User } from './api';
 ## Troubleshooting
 
 ### Common Commands
+
 ```bash
 tsc --version                    # Check version
 tsc --noEmit                    # Type check only
@@ -324,55 +422,84 @@ tsc --generateTrace ./trace     # Generate trace
 ```
 
 ### Module Resolution
+
 ```json
-{ "compilerOptions": { "moduleResolution": "bundler", "verbatimModuleSyntax": true, "allowImportingTsExtensions": true } }
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true
+  }
+}
 ```
-**Migration**: `node10` → `nodenext` (Node.js) or `bundler` (frameworks). Add `rootDir: "./src"` if tsconfig outside source.
+
+**Migration**: `node10` → `nodenext` (Node.js) or `bundler` (frameworks). Add
+`rootDir: "./src"` if tsconfig outside source.
 
 ### Type Definitions
+
 ```bash
 npm install -D @types/package-name @types/node
 // declarations.d.ts: declare module 'some-untyped-package';
 ```
 
 ### TypeScript 7.0 Migration
+
 ```json
-{ "devDependencies": { "typescript": "npm:@typescript/typescript6@^6.0.2", "@typescript/native": "npm:typescript@^7.0.2" } }
+{
+  "devDependencies": {
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "@typescript/native": "npm:typescript@^7.0.2"
+  }
+}
 ```
-**Breaking changes**: `strict: true` default, `types: []` default (add `"types": ["node"]`), `target: es5` removed, `moduleResolution: node/node10` removed, `baseUrl` deprecated.
+
+**Breaking changes**: `strict: true` default, `types: []` default (add
+`"types": ["node"]`), `target: es5` removed, `moduleResolution: node/node10`
+removed, `baseUrl` deprecated.
 
 ### Decorators
+
 - TC39 decorators (TS 5.0+): No metadata emit
-- Experimental decorators: Require `experimentalDecorators: true`, `emitDecoratorMetadata` works
+- Experimental decorators: Require `experimentalDecorators: true`,
+  `emitDecoratorMetadata` works
 - `reflect-metadata`: Not supported with TC39 decorators
 - Keep experimental for DI frameworks needing metadata
 
 ## JavaScript Migration
 
 ### Gradual Migration
+
 ```json
 { "compilerOptions": { "allowJs": true, "checkJs": false, "outDir": "./dist" } }
 ```
 
 ### JSDoc
+
 ```javascript
 /** @param {string} name @returns {string} */
-function greet(name) { return `Hello, ${name}`; }
+function greet(name) {
+  return `Hello, ${name}`;
+}
 ```
 
 ### Declaration Files
+
 ```typescript
-declare interface Window { myCustomProperty: string; }
+declare interface Window {
+  myCustomProperty: string;
+}
 ```
 
 ### TypeScript Execution
-| Tool | Cold Start | Type Check | Use Case |
-|------|-----------|-----------|----------|
-| tsx | ~20ms | No | Dev scripts |
-| Bun | ~18ms | No | Serverless |
-| ts-node | ~500ms | Yes | Legacy |
-| Node native | ~100ms | No | Zero deps |
-| tsc | N/A | Yes | Production |
+
+| Tool        | Cold Start | Type Check | Use Case    |
+| ----------- | ---------- | ---------- | ----------- |
+| tsx         | ~20ms      | No         | Dev scripts |
+| Bun         | ~18ms      | No         | Serverless  |
+| ts-node     | ~500ms     | Yes        | Legacy      |
+| Node native | ~100ms     | No         | Zero deps   |
+| tsc         | N/A        | Yes        | Production  |
 
 ```bash
 npm install -D tsx && npx tsx script.ts
@@ -383,6 +510,7 @@ bun run script.ts
 ## Type Coverage
 
 ### Tools
+
 ```bash
 npm install -D type-coverage && npx type-coverage --detail
 npm install -D typegap && npx typegap --detail --min-coverage 90
@@ -391,6 +519,7 @@ npm install -D ts-analyzer && npx ts-analyzer analyze ./src --format html
 ```
 
 ### CI Integration
+
 ```yaml
 - name: Type coverage check
   run: npx type-coverage --atLeast 90
@@ -401,11 +530,14 @@ npm install -D ts-analyzer && npx ts-analyzer analyze ./src --format html
 ## TypeScript 7.0 Migration Guide
 
 ### Prerequisites
+
 1. **Upgrade to 6.0 first**: Address deprecations before 7.0
-2. **Check compiler API usage**: Tools importing `typescript` need 6.0 side-by-side
+2. **Check compiler API usage**: Tools importing `typescript` need 6.0
+   side-by-side
 3. **Test decorator frameworks**: NestJS, TypeORM need integration testing
 
 ### Steps
+
 ```bash
 grep -r "moduleResolution.*node" tsconfig*.json
 grep -r "target.*es5" tsconfig*.json
@@ -416,6 +548,7 @@ npx tsc --noEmit && npm run build && npm test
 ```
 
 ### Who Can Migrate Now
+
 - **Can migrate**: Projects using `tsc` CLI, language server only
 - **Wait for 7.1**: Vue, Angular templates, Svelte, Astro, typescript-eslint
 

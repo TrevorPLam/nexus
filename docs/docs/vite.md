@@ -2,13 +2,17 @@
 
 ## Overview
 
-Vite (French for "fast", pronounced /vit/) is a next-generation frontend build tool created by Evan You. It consists of a development server that serves source code over native ES modules with blazing-fast Hot Module Replacement (HMR), and a build command that bundles code with Rolldown for production.
+Vite (French for "fast", pronounced /vit/) is a next-generation frontend build
+tool created by Evan You. It consists of a development server that serves source
+code over native ES modules with blazing-fast Hot Module Replacement (HMR), and
+a build command that bundles code with Rolldown for production.
 
 ## Latest Stable Version
 
 **Version**: `8.1.5` (as of July 2026)
 
 **Compatibility**:
+
 - Node.js: 20.19+, 22.12+ (Node 18 support dropped in Vite 7.0)
 - Browsers: Baseline Widely Available (browsers released at least 2.5 years ago)
   - Chrome >= 111, Edge >= 111, Firefox >= 114, Safari >= 16.4
@@ -19,7 +23,8 @@ Vite (French for "fast", pronounced /vit/) is a next-generation frontend build t
 
 ### Vite 8 Changes
 
-**Rolldown**: Single Rust-based bundler replacing esbuild (dev) + Rollup (prod). 10-30x faster builds.
+**Rolldown**: Single Rust-based bundler replacing esbuild (dev) + Rollup (prod).
+10-30x faster builds.
 
 **Oxc**: Rust toolchain for JS transforms/minification, replacing esbuild.
 
@@ -30,10 +35,12 @@ Vite (French for "fast", pronounced /vit/) is a next-generation frontend build t
 ### Core Concepts
 
 1. **Native ES Modules**: Dev server serves unbundled ESM with instant HMR
-2. **Rolldown Pre-bundling**: Dependencies pre-bundled via Rolldown (was esbuild)
+2. **Rolldown Pre-bundling**: Dependencies pre-bundled via Rolldown (was
+   esbuild)
 3. **On-Demand Transformation**: Oxc transforms source on browser request
 4. **HMR**: Updates modules without full reload; preserves state
-5. **Bundled Dev Mode (Experimental)**: Pre-bundles entire app for dev (15x faster startup on 10k components)
+5. **Bundled Dev Mode (Experimental)**: Pre-bundles entire app for dev (15x
+   faster startup on 10k components)
 
 ### Key Features
 
@@ -97,20 +104,22 @@ npm run preview
 ## Configuration
 
 **Basic `vite.config.ts`**:
+
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-})
+});
 ```
 
 **Vite 8 Configuration (Rolldown)**:
+
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -132,8 +141,9 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     target: 'es2022',
-    minify: 'oxc',  // Oxc is default (fast), terser optional
-    rolldownOptions: {  // Renamed from rollupOptions in Vite 8
+    minify: 'oxc', // Oxc is default (fast), terser optional
+    rolldownOptions: {
+      // Renamed from rollupOptions in Vite 8
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -158,10 +168,11 @@ export default defineConfig({
 
   envPrefix: 'VITE_',
   preview: { port: 4173 },
-})
+});
 ```
 
 **TypeScript Configuration**:
+
 ```json
 {
   "compilerOptions": {
@@ -187,10 +198,11 @@ export default defineConfig({
 ```
 
 **Conditional Configuration**:
+
 ```typescript
 export default defineConfig(({ command, mode }) => {
-  const isDev = command === 'serve'
-  const isProd = mode === 'production'
+  const isDev = command === 'serve';
+  const isProd = mode === 'production';
 
   return {
     plugins: [react()],
@@ -201,19 +213,21 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy: isDev ? { '/api': 'http://localhost:8080' } : undefined,
     },
-  }
-})
+  };
+});
 ```
 
 **Environment Variables**:
+
 ```typescript
 // Access environment variables
-const apiUrl = import.meta.env.VITE_API_URL
-const isDev = import.meta.env.DEV
-const isProd = import.meta.env.PROD
+const apiUrl = import.meta.env.VITE_API_URL;
+const isDev = import.meta.env.DEV;
+const isProd = import.meta.env.PROD;
 ```
 
 **`.env` files**:
+
 ```bash
 # .env (all modes)
 VITE_API_URL=https://api.example.com
@@ -225,12 +239,14 @@ VITE_API_KEY=secret_key
 VITE_API_URL=https://api.production.com
 ```
 
-**Security**: Only `VITE_*` variables exposed to client. Never put secrets in `VITE_*`.
+**Security**: Only `VITE_*` variables exposed to client. Never put secrets in
+`VITE_*`.
 
 **Path Aliases**:
+
 ```typescript
 // vite.config.ts
-import path from 'path'
+import path from 'path';
 
 export default defineConfig({
   resolve: {
@@ -238,7 +254,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-})
+});
 ```
 
 ```json
@@ -251,9 +267,11 @@ export default defineConfig({
 }
 ```
 
-**Vite 8**: Use `resolve.tsconfigPaths: true` to auto-read tsconfig paths (small perf cost).
+**Vite 8**: Use `resolve.tsconfigPaths: true` to auto-read tsconfig paths (small
+perf cost).
 
 **Static Assets**:
+
 ```
 public/
   favicon.ico
@@ -262,9 +280,11 @@ public/
 
 Accessed as: `<img src="/logo.png" />`
 
-**Imported assets**: Auto-hashed, optimized. Small files (<4KB) inlined as base64.
+**Imported assets**: Auto-hashed, optimized. Small files (<4KB) inlined as
+base64.
 
 **CSS Preprocessors**:
+
 ```bash
 npm install -D sass  # SCSS/SASS
 npm install -D less  # Less
@@ -278,7 +298,7 @@ export default defineConfig({
       scss: { additionalData: `@use "@/styles/variables" as *;` },
     },
   },
-})
+});
 ```
 
 **Tailwind CSS v4**: Use `@tailwindcss/vite` plugin (no PostCSS needed).
@@ -286,6 +306,7 @@ export default defineConfig({
 ## Advanced Patterns
 
 **Code Splitting**:
+
 ```typescript
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -308,6 +329,7 @@ function App() {
 ```
 
 **Manual chunk splitting (Vite 8)**:
+
 ```typescript
 export default defineConfig({
   build: {
@@ -320,37 +342,41 @@ export default defineConfig({
       },
     },
   },
-})
+});
 ```
 
 **Custom Plugin**:
+
 ```typescript
-import type { Plugin } from 'vite'
+import type { Plugin } from 'vite';
 
 export function myCustomPlugin(): Plugin {
   return {
     name: 'my-custom-plugin',
     transform(code, id) {
       if (id.endsWith('.my-ext')) {
-        return { code: `// transformed\n${code}`, map: null }
+        return { code: `// transformed\n${code}`, map: null };
       }
     },
-  }
+  };
 }
 ```
 
 **SSR Configuration**:
+
 ```typescript
 export default defineConfig({
   build: {
     ssr: true,
   },
-})
+});
 ```
 
-**For custom SSR**: Use middleware mode with Express/Fastify. See [SSR Guide](https://vite.dev/guide/ssr).
+**For custom SSR**: Use middleware mode with Express/Fastify. See
+[SSR Guide](https://vite.dev/guide/ssr).
 
 **Library Mode**:
+
 ```typescript
 export default defineConfig({
   build: {
@@ -366,10 +392,11 @@ export default defineConfig({
       },
     },
   },
-})
+});
 ```
 
 **Multi-Page Application**:
+
 ```typescript
 export default defineConfig({
   build: {
@@ -380,23 +407,26 @@ export default defineConfig({
       },
     },
   },
-})
+});
 ```
 
 **Dependency Optimization**:
+
 ```typescript
 export default defineConfig({
   optimizeDeps: {
     include: ['some-large-package'],
     exclude: ['some-esm-package'],
-    rolldownOptions: {  // Vite 8: was esbuildOptions
+    rolldownOptions: {
+      // Vite 8: was esbuildOptions
       // Rolldown-specific options
     },
   },
-})
+});
 ```
 
 **API Proxy**:
+
 ```typescript
 export default defineConfig({
   server: {
@@ -412,42 +442,51 @@ export default defineConfig({
       },
     },
   },
-})
+});
 ```
 
 **Preview Server**:
+
 ```typescript
 export default defineConfig({
   preview: {
     port: 4173,
     host: true,
   },
-})
+});
 ```
 
 ## Anti-Patterns
 
-**Barrel files**: Direct imports faster than re-exports. Import from source, not index files.
+**Barrel files**: Direct imports faster than re-exports. Import from source, not
+index files.
 
-**Implicit extensions**: Use `.tsx` extensions. Avoid Vite checking 6 extensions per import.
+**Implicit extensions**: Use `.tsx` extensions. Avoid Vite checking 6 extensions
+per import.
 
-**SVG transformation**: Use icon libraries (lucide-react) instead of transforming 50+ SVGs.
+**SVG transformation**: Use icon libraries (lucide-react) instead of
+transforming 50+ SVGs.
 
-**Browser cache disabled**: Keep cache enabled. Vite's 304 responses make HMR fast.
+**Browser cache disabled**: Keep cache enabled. Vite's 304 responses make HMR
+fast.
 
 **Custom Babel**: Default plugin uses Oxc (fast). Custom Babel slows transforms.
 
-**No manual chunking**: Split vendor code. Single chunk blocks caching and page load.
+**No manual chunking**: Split vendor code. Single chunk blocks caching and page
+load.
 
 **All routes upfront**: Lazy load routes. Improves LCP significantly.
 
-**Heavy plugin hooks**: Keep `buildStart`/`config` hooks fast. They block dev server startup.
+**Heavy plugin hooks**: Keep `buildStart`/`config` hooks fast. They block dev
+server startup.
 
 **Firefox dev**: Use Chrome/Safari. Firefox has ES module bugs.
 
-**Browser extensions**: Use incognito. Extensions intercept requests, adding latency.
+**Browser extensions**: Use incognito. Extensions intercept requests, adding
+latency.
 
-**No source maps**: Enable `sourcemap: true` or `'hidden'`. Debugging prod requires it.
+**No source maps**: Enable `sourcemap: true` or `'hidden'`. Debugging prod
+requires it.
 
 **Wrong Node version**: Use 20.19+ or 22.12+. Vite 7+ dropped Node 18.
 
@@ -458,50 +497,55 @@ export default defineConfig({
 ## Performance
 
 **Dev Server**:
+
 ```typescript
 export default defineConfig({
   server: {
     warmup: { clientFiles: ['./src/components/*.tsx'] },
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js'],  // Narrow list
+    extensions: ['.tsx', '.ts', '.jsx', '.js'], // Narrow list
   },
-})
+});
 ```
 
 **Build Performance**:
+
 ```typescript
 export default defineConfig({
   build: {
-    minify: 'oxc',  // Default, fast. terser optional for smaller output
-    cssMinify: 'lightningcss',  // Default
-    reportCompressedSize: false,  // Faster for large projects
-    assetsInlineLimit: 4096,  // 4KB threshold
+    minify: 'oxc', // Default, fast. terser optional for smaller output
+    cssMinify: 'lightningcss', // Default
+    reportCompressedSize: false, // Faster for large projects
+    assetsInlineLimit: 4096, // 4KB threshold
   },
-})
+});
 ```
 
 **Bundled Dev Mode (Experimental)**:
+
 ```typescript
 export default defineConfig({
   experimental: {
-    bundledDev: true,  // 15x faster startup on 10k components
+    bundledDev: true, // 15x faster startup on 10k components
   },
-})
+});
 ```
 
 **Chunk Import Map (Experimental)**:
+
 ```typescript
 export default defineConfig({
   build: {
-    chunkImportMap: true,  // Better cache efficiency
+    chunkImportMap: true, // Better cache efficiency
   },
-})
+});
 ```
 
 ## Migration
 
 **Vite 7 → Vite 8**:
+
 1. Node.js: Upgrade to 20.19+ or 22.12+
 2. Config: `rollupOptions` → `rolldownOptions`
 3. Minify: `esbuild` → `oxc` (default)
@@ -509,6 +553,7 @@ export default defineConfig({
 5. Optional: Install `esbuild` if plugins use `transformWithEsbuild`
 
 **Gradual Migration**:
+
 ```bash
 # Step 1: Try Rolldown on Vite 7
 npm remove vite
@@ -534,6 +579,7 @@ vite --debug           # Debug mode
 ## Monorepo
 
 **Turborepo**:
+
 ```json
 {
   "tasks": {
@@ -549,11 +595,13 @@ vite --debug           # Debug mode
 
 **Nx**: Use `@nx/vite` plugin for task inference and caching.
 
-**Internal packages**: Use `workspace:*` protocol. Configure `resolve.alias` for path resolution.
+**Internal packages**: Use `workspace:*` protocol. Configure `resolve.alias` for
+path resolution.
 
 ## Security
 
 **CSP Headers**:
+
 ```typescript
 // Dev needs looser policy for HMR
 Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' ws: wss:
@@ -563,6 +611,7 @@ Content-Security-Policy: script-src 'self'; style-src 'self'
 ```
 
 **Environment Variables**:
+
 - `VITE_*` exposed to client (never put secrets here)
 - Server-only vars: no prefix, use `loadEnv()` in config
 - `.env.local` gitignored for secrets

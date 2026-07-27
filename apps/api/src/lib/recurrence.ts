@@ -36,11 +36,7 @@
  */
 
 // RRULE operations
-export {
-  expandRecurringEvent,
-  generateRRULE,
-  validateRRULE,
-} from './recurrence-rrule.js';
+export { expandRecurringEvent, generateRRULE, validateRRULE } from './recurrence-rrule.js';
 
 // Timezone operations
 export {

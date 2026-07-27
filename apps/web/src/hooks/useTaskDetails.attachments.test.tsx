@@ -29,7 +29,9 @@ describe('useTaskDetails - Attachments', () => {
         storageBucket: 'attachments',
       },
     ];
-    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({ attachments: mockAttachments } as never);
+    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({
+      attachments: mockAttachments,
+    } as never);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {
       wrapper,
@@ -55,7 +57,9 @@ describe('useTaskDetails - Attachments', () => {
         storageBucket: 'attachments',
       },
     ];
-    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({ attachments: mockAttachments } as never);
+    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({
+      attachments: mockAttachments,
+    } as never);
     vi.mocked(apiClient.createTaskAttachment).mockResolvedValue({
       id: '2',
       taskId: 'task-1',
@@ -105,7 +109,9 @@ describe('useTaskDetails - Attachments', () => {
         storageBucket: 'attachments',
       },
     ];
-    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({ attachments: mockAttachments } as never);
+    vi.mocked(apiClient.getTaskAttachments).mockResolvedValue({
+      attachments: mockAttachments,
+    } as never);
     vi.mocked(apiClient.deleteTaskAttachment).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {

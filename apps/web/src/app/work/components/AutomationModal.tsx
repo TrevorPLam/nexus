@@ -56,7 +56,6 @@ interface AutomationModalProps {
   isPending: boolean;
 }
 
-
 export function AutomationModal({
   isOpen,
   editingRule,

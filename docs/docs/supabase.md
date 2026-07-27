@@ -2,13 +2,17 @@
 
 ## Overview
 
-Supabase is an open-source Firebase alternative that provides a complete backend-as-a-service platform. It includes a PostgreSQL database, authentication, real-time subscriptions, storage, and edge functions, all with a unified API and excellent TypeScript support.
+Supabase is an open-source Firebase alternative that provides a complete
+backend-as-a-service platform. It includes a PostgreSQL database,
+authentication, real-time subscriptions, storage, and edge functions, all with a
+unified API and excellent TypeScript support.
 
 ## Latest Stable Version
 
 **Version**: `2.0.0` (July 2026)
 
 **Compatibility**:
+
 - PostgreSQL: 15.0+
 - Node.js: 18.0.0+, 20.0.0+
 - Browsers: Modern browsers (Chrome, Firefox, Safari, Edge)
@@ -16,6 +20,7 @@ Supabase is an open-source Firebase alternative that provides a complete backend
 - Frameworks: React, Next.js, Vue, Svelte, Angular
 
 **Key Features**:
+
 - PostgreSQL database
 - Authentication and authorization
 - Real-time subscriptions
@@ -78,12 +83,10 @@ npm install @supabase/supabase-js @supabase/auth-helpers-nextjs
 ### Select
 
 ```typescript
-const { data, error } = await supabase
-  .from('users')
-  .select('*')
+const { data, error } = await supabase.from('users').select('*');
 
-if (error) console.error(error)
-else console.log(data)
+if (error) console.error(error);
+else console.log(data);
 ```
 
 ### Insert
@@ -91,10 +94,8 @@ else console.log(data)
 ```typescript
 const { data, error } = await supabase
   .from('users')
-  .insert([
-    { name: 'John', email: 'john@example.com' }
-  ])
-  .select()
+  .insert([{ name: 'John', email: 'john@example.com' }])
+  .select();
 ```
 
 ### Update
@@ -103,16 +104,13 @@ const { data, error } = await supabase
 const { data, error } = await supabase
   .from('users')
   .update({ name: 'Jane' })
-  .eq('id', 1)
+  .eq('id', 1);
 ```
 
 ### Delete
 
 ```typescript
-const { data, error } = await supabase
-  .from('users')
-  .delete()
-  .eq('id', 1)
+const { data, error } = await supabase.from('users').delete().eq('id', 1);
 ```
 
 ## Authentication
@@ -122,8 +120,8 @@ const { data, error } = await supabase
 ```typescript
 const { data, error } = await supabase.auth.signUp({
   email: 'user@example.com',
-  password: 'password123'
-})
+  password: 'password123',
+});
 ```
 
 ### Sign In
@@ -131,22 +129,22 @@ const { data, error } = await supabase.auth.signUp({
 ```typescript
 const { data, error } = await supabase.auth.signInWithPassword({
   email: 'user@example.com',
-  password: 'password123'
-})
+  password: 'password123',
+});
 ```
 
 ### Sign Out
 
 ```typescript
-const { error } = await supabase.auth.signOut()
+const { error } = await supabase.auth.signOut();
 ```
 
 ### OAuth
 
 ```typescript
 const { data, error } = await supabase.auth.signInWithOAuth({
-  provider: 'github'
-})
+  provider: 'github',
+});
 ```
 
 ## Real-time Subscriptions
@@ -156,20 +154,24 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 ```typescript
 const subscription = supabase
   .channel('custom-channel')
-  .on('postgres_changes', {
-    event: '*',
-    schema: 'public',
-    table: 'users'
-  }, (payload) => {
-    console.log('Change received!', payload)
-  })
-  .subscribe()
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'users',
+    },
+    (payload) => {
+      console.log('Change received!', payload);
+    },
+  )
+  .subscribe();
 ```
 
 ### Unsubscribe
 
 ```typescript
-supabase.removeChannel(subscription)
+supabase.removeChannel(subscription);
 ```
 
 ## Storage
@@ -179,7 +181,7 @@ supabase.removeChannel(subscription)
 ```typescript
 const { data, error } = await supabase.storage
   .from('avatars')
-  .upload('public/avatar1.png', file)
+  .upload('public/avatar1.png', file);
 ```
 
 ### Download File
@@ -187,7 +189,7 @@ const { data, error } = await supabase.storage
 ```typescript
 const { data, error } = await supabase.storage
   .from('avatars')
-  .download('public/avatar1.png')
+  .download('public/avatar1.png');
 ```
 
 ### Get Public URL
@@ -195,9 +197,9 @@ const { data, error } = await supabase.storage
 ```typescript
 const { data } = supabase.storage
   .from('avatars')
-  .getPublicUrl('public/avatar1.png')
+  .getPublicUrl('public/avatar1.png');
 
-console.log(data.publicUrl)
+console.log(data.publicUrl);
 ```
 
 ### Delete File
@@ -205,7 +207,7 @@ console.log(data.publicUrl)
 ```typescript
 const { data, error } = await supabase.storage
   .from('avatars')
-  .remove(['public/avatar1.png'])
+  .remove(['public/avatar1.png']);
 ```
 
 ## Row-Level Security (RLS)
@@ -243,9 +245,7 @@ ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 ### Complex Queries
 
 ```typescript
-const { data, error } = await supabase
-  .from('posts')
-  .select(`
+const { data, error } = await supabase.from('posts').select(`
     *,
     author:author_id (
       name,
@@ -257,7 +257,7 @@ const { data, error } = await supabase
         name
       )
     )
-  `)
+  `);
 ```
 
 ### Filtering
@@ -269,7 +269,7 @@ const { data, error } = await supabase
   .eq('status', 'active')
   .gte('age', 18)
   .order('created_at', { ascending: false })
-  .limit(10)
+  .limit(10);
 ```
 
 ### Full-Text Search
@@ -278,7 +278,7 @@ const { data, error } = await supabase
 const { data, error } = await supabase
   .from('posts')
   .select('*')
-  .textSearch('content', 'search term')
+  .textSearch('content', 'search term');
 ```
 
 ### Transactions
@@ -286,8 +286,8 @@ const { data, error } = await supabase
 ```typescript
 const { data, error } = await supabase.rpc('create_user_with_profile', {
   user_name: 'John',
-  user_email: 'john@example.com'
-})
+  user_email: 'john@example.com',
+});
 ```
 
 ## TypeScript Integration
@@ -301,14 +301,11 @@ supabase gen types typescript --project-id your-project-id > src/types/supabase.
 ### Use Generated Types
 
 ```typescript
-import { Database } from './types/supabase'
+import { Database } from './types/supabase';
 
-type User = Database['public']['Tables']['users']['Row']
+type User = Database['public']['Tables']['users']['Row'];
 
-const { data } = await supabase
-  .from('users')
-  .select('*')
-  .returns<User[]>()
+const { data } = await supabase.from('users').select('*').returns<User[]>();
 ```
 
 ## Anti-Patterns
@@ -316,11 +313,13 @@ const { data } = await supabase
 ### 1. Not Using RLS
 
 **BAD**:
+
 ```sql
 -- No RLS policies
 ```
 
 **GOOD**:
+
 ```sql
 -- Enable RLS and create policies
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
@@ -332,13 +331,15 @@ CREATE POLICY "Users can view own data" ON users FOR SELECT USING (auth.uid() = 
 ### 2. Exposing Service Keys
 
 **BAD**:
+
 ```typescript
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 ```
 
 **GOOD**:
+
 ```typescript
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 ```
 
 **Why**: Service keys should only be used server-side, never in client code.
@@ -346,18 +347,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 ### 3. Not Handling Errors
 
 **BAD**:
+
 ```typescript
-const { data } = await supabase.from('users').select('*')
-console.log(data)
+const { data } = await supabase.from('users').select('*');
+console.log(data);
 ```
 
 **GOOD**:
+
 ```typescript
-const { data, error } = await supabase.from('users').select('*')
+const { data, error } = await supabase.from('users').select('*');
 if (error) {
-  console.error('Error:', error)
+  console.error('Error:', error);
 } else {
-  console.log(data)
+  console.log(data);
 }
 ```
 
@@ -366,17 +369,19 @@ if (error) {
 ### 4. Not Using Transactions
 
 **BAD**:
+
 ```typescript
-await supabase.from('users').insert({ name: 'John' })
-await supabase.from('posts').insert({ title: 'First Post' })
+await supabase.from('users').insert({ name: 'John' });
+await supabase.from('posts').insert({ title: 'First Post' });
 ```
 
 **GOOD**:
+
 ```typescript
 await supabase.rpc('create_user_with_post', {
   user_name: 'John',
-  post_title: 'First Post'
-})
+  post_title: 'First Post',
+});
 ```
 
 **Why**: Transactions ensure data consistency across multiple operations.
@@ -394,25 +399,22 @@ CREATE INDEX idx_posts_author_id ON posts(author_id);
 
 ```typescript
 // BAD
-const { data } = await supabase.from('users').select('*')
+const { data } = await supabase.from('users').select('*');
 
 // GOOD
-const { data } = await supabase.from('users').select('id, name, email')
+const { data } = await supabase.from('users').select('id, name, email');
 ```
 
 ### 3. Use Pagination
 
 ```typescript
-const { data } = await supabase
-  .from('users')
-  .select('*')
-  .range(0, 9)
+const { data } = await supabase.from('users').select('*').range(0, 9);
 ```
 
 ### 4. Use Database Functions
 
 ```typescript
-const { data } = await supabase.rpc('complex_query', { param: value })
+const { data } = await supabase.rpc('complex_query', { param: value });
 ```
 
 ## Integration with Frameworks
@@ -426,7 +428,7 @@ import { cookies } from 'next/headers'
 export default async function Page() {
   const supabase = createServerComponentClient({ cookies })
   const { data } = await supabase.from('users').select('*')
-  
+
   return <div>{JSON.stringify(data)}</div>
 }
 ```
@@ -467,16 +469,19 @@ supabase gen types typescript --project-id your-project-id > src/types/supabase.
 ### Common Issues
 
 **Connection errors**:
+
 - Verify SUPABASE_URL and SUPABASE_ANON_KEY
 - Check network connectivity
 - Ensure project is active
 
 **Authentication errors**:
+
 - Verify auth configuration
 - Check RLS policies
 - Ensure user is authenticated
 
 **Real-time issues**:
+
 - Check WebSocket connection
 - Verify channel names
 - Ensure RLS allows real-time access
@@ -487,9 +492,9 @@ supabase gen types typescript --project-id your-project-id > src/types/supabase.
 // Enable debug mode
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    debug: true
-  }
-})
+    debug: true,
+  },
+});
 ```
 
 ## Best Practices

@@ -1,16 +1,19 @@
 # Turborepo
 
-High-performance build system for JS/TS monorepos. Orchestrates tasks with intelligent caching and parallel execution.
+High-performance build system for JS/TS monorepos. Orchestrates tasks with
+intelligent caching and parallel execution.
 
 ## Version & Compatibility
 
 **Latest**: `2.10.6` (Jul 2026)
 
-**Node.js**: Core turbo is version-agnostic. Ecosystem packages (create-turbo, turbo-ignore, eslint-config-turbo) support Active & Maintenance LTS.
+**Node.js**: Core turbo is version-agnostic. Ecosystem packages (create-turbo,
+turbo-ignore, eslint-config-turbo) support Active & Maintenance LTS.
 
 **Package Managers**: pnpm 8+, npm 9+, Yarn 1.22+, Yarn 2+, Bun 1+
 
-**Support Policy**: Major versions supported 2 years from next major release. v1.x EOL: Jun 4, 2026. v2.x active.
+**Support Policy**: Major versions supported 2 years from next major release.
+v1.x EOL: Jun 4, 2026. v2.x active.
 
 ## Core Concepts
 
@@ -40,6 +43,7 @@ monorepo/
 ## Root Configuration
 
 **package.json**:
+
 ```json
 {
   "name": "monorepo",
@@ -58,6 +62,7 @@ monorepo/
 ```
 
 **Rules**:
+
 - `private: true` - Prevents publishing
 - `packageManager` - Enforces version consistency
 - Scripts delegate to `turbo run` only
@@ -86,6 +91,7 @@ monorepo/
 ```
 
 **Task Options**:
+
 - `dependsOn`: `"^task"` (deps), `"task"` (same pkg), `"pkg#task"` (specific)
 - `outputs`: Cache glob patterns (use `/**` for contents)
 - `inputs`: Hash inputs (defaults: all tracked files)
@@ -113,6 +119,7 @@ monorepo/
 ```
 
 **Best Practices**:
+
 - Namespaced names (`@repo/`)
 - `exports` field (not `main`)
 - Version `0.0.0` for internal
@@ -121,6 +128,7 @@ monorepo/
 ## Dependency Management
 
 **Install where used**:
+
 ```bash
 pnpm add react --filter=@repo/ui
 npm install react --workspace=@repo/ui
@@ -128,6 +136,7 @@ yarn workspace @repo/ui add react
 ```
 
 **Internal deps use workspace protocol**:
+
 ```json
 {
   "dependencies": {
@@ -141,6 +150,7 @@ yarn workspace @repo/ui add react
 ## TypeScript
 
 **Shared config package**:
+
 ```json
 {
   "compilerOptions": {
@@ -154,6 +164,7 @@ yarn workspace @repo/ui add react
 ```
 
 **Extend in packages**:
+
 ```json
 {
   "extends": "@repo/config/tsconfig.json",
@@ -171,6 +182,7 @@ No root `tsconfig.json` needed.
 ### Package-Specific Configs
 
 **Package turbo.json** (extends root):
+
 ```json
 {
   "extends": ["//"],
@@ -183,6 +195,7 @@ No root `tsconfig.json` needed.
 ```
 
 **Extend from other packages**:
+
 ```json
 {
   "extends": ["//", "web"],
@@ -197,6 +210,7 @@ No root `tsconfig.json` needed.
 ### $TURBO_EXTENDS$ (Array Inheritance)
 
 Append to inherited arrays instead of replacing:
+
 ```json
 {
   "extends": ["//"],
@@ -230,7 +244,8 @@ Works with: `dependsOn`, `env`, `inputs`, `outputs`, `passThroughEnv`, `with`
 
 **Key renames**: `globalDependencies` → `inputs`, `globalEnv` → `env`
 
-**Behavior change**: `global.inputs` prepended to each task's `inputs` (not global hash), allowing task-level exclusion via negation globs.
+**Behavior change**: `global.inputs` prepended to each task's `inputs` (not
+global hash), allowing task-level exclusion via negation globs.
 
 ### Special Input Values
 
@@ -250,6 +265,7 @@ Works with: `dependsOn`, `env`, `inputs`, `outputs`, `passThroughEnv`, `with`
 ### Transit Nodes
 
 For parallel execution with dependency awareness:
+
 ```json
 {
   "tasks": {
@@ -287,8 +303,8 @@ turbo run build --affected
 
 ### Environment Variables
 
-**Strict mode** (default): Only vars in `env`/`globalEnv` available
-**Loose mode**: All system vars available (use `--env-mode=loose`)
+**Strict mode** (default): Only vars in `env`/`globalEnv` available **Loose
+mode**: All system vars available (use `--env-mode=loose`)
 
 ```json
 {
@@ -301,13 +317,15 @@ turbo run build --affected
 }
 ```
 
-**Framework inference** (automatic): Next.js (`NEXT_PUBLIC_*`), Vite (`VITE_*`), CRA (`REACT_APP_*`), etc.
+**Framework inference** (automatic): Next.js (`NEXT_PUBLIC_*`), Vite (`VITE_*`),
+CRA (`REACT_APP_*`), etc.
 
 Disable: `--framework-inference=false` or `"env": ["!NEXT_PUBLIC_*"]`
 
 ### Cache Management
 
 **Local cache eviction**:
+
 ```json
 {
   "cacheMaxAge": "7d",
@@ -318,12 +336,14 @@ Disable: `--framework-inference=false` or `"env": ["!NEXT_PUBLIC_*"]`
 Duration: `30s`, `5m`, `24h`, `7d`, `2w`. Size: `500MB`, `10GB`, `1TB`
 
 **Remote caching** (Vercel):
+
 ```bash
 turbo login
 turbo link
 ```
 
 CI setup:
+
 ```yaml
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -331,6 +351,7 @@ env:
 ```
 
 **Artifact signing**:
+
 ```json
 {
   "remoteCache": {
@@ -338,6 +359,7 @@ env:
   }
 }
 ```
+
 Set `TURBO_REMOTE_CACHE_SIGNATURE_KEY` env var.
 
 ### Docker Integration
@@ -346,9 +368,11 @@ Set `TURBO_REMOTE_CACHE_SIGNATURE_KEY` env var.
 turbo prune api --docker
 ```
 
-Creates `out/json/` (package.jsons) and `out/full/` (source) for Docker layer caching.
+Creates `out/json/` (package.jsons) and `out/full/` (source) for Docker layer
+caching.
 
 **Dockerfile**:
+
 ```dockerfile
 FROM node:18-alpine AS base
 RUN corepack enable pnpm
@@ -401,7 +425,7 @@ RUN pnpm turbo run build --filter=api
 
 ```json
 {
-  "concurrency": "50%"  // or integer like "4"
+  "concurrency": "50%" // or integer like "4"
 }
 ```
 
@@ -412,6 +436,7 @@ RUN pnpm turbo run build --filter=api
 ## Troubleshooting
 
 **Debugging flags**:
+
 ```bash
 turbo run build --summarize      # JSON run summary
 turbo run build --dry=json       # Show what would run
@@ -420,16 +445,19 @@ turbo run build --output-logs=new-only  # Cache misses only
 ```
 
 **Unexpected cache misses**:
+
 1. Run with `--summarize`, compare with previous run
 2. Check env vars with `--dry=json`
 3. Look for lockfile/config changes
 
 **Unexpected cache hits**:
+
 1. Verify env var is in `env` array
 2. Verify file is in `inputs` array
 3. Check if `envMode` is loose
 
 **With globalConfiguration enabled**:
+
 - `global.inputs` appear in task inputs (not global hash)
 - Use `$TURBO_DEFAULT$` when excluding global inputs
 - Toggling flag invalidates all caches
@@ -448,6 +476,7 @@ turbo run build --output-logs=new-only  # Cache misses only
 ```
 
 **PR builds**:
+
 ```yaml
 turbo run build lint test --filter=[origin/main]
 ```
@@ -467,13 +496,15 @@ turbo prune web --docker                  # Docker prep
 ## Package Managers
 
 **pnpm** (recommended):
+
 ```yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 ```
 
 **npm/Yarn**:
+
 ```json
 {
   "workspaces": ["apps/*", "packages/*"]

@@ -30,7 +30,9 @@ describe('useTaskDetails - Time Entries', () => {
         billableRate: '100',
       },
     ];
-    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({ timeEntries: mockTimeEntries } as never);
+    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({
+      timeEntries: mockTimeEntries,
+    } as never);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {
       wrapper,
@@ -57,7 +59,9 @@ describe('useTaskDetails - Time Entries', () => {
         billableRate: '100',
       },
     ];
-    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({ timeEntries: mockTimeEntries } as never);
+    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({
+      timeEntries: mockTimeEntries,
+    } as never);
     vi.mocked(apiClient.createTimeEntry).mockResolvedValue({
       id: '2',
       taskId: 'task-1',
@@ -105,7 +109,9 @@ describe('useTaskDetails - Time Entries', () => {
         billableRate: '100',
       },
     ];
-    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({ timeEntries: mockTimeEntries } as never);
+    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({
+      timeEntries: mockTimeEntries,
+    } as never);
     vi.mocked(apiClient.updateTimeEntry).mockResolvedValue({
       id: '1',
       taskId: 'task-1',
@@ -151,7 +157,9 @@ describe('useTaskDetails - Time Entries', () => {
         billableRate: '100',
       },
     ];
-    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({ timeEntries: mockTimeEntries } as never);
+    vi.mocked(apiClient.getTimeEntries).mockResolvedValue({
+      timeEntries: mockTimeEntries,
+    } as never);
     vi.mocked(apiClient.deleteTimeEntry).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useTaskDetails({ id: 'task-1' }), {

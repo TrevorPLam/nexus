@@ -7,14 +7,6 @@
  * - event-write.ts (write operations)
  */
 
-export {
-  getEventById,
-  getEventsByCalendar,
-  getEventsByWorkspace,
-} from './event-read.js';
+export { getEventById, getEventsByCalendar, getEventsByWorkspace } from './event-read.js';
 
-export {
-  createEvent,
-  updateEvent,
-  deleteEvent,
-} from './event-write.js';
+export { createEvent, updateEvent, deleteEvent } from './event-write.js';

@@ -2,18 +2,22 @@
 
 ## Overview
 
-Prettier is an opinionated code formatter that enforces a consistent style across your codebase. It parses your code and reprints it with its own rules, taking the maximum line length into account and wrapping code when necessary.
+Prettier is an opinionated code formatter that enforces a consistent style
+across your codebase. It parses your code and reprints it with its own rules,
+taking the maximum line length into account and wrapping code when necessary.
 
 ## Latest Stable Version
 
 **Version**: `3.9.6` (July 2026)
 
 **Compatibility**:
+
 - Node.js: 14.17.0+
 - Browsers: Not applicable (CLI tool)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - Zero configuration with sensible defaults
 - Integrates with most editors
 - Supports JavaScript, TypeScript, JSX, CSS, HTML, JSON, and more
@@ -22,21 +26,24 @@ Prettier is an opinionated code formatter that enforces a consistent style acros
 
 ## Core Concepts
 
-- **Opinionated Formatting**: Prettier has few options; it enforces a consistent style
+- **Opinionated Formatting**: Prettier has few options; it enforces a consistent
+  style
 - **Parsing**: Code is parsed into an AST, then reformatted
 - **Print Width**: Maximum line length (default 80)
 - **Tab Width**: Number of spaces per indentation level
 - **Semicolons**: Whether to add semicolons at the end of statements
 - **Quotes**: Single vs double quotes
 - **Trailing Commas**: Whether to add trailing commas in objects/arrays
-- **Arrow Function Parentheses**: When to add parentheses around arrow function parameters
+- **Arrow Function Parentheses**: When to add parentheses around arrow function
+  parameters
 
 ## Key Features
 
 - **Zero Config**: Works out of the box with sensible defaults
 - **Editor Integration**: VS Code, WebStorm, Sublime Text, Atom, etc.
 - **Format on Save**: Automatic formatting when files are saved
-- **Language Support**: JavaScript, TypeScript, JSX, CSS, HTML, JSON, Markdown, YAML, and more
+- **Language Support**: JavaScript, TypeScript, JSX, CSS, HTML, JSON, Markdown,
+  YAML, and more
 - **CI Integration**: Can be run in CI pipelines to enforce formatting
 - **ESLint Integration**: Disables conflicting ESLint formatting rules
 - **Fast**: Efficient formatting even for large codebases
@@ -79,6 +86,7 @@ npm install -D prettier eslint-config-prettier
 ### Configuration Files
 
 Prettier looks for configuration files in this order:
+
 1. `.prettierrc` (JSON)
 2. `.prettierrc.json` (JSON)
 3. `.prettierrc.yaml` / `.prettierrc.yml` (YAML)
@@ -90,6 +98,7 @@ Prettier looks for configuration files in this order:
 ### Recommended Configuration
 
 **`.prettierrc`**:
+
 ```json
 {
   "semi": true,
@@ -104,6 +113,7 @@ Prettier looks for configuration files in this order:
 ```
 
 **`.prettierrc.js`** (for dynamic configuration):
+
 ```javascript
 module.exports = {
   semi: true,
@@ -119,42 +129,43 @@ module.exports = {
       files: '*.md',
       options: {
         printWidth: 80,
-        proseWrap: 'always'
-      }
+        proseWrap: 'always',
+      },
     },
     {
       files: '*.json',
       options: {
-        printWidth: 200
-      }
-    }
-  ]
-}
+        printWidth: 200,
+      },
+    },
+  ],
+};
 ```
 
 ### Configuration Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `printWidth` | 80 | Maximum line length |
-| `tabWidth` | 2 | Number of spaces per indentation level |
-| `useTabs` | false | Use tabs instead of spaces |
-| `semi` | true | Add semicolons at the end of statements |
-| `singleQuote` | false | Use single quotes instead of double quotes |
-| `quoteProps` | 'as-needed' | Quote object properties when needed |
-| `jsxSingleQuote` | false | Use single quotes in JSX |
-| `trailingComma` | 'es5' | Add trailing commas where valid in ES5 |
-| `bracketSpacing` | true | Print spaces between brackets |
-| `bracketSameLine` | false | Put `>` of JSX tags on the last line |
-| `arrowParens` | 'always' | Add parentheses around arrow function parameters |
-| `proseWrap` | 'preserve' | How to wrap prose |
-| `htmlWhitespaceSensitivity` | 'css' | How to handle whitespace in HTML |
-| `endOfLine` | 'lf' | Line ending style |
-| `embeddedLanguageFormatting` | 'auto' | Format embedded code |
+| Option                       | Default     | Description                                      |
+| ---------------------------- | ----------- | ------------------------------------------------ |
+| `printWidth`                 | 80          | Maximum line length                              |
+| `tabWidth`                   | 2           | Number of spaces per indentation level           |
+| `useTabs`                    | false       | Use tabs instead of spaces                       |
+| `semi`                       | true        | Add semicolons at the end of statements          |
+| `singleQuote`                | false       | Use single quotes instead of double quotes       |
+| `quoteProps`                 | 'as-needed' | Quote object properties when needed              |
+| `jsxSingleQuote`             | false       | Use single quotes in JSX                         |
+| `trailingComma`              | 'es5'       | Add trailing commas where valid in ES5           |
+| `bracketSpacing`             | true        | Print spaces between brackets                    |
+| `bracketSameLine`            | false       | Put `>` of JSX tags on the last line             |
+| `arrowParens`                | 'always'    | Add parentheses around arrow function parameters |
+| `proseWrap`                  | 'preserve'  | How to wrap prose                                |
+| `htmlWhitespaceSensitivity`  | 'css'       | How to handle whitespace in HTML                 |
+| `endOfLine`                  | 'lf'        | Line ending style                                |
+| `embeddedLanguageFormatting` | 'auto'      | Format embedded code                             |
 
 ### Ignore Files
 
 **`.prettierignore`**:
+
 ```
 # Dependencies
 node_modules/
@@ -242,23 +253,24 @@ module.exports = {
     {
       files: '*.test.{js,ts}',
       options: {
-        printWidth: 120
-      }
+        printWidth: 120,
+      },
     },
     {
       files: ['*.md', '*.mdx'],
       options: {
         proseWrap: 'always',
-        printWidth: 80
-      }
-    }
-  ]
-}
+        printWidth: 80,
+      },
+    },
+  ],
+};
 ```
 
 ### Monorepo Configuration
 
 **Root `.prettierrc`**:
+
 ```json
 {
   "semi": true,
@@ -269,9 +281,10 @@ module.exports = {
 ```
 
 **Package-specific overrides**:
+
 ```javascript
 // apps/web/prettier.config.js
-const baseConfig = require('../../.prettierrc')
+const baseConfig = require('../../.prettierrc');
 
 module.exports = {
   ...baseConfig,
@@ -279,37 +292,37 @@ module.exports = {
     {
       files: '*.tsx',
       options: {
-        jsxSingleQuote: true
-      }
-    }
-  ]
-}
+        jsxSingleQuote: true,
+      },
+    },
+  ],
+};
 ```
 
 ### Integration with ESLint
 
 **Install dependencies**:
+
 ```bash
 npm install -D prettier eslint-config-prettier
 ```
 
 **ESLint flat config**:
+
 ```javascript
-import prettier from 'eslint-config-prettier'
+import prettier from 'eslint-config-prettier';
 
 export default [
   // ...other configs
-  prettier  // Must be last to disable conflicting rules
-]
+  prettier, // Must be last to disable conflicting rules
+];
 ```
 
 **Legacy ESLint config**:
+
 ```json
 {
-  "extends": [
-    "eslint:recommended",
-    "prettier"
-  ]
+  "extends": ["eslint:recommended", "prettier"]
 }
 ```
 
@@ -318,6 +331,7 @@ export default [
 ### 1. Too Many Configuration Options
 
 **BAD**:
+
 ```json
 {
   "semi": true,
@@ -338,6 +352,7 @@ export default [
 ```
 
 **GOOD**:
+
 ```json
 {
   "semi": true,
@@ -355,11 +370,13 @@ export default [
 ### 2. Not Using .prettierignore
 
 **BAD**:
+
 ```bash
 prettier --write .  # Formats everything including node_modules
 ```
 
 **GOOD**:
+
 ```
 # .prettierignore
 node_modules/
@@ -368,11 +385,13 @@ build/
 *.min.js
 ```
 
-**Why**: Formatting generated files or dependencies is wasteful and can cause issues.
+**Why**: Formatting generated files or dependencies is wasteful and can cause
+issues.
 
 ### 3. Not Integrating with ESLint
 
 **BAD**:
+
 ```javascript
 // ESLint handles formatting
 {
@@ -385,20 +404,23 @@ build/
 ```
 
 **GOOD**:
+
 ```javascript
-import prettier from 'eslint-config-prettier'
+import prettier from 'eslint-config-prettier';
 
 export default [
   // ...other configs
-  prettier  // Disables ESLint formatting rules
-]
+  prettier, // Disables ESLint formatting rules
+];
 ```
 
-**Why**: Prettier handles formatting better; ESLint should focus on code quality.
+**Why**: Prettier handles formatting better; ESLint should focus on code
+quality.
 
 ### 4. Inconsistent Print Width
 
 **BAD**:
+
 ```json
 {
   "printWidth": 80
@@ -406,6 +428,7 @@ export default [
 ```
 
 **GOOD**:
+
 ```json
 {
   "printWidth": 100
@@ -417,6 +440,7 @@ export default [
 ### 5. Not Using Trailing Commas
 
 **BAD**:
+
 ```json
 {
   "trailingComma": "none"
@@ -424,6 +448,7 @@ export default [
 ```
 
 **GOOD**:
+
 ```json
 {
   "trailingComma": "all"
@@ -435,12 +460,14 @@ export default [
 ### 6. Not Formatting on Save
 
 **BAD**:
+
 ```bash
 # Manual formatting
 prettier --write src/index.ts
 ```
 
 **GOOD**:
+
 ```json
 // .vscode/settings.json
 {
@@ -454,11 +481,13 @@ prettier --write src/index.ts
 ### 7. Not Running in CI
 
 **BAD**:
+
 ```bash
 # No CI check
 ```
 
 **GOOD**:
+
 ```yaml
 # .github/workflows/ci.yml
 - name: Check formatting
@@ -470,6 +499,7 @@ prettier --write src/index.ts
 ### 8. Using Different Line Endings
 
 **BAD**:
+
 ```json
 {
   "endOfLine": "auto"
@@ -477,6 +507,7 @@ prettier --write src/index.ts
 ```
 
 **GOOD**:
+
 ```json
 {
   "endOfLine": "lf"
@@ -490,6 +521,7 @@ prettier --write src/index.ts
 ### 1. Use .prettierignore
 
 Exclude unnecessary files from formatting:
+
 ```
 node_modules/
 dist/
@@ -506,6 +538,7 @@ prettier --write src/  # Only format source files
 ### 3. Use Caching
 
 Prettier doesn't have built-in caching, but you can use third-party tools:
+
 ```bash
 npm install -D prettier-cache
 prettier-cache --write .
@@ -514,6 +547,7 @@ prettier-cache --write .
 ### 4. Parallel Processing
 
 Format files in parallel using tools like `npm-run-all`:
+
 ```bash
 npm install -D npm-run-all
 npm-run-all --parallel prettier:*
@@ -524,11 +558,13 @@ npm-run-all --parallel prettier:*
 ### VS Code
 
 **Install extension**:
+
 ```bash
 code --install-extension esbenp.prettier-vscode
 ```
 
 **Settings**:
+
 ```json
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -559,6 +595,7 @@ pre-commit:
 ```
 
 **package.json scripts**:
+
 ```json
 {
   "scripts": {
@@ -571,12 +608,14 @@ pre-commit:
 ### CI/CD
 
 **GitHub Actions**:
+
 ```yaml
 - name: Check formatting
   run: pnpm format:check
 ```
 
 **GitLab CI**:
+
 ```yaml
 formatting:
   script:
@@ -627,19 +666,23 @@ echo 'const x = 1' | prettier --stdin-filepath stdin.js
 ### Common Issues
 
 **"File ignored" warnings**:
+
 - Check `.prettierignore` for incorrect patterns
 - Ensure file paths are correct
 
 **Formatting not working in editor**:
+
 - Verify Prettier extension is installed
 - Check editor settings for default formatter
 - Ensure `.prettierrc` is in the project root
 
 **Conflicts with ESLint**:
+
 - Use `eslint-config-prettier` to disable conflicting rules
 - Run Prettier before ESLint in pre-commit hooks
 
 **Slow formatting**:
+
 - Use `.prettierignore` to exclude large directories
 - Format specific files instead of entire project
 - Consider using caching tools

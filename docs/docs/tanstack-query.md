@@ -2,18 +2,23 @@
 
 ## Overview
 
-TanStack Query (formerly React Query) is a powerful data synchronization library for React applications. It handles fetching, caching, synchronizing, and updating server state, eliminating the need to manage complex state for asynchronous operations.
+TanStack Query (formerly React Query) is a powerful data synchronization library
+for React applications. It handles fetching, caching, synchronizing, and
+updating server state, eliminating the need to manage complex state for
+asynchronous operations.
 
 ## Latest Stable Version
 
 **Version**: `5.0.0` (July 2026)
 
 **Compatibility**:
+
 - React: 16.8+, 17.x, 18.x
 - Browsers: Modern browsers (Chrome, Firefox, Safari, Edge)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - Automatic caching and refetching
 - Parallel and dependent queries
 - Mutations and optimistic updates
@@ -211,28 +216,28 @@ function CreateUserForm() {
 
 ```typescript
 function UpdateUserForm({ user }: { user: any }) {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (userData: any) => {
       return fetch(`/api/users/${user.id}`, {
         method: 'PUT',
-        body: JSON.stringify(userData)
-      }).then(res => res.json())
+        body: JSON.stringify(userData),
+      }).then((res) => res.json());
     },
     onMutate: async (newData) => {
-      await queryClient.cancelQueries({ queryKey: ['user', user.id] })
-      const previousUser = queryClient.getQueryData(['user', user.id])
-      queryClient.setQueryData(['user', user.id], newData)
-      return { previousUser }
+      await queryClient.cancelQueries({ queryKey: ['user', user.id] });
+      const previousUser = queryClient.getQueryData(['user', user.id]);
+      queryClient.setQueryData(['user', user.id], newData);
+      return { previousUser };
     },
     onError: (err, newData, context) => {
-      queryClient.setQueryData(['user', user.id], context?.previousUser)
+      queryClient.setQueryData(['user', user.id], context?.previousUser);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['user', user.id] })
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ['user', user.id] });
+    },
+  });
 }
 ```
 
@@ -283,8 +288,8 @@ function InfinitePosts() {
 function useFilteredPosts(filter: string) {
   return useQuery({
     queryKey: ['posts', { filter }],
-    queryFn: () => fetchPosts(filter)
-  })
+    queryFn: () => fetchPosts(filter),
+  });
 }
 ```
 
@@ -295,8 +300,8 @@ const { data } = useQuery({
   queryKey: ['user', userId],
   queryFn: () => fetchUser(userId),
   retry: 3,
-  retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
-})
+  retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+});
 ```
 
 ### Query Invalidation
@@ -355,19 +360,21 @@ function PostList() {
 ### 1. Not Using Query Keys Properly
 
 **BAD**:
+
 ```typescript
 useQuery({
   queryKey: ['user'], // Missing user ID
-  queryFn: () => fetchUser(userId)
-})
+  queryFn: () => fetchUser(userId),
+});
 ```
 
 **GOOD**:
+
 ```typescript
 useQuery({
   queryKey: ['user', userId], // Includes user ID
-  queryFn: () => fetchUser(userId)
-})
+  queryFn: () => fetchUser(userId),
+});
 ```
 
 **Why**: Query keys must include all parameters that affect the query result.
@@ -375,6 +382,7 @@ useQuery({
 ### 2. Not Handling Loading/Error States
 
 **BAD**:
+
 ```typescript
 const { data } = useQuery({
   queryKey: ['user', userId],
@@ -384,6 +392,7 @@ return <div>{data.name}</div> // Crashes if data is undefined
 ```
 
 **GOOD**:
+
 ```typescript
 const { data, isLoading, error } = useQuery({
   queryKey: ['user', userId],
@@ -400,21 +409,23 @@ return <div>{data.name}</div>
 ### 3. Not Invalidating After Mutations
 
 **BAD**:
+
 ```typescript
 const mutation = useMutation({
-  mutationFn: createUser
+  mutationFn: createUser,
   // No invalidation
-})
+});
 ```
 
 **GOOD**:
+
 ```typescript
 const mutation = useMutation({
   mutationFn: createUser,
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['users'] })
-  }
-})
+    queryClient.invalidateQueries({ queryKey: ['users'] });
+  },
+});
 ```
 
 **Why**: Invalidation ensures UI reflects server state.
@@ -422,19 +433,21 @@ const mutation = useMutation({
 ### 4. Over-fetching Data
 
 **BAD**:
+
 ```typescript
 useQuery({
   queryKey: ['users'],
-  queryFn: () => fetchAllUsers() // Fetches all users
-})
+  queryFn: () => fetchAllUsers(), // Fetches all users
+});
 ```
 
 **GOOD**:
+
 ```typescript
 useQuery({
   queryKey: ['users', { page: 1, limit: 10 }],
-  queryFn: () => fetchUsers({ page: 1, limit: 10 })
-})
+  queryFn: () => fetchUsers({ page: 1, limit: 10 }),
+});
 ```
 
 **Why**: Pagination reduces bandwidth and improves performance.
@@ -447,10 +460,10 @@ useQuery({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5 // 5 minutes
-    }
-  }
-})
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 ```
 
 ### 2. Use Selectors
@@ -459,8 +472,8 @@ const queryClient = new QueryClient({
 const { data: userName } = useQuery({
   queryKey: ['user', userId],
   queryFn: () => fetchUser(userId),
-  select: (data) => data.name // Only subscribe to name changes
-})
+  select: (data) => data.name, // Only subscribe to name changes
+});
 ```
 
 ### 3. Enable Suspense
@@ -469,8 +482,8 @@ const { data: userName } = useQuery({
 const { data } = useQuery({
   queryKey: ['user', userId],
   queryFn: () => fetchUser(userId),
-  suspense: true
-})
+  suspense: true,
+});
 ```
 
 ### 4. Use Query Client Defaults
@@ -481,10 +494,10 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      retry: 1
-    }
-  }
-})
+      retry: 1,
+    },
+  },
+});
 ```
 
 ## DevTools
@@ -531,16 +544,19 @@ npm install @tanstack/solid-query
 ### Common Issues
 
 **Queries not refetching**:
+
 - Check stale time configuration
 - Verify query keys are correct
 - Ensure invalidation is called after mutations
 
 **Memory leaks**:
+
 - Clean up queries in useEffect
 - Use proper cache time
 - Cancel queries on unmount
 
 **Type errors**:
+
 - Ensure TypeScript types are correct
 - Check query key types
 - Verify generic types
@@ -552,10 +568,10 @@ npm install @tanstack/solid-query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      logLevel: 'debug'
-    }
-  }
-})
+      logLevel: 'debug',
+    },
+  },
+});
 ```
 
 ## Best Practices

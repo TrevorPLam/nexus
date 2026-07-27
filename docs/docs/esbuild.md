@@ -2,13 +2,19 @@
 
 ## Overview
 
-esbuild is an extremely fast JavaScript and TypeScript bundler and minifier written in Go. It routinely bundles medium-sized apps in hundreds of milliseconds — often 10–100× faster than JavaScript-based alternatives like Webpack or Rollup. It powers dependency pre-bundling inside Vite, transpilation in many meta-frameworks, and standalone build scripts for libraries and serverless functions.
+esbuild is an extremely fast JavaScript and TypeScript bundler and minifier
+written in Go. It routinely bundles medium-sized apps in hundreds of
+milliseconds — often 10–100× faster than JavaScript-based alternatives like
+Webpack or Rollup. It powers dependency pre-bundling inside Vite, transpilation
+in many meta-frameworks, and standalone build scripts for libraries and
+serverless functions.
 
 ## Latest Stable Version
 
 **Version**: `0.28.1` (June 2026)
 
 **Compatibility**:
+
 - Node.js: 12.x+ (recommended 18.x+)
 - Platforms: Windows, macOS, Linux, FreeBSD
 - Browsers: All modern browsers (via target configuration)
@@ -16,6 +22,7 @@ esbuild is an extremely fast JavaScript and TypeScript bundler and minifier writ
 - Runtimes: Node.js, Deno, Bun, Browser
 
 **Security Notes**:
+
 - Update to 0.28.1+ for critical Deno RCE fix (GHSA-gv7w-rqvm-qjhr)
 - Update to 0.25.0+ for CORS dev server fix (GHSA-67mh-4wv8-2f99)
 - Update to 0.28.1+ for Windows path traversal fix (GHSA-g7r4-m6w7-qqqr)
@@ -24,11 +31,15 @@ esbuild is an extremely fast JavaScript and TypeScript bundler and minifier writ
 
 ### Core Concepts
 
-1. **Go Implementation**: Written in Go for native performance, compiles to machine code
+1. **Go Implementation**: Written in Go for native performance, compiles to
+   machine code
 2. **Parallel Processing**: Runs transformations in parallel across CPU cores
-3. **Memory Efficient**: Uses memory-efficient data structures, no intermediate AST copies
-4. **No Type Checking**: Intentionally skips type checking for speed (use tsc separately)
-5. **Three APIs**: `build()`, `context()`, and `transform()` for different use cases
+3. **Memory Efficient**: Uses memory-efficient data structures, no intermediate
+   AST copies
+4. **No Type Checking**: Intentionally skips type checking for speed (use tsc
+   separately)
+5. **Three APIs**: `build()`, `context()`, and `transform()` for different use
+   cases
 
 ### Key Features
 
@@ -44,18 +55,21 @@ esbuild is an extremely fast JavaScript and TypeScript bundler and minifier writ
 ### API Overview
 
 **`build()`**: One-shot graph build for files
+
 - Resolves imports
 - Applies tree shaking
 - Writes outputs to disk
 - Best for CI/CD and production builds
 
 **`context()`**: Persistent build context for watch mode
+
 - Reuses parsed ASTs and module metadata
 - Enables incremental rebuilds
 - Supports watch and serve modes
 - Best for development
 
 **`transform()`**: Stateless single-string converter
+
 - No filesystem access
 - No import resolution
 - Pure lexer-plus-codegen pass
@@ -96,6 +110,7 @@ curl -fsSL https://esbuild.github.io/dl/v0.28.1 | sh
 ```
 
 **Pin the exact version for reproducibility**:
+
 ```json
 {
   "devDependencies": {
@@ -107,8 +122,9 @@ curl -fsSL https://esbuild.github.io/dl/v0.28.1 | sh
 ### 2. Basic Build Script
 
 **`build.mjs`**:
+
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -117,12 +133,13 @@ await esbuild.build({
   sourcemap: true,
   target: ['chrome90', 'firefox90', 'safari15'],
   outfile: 'dist/bundle.js',
-})
+});
 
-console.log('Build complete')
+console.log('Build complete');
 ```
 
 Run with:
+
 ```bash
 node build.mjs
 ```
@@ -130,7 +147,7 @@ node build.mjs
 ### 3. Multiple Entry Points with Code Splitting
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: {
@@ -138,14 +155,15 @@ await esbuild.build({
     worker: 'src/worker.ts',
   },
   bundle: true,
-  splitting: true,     // Enable code splitting (ESM only)
+  splitting: true, // Enable code splitting (ESM only)
   format: 'esm',
   outdir: 'dist',
   chunkNames: 'chunks/[name]-[hash]',
-})
+});
 ```
 
 **Requirements for code splitting**:
+
 - `format: 'esm'` (required)
 - `outdir` (not `outfile`)
 - `splitting: true`
@@ -153,7 +171,7 @@ await esbuild.build({
 ### 4. Production Build for Node.js CLI
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/cli.ts'],
@@ -167,17 +185,17 @@ await esbuild.build({
     'fsevents',
   ],
   banner: {
-    js: '#!/usr/bin/env node',  // Shebang for CLI
+    js: '#!/usr/bin/env node', // Shebang for CLI
   },
   minify: true,
   sourcemap: true,
-})
+});
 ```
 
 ### 5. Library Build (ESM + CJS)
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 // Build ESM
 await esbuild.build({
@@ -185,8 +203,8 @@ await esbuild.build({
   bundle: true,
   format: 'esm',
   outfile: 'dist/index.mjs',
-  external: ['react', 'react-dom'],  // Don't bundle peer dependencies
-})
+  external: ['react', 'react-dom'], // Don't bundle peer dependencies
+});
 
 // Build CJS
 await esbuild.build({
@@ -195,61 +213,61 @@ await esbuild.build({
   format: 'cjs',
   outfile: 'dist/index.js',
   external: ['react', 'react-dom'],
-})
+});
 ```
 
 ### 6. Watch Mode with Context
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
   sourcemap: true,
   outdir: 'dist',
-})
+});
 
-await ctx.watch()  // Watch for file changes
+await ctx.watch(); // Watch for file changes
 
 // Cleanup on exit
 process.on('SIGINT', async () => {
-  await ctx.dispose()
-  process.exit()
-})
+  await ctx.dispose();
+  process.exit();
+});
 ```
 
 ### 7. Built-in Dev Server
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
   outdir: 'dist',
-})
+});
 
 const { host, port } = await ctx.serve({
   servedir: 'dist',
   port: 3000,
-})
+});
 
-console.log(`Serving at http://${host}:${port}`)
+console.log(`Serving at http://${host}:${port}`);
 ```
 
 ### 8. Custom Plugins
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const cssModulesPlugin = {
   name: 'css-modules',
   setup(build) {
     build.onLoad({ filter: /\.module\.css$/ }, async (args) => {
-      const css = await fs.promises.readFile(args.path, 'utf8')
+      const css = await fs.promises.readFile(args.path, 'utf8');
       // Transform CSS modules → JS object
-      const { transformed, classNames } = transformCSSModules(css)
+      const { transformed, classNames } = transformCSSModules(css);
       return {
         contents: `
           const style = document.createElement('style')
@@ -258,23 +276,23 @@ const cssModulesPlugin = {
           export default ${JSON.stringify(classNames)}
         `,
         loader: 'js',
-      }
-    })
+      };
+    });
   },
-}
+};
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   plugins: [cssModulesPlugin],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 9. Environment Variables
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -284,15 +302,16 @@ await esbuild.build({
     'process.env.API_URL': '"https://api.example.com"',
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Important**: Values must be JSON-serializable strings. Use `JSON.stringify()` for complex values.
+**Important**: Values must be JSON-serializable strings. Use `JSON.stringify()`
+for complex values.
 
 ### 10. Path Aliases
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -305,13 +324,13 @@ await esbuild.build({
     },
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 11. External Dependencies
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -321,23 +340,23 @@ await esbuild.build({
     'fs',
     'path',
     'express',
-    '*node_modules/*',  // Externalize all node_modules
+    '*node_modules/*', // Externalize all node_modules
   ],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 12. Metafile for Bundle Analysis
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   metafile: true,
   outfile: 'dist/bundle.js',
-})
+});
 
 // Analyze with esbuild-visualizer or similar tools
 ```
@@ -347,44 +366,44 @@ await esbuild.build({
 ### 1. Incremental Builds with Context
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
   outdir: 'dist',
-})
+});
 
 // Manual rebuild
-await ctx.rebuild()
+await ctx.rebuild();
 
 // Reuse context for multiple builds
 for (const file of ['src/index.ts', 'src/worker.ts']) {
-  await ctx.rebuild({ entryPoints: [file] })
+  await ctx.rebuild({ entryPoints: [file] });
 }
 
-await ctx.dispose()
+await ctx.dispose();
 ```
 
 ### 2. Live Reload with Watch + Serve
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
   sourcemap: true,
   outdir: 'dist',
-})
+});
 
 // Enable watch
-await ctx.watch()
+await ctx.watch();
 
 // Enable serve
 const { host, port } = await ctx.serve({
   servedir: 'dist',
-})
+});
 
 // Add client-side live reload
 // (requires custom implementation)
@@ -393,16 +412,17 @@ const { host, port } = await ctx.serve({
 ### 3. Transform API for Single Files
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 const result = await esbuild.transform('const x: number = 1', {
   loader: 'ts',
-})
+});
 
-console.log(result.code)  // "const x = 1;"
+console.log(result.code); // "const x = 1;"
 ```
 
 **Use cases**:
+
 - Build plugins
 - Test runner hooks
 - CMS pipelines
@@ -411,7 +431,7 @@ console.log(result.code)  // "const x = 1;"
 ### 4. Custom Loaders
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -421,79 +441,74 @@ await esbuild.build({
     '.data': 'json',
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Available loaders**: `js`, `jsx`, `ts`, `tsx`, `css`, `json`, `text`, `base64`, `file`, `dataurl`
+**Available loaders**: `js`, `jsx`, `ts`, `tsx`, `css`, `json`, `text`,
+`base64`, `file`, `dataurl`
 
 ### 5. JSX Configuration
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.tsx'],
   bundle: true,
-  jsx: 'automatic',  // or 'transform'
+  jsx: 'automatic', // or 'transform'
   jsxImportSource: 'react',
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 6. Target Configuration
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  target: [
-    'es2020',
-    'chrome100',
-    'firefox100',
-    'safari15',
-    'node20',
-  ],
+  target: ['es2020', 'chrome100', 'firefox100', 'safari15', 'node20'],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 7. Minification Options
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  minify: true,  // All minification
+  minify: true, // All minification
   // Or individual options:
   // minifyWhitespace: true,
   // minifyIdentifiers: true,
   // minifySyntax: true,
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 8. Source Map Configuration
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  sourcemap: 'inline',  // or 'external', 'linked', 'both'
+  sourcemap: 'inline', // or 'external', 'linked', 'both'
   sourcesContent: true,
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 9. Banner and Footer
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -505,20 +520,20 @@ await esbuild.build({
     js: '// End of bundle',
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 10. Legal Comments
 
 ```javascript
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  legalComments: 'none',  // or 'inline', 'eof', 'linked', 'external'
+  legalComments: 'none', // or 'inline', 'eof', 'linked', 'external'
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ## Anti-Patterns & Common Mistakes
@@ -526,44 +541,49 @@ await esbuild.build({
 ### 1. Assuming esbuild Type-Checks
 
 **BAD**:
+
 ```javascript
 // esbuild strips types but doesn't check them
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 **GOOD**:
+
 ```javascript
 // Run type checking separately
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   outfile: 'dist/bundle.js',
-})
+});
 
 // In CI
-await exec('tsc --noEmit')
+await exec('tsc --noEmit');
 ```
 
-**Why**: esbuild intentionally skips type checking for speed. Invalid types can ship to production.
+**Why**: esbuild intentionally skips type checking for speed. Invalid types can
+ship to production.
 
 ### 2. Bundling Native Node Addons for Browser
 
 **BAD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   platform: 'browser',
   outfile: 'dist/bundle.js',
-})
+});
 // If code imports .node files or fs, it will fail at runtime
 ```
 
 **GOOD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -571,49 +591,55 @@ await esbuild.build({
   platform: 'browser',
   external: ['fs', 'path', '*.node'],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Why**: `.node` files and `fs` imports fail at runtime in browser. Externalize or stub them.
+**Why**: `.node` files and `fs` imports fail at runtime in browser. Externalize
+or stub them.
 
 ### 3. Over-Bundling Server Code
 
 **BAD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/server.ts'],
   bundle: true,
   platform: 'node',
   outfile: 'dist/server.js',
-})
+});
 // Duplicates node_modules into Lambda artifacts
 ```
 
 **GOOD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/server.ts'],
   bundle: true,
   platform: 'node',
-  packages: 'external',  // Leave all node_modules external
+  packages: 'external', // Leave all node_modules external
   outfile: 'dist/server.js',
-})
+});
 ```
 
-**Why**: Duplicating `node_modules` bloats cold starts in serverless environments.
+**Why**: Duplicating `node_modules` bloats cold starts in serverless
+environments.
 
 ### 4. Dynamic Import Expressions
 
 **BAD**:
+
 ```javascript
 // Non-literal import may not split
-const module = await import(path)
+const module = await import(path);
 ```
 
 **GOOD**:
+
 ```javascript
 // Use static strings for code splitting
-const module = await import('./module')
+const module = await import('./module');
 ```
 
 **Why**: Non-literal `import(path)` may not work with `splitting: true`.
@@ -621,6 +647,7 @@ const module = await import('./module')
 ### 5. Missing `define` for `process.env`
 
 **BAD**:
+
 ```javascript
 // Browser bundles reference undefined process
 await esbuild.build({
@@ -628,10 +655,11 @@ await esbuild.build({
   bundle: true,
   platform: 'browser',
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 **GOOD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/index.ts'],
@@ -641,19 +669,22 @@ await esbuild.build({
     'process.env.NODE_ENV': '"production"',
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Why**: Browser bundles reference undefined `process` unless replaced at build time.
+**Why**: Browser bundles reference undefined `process` unless replaced at build
+time.
 
 ### 6. Ignoring `sideEffects`
 
 **BAD**:
+
 ```javascript
 // Tree shaking silently keeps large polyfill entry points
 ```
 
 **GOOD**:
+
 ```json
 // package.json
 {
@@ -661,59 +692,67 @@ await esbuild.build({
 }
 ```
 
-**Why**: Tree shaking works on ESM static imports. Side-effect imports can prevent dead-code elimination.
+**Why**: Tree shaking works on ESM static imports. Side-effect imports can
+prevent dead-code elimination.
 
 ### 7. Using Wrong API for Use Case
 
 **BAD**:
+
 ```javascript
 // Using transform() when you need import resolution
-const result = await esbuild.transform(code, { loader: 'ts' })
+const result = await esbuild.transform(code, { loader: 'ts' });
 ```
 
 **GOOD**:
+
 ```javascript
 // Use build() for import resolution
 await esbuild.build({
   entryPoints: ['src/index.ts'],
-  bundle: false,  // Don't bundle, just resolve
+  bundle: false, // Don't bundle, just resolve
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Why**: `transform()` never reads `tsconfig.json`, never resolves imports, and emits no `.d.ts` files.
+**Why**: `transform()` never reads `tsconfig.json`, never resolves imports, and
+emits no `.d.ts` files.
 
 ### 8. Mixing CJS and ESM Incorrectly
 
 **BAD**:
+
 ```javascript
 // When using --platform=node with mixed CJS/ESM packages
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   platform: 'node',
-  format: 'esm',  // May fail with ESM entry points
+  format: 'esm', // May fail with ESM entry points
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 **GOOD**:
+
 ```javascript
 // Use CJS format for Node.js bundles
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   platform: 'node',
-  format: 'cjs',  // Works in all cases except top-level await
+  format: 'cjs', // Works in all cases except top-level await
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Why**: esbuild has limited transformation capabilities between ESM and CJS. Node.js itself has additional limitations.
+**Why**: esbuild has limited transformation capabilities between ESM and CJS.
+Node.js itself has additional limitations.
 
 ### 9. Not Pinning esbuild Version
 
 **BAD**:
+
 ```json
 {
   "devDependencies": {
@@ -723,6 +762,7 @@ await esbuild.build({
 ```
 
 **GOOD**:
+
 ```json
 {
   "devDependencies": {
@@ -731,21 +771,24 @@ await esbuild.build({
 }
 ```
 
-**Why**: esbuild deliberately contains backwards-incompatible changes. Pin exact version for reproducibility.
+**Why**: esbuild deliberately contains backwards-incompatible changes. Pin exact
+version for reproducibility.
 
 ### 10. Using esbuild Dev Server in Production
 
 **BAD**:
+
 ```javascript
 // Using esbuild's built-in serve in production
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
-})
-await ctx.serve({ servedir: 'dist' })
+});
+await ctx.serve({ servedir: 'dist' });
 ```
 
 **GOOD**:
+
 ```javascript
 // Use proper production server (nginx, Apache, etc.)
 // esbuild serve is for development only
@@ -756,21 +799,23 @@ await ctx.serve({ servedir: 'dist' })
 ### 11. Forgetting to Dispose Context
 
 **BAD**:
+
 ```javascript
-const ctx = await esbuild.context({ /* ... */ })
-await ctx.watch()
+const ctx = await esbuild.context({/* ... */});
+await ctx.watch();
 // Never disposes - leaks resources
 ```
 
 **GOOD**:
+
 ```javascript
-const ctx = await esbuild.context({ /* ... */ })
-await ctx.watch()
+const ctx = await esbuild.context({/* ... */});
+await ctx.watch();
 
 process.on('SIGINT', async () => {
-  await ctx.dispose()
-  process.exit()
-})
+  await ctx.dispose();
+  process.exit();
+});
 ```
 
 **Why**: Contexts hold resources. Not disposing leaks memory and file handles.
@@ -778,36 +823,41 @@ process.on('SIGINT', async () => {
 ### 12. Using `transform()` for Multi-File Output
 
 **BAD**:
+
 ```javascript
 // transform() can't do multi-file output
-const result = await esbuild.transform(code, { loader: 'ts' })
+const result = await esbuild.transform(code, { loader: 'ts' });
 ```
 
 **GOOD**:
+
 ```javascript
 // Use build() for multi-file output
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: false,
   outdir: 'dist',
-})
+});
 ```
 
-**Why**: `transform()` is a pure codegen pass. Use `build()` for filesystem operations.
+**Why**: `transform()` is a pure codegen pass. Use `build()` for filesystem
+operations.
 
 ### 13. Expecting PostCSS/Sass in Core
 
 **BAD**:
+
 ```javascript
 // esbuild doesn't include PostCSS or Sass
 await esbuild.build({
   entryPoints: ['src/index.scss'],
   bundle: true,
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 **GOOD**:
+
 ```javascript
 // Use plugins or pre-process CSS before esbuild
 await esbuild.build({
@@ -815,46 +865,52 @@ await esbuild.build({
   bundle: true,
   plugins: [sassPlugin()],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
-**Why**: esbuild doesn't include PostCSS or Sass processing. Use plugins or pre-process.
+**Why**: esbuild doesn't include PostCSS or Sass processing. Use plugins or
+pre-process.
 
 ### 14. Not Using `context()` for Watch Mode
 
 **BAD**:
+
 ```javascript
 // Calling build() in a loop is inefficient
 while (true) {
-  await esbuild.build({ /* ... */ })
-  await sleep(1000)
+  await esbuild.build({/* ... */});
+  await sleep(1000);
 }
 ```
 
 **GOOD**:
+
 ```javascript
 // Use context() for efficient watch mode
-const ctx = await esbuild.context({ /* ... */ })
-await ctx.watch()
+const ctx = await esbuild.context({/* ... */});
+await ctx.watch();
 ```
 
-**Why**: `context()` reuses parsed ASTs and module metadata, cutting watch-mode latency.
+**Why**: `context()` reuses parsed ASTs and module metadata, cutting watch-mode
+latency.
 
 ### 15. Inlining Secrets into Client Bundles
 
 **BAD**:
+
 ```javascript
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   define: {
-    'process.env.API_KEY': '"secret_key"',  // Exposed in client code
+    'process.env.API_KEY': '"secret_key"', // Exposed in client code
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 **GOOD**:
+
 ```javascript
 // Never inline secrets into client bundles
 // Use server-side environment variables or API calls
@@ -867,8 +923,8 @@ await esbuild.build({
 ### 1. Use Context for Watch Mode
 
 ```javascript
-const ctx = await esbuild.context({ /* ... */ })
-await ctx.watch()
+const ctx = await esbuild.context({/* ... */});
+await ctx.watch();
 ```
 
 Incremental rebuilds reuse parsed ASTs and module metadata.
@@ -882,7 +938,7 @@ await esbuild.build({
   splitting: true,
   format: 'esm',
   outdir: 'dist',
-})
+});
 ```
 
 ### 3. Externalize Large Dependencies
@@ -893,7 +949,7 @@ await esbuild.build({
   bundle: true,
   external: ['react', 'react-dom', 'lodash'],
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 4. Use Appropriate Target
@@ -902,14 +958,15 @@ await esbuild.build({
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  target: ['es2020'],  // Don't target older browsers unnecessarily
+  target: ['es2020'], // Don't target older browsers unnecessarily
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 5. Enable Parallel Processing
 
-esbuild automatically uses parallel processing. Ensure you're using the native binary (not WASM) for best performance.
+esbuild automatically uses parallel processing. Ensure you're using the native
+binary (not WASM) for best performance.
 
 ### 6. Avoid Re-processing Static Assets
 
@@ -918,11 +975,11 @@ await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   loader: {
-    '.png': 'file',  // Don't process, just copy
+    '.png': 'file', // Don't process, just copy
     '.svg': 'file',
   },
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 ### 7. Use Metafile for Analysis
@@ -933,7 +990,7 @@ await esbuild.build({
   bundle: true,
   metafile: true,
   outfile: 'dist/bundle.js',
-})
+});
 ```
 
 Analyze with tools like `esbuild-visualizer` to identify large dependencies.
@@ -955,7 +1012,7 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run build
-      - run: npx tsc --noEmit  # Type checking
+      - run: npx tsc --noEmit # Type checking
 ```
 
 ### Cache Configuration
@@ -1050,44 +1107,44 @@ esbuild src/index.ts --bundle --metafile=meta.json --outfile=dist/bundle.js
 
 ### esbuild vs Webpack
 
-| Feature | esbuild | Webpack |
-|---------|---------|---------|
-| Speed | 10-100x faster | Slower |
-| Language | Go | JavaScript |
-| Type checking | No | Optional |
-| Plugin ecosystem | Smaller | Larger |
-| HMR | No | Yes |
-| Configuration | Simple | Complex |
-| Tree shaking | Basic | Advanced |
+| Feature          | esbuild        | Webpack    |
+| ---------------- | -------------- | ---------- |
+| Speed            | 10-100x faster | Slower     |
+| Language         | Go             | JavaScript |
+| Type checking    | No             | Optional   |
+| Plugin ecosystem | Smaller        | Larger     |
+| HMR              | No             | Yes        |
+| Configuration    | Simple         | Complex    |
+| Tree shaking     | Basic          | Advanced   |
 
 ### esbuild vs Rollup
 
-| Feature | esbuild | Rollup |
-|---------|---------|---------|
-| Speed | Faster | Slower |
-| Tree shaking | Basic | Advanced |
-| Plugin ecosystem | Smaller | Larger |
-| Code splitting | Yes | Yes |
-| Format support | All | All |
+| Feature          | esbuild | Rollup   |
+| ---------------- | ------- | -------- |
+| Speed            | Faster  | Slower   |
+| Tree shaking     | Basic   | Advanced |
+| Plugin ecosystem | Smaller | Larger   |
+| Code splitting   | Yes     | Yes      |
+| Format support   | All     | All      |
 
 ### esbuild vs Bun
 
-| Feature | esbuild | Bun |
-|---------|---------|-----|
-| Standalone tool | Yes | Part of Bun runtime |
-| Language | Go | Zig |
-| Plugin ecosystem | Smaller | Growing |
-| Integration | Works everywhere | Bun-only |
+| Feature          | esbuild          | Bun                 |
+| ---------------- | ---------------- | ------------------- |
+| Standalone tool  | Yes              | Part of Bun runtime |
+| Language         | Go               | Zig                 |
+| Plugin ecosystem | Smaller          | Growing             |
+| Integration      | Works everywhere | Bun-only            |
 
 ## Security
 
 ### Known Vulnerabilities & Fixes
 
-| Advisory | Severity | Fixed In | Issue |
-|----------|----------|----------|-------|
-| GHSA-gv7w-rqvm-qjhr | High (CVSS 8.1) | 0.28.1 | Deno RCE via NPM_CONFIG_REGISTRY |
-| GHSA-67mh-4wv8-2f99 | Moderate (CVSS 5.3) | 0.25.0 | CORS bypass in dev server |
-| GHSA-g7r4-m6w7-qqqr | Low (CVSS 2.5) | 0.28.1 | Windows path traversal |
+| Advisory            | Severity            | Fixed In | Issue                            |
+| ------------------- | ------------------- | -------- | -------------------------------- |
+| GHSA-gv7w-rqvm-qjhr | High (CVSS 8.1)     | 0.28.1   | Deno RCE via NPM_CONFIG_REGISTRY |
+| GHSA-67mh-4wv8-2f99 | Moderate (CVSS 5.3) | 0.25.0   | CORS bypass in dev server        |
+| GHSA-g7r4-m6w7-qqqr | Low (CVSS 2.5)      | 0.28.1   | Windows path traversal           |
 
 ### Security Best Practices
 
@@ -1103,32 +1160,38 @@ esbuild src/index.ts --bundle --metafile=meta.json --outfile=dist/bundle.js
 ### Common Errors
 
 **"Could not resolve" module errors**:
+
 - Verify package installed in node_modules
 - Check import path spelling/casing
 - Configure aliases correctly in resolve.alias
 - Use external: for peer dependencies
 
 **TypeScript errors not caught**:
+
 - esbuild strips types but doesn't check them
 - Run `tsc --noEmit` separately in CI
 - Use `concurrently` to run tsc alongside esbuild watch
 
 **CSS not processing**:
+
 - esbuild extracts CSS to separate files by default
 - Link CSS files in HTML manually
 - Use plugins for PostCSS/Sass/Tailwind
 
 **Tree shaking not working**:
+
 - Requires ESM format (not CJS)
 - Set `sideEffects: false` in package.json
 - Check package exports field for ESM support
 
 **Watch mode slow**:
+
 - Plugins rebuild every time (by design for correctness)
 - Implement plugin-level caching for expensive operations
 - Use context() instead of build() in loops
 
 **Platform/target errors**:
+
 - Set platform: 'node' for server code
 - Set platform: 'browser' for client code
 - Configure target for your actual browser support
@@ -1151,12 +1214,14 @@ esbuild src/index.ts --bundle --metafile=meta.json
 ### From Webpack
 
 **Key differences**:
+
 - esbuild has simpler configuration (no complex loaders)
 - No HMR (use Vite for full HMR support)
 - CSS extracted to separate files
 - Different plugin API
 
 **Migration steps**:
+
 1. Install esbuild: `npm install -D esbuild`
 2. Replace webpack.config.js with esbuild build script
 3. Convert loaders to esbuild loaders or plugins
@@ -1165,27 +1230,32 @@ esbuild src/index.ts --bundle --metafile=meta.json
 6. Test bundle output thoroughly
 
 **Hybrid approach** (gradual migration):
+
 ```javascript
 // Use esbuild-loader within webpack
 module.exports = {
   module: {
-    rules: [{
-      test: /\.tsx?$/,
-      loader: 'esbuild-loader',
-      options: { loader: 'tsx', target: 'es2015' }
-    }]
-  }
-}
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'esbuild-loader',
+        options: { loader: 'tsx', target: 'es2015' },
+      },
+    ],
+  },
+};
 ```
 
 ### From Rollup
 
 **Key differences**:
+
 - esbuild faster but less aggressive tree shaking
 - Different plugin ecosystem
 - Built-in TypeScript support
 
 **Migration steps**:
+
 1. Replace rollup.config.js with esbuild build script
 2. Convert rollup plugins to esbuild equivalents
 3. Use rollup-plugin-esbuild for gradual transition
@@ -1196,6 +1266,7 @@ module.exports = {
 ### AWS Lambda
 
 **Using serverless-esbuild plugin**:
+
 ```yaml
 # serverless.yml
 plugins:
@@ -1215,6 +1286,7 @@ functions:
 ```
 
 **Native Serverless Framework v4**:
+
 ```yaml
 # serverless.yml (v4+)
 build:
@@ -1239,61 +1311,65 @@ build:
 ### Tailwind CSS
 
 **Using esbuild-plugin-tailwindcss**:
+
 ```javascript
-import esbuild from 'esbuild'
-import tailwindPlugin from 'esbuild-plugin-tailwindcss'
+import esbuild from 'esbuild';
+import tailwindPlugin from 'esbuild-plugin-tailwindcss';
 
 await esbuild.build({
   entryPoints: ['src/index.js'],
   plugins: [tailwindPlugin()],
   outdir: 'dist',
-  bundle: true
-})
+  bundle: true,
+});
 ```
 
 **With CSS Modules**:
+
 ```javascript
 tailwindPlugin({
   cssModules: {
     enabled: true,
     filter: /\.module\.css$/,
     options: {
-      generateScopedName: '[name]__[local]___[hash:base64:5]'
-    }
-  }
-})
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
+    },
+  },
+});
 ```
 
 ### PostCSS
 
 **Using esbuild-plugin-postcss**:
+
 ```javascript
-import { postCSSPlugin } from '@udibo/esbuild-plugin-postcss'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
+import { postCSSPlugin } from '@udibo/esbuild-plugin-postcss';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 await esbuild.build({
   plugins: [
     postCSSPlugin({
-      plugins: [tailwindcss(), autoprefixer()]
-    })
+      plugins: [tailwindcss(), autoprefixer()],
+    }),
   ],
   entryPoints: ['src/index.css'],
-  outdir: 'dist'
-})
+  outdir: 'dist',
+});
 ```
 
 ### Sass/SCSS
 
 **Using esbuild-sass-plugin**:
+
 ```javascript
-import { sassPlugin } from 'esbuild-sass-plugin'
+import { sassPlugin } from 'esbuild-sass-plugin';
 
 await esbuild.build({
   plugins: [sassPlugin()],
   entryPoints: ['src/index.ts'],
-  outdir: 'dist'
-})
+  outdir: 'dist',
+});
 ```
 
 ## Bundle Analysis
@@ -1305,33 +1381,37 @@ await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
   metafile: true,
-  outfile: 'dist/bundle.js'
-})
+  outfile: 'dist/bundle.js',
+});
 
 // Write metafile for analysis
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile))
+fs.writeFileSync('meta.json', JSON.stringify(result.metafile));
 ```
 
 ### Analysis Tools
 
 **Official esbuild analyzer**:
+
 - Upload meta.json to https://esbuild.github.io/analyze/
 - Visualizes sunburst and flame charts
 - Shows module sizes and dependencies
 
 **esbuild-visualizer**:
+
 ```bash
 npx esbuild-visualizer --metadata ./meta.json --filename stats.html
 ```
 
 **esbuild-analyzer**:
+
 ```javascript
-import { getEsbuildAnalyzerHtml } from 'esbuild-analyzer'
-const html = getEsbuildAnalyzerHtml(result.metafile)
-fs.writeFileSync('bundle-analysis.html', html)
+import { getEsbuildAnalyzerHtml } from 'esbuild-analyzer';
+const html = getEsbuildAnalyzerHtml(result.metafile);
+fs.writeFileSync('bundle-analysis.html', html);
 ```
 
 **GitHub Actions integration**:
+
 ```yaml
 - name: Analyze bundle size
   uses: exoego/esbuild-bundle-analyzer@v1
@@ -1357,14 +1437,14 @@ fs.writeFileSync('bundle-analysis.html', html)
 
 ```javascript
 // apps/web/esbuild.config.js
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild';
 
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  external: ['@acme/ui'],  // Workspace reference
-  outfile: 'dist/bundle.js'
-})
+  external: ['@acme/ui'], // Workspace reference
+  outfile: 'dist/bundle.js',
+});
 ```
 
 ### pnpm Workspaces
@@ -1404,54 +1484,58 @@ packages:
 ### Deno
 
 **Using @luca/esbuild-deno-loader**:
+
 ```typescript
-import * as esbuild from 'npm:esbuild'
-import { denoPlugins } from 'jsr:@luca/esbuild-deno-loader'
+import * as esbuild from 'npm:esbuild';
+import { denoPlugins } from 'jsr:@luca/esbuild-deno-loader';
 
 await esbuild.build({
   plugins: [...denoPlugins()],
   entryPoints: ['https://deno.land/std/http/server.ts'],
   outfile: './dist/server.js',
-  bundle: true
-})
+  bundle: true,
+});
 ```
 
 **Using @oazmi/esbuild-plugin-deno** (cross-runtime):
+
 ```javascript
-import { denoPlugins } from '@oazmi/esbuild-plugin-deno'
+import { denoPlugins } from '@oazmi/esbuild-plugin-deno';
 
 await esbuild.build({
   plugins: denoPlugins({
     initialPluginData: {
-      runtimePackage: './deno.json'
-    }
+      runtimePackage: './deno.json',
+    },
   }),
   entryPoints: ['src/index.ts'],
-  bundle: true
-})
+  bundle: true,
+});
 ```
 
 ### Bun
 
 **Native Bun bundler (esbuild-compatible)**:
+
 ```javascript
 await Bun.build({
   entrypoints: ['src/index.ts'],
   outdir: 'dist',
   target: 'browser',
-  format: 'esm'
-})
+  format: 'esm',
+});
 ```
 
 **Using esbuild plugins with Bun**:
+
 ```javascript
-import tailwindPlugin from 'esbuild-plugin-tailwindcss'
+import tailwindPlugin from 'esbuild-plugin-tailwindcss';
 
 await Bun.build({
   entrypoints: ['src/index.ts'],
   plugins: [tailwindPlugin()],
-  outdir: 'dist'
-})
+  outdir: 'dist',
+});
 ```
 
 ## Advanced Caching
@@ -1462,14 +1546,14 @@ await Bun.build({
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  outdir: 'dist'
-})
+  outdir: 'dist',
+});
 
 // Reuse parsed ASTs and module metadata
-await ctx.rebuild()
-await ctx.rebuild()  // Faster - unchanged files cached
+await ctx.rebuild();
+await ctx.rebuild(); // Faster - unchanged files cached
 
-await ctx.dispose()  // Cleanup
+await ctx.dispose(); // Cleanup
 ```
 
 ### Watch Mode
@@ -1478,36 +1562,36 @@ await ctx.dispose()  // Cleanup
 const ctx = await esbuild.context({
   entryPoints: ['src/index.ts'],
   bundle: true,
-  outdir: 'dist'
-})
+  outdir: 'dist',
+});
 
-await ctx.watch()  // Auto-rebuild on file changes
+await ctx.watch(); // Auto-rebuild on file changes
 
 process.on('SIGINT', async () => {
-  await ctx.dispose()
-  process.exit()
-})
+  await ctx.dispose();
+  process.exit();
+});
 ```
 
 ### Plugin Caching
 
 ```javascript
-const cache = new Map()
+const cache = new Map();
 
 const cachedPlugin = {
   name: 'cached',
   setup(build) {
     build.onLoad({ filter: /\.data$/ }, async (args) => {
-      const cacheKey = args.path
+      const cacheKey = args.path;
       if (cache.has(cacheKey)) {
-        return cache.get(cacheKey)
+        return cache.get(cacheKey);
       }
-      const result = await expensiveOperation(args.path)
-      cache.set(cacheKey, result)
-      return result
-    })
-  }
-}
+      const result = await expensiveOperation(args.path);
+      cache.set(cacheKey, result);
+      return result;
+    });
+  },
+};
 ```
 
 ## Performance Benchmarks
@@ -1515,22 +1599,22 @@ const cachedPlugin = {
 ### Build Time Comparisons (2026)
 
 | Bundler | Small Project | Medium Project | Large Project |
-|---------|---------------|----------------|---------------|
-| esbuild | ~30ms | ~200ms | ~500ms |
-| Rspack | ~90ms | ~600ms | ~1850ms |
-| Vite | ~450ms | ~1800ms | ~1330ms |
-| webpack | ~1100ms | ~5500ms | ~13130ms |
-| Rollup | ~750ms | ~2400ms | ~8200ms |
+| ------- | ------------- | -------------- | ------------- |
+| esbuild | ~30ms         | ~200ms         | ~500ms        |
+| Rspack  | ~90ms         | ~600ms         | ~1850ms       |
+| Vite    | ~450ms        | ~1800ms        | ~1330ms       |
+| webpack | ~1100ms       | ~5500ms        | ~13130ms      |
+| Rollup  | ~750ms        | ~2400ms        | ~8200ms       |
 
 ### Bundle Size Comparisons
 
 | Bundler | Gzipped Size | Tree Shaking |
-|---------|--------------|-------------|
-| Rollup | Best | Advanced |
-| Vite | Excellent | Advanced |
-| esbuild | Good | Basic |
-| webpack | Good | Advanced |
-| Rspack | Larger | Basic |
+| ------- | ------------ | ------------ |
+| Rollup  | Best         | Advanced     |
+| Vite    | Excellent    | Advanced     |
+| esbuild | Good         | Basic        |
+| webpack | Good         | Advanced     |
+| Rspack  | Larger       | Basic        |
 
 ## Resources
 

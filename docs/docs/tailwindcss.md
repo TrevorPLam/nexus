@@ -2,19 +2,24 @@
 
 ## Overview
 
-Tailwind CSS is a utility-first CSS framework that provides low-level utility classes to build custom designs directly in your markup. It enables rapid UI development without leaving your HTML, offering complete control over component styling.
+Tailwind CSS is a utility-first CSS framework that provides low-level utility
+classes to build custom designs directly in your markup. It enables rapid UI
+development without leaving your HTML, offering complete control over component
+styling.
 
 ## Latest Stable Version
 
 **Version**: `4.3.3` (July 2026)
 
 **Compatibility**:
+
 - Browsers: Chrome, Firefox, Safari, Edge (modern versions)
 - Node.js: 18.0.0+, 20.0.0+
 - Package Managers: npm, pnpm, yarn, bun
 - Frameworks: React, Vue, Svelte, Angular, Next.js, Nuxt, SvelteKit
 
 **Key Features**:
+
 - Utility-first approach
 - Responsive design
 - Dark mode support
@@ -69,18 +74,21 @@ npx tailwindcss init -p
 ### Framework-Specific Installation
 
 **Next.js**:
+
 ```bash
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
 
 **Vite**:
+
 ```bash
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
 
 **React Native**:
+
 ```bash
 npm install -D tailwindcss nativewind
 ```
@@ -92,10 +100,7 @@ npm install -D tailwindcss nativewind
 ```javascript
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -108,7 +113,7 @@ export default {
     },
   },
   plugins: [],
-}
+};
 ```
 
 ### postcss.config.js
@@ -119,7 +124,7 @@ export default {
     tailwindcss: {},
     autoprefixer: {},
   },
-}
+};
 ```
 
 ## Basic Styling
@@ -168,7 +173,7 @@ export default {
       },
     },
   },
-}
+};
 ```
 
 ### Custom Utilities
@@ -190,16 +195,18 @@ export default {
         '.text-shadow': {
           textShadow: '0 2px 4px 0 rgb(0 0 0 / 0.1)',
         },
-      })
+      });
     },
   ],
-}
+};
 ```
 
 ### Variants
 
 ```html
-<button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+<button
+  class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+>
   Click me
 </button>
 ```
@@ -207,9 +214,7 @@ export default {
 ### Arbitrary Values
 
 ```html
-<div class="w-[137px] h-[42px] bg-[#1da1f2]">
-  Arbitrary values
-</div>
+<div class="w-[137px] h-[42px] bg-[#1da1f2]">Arbitrary values</div>
 ```
 
 ## Framework Integration
@@ -229,7 +234,7 @@ export default {
     extend: {},
   },
   plugins: [],
-}
+};
 ```
 
 ```css
@@ -245,15 +250,12 @@ export default {
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},
   },
   plugins: [],
-}
+};
 ```
 
 ### React Native
@@ -267,7 +269,7 @@ export default {
     extend: {},
   },
   plugins: [],
-}
+};
 ```
 
 ## Plugins
@@ -286,14 +288,16 @@ export default {
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
   ],
-}
+};
 ```
 
 ### Forms Plugin
 
 ```html
 <form class="space-y-4">
-  <input class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+  <input
+    class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+  />
   <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
     Submit
   </button>
@@ -314,6 +318,7 @@ export default {
 ### 1. Not Using Responsive Design
 
 **BAD**:
+
 ```html
 <div class="w-full p-8">
   <h1 class="text-2xl">Not responsive</h1>
@@ -321,6 +326,7 @@ export default {
 ```
 
 **GOOD**:
+
 ```html
 <div class="w-full p-4 md:p-8">
   <h1 class="text-xl md:text-2xl lg:text-3xl">Responsive</h1>
@@ -332,6 +338,7 @@ export default {
 ### 2. Not Using Dark Mode
 
 **BAD**:
+
 ```html
 <div class="bg-white text-gray-900">
   <h1>No dark mode</h1>
@@ -339,6 +346,7 @@ export default {
 ```
 
 **GOOD**:
+
 ```html
 <div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
   <h1>Dark mode support</h1>
@@ -350,17 +358,15 @@ export default {
 ### 3. Overusing Arbitrary Values
 
 **BAD**:
+
 ```html
-<div class="w-[137px] h-[42px] bg-[#1da1f2]">
-  Too many arbitrary values
-</div>
+<div class="w-[137px] h-[42px] bg-[#1da1f2]">Too many arbitrary values</div>
 ```
 
 **GOOD**:
+
 ```html
-<div class="w-32 h-10 bg-blue-500">
-  Using design tokens
-</div>
+<div class="w-32 h-10 bg-blue-500">Using design tokens</div>
 ```
 
 **Why**: Design tokens provide consistency and maintainability.
@@ -368,6 +374,7 @@ export default {
 ### 4. Not Extracting Components
 
 **BAD**:
+
 ```html
 <div class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
   Repeated button styles
@@ -375,6 +382,7 @@ export default {
 ```
 
 **GOOD**:
+
 ```html
 <button class="btn-primary">Button</button>
 ```
@@ -400,18 +408,14 @@ Tailwind CSS v3+ uses JIT mode by default for better performance.
 ```javascript
 // tailwind.config.js
 export default {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
-}
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+};
 ```
 
 ### 3. Use CSS Variables
 
 ```html
-<div class="bg-[var(--primary-color)]">
-  CSS variable usage
-</div>
+<div class="bg-[var(--primary-color)]">CSS variable usage</div>
 ```
 
 ### 4. Optimize Build Process
@@ -422,7 +426,7 @@ export default {
   corePlugins: {
     preflight: false, // Disable preflight if not needed
   },
-}
+};
 ```
 
 ## Common Commands
@@ -449,16 +453,19 @@ npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify
 ### Common Issues
 
 **Styles not applying**:
+
 - Check content paths in tailwind.config.js
 - Verify PostCSS configuration
 - Ensure CSS file is imported
 
 **Build performance**:
+
 - Enable JIT mode
 - Optimize content paths
 - Disable unused plugins
 
 **Framework integration**:
+
 - Follow framework-specific setup
 - Check for conflicting CSS
 - Verify configuration paths
@@ -469,7 +476,7 @@ npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify
 // tailwind.config.js
 export default {
   debug: true, // Enable debug mode
-}
+};
 ```
 
 ## Best Practices

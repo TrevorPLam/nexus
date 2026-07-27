@@ -1,20 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import {
-  cloneTaskWithDependencies,
-} from './task-cloning-operations.js';
-import {
-  createTaskWithDependencies,
-  createTaskWithAssignees,
-} from './task-creation-operations.js';
+import { cloneTaskWithDependencies } from './task-cloning-operations.js';
+import { createTaskWithDependencies, createTaskWithAssignees } from './task-creation-operations.js';
 import {
   deleteProjectWithTasks,
   batchDeleteTasksWithDependencies,
 } from './task-deletion-operations.js';
-import {
-  moveTaskToProject,
-  completeTaskWithTimeEntry,
-} from './task-modification-operations.js';
+import { moveTaskToProject, completeTaskWithTimeEntry } from './task-modification-operations.js';
 
 // Helper to create chainable query builder mock that resolves to array
 const createQueryBuilder = () => {
@@ -260,7 +252,8 @@ describe('Complex Task Operations', () => {
 
     it('should complete a task without time entry when data is null', async () => {
       const taskId = 'task-123';
-      const timeEntryData = null as unknown as typeof import('@life-os/database').timeEntries.$inferInsert;
+      const timeEntryData =
+        null as unknown as typeof import('@life-os/database').timeEntries.$inferInsert;
 
       const result = await completeTaskWithTimeEntry(taskId, timeEntryData);
 

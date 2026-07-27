@@ -2,13 +2,17 @@
 
 ## Overview
 
-PowerSync is an offline-first database synchronization platform for mobile and web applications. It provides real-time data synchronization between local SQLite databases and remote databases, enabling applications to work offline and sync automatically when connectivity is restored.
+PowerSync is an offline-first database synchronization platform for mobile and
+web applications. It provides real-time data synchronization between local
+SQLite databases and remote databases, enabling applications to work offline and
+sync automatically when connectivity is restored.
 
 ## Latest Stable Version
 
 **Version**: `1.35.9` (July 2026)
 
 **Compatibility**:
+
 - React Native: 0.70+
 - iOS: 12+
 - Android: API 21+
@@ -16,6 +20,7 @@ PowerSync is an offline-first database synchronization platform for mobile and w
 - Package Managers: npm, pnpm, yarn
 
 **Key Features**:
+
 - Offline-first architecture
 - Real-time synchronization
 - Conflict resolution
@@ -85,7 +90,7 @@ npm install @powersync/drizzle-driver
 ### Database Schema
 
 ```typescript
-import { Schema } from '@powersync/react-native'
+import { Schema } from '@powersync/react-native';
 
 export const AppSchema = new Schema([
   {
@@ -94,8 +99,8 @@ export const AppSchema = new Schema([
       { name: 'id', type: 'TEXT', primaryKey: true },
       { name: 'name', type: 'TEXT' },
       { name: 'email', type: 'TEXT' },
-      { name: 'created_at', type: 'TEXT' }
-    ]
+      { name: 'created_at', type: 'TEXT' },
+    ],
   },
   {
     name: 'posts',
@@ -104,45 +109,45 @@ export const AppSchema = new Schema([
       { name: 'title', type: 'TEXT' },
       { name: 'content', type: 'TEXT' },
       { name: 'author_id', type: 'TEXT' },
-      { name: 'created_at', type: 'TEXT' }
-    ]
-  }
-])
+      { name: 'created_at', type: 'TEXT' },
+    ],
+  },
+]);
 ```
 
 ### PowerSync Database
 
 ```typescript
-import { PowerSyncDatabase } from '@powersync/react-native'
-import { AppSchema } from './schema'
+import { PowerSyncDatabase } from '@powersync/react-native';
+import { AppSchema } from './schema';
 
 const database = new PowerSyncDatabase({
   database: {
-    dbFilename: 'app.db'
+    dbFilename: 'app.db',
   },
-  schema: AppSchema
-})
+  schema: AppSchema,
+});
 
-await database.initialize()
+await database.initialize();
 ```
 
 ### Sync Rules
 
 ```typescript
-import { AbstractPowerSyncDatabase, SyncRules } from '@powersync/common'
+import { AbstractPowerSyncDatabase, SyncRules } from '@powersync/common';
 
 class AppSyncRules extends SyncRules {
   async getSyncRules() {
     return [
       {
         name: 'users',
-        query: 'SELECT * FROM users WHERE user_id = token_user_id()'
+        query: 'SELECT * FROM users WHERE user_id = token_user_id()',
       },
       {
         name: 'posts',
-        query: 'SELECT * FROM posts WHERE author_id = token_user_id()'
-      }
-    ]
+        query: 'SELECT * FROM posts WHERE author_id = token_user_id()',
+      },
+    ];
   }
 }
 ```
@@ -150,24 +155,24 @@ class AppSyncRules extends SyncRules {
 ### Sync Configuration
 
 ```typescript
-import { PowerSyncDatabase } from '@powersync/react-native'
-import { AppSyncRules } from './sync-rules'
+import { PowerSyncDatabase } from '@powersync/react-native';
+import { AppSyncRules } from './sync-rules';
 
 const database = new PowerSyncDatabase({
   database: {
-    dbFilename: 'app.db'
+    dbFilename: 'app.db',
   },
   schema: AppSchema,
-  syncRules: new AppSyncRules()
-})
+  syncRules: new AppSyncRules(),
+});
 
 await database.connect({
   powersyncUrl: process.env.POWERSYNC_URL,
   powersyncToken: async () => {
     // Return authentication token
-    return await getAuthToken()
-  }
-})
+    return await getAuthToken();
+  },
+});
 ```
 
 ## Query Observers
@@ -215,22 +220,22 @@ function UserProfile({ userId }: { userId: string }) {
 
 ```typescript
 function useUserCount() {
-  const { database } = usePowerSync()
-  const [count, setCount] = useState(0)
+  const { database } = usePowerSync();
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const observer = database.watch(
       'SELECT COUNT(*) as count FROM users',
       [],
       (result) => {
-        setCount(result[0].count)
-      }
-    )
+        setCount(result[0].count);
+      },
+    );
 
-    return () => observer.cancel()
-  }, [database])
+    return () => observer.cancel();
+  }, [database]);
 
-  return count
+  return count;
 }
 ```
 
@@ -241,35 +246,32 @@ function useUserCount() {
 ```typescript
 await database.execute(
   'INSERT INTO users (id, name, email, created_at) VALUES (?, ?, ?, ?)',
-  [uuid.v4(), 'John Doe', 'john@example.com', new Date().toISOString()]
-)
+  [uuid.v4(), 'John Doe', 'john@example.com', new Date().toISOString()],
+);
 ```
 
 ### Update
 
 ```typescript
-await database.execute(
-  'UPDATE users SET name = ? WHERE id = ?',
-  ['Jane Doe', userId]
-)
+await database.execute('UPDATE users SET name = ? WHERE id = ?', [
+  'Jane Doe',
+  userId,
+]);
 ```
 
 ### Delete
 
 ```typescript
-await database.execute(
-  'DELETE FROM users WHERE id = ?',
-  [userId]
-)
+await database.execute('DELETE FROM users WHERE id = ?', [userId]);
 ```
 
 ### Batch Operations
 
 ```typescript
 await database.write(async (tx) => {
-  await tx.execute('INSERT INTO users ...')
-  await tx.execute('INSERT INTO posts ...')
-})
+  await tx.execute('INSERT INTO users ...');
+  await tx.execute('INSERT INTO posts ...');
+});
 ```
 
 ## Advanced Patterns
@@ -277,19 +279,19 @@ await database.write(async (tx) => {
 ### Drizzle Integration
 
 ```typescript
-import { PowerSyncDatabase } from '@powersync/react-native'
-import { drizzlePowerSync } from '@powersync/drizzle-driver'
-import { users } from './schema'
+import { PowerSyncDatabase } from '@powersync/react-native';
+import { drizzlePowerSync } from '@powersync/drizzle-driver';
+import { users } from './schema';
 
 const database = new PowerSyncDatabase({
   database: { dbFilename: 'app.db' },
-  schema: AppSchema
-})
+  schema: AppSchema,
+});
 
-const db = drizzlePowerSync(database)
+const db = drizzlePowerSync(database);
 
 // Use Drizzle ORM
-const allUsers = await db.select().from(users)
+const allUsers = await db.select().from(users);
 ```
 
 ### Conflict Resolution
@@ -299,9 +301,9 @@ class AppSyncRules extends SyncRules {
   async resolveConflict(local: any, remote: any): Promise<any> {
     // Custom conflict resolution logic
     if (local.updated_at > remote.updated_at) {
-      return local
+      return local;
     }
-    return remote
+    return remote;
   }
 }
 ```
@@ -314,17 +316,17 @@ class AppSyncRules extends SyncRules {
     return [
       {
         name: 'users',
-        query: 'SELECT * FROM users WHERE user_id = token_user_id()'
+        query: 'SELECT * FROM users WHERE user_id = token_user_id()',
       },
       {
         name: 'posts',
-        query: 'SELECT * FROM posts WHERE author_id = token_user_id()'
+        query: 'SELECT * FROM posts WHERE author_id = token_user_id()',
       },
       {
         name: 'comments',
-        query: 'SELECT * FROM comments WHERE user_id = token_user_id()'
-      }
-    ]
+        query: 'SELECT * FROM comments WHERE user_id = token_user_id()',
+      },
+    ];
   }
 }
 ```
@@ -357,17 +359,17 @@ function ConnectionStatus() {
 ### Web Database
 
 ```typescript
-import { PowerSyncDatabase } from '@powersync/react-web'
-import { AppSchema } from './schema'
+import { PowerSyncDatabase } from '@powersync/react-web';
+import { AppSchema } from './schema';
 
 const database = new PowerSyncDatabase({
   database: {
-    dbFilename: 'app.db'
+    dbFilename: 'app.db',
   },
-  schema: AppSchema
-})
+  schema: AppSchema,
+});
 
-await database.initialize()
+await database.initialize();
 ```
 
 ### Web Sync
@@ -376,9 +378,9 @@ await database.initialize()
 await database.connect({
   powersyncUrl: process.env.POWERSYNC_URL,
   powersyncToken: async () => {
-    return await getAuthToken()
-  }
-})
+    return await getAuthToken();
+  },
+});
 ```
 
 ## Anti-Patterns
@@ -386,14 +388,16 @@ await database.connect({
 ### 1. Not Handling Offline State
 
 **BAD**:
+
 ```typescript
 function DataList() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
   // No offline handling
 }
 ```
 
 **GOOD**:
+
 ```typescript
 function DataList() {
   const { database } = usePowerSync()
@@ -413,18 +417,20 @@ function DataList() {
 ### 2. Not Using Observers
 
 **BAD**:
+
 ```typescript
 function UserList() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
   // Manual refresh needed
 }
 ```
 
 **GOOD**:
+
 ```typescript
 function UserList() {
-  const { database } = usePowerSync()
-  const [users] = useQuery(database, 'SELECT * FROM users')
+  const { database } = usePowerSync();
+  const [users] = useQuery(database, 'SELECT * FROM users');
   // Auto-updates
 }
 ```
@@ -434,11 +440,13 @@ function UserList() {
 ### 3. Ignoring Conflicts
 
 **BAD**:
+
 ```typescript
 // No conflict resolution
 ```
 
 **GOOD**:
+
 ```typescript
 class AppSyncRules extends SyncRules {
   async resolveConflict(local: any, remote: any): Promise<any> {
@@ -452,16 +460,18 @@ class AppSyncRules extends SyncRules {
 ### 4. Not Optimizing Queries
 
 **BAD**:
+
 ```typescript
-const [data] = useQuery(database, 'SELECT * FROM large_table')
+const [data] = useQuery(database, 'SELECT * FROM large_table');
 ```
 
 **GOOD**:
+
 ```typescript
 const [data] = useQuery(
   database,
-  'SELECT id, name FROM large_table WHERE active = 1 LIMIT 100'
-)
+  'SELECT id, name FROM large_table WHERE active = 1 LIMIT 100',
+);
 ```
 
 **Why**: Large queries slow down sync and UI.
@@ -472,10 +482,7 @@ const [data] = useQuery(
 
 ```typescript
 // Select only needed columns
-const [users] = useQuery(
-  database,
-  'SELECT id, name FROM users'
-)
+const [users] = useQuery(database, 'SELECT id, name FROM users');
 ```
 
 ### 2. Use Indexes
@@ -487,10 +494,10 @@ export const AppSchema = new Schema([
     columns: [
       { name: 'id', type: 'TEXT', primaryKey: true },
       { name: 'email', type: 'TEXT', indexed: true },
-      { name: 'name', type: 'TEXT' }
-    ]
-  }
-])
+      { name: 'name', type: 'TEXT' },
+    ],
+  },
+]);
 ```
 
 ### 3. Batch Operations
@@ -498,7 +505,7 @@ export const AppSchema = new Schema([
 ```typescript
 await database.write(async (tx) => {
   // Multiple operations in single transaction
-})
+});
 ```
 
 ### 4. Limit Sync Data
@@ -517,29 +524,29 @@ await database.write(async (tx) => {
 ```typescript
 const database = new PowerSyncDatabase({
   database: { dbFilename: 'app.db' },
-  schema: AppSchema
-})
+  schema: AppSchema,
+});
 
 await database.connect({
   powersyncUrl: process.env.POWERSYNC_URL,
   powersyncToken: async () => {
-    return await getAuthToken()
-  }
-})
+    return await getAuthToken();
+  },
+});
 ```
 
 ### Custom Adapter
 
 ```typescript
-import { PowerSyncDatabase } from '@powersync/react-native'
+import { PowerSyncDatabase } from '@powersync/react-native';
 
 const database = new PowerSyncDatabase({
   database: {
     dbFilename: 'app.db',
-    adapter: customAdapter
+    adapter: customAdapter,
   },
-  schema: AppSchema
-})
+  schema: AppSchema,
+});
 ```
 
 ## Common Commands
@@ -563,16 +570,19 @@ npm install @powersync/common
 ### Common Issues
 
 **Sync not working**:
+
 - Check PowerSync URL and token
 - Verify sync rules are correct
 - Check network connectivity
 
 **Observers not updating**:
+
 - Ensure query is correct
 - Check database connection
 - Verify data is actually changing
 
 **Performance issues**:
+
 - Optimize queries
 - Add indexes
 - Limit data synced
@@ -584,8 +594,8 @@ npm install @powersync/common
 const database = new PowerSyncDatabase({
   database: { dbFilename: 'app.db' },
   schema: AppSchema,
-  debug: true
-})
+  debug: true,
+});
 ```
 
 ## Best Practices

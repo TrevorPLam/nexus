@@ -2,18 +2,23 @@
 
 ## Overview
 
-React is a JavaScript library for building user interfaces. It enables developers to create reusable UI components and efficiently update the DOM using a virtual DOM. React is component-based, declarative, and supports both client-side and server-side rendering.
+React is a JavaScript library for building user interfaces. It enables
+developers to create reusable UI components and efficiently update the DOM using
+a virtual DOM. React is component-based, declarative, and supports both
+client-side and server-side rendering.
 
 ## Latest Stable Version
 
 **Version**: `18.3.0` (July 2026)
 
 **Compatibility**:
+
 - Browsers: Chrome, Firefox, Safari, Edge (modern versions)
 - Node.js: 12.0.0+ (for build tools)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - Component-based architecture
 - Virtual DOM for efficient updates
 - JSX syntax
@@ -237,15 +242,15 @@ function InputFocus() {
 ```typescript
 function useLocalStorage<T>(key: string, initialValue: T) {
   const [value, setValue] = useState<T>(() => {
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : initialValue
-  })
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : initialValue;
+  });
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
 
-  return [value, setValue] as const
+  return [value, setValue] as const;
 }
 ```
 
@@ -334,15 +339,17 @@ function Counter() {
 ### 1. Mutating State Directly
 
 **BAD**:
+
 ```typescript
-const [count, setCount] = useState(0)
-count++ // Direct mutation
+const [count, setCount] = useState(0);
+count++; // Direct mutation
 ```
 
 **GOOD**:
+
 ```typescript
-const [count, setCount] = useState(0)
-setCount(count + 1) // Proper update
+const [count, setCount] = useState(0);
+setCount(count + 1); // Proper update
 ```
 
 **Why**: Direct mutations won't trigger re-renders.
@@ -350,11 +357,13 @@ setCount(count + 1) // Proper update
 ### 2. Using Index as Key
 
 **BAD**:
+
 ```typescript
 {items.map((item, index) => <div key={index}>{item.name}</div>)}
 ```
 
 **GOOD**:
+
 ```typescript
 {items.map(item => <div key={item.id}>{item.name}</div>)}
 ```
@@ -364,19 +373,21 @@ setCount(count + 1) // Proper update
 ### 3. Not Cleaning Up Effects
 
 **BAD**:
+
 ```typescript
 useEffect(() => {
-  const interval = setInterval(() => console.log('tick'), 1000)
+  const interval = setInterval(() => console.log('tick'), 1000);
   // No cleanup
-}, [])
+}, []);
 ```
 
 **GOOD**:
+
 ```typescript
 useEffect(() => {
-  const interval = setInterval(() => console.log('tick'), 1000)
-  return () => clearInterval(interval)
-}, [])
+  const interval = setInterval(() => console.log('tick'), 1000);
+  return () => clearInterval(interval);
+}, []);
 ```
 
 **Why**: Cleanup prevents memory leaks and unintended behavior.
@@ -384,11 +395,13 @@ useEffect(() => {
 ### 4. Overusing Context
 
 **BAD**:
+
 ```typescript
 // Using context for everything
 ```
 
 **GOOD**:
+
 ```typescript
 // Use context for truly global state, props for component-specific data
 ```
@@ -398,6 +411,7 @@ useEffect(() => {
 ### 5. Not Using useMemo/useCallback
 
 **BAD**:
+
 ```typescript
 function Parent() {
   const handleClick = () => {
@@ -408,6 +422,7 @@ function Parent() {
 ```
 
 **GOOD**:
+
 ```typescript
 function Parent() {
   const handleClick = useCallback(() => {
@@ -467,10 +482,10 @@ function VirtualizedList({ items }: { items: any[] }) {
 ### 4. Code Splitting
 
 ```typescript
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react';
 
-const Home = lazy(() => import('./Home'))
-const About = lazy(() => import('./About'))
+const Home = lazy(() => import('./Home'));
+const About = lazy(() => import('./About'));
 ```
 
 ## Testing
@@ -512,16 +527,19 @@ npm install -D @types/react @types/react-dom
 ### Common Issues
 
 **Component not re-rendering**:
+
 - Check if state is being updated correctly
 - Verify hooks are called at the top level
 - Ensure proper dependency arrays in useEffect
 
 **Memory leaks**:
+
 - Clean up effects in useEffect
 - Remove event listeners
 - Clear intervals/timeouts
 
 **Performance issues**:
+
 - Use React.memo for expensive components
 - Implement virtualization for long lists
 - Use useMemo/useCallback appropriately

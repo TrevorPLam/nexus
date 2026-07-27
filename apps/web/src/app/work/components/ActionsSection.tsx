@@ -112,10 +112,7 @@ export function ActionsSection({
                 <input
                   type="text"
                   value={
-                    (action as any).userId ||
-                    (action as any).template ||
-                    (action as any).tag ||
-                    ''
+                    (action as any).userId || (action as any).template || (action as any).tag || ''
                   }
                   onChange={(e) => {
                     if (action.type === 'assign_to') {

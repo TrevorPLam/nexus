@@ -2,19 +2,23 @@
 
 ## Overview
 
-Zod is a TypeScript-first schema declaration and validation library. It provides a simple, expressive way to define data schemas and validate data against those schemas, with automatic type inference for TypeScript.
+Zod is a TypeScript-first schema declaration and validation library. It provides
+a simple, expressive way to define data schemas and validate data against those
+schemas, with automatic type inference for TypeScript.
 
 ## Latest Stable Version
 
 **Version**: `3.23.0` (July 2026)
 
 **Compatibility**:
+
 - TypeScript: 4.5+, 5.0+
 - Node.js: 14.0.0+, 16.0.0+, 18.0.0+, 20.0.0+
 - Browsers: Modern browsers (Chrome, Firefox, Safari, Edge)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - TypeScript-first with automatic type inference
 - Zero dependencies
 - Comprehensive validation
@@ -67,30 +71,30 @@ npm install zod
 ### String Schema
 
 ```typescript
-import { z } from 'zod'
+import { z } from 'zod';
 
-const stringSchema = z.string()
+const stringSchema = z.string();
 
-stringSchema.parse('hello') // Success
-stringSchema.parse(123) // Error: Expected string, received number
+stringSchema.parse('hello'); // Success
+stringSchema.parse(123); // Error: Expected string, received number
 ```
 
 ### Number Schema
 
 ```typescript
-const numberSchema = z.number()
+const numberSchema = z.number();
 
-numberSchema.parse(42) // Success
-numberSchema.parse('42') // Error: Expected number, received string
+numberSchema.parse(42); // Success
+numberSchema.parse('42'); // Error: Expected number, received string
 ```
 
 ### Boolean Schema
 
 ```typescript
-const booleanSchema = z.boolean()
+const booleanSchema = z.boolean();
 
-booleanSchema.parse(true) // Success
-booleanSchema.parse('true') // Error: Expected boolean, received string
+booleanSchema.parse(true); // Success
+booleanSchema.parse('true'); // Error: Expected boolean, received string
 ```
 
 ### Object Schema
@@ -99,23 +103,23 @@ booleanSchema.parse('true') // Error: Expected boolean, received string
 const userSchema = z.object({
   name: z.string(),
   age: z.number(),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
 const user = userSchema.parse({
   name: 'John',
   age: 30,
-  email: 'john@example.com'
-})
+  email: 'john@example.com',
+});
 ```
 
 ### Array Schema
 
 ```typescript
-const arraySchema = z.array(z.string())
+const arraySchema = z.array(z.string());
 
-arraySchema.parse(['a', 'b', 'c']) // Success
-arraySchema.parse([1, 2, 3]) // Error
+arraySchema.parse(['a', 'b', 'c']); // Success
+arraySchema.parse([1, 2, 3]); // Error
 ```
 
 ## Advanced Schemas
@@ -126,8 +130,8 @@ arraySchema.parse([1, 2, 3]) // Error
 const userSchema = z.object({
   name: z.string(),
   age: z.number().optional(),
-  email: z.string().optional()
-})
+  email: z.string().optional(),
+});
 ```
 
 ### Default Values
@@ -136,26 +140,26 @@ const userSchema = z.object({
 const userSchema = z.object({
   name: z.string(),
   age: z.number().default(18),
-  email: z.string().default('')
-})
+  email: z.string().default(''),
+});
 ```
 
 ### Nullable Fields
 
 ```typescript
 const schema = z.object({
-  name: z.string().nullable()
-})
+  name: z.string().nullable(),
+});
 ```
 
 ### Union Types
 
 ```typescript
-const stringOrNumber = z.union([z.string(), z.number()])
+const stringOrNumber = z.union([z.string(), z.number()]);
 
-stringOrNumber.parse('hello') // Success
-stringOrNumber.parse(42) // Success
-stringOrNumber.parse(true) // Error
+stringOrNumber.parse('hello'); // Success
+stringOrNumber.parse(42); // Success
+stringOrNumber.parse(true); // Error
 ```
 
 ### Discriminated Unions
@@ -163,15 +167,18 @@ stringOrNumber.parse(true) // Error
 ```typescript
 const successSchema = z.object({
   status: z.literal('success'),
-  data: z.string()
-})
+  data: z.string(),
+});
 
 const errorSchema = z.object({
   status: z.literal('error'),
-  error: z.string()
-})
+  error: z.string(),
+});
 
-const resultSchema = z.discriminatedUnion('status', [successSchema, errorSchema])
+const resultSchema = z.discriminatedUnion('status', [
+  successSchema,
+  errorSchema,
+]);
 ```
 
 ## Validation
@@ -179,44 +186,44 @@ const resultSchema = z.discriminatedUnion('status', [successSchema, errorSchema]
 ### Basic Validation
 
 ```typescript
-const emailSchema = z.string().email()
+const emailSchema = z.string().email();
 
-emailSchema.parse('john@example.com') // Success
-emailSchema.parse('invalid-email') // Error: Invalid email
+emailSchema.parse('john@example.com'); // Success
+emailSchema.parse('invalid-email'); // Error: Invalid email
 ```
 
 ### Custom Validation
 
 ```typescript
-const passwordSchema = z.string()
+const passwordSchema = z
+  .string()
   .min(8, 'Password must be at least 8 characters')
   .max(100, 'Password must be less than 100 characters')
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/[0-9]/, 'Password must contain at least one number')
+  .regex(/[0-9]/, 'Password must contain at least one number');
 ```
 
 ### Refinements
 
 ```typescript
-const ageSchema = z.number().refine(
-  (value) => value >= 18,
-  'Must be 18 or older'
-)
+const ageSchema = z
+  .number()
+  .refine((value) => value >= 18, 'Must be 18 or older');
 
-ageSchema.parse(25) // Success
-ageSchema.parse(15) // Error: Must be 18 or older
+ageSchema.parse(25); // Success
+ageSchema.parse(15); // Error: Must be 18 or older
 ```
 
 ### Async Validation
 
 ```typescript
-const emailSchema = z.string().email().refine(
-  async (email) => {
-    const exists = await checkEmailExists(email)
-    return !exists
-  },
-  'Email already exists'
-)
+const emailSchema = z
+  .string()
+  .email()
+  .refine(async (email) => {
+    const exists = await checkEmailExists(email);
+    return !exists;
+  }, 'Email already exists');
 ```
 
 ## Type Inference
@@ -227,10 +234,10 @@ const emailSchema = z.string().email().refine(
 const userSchema = z.object({
   name: z.string(),
   age: z.number(),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
-type User = z.infer<typeof userSchema>
+type User = z.infer<typeof userSchema>;
 // type User = {
 //   name: string
 //   age: number
@@ -241,10 +248,10 @@ type User = z.infer<typeof userSchema>
 ### Input vs Output Types
 
 ```typescript
-const schema = z.string().transform((val) => val.toUpperCase())
+const schema = z.string().transform((val) => val.toUpperCase());
 
-type Input = z.input<typeof schema> // string
-type Output = z.output<typeof schema> // string (uppercase)
+type Input = z.input<typeof schema>; // string
+type Output = z.output<typeof schema>; // string (uppercase)
 ```
 
 ## Error Handling
@@ -252,12 +259,12 @@ type Output = z.output<typeof schema> // string (uppercase)
 ### Safe Parse
 
 ```typescript
-const result = userSchema.safeParse({ name: 'John' })
+const result = userSchema.safeParse({ name: 'John' });
 
 if (result.success) {
-  console.log(result.data)
+  console.log(result.data);
 } else {
-  console.log(result.error.errors)
+  console.log(result.error.errors);
 }
 ```
 
@@ -266,20 +273,20 @@ if (result.success) {
 ```typescript
 const schema = z.string({
   required_error: 'Name is required',
-  invalid_type_error: 'Name must be a string'
-})
+  invalid_type_error: 'Name must be a string',
+});
 ```
 
 ### Error Formatting
 
 ```typescript
-const result = schema.safeParse(data)
+const result = schema.safeParse(data);
 
 if (!result.success) {
-  const errors = result.error.errors.map(err => ({
+  const errors = result.error.errors.map((err) => ({
     path: err.path.join('.'),
-    message: err.message
-  }))
+    message: err.message,
+  }));
 }
 ```
 
@@ -288,35 +295,39 @@ if (!result.success) {
 ### String Transformations
 
 ```typescript
-const schema = z.string()
+const schema = z
+  .string()
   .trim()
   .toLowerCase()
-  .transform((val) => val.replace(/\s+/g, '-'))
+  .transform((val) => val.replace(/\s+/g, '-'));
 
-schema.parse('  Hello World  ') // 'hello-world'
+schema.parse('  Hello World  '); // 'hello-world'
 ```
 
 ### Number Transformations
 
 ```typescript
-const schema = z.string()
+const schema = z
+  .string()
   .transform((val) => Number(val))
-  .pipe(z.number())
+  .pipe(z.number());
 
-schema.parse('42') // 42
+schema.parse('42'); // 42
 ```
 
 ### Object Transformations
 
 ```typescript
-const schema = z.object({
-  firstName: z.string(),
-  lastName: z.string()
-}).transform((data) => ({
-  fullName: `${data.firstName} ${data.lastName}`
-}))
+const schema = z
+  .object({
+    firstName: z.string(),
+    lastName: z.string(),
+  })
+  .transform((data) => ({
+    fullName: `${data.firstName} ${data.lastName}`,
+  }));
 
-schema.parse({ firstName: 'John', lastName: 'Doe' })
+schema.parse({ firstName: 'John', lastName: 'Doe' });
 // { fullName: 'John Doe' }
 ```
 
@@ -327,22 +338,22 @@ schema.parse({ firstName: 'John', lastName: 'Doe' })
 ```typescript
 const baseSchema = z.object({
   id: z.string(),
-  createdAt: z.date()
-})
+  createdAt: z.date(),
+});
 
 const userSchema = baseSchema.extend({
   name: z.string(),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 ```
 
 ### Merge Schemas
 
 ```typescript
-const schema1 = z.object({ a: z.string() })
-const schema2 = z.object({ b: z.number() })
+const schema1 = z.object({ a: z.string() });
+const schema2 = z.object({ b: z.number() });
 
-const mergedSchema = schema1.merge(schema2)
+const mergedSchema = schema1.merge(schema2);
 ```
 
 ### Partial Schemas
@@ -351,10 +362,10 @@ const mergedSchema = schema1.merge(schema2)
 const userSchema = z.object({
   name: z.string(),
   age: z.number(),
-  email: z.string()
-})
+  email: z.string(),
+});
 
-const partialUserSchema = userSchema.partial()
+const partialUserSchema = userSchema.partial();
 // All fields are optional
 ```
 
@@ -363,10 +374,10 @@ const partialUserSchema = userSchema.partial()
 ```typescript
 const partialSchema = z.object({
   name: z.string().optional(),
-  age: z.number().optional()
-})
+  age: z.number().optional(),
+});
 
-const requiredSchema = partialSchema.required()
+const requiredSchema = partialSchema.required();
 // All fields are required
 ```
 
@@ -375,30 +386,32 @@ const requiredSchema = partialSchema.required()
 ### Schema Reuse
 
 ```typescript
-const emailSchema = z.string().email()
-const passwordSchema = z.string().min(8)
+const emailSchema = z.string().email();
+const passwordSchema = z.string().min(8);
 
 const registerSchema = z.object({
   email: emailSchema,
-  password: passwordSchema
-})
+  password: passwordSchema,
+});
 
 const loginSchema = z.object({
   email: emailSchema,
-  password: passwordSchema
-})
+  password: passwordSchema,
+});
 ```
 
 ### Conditional Validation
 
 ```typescript
-const schema = z.object({
-  type: z.enum(['individual', 'company']),
-  companyName: z.string().optional()
-}).refine(
-  (data) => data.type === 'company' ? !!data.companyName : true,
-  'Company name is required for company type'
-)
+const schema = z
+  .object({
+    type: z.enum(['individual', 'company']),
+    companyName: z.string().optional(),
+  })
+  .refine(
+    (data) => (data.type === 'company' ? !!data.companyName : true),
+    'Company name is required for company type',
+  );
 ```
 
 ### Recursive Schemas
@@ -408,11 +421,11 @@ const categorySchema: z.ZodType<Category> = z.lazy(() =>
   z.object({
     id: z.string(),
     name: z.string(),
-    subcategories: z.array(categorySchema).optional()
-  })
-)
+    subcategories: z.array(categorySchema).optional(),
+  }),
+);
 
-type Category = z.infer<typeof categorySchema>
+type Category = z.infer<typeof categorySchema>;
 ```
 
 ## Anti-Patterns
@@ -420,26 +433,28 @@ type Category = z.infer<typeof categorySchema>
 ### 1. Not Using Type Inference
 
 **BAD**:
+
 ```typescript
 interface User {
-  name: string
-  age: number
+  name: string;
+  age: number;
 }
 
 const userSchema = z.object({
   name: z.string(),
-  age: z.number()
-})
+  age: z.number(),
+});
 ```
 
 **GOOD**:
+
 ```typescript
 const userSchema = z.object({
   name: z.string(),
-  age: z.number()
-})
+  age: z.number(),
+});
 
-type User = z.infer<typeof userSchema>
+type User = z.infer<typeof userSchema>;
 ```
 
 **Why**: Type inference ensures types stay in sync with schemas.
@@ -447,13 +462,15 @@ type User = z.infer<typeof userSchema>
 ### 2. Not Handling Errors
 
 **BAD**:
+
 ```typescript
-const user = userSchema.parse(data) // May throw
+const user = userSchema.parse(data); // May throw
 ```
 
 **GOOD**:
+
 ```typescript
-const result = userSchema.safeParse(data)
+const result = userSchema.safeParse(data);
 if (!result.success) {
   // Handle errors
 }
@@ -464,13 +481,15 @@ if (!result.success) {
 ### 3. Not Using Custom Error Messages
 
 **BAD**:
+
 ```typescript
-const schema = z.string().min(8)
+const schema = z.string().min(8);
 ```
 
 **GOOD**:
+
 ```typescript
-const schema = z.string().min(8, 'Password must be at least 8 characters')
+const schema = z.string().min(8, 'Password must be at least 8 characters');
 ```
 
 **Why**: Custom error messages improve user experience.
@@ -478,17 +497,19 @@ const schema = z.string().min(8, 'Password must be at least 8 characters')
 ### 4. Not Validating at Boundaries
 
 **BAD**:
+
 ```typescript
 // No validation at API boundary
 ```
 
 **GOOD**:
+
 ```typescript
 // Validate all external data
 const apiSchema = z.object({
   name: z.string(),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 ```
 
 **Why**: Boundary validation prevents invalid data from entering the system.
@@ -499,35 +520,35 @@ const apiSchema = z.object({
 
 ```typescript
 // Define schemas once and reuse
-const emailSchema = z.string().email()
+const emailSchema = z.string().email();
 ```
 
 ### 2. Use Lazy Evaluation
 
 ```typescript
-const schema = z.lazy(() => complexSchema)
+const schema = z.lazy(() => complexSchema);
 ```
 
 ### 3. Avoid Unnecessary Transformations
 
 ```typescript
 // Only transform when needed
-const schema = z.string().transform((val) => val.trim())
+const schema = z.string().transform((val) => val.trim());
 ```
 
 ### 4. Cache Parsed Results
 
 ```typescript
-const cache = new Map()
+const cache = new Map();
 
 function parseWithCache(schema: z.ZodSchema, data: any) {
-  const key = JSON.stringify(data)
+  const key = JSON.stringify(data);
   if (cache.has(key)) {
-    return cache.get(key)
+    return cache.get(key);
   }
-  const result = schema.parse(data)
-  cache.set(key, result)
-  return result
+  const result = schema.parse(data);
+  cache.set(key, result);
+  return result;
 }
 ```
 
@@ -536,38 +557,38 @@ function parseWithCache(schema: z.ZodSchema, data: any) {
 ### Express.js
 
 ```typescript
-import express from 'express'
-import { z } from 'zod'
+import express from 'express';
+import { z } from 'zod';
 
-const app = express()
+const app = express();
 
 app.post('/users', (req, res) => {
-  const result = userSchema.safeParse(req.body)
+  const result = userSchema.safeParse(req.body);
   if (!result.success) {
-    return res.status(400).json({ errors: result.error.errors })
+    return res.status(400).json({ errors: result.error.errors });
   }
   // Process valid data
-})
+});
 ```
 
 ### Next.js
 
 ```typescript
-import { z } from 'zod'
+import { z } from 'zod';
 
 const userSchema = z.object({
   name: z.string(),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  const result = userSchema.safeParse(body)
-  
+  const body = await request.json();
+  const result = userSchema.safeParse(body);
+
   if (!result.success) {
-    return Response.json({ errors: result.error.errors }, { status: 400 })
+    return Response.json({ errors: result.error.errors }, { status: 400 });
   }
-  
+
   // Process valid data
 }
 ```
@@ -614,16 +635,19 @@ npm install @hookform/resolvers zod
 ### Common Issues
 
 **Type errors**:
+
 - Ensure TypeScript version is compatible
 - Check for circular type references
 - Verify schema definitions
 
 **Validation errors**:
+
 - Check schema definitions
 - Verify data structure
 - Review error messages
 
 **Performance issues**:
+
 - Reuse schemas instead of recreating
 - Use lazy evaluation for complex schemas
 - Cache parsed results
@@ -632,9 +656,9 @@ npm install @hookform/resolvers zod
 
 ```typescript
 // Enable debug mode
-const result = schema.safeParse(data)
+const result = schema.safeParse(data);
 if (!result.success) {
-  console.log(result.error.errors)
+  console.log(result.error.errors);
 }
 ```
 

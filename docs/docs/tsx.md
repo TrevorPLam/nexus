@@ -2,7 +2,9 @@
 
 ## Overview
 
-Fast TypeScript execution engine for Node.js. Uses esbuild for transpilation, enabling direct TypeScript execution without compilation. Zero-config, supports CJS/ESM, path aliases, watch mode, and JSX.
+Fast TypeScript execution engine for Node.js. Uses esbuild for transpilation,
+enabling direct TypeScript execution without compilation. Zero-config, supports
+CJS/ESM, path aliases, watch mode, and JSX.
 
 ## Version & Compatibility
 
@@ -123,10 +125,10 @@ tsx resolves tsconfig.json paths:
 
 ```typescript
 // Instead of:
-import { formatter } from "../../utils/formatter";
+import { formatter } from '../../utils/formatter';
 
 // Use:
-import { formatter } from "@utils/formatter";
+import { formatter } from '@utils/formatter';
 ```
 
 **Note**: Compile-time only. Production requires bundler or tsc path rewriting.
@@ -195,9 +197,9 @@ chmod +x scripts/migrate.ts
 // vitest.config.ts
 export default defineConfig({
   test: {
-    pool: "forks",
-    poolOptions: { forks: { singleFork: true } }
-  }
+    pool: 'forks',
+    poolOptions: { forks: { singleFork: true } },
+  },
 });
 ```
 
@@ -341,55 +343,58 @@ Stack traces point to TypeScript source, not compiled JS.
 
 ### tsx vs ts-node
 
-| Feature | tsx | ts-node |
-|---------|-----|---------|
-| Startup | ~100ms | ~2000ms (default), ~200ms (SWC) |
-| ESM | Native | Requires --esm flag |
-| Config | Minimal | Complex |
-| Transpiler | esbuild (Go) | TypeScript/SWC |
-| Type checking | No | Optional |
-| Decorator metadata | No | Yes |
-| Path aliases | Yes | Yes |
-| const enum cross-file | No | Yes |
+| Feature               | tsx          | ts-node                         |
+| --------------------- | ------------ | ------------------------------- |
+| Startup               | ~100ms       | ~2000ms (default), ~200ms (SWC) |
+| ESM                   | Native       | Requires --esm flag             |
+| Config                | Minimal      | Complex                         |
+| Transpiler            | esbuild (Go) | TypeScript/SWC                  |
+| Type checking         | No           | Optional                        |
+| Decorator metadata    | No           | Yes                             |
+| Path aliases          | Yes          | Yes                             |
+| const enum cross-file | No           | Yes                             |
 
 ### tsx vs Node.js Native TypeScript
 
-| Feature | tsx | Node.js Native |
-|---------|-----|----------------|
-| Type annotations | Full | Full (erasable only) |
-| Enums | Full | Requires transform (Node 22/24) |
-| Namespaces | Full | Requires transform (Node 22/24) |
-| Decorators | esbuild support | Not supported |
-| Watch mode | Built-in | --watch (Node 22.6+) |
-| REPL | TypeScript REPL | No TS REPL |
-| Path mapping | Yes | No |
-| JSX | Built-in | No (.tsx unsupported) |
-| tsconfig.json | Respected | Ignored |
+| Feature          | tsx             | Node.js Native                  |
+| ---------------- | --------------- | ------------------------------- |
+| Type annotations | Full            | Full (erasable only)            |
+| Enums            | Full            | Requires transform (Node 22/24) |
+| Namespaces       | Full            | Requires transform (Node 22/24) |
+| Decorators       | esbuild support | Not supported                   |
+| Watch mode       | Built-in        | --watch (Node 22.6+)            |
+| REPL             | TypeScript REPL | No TS REPL                      |
+| Path mapping     | Yes             | No                              |
+| JSX              | Built-in        | No (.tsx unsupported)           |
+| tsconfig.json    | Respected       | Ignored                         |
 
-**Node.js Native**: Type stripping stable (Node 24.12+). `--experimental-transform-types` removed in Node 26.0. Only erasable syntax supported natively.
+**Node.js Native**: Type stripping stable (Node 24.12+).
+`--experimental-transform-types` removed in Node 26.0. Only erasable syntax
+supported natively.
 
 ### tsx vs Bun
 
-| Feature | tsx | Bun |
-|---------|-----|-----|
-| Node.js compat | Full | Most packages |
-| Native addons | Full | May not work |
-| Cold start | ~42ms | ~18ms |
-| Throughput | 1420 ops/sec | 840 ops/sec |
-| Memory | 122 MB | 240 MB |
-| Ecosystem | Node.js | Bun-specific |
+| Feature        | tsx          | Bun           |
+| -------------- | ------------ | ------------- |
+| Node.js compat | Full         | Most packages |
+| Native addons  | Full         | May not work  |
+| Cold start     | ~42ms        | ~18ms         |
+| Throughput     | 1420 ops/sec | 840 ops/sec   |
+| Memory         | 122 MB       | 240 MB        |
+| Ecosystem      | Node.js      | Bun-specific  |
 
 ### tsx vs @swc-node/register
 
-| Feature | tsx | @swc-node/register |
-|---------|-----|----------------|
-| Transpiler | esbuild | SWC (Rust) |
-| Cold start | ~100ms | ~80ms |
-| Parallel transform | No | Yes (faster for large projects) |
-| Watch mode | Built-in | Via nodemon |
-| TypeScript REPL | Yes | No |
+| Feature            | tsx      | @swc-node/register              |
+| ------------------ | -------- | ------------------------------- |
+| Transpiler         | esbuild  | SWC (Rust)                      |
+| Cold start         | ~100ms   | ~80ms                           |
+| Parallel transform | No       | Yes (faster for large projects) |
+| Watch mode         | Built-in | Via nodemon                     |
+| TypeScript REPL    | Yes      | No                              |
 
-**swc-node**: Faster for large projects due to parallel transformation. Less feature-complete than tsx.
+**swc-node**: Faster for large projects due to parallel transformation. Less
+feature-complete than tsx.
 
 ## Performance Optimization
 
@@ -425,7 +430,8 @@ Choose ESM or CJS and stick with it. Mixing adds complexity.
 
 ### Caching
 
-tsx uses disk cache (7-day retention, lazy indexing). Cache indexed lazily since v4.21.1 to avoid startup slowdown from unrelated entries.
+tsx uses disk cache (7-day retention, lazy indexing). Cache indexed lazily since
+v4.21.1 to avoid startup slowdown from unrelated entries.
 
 ## CI/CD
 
@@ -472,33 +478,34 @@ Use `node` directly with tsx enhancement.
 ### ESM Register API
 
 ```js
-import { register } from 'tsx/esm/api'
-const unregister = register()
-await import('./file.ts')
-unregister()
+import { register } from 'tsx/esm/api';
+const unregister = register();
+await import('./file.ts');
+unregister();
 ```
 
 Scoped registration:
+
 ```js
-const api = register({ namespace: Date.now().toString() })
-const loaded = await api.import('./file.ts', import.meta.url)
-api.unregister()
+const api = register({ namespace: Date.now().toString() });
+const loaded = await api.import('./file.ts', import.meta.url);
+api.unregister();
 ```
 
 ### CJS Register API
 
 ```js
-const tsx = require('tsx/cjs/api')
-const unregister = tsx.register()
-const loaded = require('./file.ts')
-unregister()
+const tsx = require('tsx/cjs/api');
+const unregister = tsx.register();
+const loaded = require('./file.ts');
+unregister();
 ```
 
 ### Entry Point Import
 
 ```js
-import 'tsx'
-await import('./file.ts')
+import 'tsx';
+await import('./file.ts');
 ```
 
 Note: Only works on dynamic imports after registration.
@@ -508,24 +515,26 @@ Note: Only works on dynamic imports after registration.
 Load TypeScript files without global enhancement:
 
 ```js
-import { tsImport } from 'tsx/esm/api'
-const loaded = await tsImport('./file.ts', import.meta.url)
+import { tsImport } from 'tsx/esm/api';
+const loaded = await tsImport('./file.ts', import.meta.url);
 ```
 
 Custom tsconfig:
+
 ```js
 tsImport('./file.ts', {
   parentURL: import.meta.url,
-  tsconfig: './custom-tsconfig.json'
-})
+  tsconfig: './custom-tsconfig.json',
+});
 ```
 
 Track loaded files:
+
 ```js
 tsImport('./file.ts', {
   parentURL: import.meta.url,
-  onImport: (file) => console.log(file)
-})
+  onImport: (file) => console.log(file),
+});
 ```
 
 ## Node.js Enhancements
@@ -545,6 +554,7 @@ tsx --test
 ```
 
 Enhances Node.js built-in test runner (Node 21+). Recognizes:
+
 - `**/*.test.?[cm][jt]s`
 - `**/*-test.?[cm][jt]s`
 - `**/*_test.?[cm][jt]s`
@@ -569,6 +579,7 @@ npm install -D tsx
 ```
 
 Update scripts:
+
 ```json
 {
   "scripts": {
@@ -597,8 +608,10 @@ Remove ts-node config from tsconfig.json. Test all scripts.
 ### Decorators
 
 esbuild supports both:
+
 - **Standard decorators** (TypeScript 5.0+, TC39 Stage 3) - default
-- **Experimental decorators** (legacy) - set `experimentalDecorators: true` in tsconfig.json
+- **Experimental decorators** (legacy) - set `experimentalDecorators: true` in
+  tsconfig.json
 
 Standard decorators incompatible with `emitDecoratorMetadata`.
 

@@ -45,7 +45,15 @@
  * - July 26, 2026
  */
 
-import { tasks, projects, taskDependencies, taskAssignees, taskComments, taskAttachments, timeEntries } from '@life-os/database';
+import {
+  tasks,
+  projects,
+  taskDependencies,
+  taskAssignees,
+  taskComments,
+  taskAttachments,
+  timeEntries,
+} from '@life-os/database';
 import { eq, inArray } from 'drizzle-orm';
 
 import { withTransaction } from './work-operations.js';

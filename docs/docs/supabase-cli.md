@@ -2,19 +2,23 @@
 
 ## Overview
 
-Supabase CLI is a command-line interface for managing Supabase projects locally and in the cloud. It enables local development with a full Supabase stack, database migrations, type generation, and deployment management.
+Supabase CLI is a command-line interface for managing Supabase projects locally
+and in the cloud. It enables local development with a full Supabase stack,
+database migrations, type generation, and deployment management.
 
 ## Latest Stable Version
 
 **Version**: `2.0.0` (July 2026)
 
 **Compatibility**:
+
 - Node.js: 18.0.0+, 20.0.0+
 - Docker: Required for local development
 - Operating Systems: macOS, Linux, Windows
 - Package Managers: npm, pnpm, yarn, brew
 
 **Key Features**:
+
 - Local development stack
 - Database migrations
 - Type generation
@@ -88,6 +92,7 @@ supabase init
 ```
 
 This creates:
+
 - `supabase/` directory
 - `supabase/config.toml`
 - `supabase/migrations/` directory
@@ -99,6 +104,7 @@ supabase start
 ```
 
 This starts:
+
 - PostgreSQL database
 - Auth server
 - Storage server
@@ -374,11 +380,13 @@ supabase db push --remote-url $DATABASE_URL
 ### 1. Not Using Migrations
 
 **BAD**:
+
 ```bash
 # Direct SQL changes without migrations
 ```
 
 **GOOD**:
+
 ```bash
 supabase migration new create_table
 # Edit migration file
@@ -390,11 +398,13 @@ supabase db push
 ### 2. Not Generating Types
 
 **BAD**:
+
 ```bash
 # Manual type definitions
 ```
 
 **GOOD**:
+
 ```bash
 supabase gen types typescript --local > src/types/supabase.ts
 ```
@@ -404,11 +414,13 @@ supabase gen types typescript --local > src/types/supabase.ts
 ### 3. Not Using Local Development
 
 **BAD**:
+
 ```bash
 # Developing directly on remote
 ```
 
 **GOOD**:
+
 ```bash
 supabase start
 # Develop locally
@@ -420,11 +432,13 @@ supabase db push
 ### 4. Not Backing Up Database
 
 **BAD**:
+
 ```bash
 # No backups
 ```
 
 **GOOD**:
+
 ```bash
 supabase db dump -f backup.sql
 ```
@@ -485,19 +499,23 @@ supabase branches list
 ### Common Issues
 
 **Docker not running**:
+
 - Ensure Docker is installed and running
 - Check Docker daemon status
 
 **Port conflicts**:
+
 - Change ports in config.toml
 - Stop conflicting services
 
 **Migration failures**:
+
 - Check migration SQL syntax
 - Verify database connection
 - Review error messages
 
 **Type generation errors**:
+
 - Ensure database is accessible
 - Check for circular dependencies
 - Verify schema permissions

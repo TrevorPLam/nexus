@@ -5,23 +5,31 @@
 
 ## Executive Summary
 
-This document outlines a production-grade CI/CD pipeline for the Life OS monorepo, implementing 2026 best practices for pnpm monorepos with Turborepo. The pipeline emphasizes:
+This document outlines a production-grade CI/CD pipeline for the Life OS
+monorepo, implementing 2026 best practices for pnpm monorepos with Turborepo.
+The pipeline emphasizes:
 
-- **Speed:** Sub-2-minute CI times through intelligent caching and affected package detection
-- **Security:** Defense-in-depth with Dependabot, CodeQL, and supply chain hardening
+- **Speed:** Sub-2-minute CI times through intelligent caching and affected
+  package detection
+- **Security:** Defense-in-depth with Dependabot, CodeQL, and supply chain
+  hardening
 - **Reliability:** Parallel execution, proper timeouts, and staged deployments
-- **Maintainability:** Reusable workflows, composite actions, and clear separation of concerns
+- **Maintainability:** Reusable workflows, composite actions, and clear
+  separation of concerns
 
 ## Current State Assessment
 
 ### Existing Workflow
+
 The repository currently has a single `validate-deps.yml` workflow that:
+
 - Runs on push to main and pull requests
 - Sets up pnpm 11 and Node.js 24
 - Installs dependencies with frozen lockfile
 - Runs a custom dependency validation script
 
 ### Gaps Identified
+
 1. **No caching strategy** - Dependencies reinstalled on every run
 2. **No Turborepo integration** - Missing remote caching and affected detection
 3. **No security scanning** - No Dependabot, CodeQL, or dependency review
@@ -95,7 +103,9 @@ The repository currently has a single `validate-deps.yml` workflow that:
 ### Three-Layer Caching Approach
 
 #### Layer 1: pnpm Store Cache
-Caches the global pnpm content-addressable store for fast dependency restoration.
+
+Caches the global pnpm content-addressable store for fast dependency
+restoration.
 
 ```yaml
 - name: Get pnpm store path
@@ -113,11 +123,13 @@ Caches the global pnpm content-addressable store for fast dependency restoration
 ```
 
 **Key considerations:**
+
 - Fixed store path via `pnpm store path` ensures cache consistency
 - `**/pnpm-lock.yaml` pattern catches all workspace lockfiles
 - Broad restore key allows partial cache hits on lockfile changes
 
 #### Layer 2: Turborepo Remote Cache
+
 Shares build artifacts across CI runs and team members via Vercel Remote Cache.
 
 ```yaml
@@ -127,17 +139,20 @@ env:
 ```
 
 **Setup requirements:**
+
 1. Create Vercel access token from dashboard
 2. Add `TURBO_TOKEN` as GitHub secret
 3. Add `TURBO_TEAM` as GitHub variable (not secret, for log visibility)
 4. Enable remote cache in `turbo.json` (already configured)
 
 **Benefits:**
+
 - 80%+ cache hit rate on unchanged packages
 - Cache hits take 3-5 seconds vs full rebuild
 - Shared across CI, local dev, and team members
 
 #### Layer 3: Custom Heavy Dependency Caching
+
 Cache expensive dependencies like Playwright browsers or native modules.
 
 ```yaml
@@ -184,11 +199,13 @@ Use Turborepo's `--filter` flag to only run tasks for changed packages:
 ```
 
 **Filter options:**
+
 - `--filter=[HEAD^1]` - Packages changed vs last commit
 - `--filter=...[origin/main]` - Packages changed vs main branch
 - `--filter=@life-os/web` - Specific package
 
 **Requirements:**
+
 - `fetch-depth: 2` in checkout step for `--filter=[HEAD^1]`
 - `fetch-depth: 0` for `--filter=...[origin/main]`
 
@@ -213,38 +230,42 @@ on:
 #### 1. Dependabot for Dependency Security
 
 **Security Alerts (automatic):**
+
 - Enabled by default for all public repos
 - Detects CVEs via GitHub Advisory Database
 - Auto-opens PRs for critical/high severity vulnerabilities
 
 **Version Updates (configurable):**
+
 ```yaml
 # .github/dependabot.yml
 version: 2
 updates:
-  - package-ecosystem: "pnpm"
-    directory: "/"
+  - package-ecosystem: 'pnpm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: 'weekly'
+      day: 'monday'
     open-pull-requests-limit: 5
     groups:
       react-ecosystem:
-        patterns: ["react", "react-*", "@types/react*"]
+        patterns: ['react', 'react-*', '@types/react*']
     labels:
-      - "dependencies"
-      - "automated"
+      - 'dependencies'
+      - 'automated'
 ```
 
 #### 2. CodeQL for Static Analysis
 
 Enable default setup via GitHub UI:
+
 1. Navigate to repo Settings → Code Security
 2. Click "Set up" next to "CodeQL analysis"
 3. Select "Default" configuration
 4. Choose languages (TypeScript, JavaScript)
 
 **Advanced setup option:**
+
 ```yaml
 - uses: github/codeql-action/init@v4
   with:
@@ -267,6 +288,7 @@ Block vulnerable dependencies in PRs:
 #### 4. Supply Chain Hardening
 
 **Pin actions to commit SHAs:**
+
 ```yaml
 - uses: actions/checkout@v4 # ✅ Good - pinned to tag
 - uses: actions/checkout@a81bbbf # ✅ Better - pinned to SHA
@@ -274,6 +296,7 @@ Block vulnerable dependencies in PRs:
 ```
 
 **Least-privilege permissions:**
+
 ```yaml
 permissions:
   contents: read
@@ -282,6 +305,7 @@ permissions:
 ```
 
 **OIDC for cloud authentication:**
+
 ```yaml
 - name: Configure AWS credentials
   uses: aws-actions/configure-aws-credentials@v4
@@ -293,10 +317,12 @@ permissions:
 #### 5. Secret Management
 
 **Separation of concerns:**
+
 - **Secrets:** API keys, tokens, passwords (GitHub Secrets)
 - **Config:** URLs, region names, feature flags (GitHub Variables)
 
 **Environment-specific secrets:**
+
 ```yaml
 jobs:
   deploy:
@@ -310,31 +336,39 @@ jobs:
 
 ### Web (Vercel)
 
-**Approach:** Vercel native git integration for deployments, GitHub Actions for gating checks.
+**Approach:** Vercel native git integration for deployments, GitHub Actions for
+gating checks.
 
-**Rationale:** Vercel's native integration is faster and provides preview URLs automatically. GitHub Actions handles validation before merge.
+**Rationale:** Vercel's native integration is faster and provides preview URLs
+automatically. GitHub Actions handles validation before merge.
 
 **Configuration:**
+
 1. Connect repo to Vercel
 2. Set root directory to `apps/web`
 3. Configure environment variables per environment
 4. Enable branch protection requiring CI checks
 
-**GitHub Actions role:** Run lint, typecheck, tests before merge. Vercel handles actual deploy.
+**GitHub Actions role:** Run lint, typecheck, tests before merge. Vercel handles
+actual deploy.
 
 ### Mobile (Expo EAS)
 
 **Approach:** GitHub Actions triggers EAS builds on merge to main.
 
 **Workflow:**
+
 ```yaml
 - name: Build iOS
   run: eas build --platform ios --profile production --non-interactive --no-wait
 - name: Build Android
-  run: eas build --platform android --profile production --non-interactive --no-wait
+  run:
+    eas build --platform android --profile production --non-interactive
+    --no-wait
 ```
 
 **Profiles:**
+
 - `preview` - Development builds for testing
 - `production` - Store submission builds
 
@@ -345,11 +379,13 @@ jobs:
 **Approach:** Build and push Docker images, deploy via platform CLI.
 
 **Options:**
+
 - **Railway:** Automatic detection from Dockerfile
 - **Fly.io:** `flyctl deploy` via GitHub Action
 - **Render:** GitHub integration or CLI deploy
 
 **Example (Fly.io):**
+
 ```yaml
 - uses: superfly/flyctl-actions/setup-flyctl@master
 - run: flyctl deploy --remote-only
@@ -357,25 +393,29 @@ jobs:
     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 ```
 
-**Docker optimization:** Use `turbo prune` to create minimal workspace for builds.
+**Docker optimization:** Use `turbo prune` to create minimal workspace for
+builds.
 
 ## Anti-Patterns to Avoid
 
 ### 1. Over-Caching or Ineffective Cache Strategies
 
 **❌ Bad:**
+
 ```yaml
 # Cache key too specific - never hits
 key: cache-${{ github.run_id }}
 ```
 
 **❌ Bad:**
+
 ```yaml
 # Cache key too broad - restores stale artifacts
 key: node-modules
 ```
 
 **✅ Good:**
+
 ```yaml
 # Key based on lockfile hash
 key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -386,6 +426,7 @@ restore-keys: |
 ### 2. Running Unnecessary Jobs on Every Commit
 
 **❌ Bad:**
+
 ```yaml
 on:
   push:
@@ -394,6 +435,7 @@ on:
 ```
 
 **✅ Good:**
+
 ```yaml
 on:
   push:
@@ -406,6 +448,7 @@ on:
 ### 3. Missing Environment Variable Security
 
 **❌ Bad:**
+
 ```yaml
 # Production secrets in PR runs
 env:
@@ -413,6 +456,7 @@ env:
 ```
 
 **✅ Good:**
+
 ```yaml
 # Use environments for protection
 jobs:
@@ -425,6 +469,7 @@ jobs:
 ### 4. Inadequate Timeout and Retry Configurations
 
 **❌ Bad:**
+
 ```yaml
 jobs:
   build:
@@ -433,6 +478,7 @@ jobs:
 ```
 
 **✅ Good:**
+
 ```yaml
 jobs:
   build:
@@ -443,6 +489,7 @@ jobs:
 ### 5. Sequential Job Execution
 
 **❌ Bad:**
+
 ```yaml
 jobs:
   lint:
@@ -455,6 +502,7 @@ jobs:
 ```
 
 **✅ Good:**
+
 ```yaml
 jobs:
   lint:
@@ -468,12 +516,14 @@ jobs:
 ### 6. Using Mutable Action References
 
 **❌ Bad:**
+
 ```yaml
 - uses: some-action@main
 - uses: some-action@v2
 ```
 
 **✅ Good:**
+
 ```yaml
 - uses: some-action@abc123def456 # SHA
 - uses: some-action@v2 # Tag with comment # v2.1.0
@@ -482,11 +532,13 @@ jobs:
 ### 7. Excessive Permissions
 
 **❌ Bad:**
+
 ```yaml
 permissions: write-all
 ```
 
 **✅ Good:**
+
 ```yaml
 permissions:
   contents: read
@@ -496,11 +548,13 @@ permissions:
 ### 8. No Concurrency Control
 
 **❌ Bad:**
+
 ```yaml
 # Multiple runs accumulate on rapid pushes
 ```
 
 **✅ Good:**
+
 ```yaml
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -511,13 +565,13 @@ concurrency:
 
 ### CI Pipeline Goals
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Cold cache install time | < 2 min | ~3-4 min |
-| Warm cache install time | < 30 sec | ~90 sec |
-| Full CI run (cache hit) | < 2 min | N/A |
-| Full CI run (cache miss) | < 5 min | N/A |
-| Affected-only CI | < 1 min | N/A |
+| Metric                   | Target   | Current  |
+| ------------------------ | -------- | -------- |
+| Cold cache install time  | < 2 min  | ~3-4 min |
+| Warm cache install time  | < 30 sec | ~90 sec  |
+| Full CI run (cache hit)  | < 2 min  | N/A      |
+| Full CI run (cache miss) | < 5 min  | N/A      |
+| Affected-only CI         | < 1 min  | N/A      |
 
 ### Optimization Techniques
 
@@ -554,18 +608,21 @@ concurrency:
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 - [ ] Create reusable setup-project composite action
 - [ ] Implement pnpm store caching
 - [ ] Add Turborepo remote cache configuration
 - [ ] Set up cache warming job
 
 ### Phase 2: CI Pipeline (Week 2)
+
 - [ ] Create ci.yml with parallel jobs
 - [ ] Implement affected package detection
 - [ ] Add Supabase service for integration tests
 - [ ] Configure timeout and concurrency
 
 ### Phase 3: Security (Week 3)
+
 - [ ] Enable CodeQL default setup
 - [ ] Add dependency review action
 - [ ] Configure Dependabot version updates
@@ -573,12 +630,14 @@ concurrency:
 - [ ] Implement least-privilege permissions
 
 ### Phase 4: Deployment (Week 4)
+
 - [ ] Set up Vercel integration for web
 - [ ] Configure EAS builds for mobile
 - [ ] Implement container deployment for API/worker
 - [ ] Add environment protection rules
 
 ### Phase 5: Optimization (Week 5)
+
 - [ ] Measure and optimize cache hit rates
 - [ ] Implement path filtering
 - [ ] Add performance monitoring
@@ -587,6 +646,7 @@ concurrency:
 ## Appendix: Required Secrets and Variables
 
 ### GitHub Secrets
+
 - `TURBO_TOKEN` - Vercel access token for remote cache
 - `EXPO_TOKEN` - Expo access token for EAS builds
 - `VERCEL_TOKEN` - Vercel access token (if using CLI deploy)
@@ -594,11 +654,13 @@ concurrency:
 - `RAILWAY_TOKEN` - Railway API token (if using Railway)
 
 ### GitHub Variables
+
 - `TURBO_TEAM` - Vercel team slug
 - `NODE_VERSION` - Node.js version (24)
 - `PNPM_VERSION` - pnpm version (11)
 
 ### Environment-Specific Secrets
+
 - Production database URLs
 - API keys for external services
 - Code signing certificates (if not using EAS managed)

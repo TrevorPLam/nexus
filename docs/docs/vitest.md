@@ -2,18 +2,22 @@
 
 ## Overview
 
-Vitest is a blazing-fast unit test framework powered by Vite. It provides a native ESM-first testing experience with Jest-compatible APIs, built-in TypeScript support, and out-of-the-box performance optimizations.
+Vitest is a blazing-fast unit test framework powered by Vite. It provides a
+native ESM-first testing experience with Jest-compatible APIs, built-in
+TypeScript support, and out-of-the-box performance optimizations.
 
 ## Latest Stable Version
 
 **Version**: `4.1.10` (July 2026)
 
 **Compatibility**:
+
 - Node.js: 18.0.0+, 20.0.0+, 22.0.0+
 - Browsers: Chrome, Firefox, Safari, Edge (via @vitest/browser)
 - Package Managers: npm, pnpm, yarn, bun
 
 **Key Features**:
+
 - Native ESM support
 - Jest-compatible API
 - Built-in TypeScript support
@@ -26,7 +30,8 @@ Vitest is a blazing-fast unit test framework powered by Vite. It provides a nati
 
 ## Core Concepts
 
-- **Test Files**: Files matching `*.test.ts`, `*.spec.ts`, or in `__tests__` directories
+- **Test Files**: Files matching `*.test.ts`, `*.spec.ts`, or in `__tests__`
+  directories
 - **Test Context**: Provides test utilities like `describe`, `it`, `expect`
 - **Assertions**: `expect()` API for value matching
 - **Mocks**: Functions that replace real implementations
@@ -40,7 +45,8 @@ Vitest is a blazing-fast unit test framework powered by Vite. It provides a nati
 - **Vite-Powered**: Uses Vite's config and transformation pipeline
 - **Jest Compatible**: Drop-in replacement for most Jest projects
 - **TypeScript Native**: No extra configuration needed
-- **Fast**: Uses esbuild for transpilation, worker threads for parallel execution
+- **Fast**: Uses esbuild for transpilation, worker threads for parallel
+  execution
 - **Smart Watch**: Only re-runs affected tests
 - **Coverage**: Built-in coverage via c8/istanbul
 - **Browser Mode**: Run tests in real browsers
@@ -91,8 +97,8 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom
 ### vitest.config.ts
 
 ```typescript
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
@@ -103,12 +109,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'src/test/']
+      exclude: ['node_modules/', 'src/test/'],
     },
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['node_modules/', 'dist/']
-  }
-})
+    exclude: ['node_modules/', 'dist/'],
+  },
+});
 ```
 
 ### package.json Scripts
@@ -129,31 +135,31 @@ export default defineConfig({
 ### Basic Test
 
 ```typescript
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest';
 
 describe('Math utils', () => {
   it('should add two numbers', () => {
-    expect(add(1, 2)).toBe(3)
-  })
+    expect(add(1, 2)).toBe(3);
+  });
 
   it('should subtract two numbers', () => {
-    expect(subtract(5, 3)).toBe(2)
-  })
-})
+    expect(subtract(5, 3)).toBe(2);
+  });
+});
 ```
 
 ### Async Tests
 
 ```typescript
 it('should fetch user data', async () => {
-  const user = await fetchUser(1)
-  expect(user).toBeDefined()
-  expect(user.name).toBe('John')
-})
+  const user = await fetchUser(1);
+  expect(user).toBeDefined();
+  expect(user.name).toBe('John');
+});
 
 it('should handle errors', async () => {
-  await expect(fetchUser(-1)).rejects.toThrow('Invalid user ID')
-})
+  await expect(fetchUser(-1)).rejects.toThrow('Invalid user ID');
+});
 ```
 
 ### Testing React Components
@@ -182,38 +188,38 @@ describe('Button', () => {
 ### Common Matchers
 
 ```typescript
-expect(value).toBe(3)                    // Strict equality
-expect(value).toEqual({ a: 1 })          // Deep equality
-expect(value).toBeDefined()              // Not undefined
-expect(value).toBeNull()                 // Null
-expect(value).toBeTruthy()              // Truthy
-expect(value).toBeFalsy()                // Falsy
-expect(value).toBeGreaterThan(5)         // >
-expect(value).toBeLessThan(10)           // <
-expect(value).toContain('substring')     // String/array contains
-expect(value).toMatch(/regex/)          // Regex match
-expect(value).toThrow()                  // Throws error
-expect(array).toHaveLength(3)            // Array length
-expect(object).toHaveProperty('key')     // Object property
+expect(value).toBe(3); // Strict equality
+expect(value).toEqual({ a: 1 }); // Deep equality
+expect(value).toBeDefined(); // Not undefined
+expect(value).toBeNull(); // Null
+expect(value).toBeTruthy(); // Truthy
+expect(value).toBeFalsy(); // Falsy
+expect(value).toBeGreaterThan(5); // >
+expect(value).toBeLessThan(10); // <
+expect(value).toContain('substring'); // String/array contains
+expect(value).toMatch(/regex/); // Regex match
+expect(value).toThrow(); // Throws error
+expect(array).toHaveLength(3); // Array length
+expect(object).toHaveProperty('key'); // Object property
 ```
 
 ### Async Matchers
 
 ```typescript
-await expect(promise).resolves.toBe(value)
-await expect(promise).rejects.toThrow()
+await expect(promise).resolves.toBe(value);
+await expect(promise).rejects.toThrow();
 ```
 
 ### Custom Matchers
 
 ```typescript
-import { expect } from 'vitest'
-import '@testing-library/jest-dom'
+import { expect } from 'vitest';
+import '@testing-library/jest-dom';
 
-expect(element).toBeInTheDocument()
-expect(element).toHaveTextContent('Hello')
-expect(element).toHaveClass('active')
-expect(element).toBeDisabled()
+expect(element).toBeInTheDocument();
+expect(element).toHaveTextContent('Hello');
+expect(element).toHaveClass('active');
+expect(element).toBeDisabled();
 ```
 
 ## Mocking
@@ -221,51 +227,51 @@ expect(element).toBeDisabled()
 ### Function Mocks
 
 ```typescript
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
-const mockFn = vi.fn()
-mockFn('arg1', 'arg2')
-expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2')
-expect(mockFn).toHaveBeenCalledTimes(1)
+const mockFn = vi.fn();
+mockFn('arg1', 'arg2');
+expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2');
+expect(mockFn).toHaveBeenCalledTimes(1);
 
 // Mock implementation
-const mockFn = vi.fn(() => 'mocked value')
-expect(mockFn()).toBe('mocked value')
+const mockFn = vi.fn(() => 'mocked value');
+expect(mockFn()).toBe('mocked value');
 
 // Mock return value
-mockFn.mockReturnValue('value')
-mockFn.mockResolvedValue('async value')
-mockFn.mockRejectedValue(new Error('error'))
+mockFn.mockReturnValue('value');
+mockFn.mockResolvedValue('async value');
+mockFn.mockRejectedValue(new Error('error'));
 ```
 
 ### Module Mocks
 
 ```typescript
-import { vi } from 'vitest'
-import { fetchUser } from './api'
+import { vi } from 'vitest';
+import { fetchUser } from './api';
 
 vi.mock('./api', () => ({
-  fetchUser: vi.fn(() => Promise.resolve({ id: 1, name: 'John' }))
-}))
+  fetchUser: vi.fn(() => Promise.resolve({ id: 1, name: 'John' })),
+}));
 
 it('should use mocked API', async () => {
-  const user = await fetchUser(1)
-  expect(user).toEqual({ id: 1, name: 'John' })
-})
+  const user = await fetchUser(1);
+  expect(user).toEqual({ id: 1, name: 'John' });
+});
 ```
 
 ### Partial Mocks
 
 ```typescript
-import { vi } from 'vitest'
-import * as utils from './utils'
+import { vi } from 'vitest';
+import * as utils from './utils';
 
-vi.spyOn(utils, 'calculate').mockReturnValue(42)
+vi.spyOn(utils, 'calculate').mockReturnValue(42);
 
 it('should use spy', () => {
-  const result = utils.calculate()
-  expect(result).toBe(42)
-})
+  const result = utils.calculate();
+  expect(result).toBe(42);
+});
 ```
 
 ## Advanced Patterns
@@ -274,25 +280,25 @@ it('should use spy', () => {
 
 ```typescript
 describe('Database tests', () => {
-  let db: Database
+  let db: Database;
 
   beforeEach(() => {
-    db = new Database()
-    db.connect()
-  })
+    db = new Database();
+    db.connect();
+  });
 
   afterEach(() => {
-    db.disconnect()
-  })
+    db.disconnect();
+  });
 
   beforeAll(() => {
     // Run once before all tests
-  })
+  });
 
   afterAll(() => {
     // Run once after all tests
-  })
-})
+  });
+});
 ```
 
 ### Parameterized Tests
@@ -301,12 +307,12 @@ describe('Database tests', () => {
 describe.each([
   { a: 1, b: 2, expected: 3 },
   { a: 2, b: 3, expected: 5 },
-  { a: -1, b: 1, expected: 0 }
+  { a: -1, b: 1, expected: 0 },
 ])('add($a, $b)', ({ a, b, expected }) => {
   it(`should return ${expected}`, () => {
-    expect(add(a, b)).toBe(expected)
-  })
-})
+    expect(add(a, b)).toBe(expected);
+  });
+});
 ```
 
 ### Snapshot Testing
@@ -333,14 +339,14 @@ it('should match inline snapshot', () => {
 ```typescript
 // src/utils.ts
 export function add(a: number, b: number): number {
-  return a + b
+  return a + b;
 }
 
 if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest
+  const { it, expect } = import.meta.vitest;
   it('should add numbers', () => {
-    expect(add(1, 2)).toBe(3)
-  })
+    expect(add(1, 2)).toBe(3);
+  });
 }
 ```
 
@@ -349,14 +355,16 @@ if (import.meta.vitest) {
 ### 1. Testing Implementation Details
 
 **BAD**:
+
 ```typescript
 it('should set internal state', () => {
-  component.setState({ count: 1 })
-  expect(component.state.count).toBe(1)
-})
+  component.setState({ count: 1 });
+  expect(component.state.count).toBe(1);
+});
 ```
 
 **GOOD**:
+
 ```typescript
 it('should increment count when button clicked', () => {
   render(<Counter />)
@@ -370,18 +378,20 @@ it('should increment count when button clicked', () => {
 ### 2. Not Cleaning Up Mocks
 
 **BAD**:
+
 ```typescript
-vi.mock('./api')
+vi.mock('./api');
 // Tests run
 // Mocks persist to next test
 ```
 
 **GOOD**:
+
 ```typescript
 afterEach(() => {
-  vi.clearAllMocks()
-  vi.resetAllMocks()
-})
+  vi.clearAllMocks();
+  vi.resetAllMocks();
+});
 ```
 
 **Why**: Mocks can leak between tests and cause false failures.
@@ -389,16 +399,18 @@ afterEach(() => {
 ### 3. Over-Mocking
 
 **BAD**:
+
 ```typescript
-vi.mock('./api')
-vi.mock('./utils')
-vi.mock('./helpers')
+vi.mock('./api');
+vi.mock('./utils');
+vi.mock('./helpers');
 ```
 
 **GOOD**:
+
 ```typescript
 // Only mock external dependencies
-vi.mock('./api')
+vi.mock('./api');
 ```
 
 **Why**: Over-mocking makes tests brittle and less useful.
@@ -406,21 +418,23 @@ vi.mock('./api')
 ### 4. Testing Too Much
 
 **BAD**:
+
 ```typescript
 it('should handle all edge cases', () => {
   // 50 lines of test code
-})
+});
 ```
 
 **GOOD**:
+
 ```typescript
 it('should handle valid input', () => {
   // Focused test
-})
+});
 
 it('should handle invalid input', () => {
   // Separate test
-})
+});
 ```
 
 **Why**: Small, focused tests are easier to debug and maintain.
@@ -428,20 +442,22 @@ it('should handle invalid input', () => {
 ### 5. Not Using Async/Await
 
 **BAD**:
+
 ```typescript
 it('should fetch data', () => {
-  fetchUser().then(user => {
-    expect(user).toBeDefined()
-  })
-})
+  fetchUser().then((user) => {
+    expect(user).toBeDefined();
+  });
+});
 ```
 
 **GOOD**:
+
 ```typescript
 it('should fetch data', async () => {
-  const user = await fetchUser()
-  expect(user).toBeDefined()
-})
+  const user = await fetchUser();
+  expect(user).toBeDefined();
+});
 ```
 
 **Why**: Async/await is cleaner and handles errors better.
@@ -449,11 +465,13 @@ it('should fetch data', async () => {
 ### 6. Ignoring Coverage
 
 **BAD**:
+
 ```typescript
 // No coverage configuration
 ```
 
 **GOOD**:
+
 ```typescript
 coverage: {
   provider: 'v8',
@@ -479,11 +497,11 @@ export default defineConfig({
     pool: 'threads',
     poolOptions: {
       threads: {
-        singleThread: false
-      }
-    }
-  }
-})
+        singleThread: false,
+      },
+    },
+  },
+});
 ```
 
 ### 2. Limit Test Files
@@ -492,32 +510,28 @@ export default defineConfig({
 export default defineConfig({
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['node_modules/', 'dist/', 'e2e/']
-  }
-})
+    exclude: ['node_modules/', 'dist/', 'e2e/'],
+  },
+});
 ```
 
 ### 3. Use Shallow Rendering
 
 ```typescript
-import { render } from '@testing-library/react'
+import { render } from '@testing-library/react';
 // Shallow render for component testing
 ```
 
 ### 4. Cache Dependencies
 
-Vitest automatically caches dependencies. Ensure `node_modules` is not in `.gitignore`.
+Vitest automatically caches dependencies. Ensure `node_modules` is not in
+`.gitignore`.
 
 ### 5. Use Coverage Exclusions
 
 ```typescript
 coverage: {
-  exclude: [
-    'node_modules/',
-    'src/test/',
-    'src/types/',
-    '*.config.ts'
-  ]
+  exclude: ['node_modules/', 'src/test/', 'src/types/', '*.config.ts'];
 }
 ```
 
@@ -530,8 +544,8 @@ npm install -D @testing-library/react @testing-library/jest-dom
 ```
 
 ```typescript
-import { render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 ```
 
 ### MSW (Mock Service Worker)
@@ -541,18 +555,18 @@ npm install -D msw
 ```
 
 ```typescript
-import { setupServer } from 'msw/node'
-import { rest } from 'msw'
+import { setupServer } from 'msw/node';
+import { rest } from 'msw';
 
 const server = setupServer(
   rest.get('/api/user', (req, res, ctx) => {
-    return res(ctx.json({ id: 1, name: 'John' }))
-  })
-)
+    return res(ctx.json({ id: 1, name: 'John' }));
+  }),
+);
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 ```
 
 ### Playwright (E2E)
@@ -562,12 +576,12 @@ npm install -D @playwright/test
 ```
 
 ```typescript
-import { test, expect } from '@playwright/test'
+import { test, expect } from '@playwright/test';
 
 test('homepage loads', async ({ page }) => {
-  await page.goto('http://localhost:3000')
-  await expect(page).toHaveTitle(/My App/)
-})
+  await page.goto('http://localhost:3000');
+  await expect(page).toHaveTitle(/My App/);
+});
 ```
 
 ## Common Commands
@@ -609,21 +623,25 @@ vitest --reporter=verbose
 ### Common Issues
 
 **"Module not found" errors**:
+
 - Check Vite config for alias resolution
 - Ensure file extensions are correct
 - Verify tsconfig.json paths
 
 **Slow test execution**:
+
 - Use worker threads
 - Limit test files with include/exclude
 - Avoid heavy setup in beforeEach
 
 **Mock not working**:
+
 - Ensure mock is called before test
 - Check mock path is correct
 - Use vi.resetAllMocks() in afterEach
 
 **Coverage not working**:
+
 - Install @vitest/coverage-v8
 - Check coverage configuration
 - Exclude test files from coverage

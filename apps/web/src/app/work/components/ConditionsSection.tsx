@@ -86,17 +86,11 @@ export function ConditionsSection({
               <input
                 type="text"
                 value={condition.value as string}
-                onChange={(e) =>
-                  updateCondition(index, { ...condition, value: e.target.value })
-                }
+                onChange={(e) => updateCondition(index, { ...condition, value: e.target.value })}
                 className="flex-1 px-2 py-1.5 border border-gray-300 rounded-md text-xs"
                 placeholder="Value"
               />
-              <Button
-                variant="secondary"
-                size="small"
-                onPress={() => removeCondition(index)}
-              >
+              <Button variant="secondary" size="small" onPress={() => removeCondition(index)}>
                 <Trash2 className="w-3 h-3" />
               </Button>
             </div>
