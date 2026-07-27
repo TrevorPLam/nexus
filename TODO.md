@@ -67,13 +67,13 @@ structure.
 ## T-002: Refactor journey-regression.test.tsx (451 lines)
 
 - **Task ID**: T-002
-- **Status**: `ready`
+- **Status**: `done`
 - **Original ID**: T-015
 - **Related files**: `apps/web/src/app/work/journey-regression.test.tsx`
 - **Definition of Done**:
-  - [ ] Test file split into smaller test files by feature area
-  - [ ] Each test file is under 400 lines
-  - [ ] All tests still pass after splitting
+  - [x] Test file split into smaller test files by feature area
+  - [x] Each test file is under 400 lines
+  - [x] All tests still pass after splitting
 - **Out of Scope**: Changes to test logic or coverage, only structural
   refactoring
 - **Rules to Follow**: Test organization by feature, clear test names,
@@ -108,13 +108,13 @@ two test files by suite. Each resulting file will be under 400 lines.
 
 - **T-002-1** (was T-015-1) | `AGENT` |
   `apps/web/src/app/work/journey-regression.test.tsx` | Complete initial
-  analysis and research.
+  analysis and research. _(Done)_
 - **T-002-2** (was T-015-2) | `AGENT` |
   `apps/web/src/app/work/journey-regression.test.tsx` | Split the test file into
-  smaller files by feature area.
+  smaller files by feature area. _(Done)_
 - **T-002-3** (was T-015-3) | `AGENT` |
   `apps/web/src/app/work/journey-regression.test.tsx` | Run
-  `pnpm --filter @life-os/web test` to confirm all tests pass.
+  `pnpm --filter @life-os/web test` to confirm all tests pass. _(Done)_
 
 ### Validation Commands
 
@@ -144,17 +144,33 @@ two test files by suite. Each resulting file will be under 400 lines.
 
 ### Initial Analysis
 
-- [ ] Read `apps/web/src/app/work/page.test.tsx` and understand the test
+- [x] Read `apps/web/src/app/work/page.test.tsx` and understand the test
       structure.
-- [ ] Identify logical groupings for splitting by feature.
-- [ ] Report findings and update this task if corrections are needed.
+- [x] Identify logical groupings for splitting by feature.
+- [x] Report findings and update this task if corrections are needed.
+
+**Findings**: The file is 496 lines (not 431 as listed). It has:
+
+1. Mock setup (imports and vi.mock calls) - lines 1-133 (~133 lines)
+2. Basic Work Page tests - lines 154-208 (~54 lines) - 6 tests covering
+   rendering, view toggles, and empty states
+3. "BDD: Core Work User Journey" suite - lines 210-494 (~284 lines) - 7
+   BDD-style tests covering project creation, task filtering, status changes,
+   error handling, validation, task editing, and view switching
+
+Splitting strategy: Extract shared setup (mocks, wrapper) to a test helper file,
+then split into two test files:
+
+- `page-basic.test.tsx` - Basic rendering and view tests
+- `page-bdd-journey.test.tsx` - BDD user journey tests Each resulting file will
+  be under 400 lines.
 
 ### Subtasks
 
 - **T-003-1** (was T-016-1) | `AGENT` | `apps/web/src/app/work/page.test.tsx` |
-  Complete initial analysis and research.
+  Complete initial analysis and research. _(Done)_
 - **T-003-2** (was T-016-2) | `AGENT` | `apps/web/src/app/work/page.test.tsx` |
-  Split the test file into smaller files by feature.
+  Split the test file into smaller files by feature. _(Done)_
 - **T-003-3** (was T-016-3) | `AGENT` | `apps/web/src/app/work/page.test.tsx` |
   Run `pnpm --filter @life-os/web test` to confirm all tests pass.
 
