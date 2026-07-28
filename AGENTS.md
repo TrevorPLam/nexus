@@ -262,6 +262,10 @@ supabase db push
   - MPL-2.0: File-level weak copyleft, compatible with private projects. No
     source disclosure required for internal/private use. Copyleft obligations
     only trigger on external distribution. Used by lightningcss.
+  - BlueOak-1.0.0: Permissive OSI-approved license, compatible with private
+    projects. No copyleft obligations for internal/private use. External
+    distribution requires license preservation only. Used by minipass-flush,
+    package-json-from-dist, path-scurry, and sax.
   - Additional licenses to be evaluated as needed
 - **Prohibited Dependencies**:
   - GPL-2.0: Strong copyleft license incompatible with proprietary license. Any
