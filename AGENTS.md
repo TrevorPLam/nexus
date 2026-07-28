@@ -263,8 +263,18 @@ supabase db push
     source disclosure required for internal/private use. Copyleft obligations
     only trigger on external distribution. Used by lightningcss.
   - Additional licenses to be evaluated as needed
+- **Prohibited Dependencies**:
+  - GPL-2.0: Strong copyleft license incompatible with proprietary license. Any
+    derivative work distributed externally must be licensed under GPL-2.0 with
+    complete source disclosure. node-forge (GPL-2.0) must be replaced.
 - **Evaluation Process**: Before adding new dependencies, review license
   compatibility with private project status. Document decision in AGENTS.md.
+- **node-forge Replacement**: Research identified these permissively-licensed
+  alternatives (all MIT):
+  - @noble/ciphers: Audited, minimal JS implementation, zero dependencies
+  - ironclad: Wraps Web Crypto API and Node.js crypto, TypeScript-first
+  - encryptix: Zero-dependency, uses Web Crypto API, modern features
+  - cipher-kit: Zero dependencies, cross-platform, type-safe API
 
 ## File Naming Conventions
 
