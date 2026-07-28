@@ -259,9 +259,9 @@ supabase db push
 
 - **Project License**: Private/proprietary (all rights reserved)
 - **Allowed Dependencies**:
-  - MPL-2.0: File-level weak copyleft, compatible with private projects. No source
-    disclosure required for internal/private use. Copyleft obligations only trigger
-    on external distribution.
+  - MPL-2.0: File-level weak copyleft, compatible with private projects. No
+    source disclosure required for internal/private use. Copyleft obligations
+    only trigger on external distribution. Used by lightningcss.
   - Additional licenses to be evaluated as needed
 - **Evaluation Process**: Before adding new dependencies, review license
   compatibility with private project status. Document decision in AGENTS.md.
