@@ -7,10 +7,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ApiClient, apiClient } from './index';
 
 describe('API Client Package', () => {
-  let client: ApiClient;
-
   beforeEach(() => {
-    client = new ApiClient('http://test-api.com');
     global.fetch = vi.fn();
   });
 
