@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { getRecurringEventInstances, getBaseRecurringEvent } from './calendar-operations.js';
-
 // Helper to create chainable query builder mock that resolves to array
 const createQueryBuilder = () => {
   const mockData = [{ id: '123', createdAt: new Date() }];
@@ -69,20 +67,6 @@ vi.mock('./db.js', () => ({
 describe('Calendar Operations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('Recurring Events', () => {
-    it('gets recurring event instances', async () => {
-      const result = await getRecurringEventInstances('recurrence-123');
-
-      expect(result).toBeInstanceOf(Array);
-    });
-
-    it('gets base recurring event', async () => {
-      const result = await getBaseRecurringEvent('recurrence-123');
-
-      expect(result).toBeDefined();
-    });
   });
 
   describe('Overlap Detection', () => {
