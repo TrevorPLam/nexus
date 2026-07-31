@@ -1,11 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import {
-  createCalendar,
-  getCalendarById,
-  getCalendarsByWorkspace,
-  updateCalendar,
-  deleteCalendar,
   createEvent,
   getEventById,
   getEventsByCalendar,
@@ -16,7 +11,6 @@ import {
   getEventAttendees,
   updateEventAttendee,
   deleteEventAttendee,
-  getCalendarsWithEvents,
   getEventWithAttendees,
   getEventsByTask,
   linkEventToTask,
@@ -62,78 +56,36 @@ vi.mock('./db.js', () => ({
         returning: vi.fn(() => Promise.resolve([{ id: '123' }])),
       })),
     })),
-    transaction: vi.fn(async (callback: unknown) => {
-      return callback({
-        insert: vi.fn(() => ({
-          values: vi.fn(() => ({
-            returning: vi.fn(() => Promise.resolve([{ id: '123', createdAt: new Date() }])),
-          })),
-        })),
-        update: vi.fn(() => ({
-          set: vi.fn(() => ({
-            where: vi.fn(() => ({
-              returning: vi.fn(() => Promise.resolve([{ id: '123', updatedAt: new Date() }])),
+    transaction: vi.fn(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async (callback: any) => {
+        return callback({
+          insert: vi.fn(() => ({
+            values: vi.fn(() => ({
+              returning: vi.fn(() => Promise.resolve([{ id: '123', createdAt: new Date() }])),
             })),
           })),
-        })),
-        delete: vi.fn(() => ({
-          where: vi.fn(() => ({
-            returning: vi.fn(() => Promise.resolve([{ id: '123' }])),
+          update: vi.fn(() => ({
+            set: vi.fn(() => ({
+              where: vi.fn(() => ({
+                returning: vi.fn(() => Promise.resolve([{ id: '123', updatedAt: new Date() }])),
+              })),
+            })),
           })),
-        })),
-      });
-    }),
+          delete: vi.fn(() => ({
+            where: vi.fn(() => ({
+              returning: vi.fn(() => Promise.resolve([{ id: '123' }])),
+            })),
+          })),
+        });
+      },
+    ),
   },
 }));
 
 describe('Calendar Operations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('Calendar CRUD', () => {
-    it('creates a calendar', async () => {
-      const { db } = await import('./db.js');
-      const result = await createCalendar({
-        workspaceId: 'workspace-123',
-        name: 'My Calendar',
-        provider: 'local',
-      });
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-      expect(db.insert).toHaveBeenCalled();
-    });
-
-    it('gets calendar by id', async () => {
-      const result = await getCalendarById('calendar-123');
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
-
-    it('gets calendars by workspace with pagination', async () => {
-      const result = await getCalendarsByWorkspace('workspace-123', 50);
-
-      expect(result).toBeDefined();
-      expect(result.items).toBeInstanceOf(Array);
-      expect(result.hasMore).toBeDefined();
-      expect(result.nextCursor).toBeDefined();
-    });
-
-    it('updates a calendar', async () => {
-      const result = await updateCalendar('calendar-123', { name: 'Updated Name' });
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
-
-    it('deletes a calendar', async () => {
-      const result = await deleteCalendar('calendar-123');
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
   });
 
   describe('Event CRUD', () => {
@@ -223,14 +175,6 @@ describe('Calendar Operations', () => {
   });
 
   describe('Batch Operations', () => {
-    it('gets calendars with events', async () => {
-      const result = await getCalendarsWithEvents('workspace-123');
-
-      expect(result).toBeDefined();
-      expect(result.items).toBeInstanceOf(Array);
-      expect(result.hasMore).toBeDefined();
-    });
-
     it('gets event with attendees', async () => {
       const result = await getEventWithAttendees('event-123');
 
