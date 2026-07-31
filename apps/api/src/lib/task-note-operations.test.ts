@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import {
-  batchCompleteTasks,
-  batchDeferTasks,
-  batchRescheduleTasks,
-  batchUpdateTaskStatus,
+  createTaskNote,
+  getTaskNoteById,
+  getTaskNotesByTask,
+  updateTaskNote,
+  deleteTaskNote,
 } from './work-operations.js';
 
 // Helper to create chainable query builder mock that resolves to array
@@ -74,44 +75,52 @@ vi.mock('./db.js', () => ({
   },
 }));
 
-describe('Work Operations', () => {
+describe('Task Notes', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Batch Task Operations', () => {
-    it('batch completes tasks', async () => {
-      const { db } = await import('./db.js');
-      const result = await batchCompleteTasks(['task-1', 'task-2']);
-
-      expect(result).toBeInstanceOf(Array);
-      expect(db.transaction).toHaveBeenCalled();
+  it('creates a task note', async () => {
+    const { db } = await import('./db.js');
+    const result = await createTaskNote({
+      taskId: 'task-123',
+      content: 'This is a note',
     });
 
-    it('batch defers tasks', async () => {
-      const { db } = await import('./db.js');
-      const deferDate = new Date('2024-12-31');
-      const result = await batchDeferTasks(['task-1', 'task-2'], deferDate);
+    expect(result).toBeDefined();
+    expect(result?.id).toBe('123');
+    expect(db.insert).toHaveBeenCalled();
+  });
 
-      expect(result).toBeInstanceOf(Array);
-      expect(db.transaction).toHaveBeenCalled();
-    });
+  it('gets task note by id', async () => {
+    const result = await getTaskNoteById('note-123');
 
-    it('batch reschedules tasks', async () => {
-      const { db } = await import('./db.js');
-      const newDate = new Date('2024-12-31');
-      const result = await batchRescheduleTasks(['task-1', 'task-2'], newDate);
+    // Function returns Drizzle query builder, not array directly
+    expect(result).toBeDefined();
+  });
 
-      expect(result).toBeInstanceOf(Array);
-      expect(db.transaction).toHaveBeenCalled();
-    });
+  it('gets task notes by task', async () => {
+    const result = await getTaskNotesByTask('task-123');
 
-    it('batch updates task status', async () => {
-      const { db } = await import('./db.js');
-      const result = await batchUpdateTaskStatus(['task-1', 'task-2'], 'in_progress');
+    // Function returns Drizzle query builder, not array directly
+    expect(result).toBeDefined();
+  });
 
-      expect(result).toBeInstanceOf(Array);
-      expect(db.transaction).toHaveBeenCalled();
-    });
+  it('updates a task note', async () => {
+    const { db } = await import('./db.js');
+    const result = await updateTaskNote('note-123', { content: 'Updated note' });
+
+    expect(result).toBeDefined();
+    expect(result?.id).toBe('123');
+    expect(db.transaction).toHaveBeenCalled();
+  });
+
+  it('deletes a task note', async () => {
+    const { db } = await import('./db.js');
+    const result = await deleteTaskNote('note-123');
+
+    expect(result).toBeDefined();
+    expect(result?.id).toBe('123');
+    expect(db.transaction).toHaveBeenCalled();
   });
 });
