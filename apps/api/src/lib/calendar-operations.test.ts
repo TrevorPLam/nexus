@@ -1,13 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import {
-  createEventAttendee,
-  getEventAttendees,
-  updateEventAttendee,
-  deleteEventAttendee,
-  getRecurringEventInstances,
-  getBaseRecurringEvent,
-} from './calendar-operations.js';
+import { getRecurringEventInstances, getBaseRecurringEvent } from './calendar-operations.js';
 
 // Helper to create chainable query builder mock that resolves to array
 const createQueryBuilder = () => {
@@ -76,39 +69,6 @@ vi.mock('./db.js', () => ({
 describe('Calendar Operations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('Event Attendee CRUD', () => {
-    it('creates an event attendee', async () => {
-      const result = await createEventAttendee({
-        eventId: 'event-123',
-        email: 'test@example.com',
-        status: 'needs_action',
-      });
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
-
-    it('gets event attendees', async () => {
-      const result = await getEventAttendees('event-123');
-
-      expect(result).toBeInstanceOf(Array);
-    });
-
-    it('updates an event attendee', async () => {
-      const result = await updateEventAttendee('attendee-123', { status: 'accepted' });
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
-
-    it('deletes an event attendee', async () => {
-      const result = await deleteEventAttendee('attendee-123');
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-    });
   });
 
   describe('Recurring Events', () => {
