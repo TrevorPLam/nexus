@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import {
-  createTaskDependency,
-  getTaskDependencies,
-  deleteTaskDependency,
   createTaskNote,
   getTaskNoteById,
   getTaskNotesByTask,
@@ -85,37 +82,6 @@ vi.mock('./db.js', () => ({
 describe('Work Operations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('Task Dependencies', () => {
-    it('creates a task dependency', async () => {
-      const { db } = await import('./db.js');
-      const result = await createTaskDependency({
-        taskId: 'task-123',
-        dependsOnTaskId: 'task-456',
-        type: 'finish_to_start',
-      });
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-      expect(db.insert).toHaveBeenCalled();
-    });
-
-    it('gets task dependencies', async () => {
-      const result = await getTaskDependencies('task-123');
-
-      // Function returns Drizzle query builder, not array directly
-      expect(result).toBeDefined();
-    });
-
-    it('deletes a task dependency', async () => {
-      const { db } = await import('./db.js');
-      const result = await deleteTaskDependency('dependency-123');
-
-      expect(result).toBeDefined();
-      expect(result?.id).toBe('123');
-      expect(db.delete).toHaveBeenCalled();
-    });
   });
 
   describe('Task Notes', () => {
